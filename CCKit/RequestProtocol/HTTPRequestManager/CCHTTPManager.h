@@ -161,7 +161,7 @@ typedef void (^requestDownloadsuccess)(id response, NSError *error);
  *
  *  @brief 时时网络状态（status 0: 无网络 1: 3G/4G 2:WiFi）
  *
- *  @param status 网络状态
+ *  @param success 网络状态
  */
 + (void)netWorkReachability:(void (^)(NSInteger status))success;
 

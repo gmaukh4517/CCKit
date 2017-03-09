@@ -1,6 +1,6 @@
 //
 //  RequestProtocol.h
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
 //
@@ -23,12 +23,12 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_RequestProtocol_h
-#define CCFramework_RequestProtocol_h
+#ifndef CCKit_RequestProtocol_h
+#define CCKit_RequestProtocol_h
 
-#import <CCFramework/CCHTTPManager.h>
-#import <CCFramework/CCHTTPRequest.h>
-#import <CCFramework/CCResponseObject.h>
-#import <CCFramework/HttpFileConfig.h>
+#import <CCKit/CCHTTPManager.h>
+#import <CCKit/CCHTTPRequest.h>
+#import <CCKit/CCResponseObject.h>
+#import <CCKit/HttpFileConfig.h>
 
 #endif

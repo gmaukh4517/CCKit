@@ -24,6 +24,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CCHTTPRequest.h"
+#import "Config.h"
 #import "CCViewModelProtocol.h"
 #import "CCViewMangerProtocol.h"
 

@@ -29,3 +29,4 @@
 #import <CCKit/CCMVVM.h>
 #import <CCKit/Category.h>
 #import <CCKit/Tools.h>
+#import <CCKit/RequestProtocol.h>
