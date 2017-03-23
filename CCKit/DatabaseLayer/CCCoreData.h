@@ -30,8 +30,9 @@
 #import <CCKit/CCCollectionViewFetchResultController.h>
 #import <CCKit/CCTableViewFetchResultController.h>
 
-#import <CCKit/CoreDataMasterSlave.h>
 #import <CCKit/CoreDataMasterSlave+Manager.h>
+#import <CCKit/CoreDataMasterSlave.h>
 
+#import <CCKit/FMDB.h>
 
 #endif

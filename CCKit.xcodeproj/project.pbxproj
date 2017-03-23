@@ -21,6 +21,17 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4233C1F91E83CCD80041A015 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1EE1E83CCD80041A015 /* FMDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1FA1E83CCD80041A015 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1EF1E83CCD80041A015 /* FMDatabase.m */; };
+		4233C1FB1E83CCD80041A015 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1FC1E83CCD80041A015 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F11E83CCD80041A015 /* FMDatabaseAdditions.m */; };
+		4233C1FD1E83CCD80041A015 /* FMDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F21E83CCD80041A015 /* FMDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1FE1E83CCD80041A015 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F31E83CCD80041A015 /* FMDatabasePool.m */; };
+		4233C1FF1E83CCD80041A015 /* FMDatabaseQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F41E83CCD80041A015 /* FMDatabaseQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C2001E83CCD80041A015 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F51E83CCD80041A015 /* FMDatabaseQueue.m */; };
+		4233C2011E83CCD80041A015 /* FMDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F61E83CCD80041A015 /* FMDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F71E83CCD80041A015 /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C2031E83CCD80041A015 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F81E83CCD80041A015 /* FMResultSet.m */; };
 		42954A0A1E71226F00F4CC4C /* Ability.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A091E71226F00F4CC4C /* Ability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42954A171E712AC800F4CC4C /* CCAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A121E712AC800F4CC4C /* CCAlertView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42954A181E712AC800F4CC4C /* CCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42954A131E712AC800F4CC4C /* CCAlertView.m */; };
@@ -402,6 +413,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4233C1EE1E83CCD80041A015 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		4233C1EF1E83CCD80041A015 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		4233C1F11E83CCD80041A015 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		4233C1F21E83CCD80041A015 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		4233C1F31E83CCD80041A015 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		4233C1F41E83CCD80041A015 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		4233C1F51E83CCD80041A015 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		4233C1F61E83CCD80041A015 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		4233C1F71E83CCD80041A015 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		4233C1F81E83CCD80041A015 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		42954A091E71226F00F4CC4C /* Ability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ability.h; sourceTree = "<group>"; };
 		42954A121E712AC800F4CC4C /* CCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAlertView.h; sourceTree = "<group>"; };
 		42954A131E712AC800F4CC4C /* CCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAlertView.m; sourceTree = "<group>"; };
@@ -802,6 +824,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4233C1ED1E83CCD80041A015 /* FMDB */ = {
+			isa = PBXGroup;
+			children = (
+				4233C1EE1E83CCD80041A015 /* FMDatabase.h */,
+				4233C1EF1E83CCD80041A015 /* FMDatabase.m */,
+				4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */,
+				4233C1F11E83CCD80041A015 /* FMDatabaseAdditions.m */,
+				4233C1F21E83CCD80041A015 /* FMDatabasePool.h */,
+				4233C1F31E83CCD80041A015 /* FMDatabasePool.m */,
+				4233C1F41E83CCD80041A015 /* FMDatabaseQueue.h */,
+				4233C1F51E83CCD80041A015 /* FMDatabaseQueue.m */,
+				4233C1F61E83CCD80041A015 /* FMDB.h */,
+				4233C1F71E83CCD80041A015 /* FMResultSet.h */,
+				4233C1F81E83CCD80041A015 /* FMResultSet.m */,
+			);
+			path = FMDB;
+			sourceTree = "<group>";
+		};
 		42954A101E712AC800F4CC4C /* Tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -1155,6 +1195,7 @@
 				42FC70D21E6FDCF600FBBE42 /* CoreDataFactory */,
 				42FC70DF1E6FDCF600FBBE42 /* CoreDataMasterSlave */,
 				42FC70F61E6FDCF600FBBE42 /* Macros */,
+				4233C1ED1E83CCD80041A015 /* FMDB */,
 			);
 			path = DatabaseLayer;
 			sourceTree = "<group>";
@@ -2279,6 +2320,7 @@
 				42FC73221E70012800FBBE42 /* NSHTTPCookieStorage+Additions.h in Headers */,
 				42FC73601E70012800FBBE42 /* UICollectionViewCell+Additions.h in Headers */,
 				42FC738A1E70012800FBBE42 /* UITableViewCell+Additions.h in Headers */,
+				4233C1FF1E83CCD80041A015 /* FMDatabaseQueue.h in Headers */,
 				42FC717E1E6FDF1400FBBE42 /* UIAlertView+AFNetworking.h in Headers */,
 				42FC71671E6FDF1400FBBE42 /* AFNetworking.h in Headers */,
 				42FC704B1E6FB2B700FBBE42 /* CCKit.h in Headers */,
@@ -2292,6 +2334,7 @@
 				42FC732A1E70012800FBBE42 /* NSDecimalNumber+Additions.h in Headers */,
 				42FC74351E700B4C00FBBE42 /* rscode.h in Headers */,
 				42FC73741E70012800FBBE42 /* UINavigationController+Additions.h in Headers */,
+				4233C1FB1E83CCD80041A015 /* FMDatabaseAdditions.h in Headers */,
 				42FC734A1E70012800FBBE42 /* CAShapeLayer+Additions.h in Headers */,
 				42FC742C1E700B4C00FBBE42 /* QRCodeGenerator.h in Headers */,
 				42FC71721E6FDF1400FBBE42 /* AFNetworkReachabilityManager.h in Headers */,
@@ -2305,6 +2348,7 @@
 				42FC73141E70012800FBBE42 /* NSData+Additions.h in Headers */,
 				42FC71871E6FDF1400FBBE42 /* UIRefreshControl+AFNetworking.h in Headers */,
 				42FC73781E70012800FBBE42 /* UIPopoverController+Additions.h in Headers */,
+				4233C1FD1E83CCD80041A015 /* FMDatabasePool.h in Headers */,
 				42954A171E712AC800F4CC4C /* CCAlertView.h in Headers */,
 				42954A891E712BE100F4CC4C /* SDWebImageDecoder.h in Headers */,
 				42FC73501E70012800FBBE42 /* UIAlertView+Additions.h in Headers */,
@@ -2354,6 +2398,7 @@
 				42FC71801E6FDF1400FBBE42 /* UIButton+AFNetworking.h in Headers */,
 				42FC74031E7005F300FBBE42 /* CCUtilities.h in Headers */,
 				42FC73011E70012800FBBE42 /* NSString+AvoidCrash.h in Headers */,
+				4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */,
 				42FC73821E70012800FBBE42 /* UISplitViewController+Additions.h in Headers */,
 				42FC73261E70012800FBBE42 /* NSInvocation+Additions.h in Headers */,
 				42FC73461E70012800FBBE42 /* CALayer+Additions.h in Headers */,
@@ -2406,6 +2451,7 @@
 				42FC731E1E70012800FBBE42 /* NSFileHandle+Additions.h in Headers */,
 				42954A6E1E712BE100F4CC4C /* SDImageCache.h in Headers */,
 				42FC713A1E6FDE0400FBBE42 /* NSPersistentStoreCoordinator+Additions.h in Headers */,
+				4233C1F91E83CCD80041A015 /* FMDatabase.h in Headers */,
 				42FC74331E700B4C00FBBE42 /* qrspec.h in Headers */,
 				42954A861E712BE100F4CC4C /* SDWebImageCompat.h in Headers */,
 				42FC71AC1E6FFC0000FBBE42 /* CCProperty.h in Headers */,
@@ -2413,6 +2459,7 @@
 				42954A7A1E712BE100F4CC4C /* UIImage+WebP.h in Headers */,
 				42FC731C1E70012800FBBE42 /* NSException+Additions.h in Headers */,
 				42FC71851E6FDF1400FBBE42 /* UIProgressView+AFNetworking.h in Headers */,
+				4233C2011E83CCD80041A015 /* FMDB.h in Headers */,
 				42FC73321E70012800FBBE42 /* NSSet+Additions.h in Headers */,
 				42FC733C1E70012800FBBE42 /* NSURLConnection+Additions.h in Headers */,
 				42FC73241E70012800FBBE42 /* NSIndexPath+Additions.h in Headers */,
@@ -2548,6 +2595,7 @@
 				42FC731D1E70012800FBBE42 /* NSException+Additions.m in Sources */,
 				42FC738F1E70012800FBBE42 /* UITextField+Additions.m in Sources */,
 				42FC710B1E6FDCF600FBBE42 /* CoreDataMasterSlave+Queries.m in Sources */,
+				4233C2031E83CCD80041A015 /* FMResultSet.m in Sources */,
 				42FC72F41E70012800FBBE42 /* NSAttributedString+AvoidCrash.m in Sources */,
 				42FC70CA1E6FDC7F00FBBE42 /* CCHTTPUpDownLoad.m in Sources */,
 				42FC71AB1E6FFC0000FBBE42 /* CCFoundation.m in Sources */,
@@ -2569,6 +2617,7 @@
 				42FC73291E70012800FBBE42 /* NSNotificationCenter+Additions.m in Sources */,
 				42954A901E712BE100F4CC4C /* MKAnnotationView+WebCache.m in Sources */,
 				42954A8E1E712BE100F4CC4C /* SDWebImagePrefetcher.m in Sources */,
+				4233C1FA1E83CCD80041A015 /* FMDatabase.m in Sources */,
 				42FC739D1E70012800FBBE42 /* UIWindow+Additions.m in Sources */,
 				42FC71771E6FDF1400FBBE42 /* AFURLRequestSerialization.m in Sources */,
 				42FC72F01E70012800FBBE42 /* AvoidCrash.m in Sources */,
@@ -2691,6 +2740,7 @@
 				42FC73111E70012800FBBE42 /* NSArray+Additions.m in Sources */,
 				42FC71371E6FDE0400FBBE42 /* NSManagedObject+Additions.m in Sources */,
 				42FC73571E70012800FBBE42 /* UIBarButtonItem+Badge.m in Sources */,
+				4233C1FC1E83CCD80041A015 /* FMDatabaseAdditions.m in Sources */,
 				42954A871E712BE100F4CC4C /* SDWebImageCompat.m in Sources */,
 				42FC73871E70012800FBBE42 /* UITabBarController+Additions.m in Sources */,
 				42FC70A81E6FDB7700FBBE42 /* CCMediator.m in Sources */,
@@ -2705,6 +2755,7 @@
 				42FC738D1E70012800FBBE42 /* UITableViewHeaderFooterView+Additions.m in Sources */,
 				42FC73691E70012800FBBE42 /* UIFont+Additions.m in Sources */,
 				42FC730F1E70012800FBBE42 /* CLLocationManager+Additions.m in Sources */,
+				4233C1FE1E83CCD80041A015 /* FMDatabasePool.m in Sources */,
 				42FC73231E70012800FBBE42 /* NSHTTPCookieStorage+Additions.m in Sources */,
 				42FC71BB1E6FFC0000FBBE42 /* NSString+CCExtension.m in Sources */,
 				42FC73251E70012800FBBE42 /* NSIndexPath+Additions.m in Sources */,
@@ -2719,6 +2770,7 @@
 				42FC73271E70012800FBBE42 /* NSInvocation+Additions.m in Sources */,
 				42FC71691E6FDF1400FBBE42 /* AFHTTPSessionManager.m in Sources */,
 				42FC738B1E70012800FBBE42 /* UITableViewCell+Additions.m in Sources */,
+				4233C2001E83CCD80041A015 /* FMDatabaseQueue.m in Sources */,
 				42FC72FE1E70012800FBBE42 /* NSMutableString+AvoidCrash.m in Sources */,
 				42954A7D1E712BE100F4CC4C /* UIView+WebCacheOperation.m in Sources */,
 			);
