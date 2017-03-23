@@ -25,7 +25,7 @@
 
 #import "NSString+Additions.h"
 #import <objc/runtime.h>
-//#import "CCBase64.h"
+#import "CCBase64.h"
 #import "QRCodeGenerator.h"
 #import "NSData+Additions.h"
 #import <CommonCrypto/CommonDigest.h>
@@ -363,6 +363,36 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 
 #pragma mark--- 转换
+
+/**
+ *  @author CC, 15-09-25
+ *
+ *  @brief  base64编码
+ *
+ *  @return 返回编码后的字符串
+ */
+- (NSString *)encodeBase64String
+{
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    data = [CCBase64 encodeData:data];
+    NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return base64String;
+}
+
+/**
+ *  @author CC, 15-09-25
+ *
+ *  @brief  base64解码
+ *
+ *  @return 返回编码后的字符串
+ */
+- (NSString *)decodeBase64String
+{
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    data = [CCBase64 decodeData:data];
+    NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return base64String;
+}
 
 /**
  *  @author CC, 2015-07-21

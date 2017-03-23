@@ -24,6 +24,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CCViewControllerProtocolDelegate.h"
+#import "BaseViewManger.h"
+#import "BaseViewModel.h"
 
 // noticeStatistics 注册改通知 用于统计
 #define noticeStatisticsWillAppear @"NOTICESTATISTICSWILLAPPEAR"
@@ -31,7 +34,7 @@
 
 typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewController, BOOL animated);
 
-@interface UIViewController (Additions)
+@interface UIViewController (Additions) <CCViewControllerProtocolDelegate>
 
 @property(readonly) UIView *navigationBarView;
 
@@ -46,6 +49,9 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
  *  @brief 是否隐藏底部TabBar
  */
 @property(nonatomic, assign) BOOL tabBarHidden;
+
+@property(nonatomic, strong) __kindof BaseViewModel *cc_viewModel;
+@property(nonatomic, strong) __kindof BaseViewManger *cc_viewManger;
 
 /**
  包含在导航中时，交互式弹出手势是否禁用

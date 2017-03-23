@@ -27,10 +27,10 @@
 #import "UIView+Method.h"
 #import "UITableView+Additions.h"
 #import "UIViewController+Additions.h"
-#import "Config.h"
+#import "CCProperty.h"
 #import "UITableViewCell+Additions.h"
+#import "Config.h"
 #import "UIView+CCTransfer.h"
-
 
 #define defaultInterval .5 //默认时间间隔
 
@@ -363,21 +363,6 @@
 
 #pragma mark :. delegate
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (self.paddedSeparator) {
-        if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
-            [cell setSeparatorInset:UIEdgeInsetsZero];
-        }
-        if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
-            [cell setPreservesSuperviewLayoutMargins:NO];
-        }
-        if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
-            [cell setLayoutMargins:UIEdgeInsetsZero];
-        }
-    }
-}
-
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCellEditingStyle style = UITableViewCellEditingStyleNone;
@@ -450,17 +435,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *curCell = nil;
     id curModel = [self currentModelAtIndexPath:indexPath];
     NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
-    curCell = [tableView dequeueReusableCellWithIdentifier:curCellIdentifier forIndexPath:indexPath];
+    UITableViewCell *curCell = [tableView dequeueReusableCellWithIdentifier:curCellIdentifier forIndexPath:indexPath];
     CCAssert(curCell, @"cell is nil Identifier ⤭ %@ ⤪", curCellIdentifier);
-    
-    if (self.didWillDisplayBlock) {
-        self.didWillDisplayBlock(curCell, indexPath, curModel, YES);
-    } else if ([curCell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
-        [curCell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
-    }
     
     if (self.cellDelegate)
         curCell.viewDelegate = self.cellDelegate;
@@ -469,6 +447,28 @@
         curCell.viewEventsBlock = self.cellViewEventsBlock;
     
     return curCell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.paddedSeparator) {
+        if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+            [cell setSeparatorInset:UIEdgeInsetsZero];
+        }
+        if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+            [cell setPreservesSuperviewLayoutMargins:NO];
+        }
+        if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+            [cell setLayoutMargins:UIEdgeInsetsZero];
+        }
+    }
+    
+    id curModel = [self currentModelAtIndexPath:indexPath];
+    if (self.didWillDisplayBlock) {
+        self.didWillDisplayBlock(cell, indexPath, curModel, YES);
+    } else if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+        [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

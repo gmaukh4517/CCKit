@@ -176,9 +176,12 @@
 - (UIImage *)screenshot;
 
 /**
+ *  @author Jakey
+ *
  *  @brief  截图一个view中所有视图 包括旋转缩放效果
  *
- *  @param maxWidth 限制缩放的最大宽度 保持默认传0
+ *  @param aView    一个view
+ *  @param limitWidth 限制缩放的最大宽度 保持默认传0
  *
  *  @return 截图
  */
@@ -325,103 +328,103 @@ typedef NS_OPTIONS(NSUInteger, ExcludePoint) {
 - (void)addBottomBorderWithColor:(UIColor *)color width:(CGFloat)borderWidth excludePoint:(CGFloat)point edgeType:(ExcludePoint)edge;
 - (void)addRightBorderWithColor:(UIColor *)color width:(CGFloat)borderWidth excludePoint:(CGFloat)point edgeType:(ExcludePoint)edge;
 
-//#pragma mark -
-//#pragma mark :. WebCacheOperation
-//
-///**
-// *  Set the image load operation (storage in a UIView based dictionary)
-// *
-// *  @param operation the operation
-// *  @param key       key for storing the operation
-// */
-//- (void)cc_setImageLoadOperation:(id)operation forKey:(NSString *)key;
-//
-///**
-// *  Cancel all operations for the current UIView and key
-// *
-// *  @param key key for identifying the operations
-// */
-//- (void)cc_cancelImageLoadOperationWithKey:(NSString *)key;
-//
-///**
-// *  Just remove the operations corresponding to the current UIView and key without cancelling them
-// *
-// *  @param key key for identifying the operations
-// */
-//- (void)cc_removeImageLoadOperationWithKey:(NSString *)key;
+#pragma mark -
+#pragma mark :. WebCacheOperation
+
+/**
+ *  Set the image load operation (storage in a UIView based dictionary)
+ *
+ *  @param operation the operation
+ *  @param key       key for storing the operation
+ */
+- (void)cc_setImageLoadOperation:(id)operation forKey:(NSString *)key;
+
+/**
+ *  Cancel all operations for the current UIView and key
+ *
+ *  @param key key for identifying the operations
+ */
+- (void)cc_cancelImageLoadOperationWithKey:(NSString *)key;
+
+/**
+ *  Just remove the operations corresponding to the current UIView and key without cancelling them
+ *
+ *  @param key key for identifying the operations
+ */
+- (void)cc_removeImageLoadOperationWithKey:(NSString *)key;
+
+
+#pragma mark -
+#pragma mark :. CCRemoteImage
+
+/**
+ *  @author C C, 15-08-17
+ *
+ *  @brief  加载图片状态
+ *
+ *  @since 1.0
+ */
+typedef NS_ENUM(NSInteger, UIImageViewURLDownloadState) {
+    UIImageViewURLDownloadStateUnknown = 0,
+    UIImageViewURLDownloadStateLoaded,
+    UIImageViewURLDownloadStateWaitingForLoad,
+    UIImageViewURLDownloadStateNowLoading,
+    UIImageViewURLDownloadStateFailed,
+};
+
+/**
+ *  @author C C, 15-08-17
+ *
+ *  @brief  头像状态
+ *
+ *  @since 1.0
+ */
+typedef NS_ENUM(NSInteger, CCMessageAvatarType) {
+    CCMessageAvatarTypeNormal = 0,
+    CCMessageAvatarTypeSquare,
+    CCMessageAvatarTypeCircle
+};
+
+
+// url
+@property(nonatomic, strong) NSURL *url;
+
+// download state
+@property(nonatomic, readonly) UIImageViewURLDownloadState loadingState;
 
 //
-//#pragma mark -
-//#pragma mark :. CCRemoteImage
-//
-///**
-// *  @author C C, 15-08-17
-// *
-// *  @brief  加载图片状态
-// *
-// *  @since 1.0
-// */
-//typedef NS_ENUM(NSInteger, UIImageViewURLDownloadState) {
-//    UIImageViewURLDownloadStateUnknown = 0,
-//    UIImageViewURLDownloadStateLoaded,
-//    UIImageViewURLDownloadStateWaitingForLoad,
-//    UIImageViewURLDownloadStateNowLoading,
-//    UIImageViewURLDownloadStateFailed,
-//};
-//
-///**
-// *  @author C C, 15-08-17
-// *
-// *  @brief  头像状态
-// *
-// *  @since 1.0
-// */
-//typedef NS_ENUM(NSInteger, CCMessageAvatarType) {
-//    CCMessageAvatarTypeNormal = 0,
-//    CCMessageAvatarTypeSquare,
-//    CCMessageAvatarTypeCircle
-//};
-//
-//
-//// url
-//@property(nonatomic, strong) NSURL *url;
-//
-//// download state
-//@property(nonatomic, readonly) UIImageViewURLDownloadState loadingState;
-//
-////
-//@property(nonatomic, assign) CCMessageAvatarType messageAvatarType;
-//
-//// UI
-//@property(nonatomic, strong) UIView *loadingView;
-//// Set UIActivityIndicatorView as loadingView
-//- (void)setDefaultLoadingView;
-//
-//// instancetype
-//+ (id)imageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading;
-//
-//// Get instance that has UIActivityIndicatorView as loadingView by default
-//+ (id)indicatorImageView;
-//+ (id)indicatorImageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading;
-//
-//// Download
-//- (void)setImageWithURL:(NSURL *)url;
-//- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage;
-//- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show;
-//- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show completionBlock:(void (^)(UIImage *image, NSURL *url, NSError *error))handler;
-//
-//- (void)setImageUrl:(NSURL *)url autoLoading:(BOOL)autoLoading;
-//- (void)load;
-//
-//#pragma mark -
-//#pragma mark :.  CCBadgeView
-//
-//@property (nonatomic, assign) CGRect badgeViewFrame;
-//@property (nonatomic, strong, readonly) UIView *badgeView;
-//
-//- (CCCircleView *)setupCircleBadge;
-//
-//- (void)destroyCircleBadge;
+@property(nonatomic, assign) CCMessageAvatarType messageAvatarType;
+
+// UI
+@property(nonatomic, strong) UIView *loadingView;
+// Set UIActivityIndicatorView as loadingView
+- (void)setDefaultLoadingView;
+
+// instancetype
++ (id)imageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading;
+
+// Get instance that has UIActivityIndicatorView as loadingView by default
++ (id)indicatorImageView;
++ (id)indicatorImageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading;
+
+// Download
+- (void)setImageWithURL:(NSURL *)url;
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage;
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show;
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show completionBlock:(void (^)(UIImage *image, NSURL *url, NSError *error))handler;
+
+- (void)setImageUrl:(NSURL *)url autoLoading:(BOOL)autoLoading;
+- (void)load;
+
+#pragma mark -
+#pragma mark :.  CCBadgeView
+
+@property (nonatomic, assign) CGRect badgeViewFrame;
+@property (nonatomic, strong, readonly) UIView *badgeView;
+
+- (CCCircleView *)setupCircleBadge;
+
+- (void)destroyCircleBadge;
 
 
 @end

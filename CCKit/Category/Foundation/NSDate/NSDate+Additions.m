@@ -400,8 +400,11 @@
     
     if (currentComps.year == otherComps.year && currentComps.month == otherComps.month && currentComps.day == otherComps.day)
         strDate = [self timeFormat:@"HH:mm"];
-    else if (time<=60*60*24){
-        strDate = @"昨天";
+    else if (time<=60*60*24*2 && currentComps.day != otherComps.day){
+        if (currentComps.day - otherComps.day == 1 || (otherComps.day - currentComps.day  > 1 && currentComps.day  == 1) )
+            strDate = @"昨天";
+        else 
+            strDate = [NSDate getWeekStringFromInteger:(int)weekIntValue];
     }else if (time / (3600 * 24) < 7)
         strDate = [NSDate getWeekStringFromInteger:(int)weekIntValue];
     else if (currentComps.year == otherComps.year){
@@ -410,7 +413,7 @@
             month = @"M";
         
         NSString *day = @"dd";
-        if (otherComps.day < 10) {
+        if (otherComps.date < 10) {
             day = @"d";
         }
         strDate = [self timeFormat:[NSString stringWithFormat:@"%@月%@日",month,day]];
@@ -420,7 +423,7 @@
             month = @"M";
         
         NSString *day = @"dd";
-        if (otherComps.day < 10) {
+        if (otherComps.date < 10) {
             day = @"d";
         }
         strDate = [self timeFormat:[NSString stringWithFormat:@"yy年%@月%@日",month,day]];

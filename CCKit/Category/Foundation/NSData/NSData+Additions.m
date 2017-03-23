@@ -24,7 +24,7 @@
 //
 
 #import "NSData+Additions.h"
-//#import "CCBase64.h"
+#import "CCBase64.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -186,6 +186,32 @@
 {
     return [self base64EncodedStringWithWrapWidth:0];
 }
+
+
+/**
+ *  @author CC, 15-09-25
+ *
+ *  @brief  base64编码
+ *
+ *  @return 返回编码之后的字符串
+ */
+- (NSString *)encodeBase64Data
+{
+    return [[NSString alloc] initWithData:[CCBase64 encodeData:self] encoding:NSUTF8StringEncoding];
+}
+
+/**
+ *  @author CC, 15-09-25
+ *
+ *  @brief  base64解码
+ *
+ *  @return 返回加密字符串
+ */
+- (NSString *)decodeBase64Data
+{
+    return [[NSString alloc] initWithData:[CCBase64 decodeData:self] encoding:NSUTF8StringEncoding];
+}
+
 
 #pragma mark-
 #pragma mark :. Encrypt

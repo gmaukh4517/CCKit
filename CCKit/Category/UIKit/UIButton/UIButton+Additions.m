@@ -27,8 +27,6 @@
 #import <objc/runtime.h>
 #import "UIImageView+WebCache.h"
 #import "UIView+Method.h"
-#import "SDWebImageCompat.h"
-#import "SDWebImageManager.h"
 
 @implementation UIButton (Additions)
 

@@ -24,7 +24,6 @@
 //
 
 #import "UIViewController+Additions.h"
-#import "CCMacroProperty.h"
 #import "NSObject+Additions.h"
 #import "NSString+Additions.h"
 #import "CCProperty.h"
@@ -32,6 +31,7 @@
 #import "UITableView+Additions.h"
 #import "UITabBar+Additional.h"
 #import <objc/runtime.h>
+#import "CCNSLog.h"
 #import "UIApplication+Additions.h"
 
 @import StoreKit;
@@ -150,7 +150,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         cc_NoticePost(noticeStatisticsWillAppear, [NSString stringWithUTF8String:object_getClassName(self)]);
     }
     
-    NSLog(@"viewDidAppear : %@", mClassName);
+    CCNSLogger(@"viewDidAppear : %@", mClassName);
 }
 
 - (void)cc_viewWillDisappear:(BOOL)animated
@@ -391,6 +391,43 @@ static char NavBarIsLoadingKey;
         self.navigationItem.title = self.navBarOrigTitle;
         self.isLoading = NO;
     }
+}
+
+#pragma mark :. 操作对象
+- (BaseViewModel *)cc_viewModel
+{
+    BaseViewModel *curVM = objc_getAssociatedObject(self, @selector(cc_viewModel));
+    if (curVM) return curVM;
+    if (![self respondsToSelector:@selector(cc_classOfViewModel)]) {
+        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewModel" reason:@"you forgot to add cc_classOfViewModel() in VivewController" userInfo:nil];
+        [exp raise];
+    }
+    curVM = [[[self cc_classOfViewModel] alloc] init];
+    self.cc_viewModel = curVM;
+    return curVM;
+}
+
+- (void)setCc_viewModel:(__kindof NSObject *)cc_viewModel
+{
+    objc_setAssociatedObject(self, @selector(cc_viewModel), cc_viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BaseViewManger *)cc_viewManger
+{
+    BaseViewManger *curVM = objc_getAssociatedObject(self, @selector(cc_viewManger));
+    if (curVM) return curVM;
+    if (![self respondsToSelector:@selector(cc_classOfViewManger)]) {
+        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManger" reason:@"you forgot to add cc_classOfViewManger() in VivewController" userInfo:nil];
+        [exp raise];
+    }
+    curVM = [[[self cc_classOfViewManger] alloc] init];
+    self.cc_viewManger = curVM;
+    return curVM;
+}
+
+- (void)setCc_viewManger:(__kindof NSObject *)cc_viewManger
+{
+    objc_setAssociatedObject(self, @selector(cc_viewManger), cc_viewManger, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark -

@@ -27,7 +27,6 @@
 #import "UINavigationController+Additions.h"
 #import "UIViewController+Additions.h"
 #import <objc/runtime.h>
-#import "Config.h"
 
 @interface _CCFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
 

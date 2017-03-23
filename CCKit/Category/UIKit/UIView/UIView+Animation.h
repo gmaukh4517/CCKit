@@ -83,7 +83,7 @@ float radiansForDegrees(int degrees);
 
 /** The pan gestures that handles the view dragging
  *
- * panGesture The tint color of the blurred view. Set to nil to reset.
+ * @param panGesture The tint color of the blurred view. Set to nil to reset.
  */
 @property(nonatomic) UIPanGestureRecognizer *panGesture;
 
@@ -228,7 +228,7 @@ typedef NS_ENUM(NSInteger, ShakeDirection) {
  * @param times The number of shakes
  * @param delta The width of the shake
  * @param interval The duration of one shake
- * @param shakeDirection of the shake
+ * @param direction of the shake
  */
 - (void)shake:(int)times withDelta:(CGFloat)delta speed:(NSTimeInterval)interval shakeDirection:(ShakeDirection)shakeDirection;
 
@@ -239,7 +239,7 @@ typedef NS_ENUM(NSInteger, ShakeDirection) {
  * @param times The number of shakes
  * @param delta The width of the shake
  * @param interval The duration of one shake
- * @param shakeDirection of the shake
+ * @param direction of the shake
  * @param completion to be called when the view is done shaking
  */
 - (void)shake:(int)times withDelta:(CGFloat)delta speed:(NSTimeInterval)interval shakeDirection:(ShakeDirection)shakeDirection completion:(void (^)(void))completion;

@@ -56,6 +56,8 @@ static NSString *const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
                     size = CGSizeMake(emojiImage.size.width < size.width ? emojiImage.size.width : size.width, emojiImage.size.height < size.height ? emojiImage.size.height : size.height);
                 
                 emoji = emojiImage;
+            }else if ([emoji isKindOfClass:[NSData class]]){
+                emoji = [UIImage imageWithData:emoji]; 
             }
             
             NSTextAttachment *textAttachment = [NSTextAttachment new];

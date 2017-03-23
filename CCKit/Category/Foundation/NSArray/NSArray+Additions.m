@@ -713,7 +713,9 @@
             if ([evaluatedObject isKindOfClass:[NSObject class]]) {
                 oDic = [evaluatedObject cc_keyValues];
             }
-            [dic setObject:[oDic objectForKey:obj] forKey:obj];
+            id vlaue = [oDic objectForKey:obj];
+            if (vlaue)
+                 [dic setObject:[oDic objectForKey:obj] forKey:obj];   
         }];
         BOOL seen = [seenObject containsObject:dic];
         if (!seen)

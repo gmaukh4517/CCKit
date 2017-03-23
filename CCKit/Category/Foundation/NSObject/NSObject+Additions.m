@@ -672,6 +672,16 @@ static const void *IntegerProperty = &IntegerProperty;
 #pragma mark -
 #pragma mark :. AssociatedObject
 
+- (void)setCarryObjects:(id)carryObjects
+{
+    objc_setAssociatedObject(self, @selector(carryObjects), carryObjects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id)carryObjects
+{
+    return objc_getAssociatedObject(self, @selector(carryObjects));
+}
+
 /**
  *  @brief  附加一个stong对象
  *

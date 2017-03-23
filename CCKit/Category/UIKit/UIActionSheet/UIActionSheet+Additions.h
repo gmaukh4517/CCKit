@@ -25,9 +25,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIActionSheet (
-    Additions) <UIAlertViewDelegate, UIActionSheetDelegate>
-    
+@interface UIActionSheet (Additions) <UIAlertViewDelegate, UIActionSheetDelegate>
+
 /**
  *  @author CC, 2015-07-16
  *
@@ -42,7 +41,9 @@
  *
  *  @brief  设置视图
  *
- *  @param views s
+ *  @param views
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
@@ -53,7 +54,9 @@
  *
  *  @brief  隐藏视图
  *
- *  @param index s
+ *  @param index
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
@@ -64,18 +67,25 @@
  *
  *  @brief  Block返回结果
  *
- *  @param actionSheet s
- *  @param buttonIndex s
+ *  @param actionSheet
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
 - (void)actionSheet:(UIActionSheet *)actionSheet
-    clickedButtonAtIndex:(NSInteger)buttonIndex;
-    
+clickedButtonAtIndex:(NSInteger)buttonIndex;
+
 /**
  *  @author CC, 2015-07-16
  *
  *  @brief  Block返回结果
+ *
+ *  @param actionSheet
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
@@ -87,72 +97,76 @@
  *  @brief  Block返回结果
  *
  *  @param view 显示父类视图
- *  @param completionHandler s
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
 - (void)showInView:(UIView *)view
-    withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
-    
+withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
+
 /**
  *  @author CC, 2015-07-16
  *
  *  @brief  Block返回结果
  *
  *  @param view 显示父类视图
- *  @param completionHandler s
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
 - (void)showFromToolbar:(UIToolbar *)view
-    withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
-    
+  withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
+
 /**
  *  @author CC, 2015-07-16
  *
  *  @brief  Block返回结果
  *
  *  @param view 显示父类视图
- *  @param completionHandler s
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
 - (void)showFromTabBar:(UITabBar *)view
-    withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
-    
-/**
- 显示位置
- 
- @param rect 位置
- @param view 显示父类视图
- @param animated 是否动画
- @param completionHandler Block返回结果
- */
-- (void)showFromRect:(CGRect)rect
-                   inView:(UIView *)view
-                 animated:(BOOL)animated
-    withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
-    
+ withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
+
 /**
  *  @author CC, 2015-07-16
  *
  *  @brief  Block返回结果
  *
  *  @param view 显示父类视图
- *  @param buttonIndex s
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
  *
  *  @since 1.0
  */
- 
+- (void)showFromRect:(CGRect)rect
+              inView:(UIView *)view
+            animated:(BOOL)animated
+withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
+
 /**
-  显示位置
-  
- @param item 对象
- @param animated 是否动画
- @param completionHandler 回到函数
+ *  @author CC, 2015-07-16
+ *
+ *  @brief  Block返回结果
+ *
+ *  @param view 显示父类视图
+ *  @param buttonIndex
+ *
+ *  @return <#return value description#>
+ *
+ *  @since 1.0
  */
 - (void)showFromBarButtonItem:(UIBarButtonItem *)item
                      animated:(BOOL)animated
         withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
-            
+
 @end

@@ -24,6 +24,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SDWebImageCompat.h"
+#import "SDWebImageManager.h"
 
 @interface UIButton (Additions)
 
@@ -62,16 +64,19 @@
  *  @param image 图片
  *  @param color 文字颜色
  */
-- (void)setButtonUpImageNextTilte:(NSString *)image TitleColor:(UIColor *)color;
+- (void)setButtonUpImageNextTilte:(NSString *)image
+                       TitleColor:(UIColor *)color;
 
 /**
  *  @author CC, 2015-12-09
- *
+ *  
  *  @brief  设置按钮图片
  *
  *  @param imagePath 图片路径
  */
 - (void)setImage:(NSString *)imagePath;
+
+
 
 /**
  *  @author CC, 2015-07-16
@@ -107,7 +112,7 @@
 + (id)buttonClickDoesNotChange:(NSString *)title
                BackgroundImage:(NSString *)image
                     TitleColor:(UIColor *)color;
-                    
+
 /**
  *  @author CC, 2015-07-16
  *
@@ -120,38 +125,38 @@
  */
 + (id)buttonWithTitleBackgroundImage:(NSString *)title
                      BackgroundImage:(NSString *)image;
-                     
+
 /**
  *  @author CC, 2015-07-16
  *
  *  @brief  设置背景图与长按背景图片
  *
- *  @param FinishedSelectedImage 背景图片
- *  @param FinishedUnselectedImage 长按背景图片
+ *  @param sImage 背景图片
+ *  @param image 长按背景图片
  *
  *  @since 1.0
  */
 + (id)buttonWithFinishedSelectedImage:(NSString *)FinishedSelectedImage
           withFinishedUnselectedImage:(NSString *)FinishedUnselectedImage;
-          
+
 /**
  *  @author CC, 2015-07-16
  *
  *  @brief  设置标题与背景
  *
  *  @param title 标题
- *  @param FinishedImage 背景图片
- *  @param FinishedUnImage 长按背景图片
+ *  @param sImage 背景图片
+ *  @param image 长按背景图片
  *
  *  @since 1.0
  */
 + (id)buttonWithImageStr:(NSString *)title
            FinishedImage:(NSString *)FinishedImage
      WithFinishedUnImage:(NSString *)FinishedUnImage;
-     
+
 /**
  *  @author CC, 2015-12-22
- *
+ *  
  *  @brief  设置标题与背景
  *
  *  @param title           标题
@@ -161,9 +166,9 @@
  *  @return 返回按钮
  */
 + (id)buttonWithImage:(NSString *)title
-          FinishedImage:(UIImage *)FinishedImage
-    WithFinishedUnImage:(UIImage *)FinishedUnImage;
-    
+        FinishedImage:(UIImage *)FinishedImage
+  WithFinishedUnImage:(UIImage *)FinishedUnImage;
+
 /**
  *  @author CC, 2015-07-16
  *
@@ -184,7 +189,8 @@
  *  @param frame 按钮位置 *
  *  @since 1.0
  */
-+ (id)buttonWithBackgroundImageFrame:(NSString *)image Frame:(CGRect)frame;
++ (id)buttonWithBackgroundImageFrame:(NSString *)image
+                               Frame:(CGRect)frame;
 
 /**
  *  @author CC, 2015-07-16
@@ -192,7 +198,7 @@
  *  @brief  设置背景图片与位置
  *
  *  @param LeftImage 左图片
- *  @param title 背景图片
+ *  @param image 背景图片
  *  @param frame 按钮位置
  *
  *  @since 1.0
@@ -200,7 +206,7 @@
 + (id)buttonWithImageTitle:(NSString *)LeftImage
                      Title:(NSString *)title
                      Frame:(CGRect)frame;
-                     
+
 /**
  *  @author C C, 2015-12-01
  *
@@ -213,10 +219,10 @@
 + (id)buttonLeftTitleWithImage:(NSString *)rightImage
                          Title:(NSString *)title
                          Frame:(CGRect)frame;
-                         
+
 /**
  *  @author CC, 2016-01-09
- *
+ *  
  *  @brief 左文右图
  *
  *  @param rightImage 右图
@@ -226,7 +232,7 @@
 + (id)buttonWithLeftTitleImage:(UIImage *)rightImage
                          Title:(NSString *)title
                          Frame:(CGRect)frame;
-                         
+
 /**
  *  @author CC, 2015-07-16
  *
@@ -241,7 +247,7 @@
 + (id)buttonWithUpImageNextTilte:(NSString *)image
                            Title:(NSString *)title
                            Frame:(CGRect)frame;
-                           
+
 /**
  *  @author CC, 2015-07-16
  *
@@ -252,7 +258,8 @@
  *
  *  @since 1.0
  */
-+ (id)buttonWithFillet:(NSString *)title Frame:(CGRect)frame;
++ (id)buttonWithFillet:(NSString *)title
+                 Frame:(CGRect)frame;
 
 /**
  *  @author CC, 2015-07-16
@@ -268,7 +275,7 @@
 + (id)buttonWithFillet:(NSString *)image
                  Title:(NSString *)title
                  Frame:(CGRect)frame;
-                 
+
 /**
  *  @author CC, 2015-07-16
  *
@@ -285,13 +292,13 @@
                  Frame:(CGRect)frame
             TitleColor:(UIColor *)color
                  Moode:(UIControlContentHorizontalAlignment)mode;
-                 
+
 #pragma mark -
 #pragma mark :. CountDown
 
 /**
  *  @author CC, 16-03-02
- *
+ *  
  *  @brief 倒计时按钮
  *
  *  @param timeout    倒计时长
@@ -301,7 +308,7 @@
 - (void)startTime:(NSInteger)timeout
             title:(NSString *)title
        waitTittle:(NSString *)waitTittle;
-       
+
 #pragma mark -
 #pragma mark :. Indicator
 /**

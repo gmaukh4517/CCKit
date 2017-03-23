@@ -27,12 +27,10 @@
 #import <objc/runtime.h>
 #import "UIView+Method.h"
 #import "CCRingProgressView.h"
-#import "CCMacroProperty.h"
+#import "CCProperty.h"
 #import "SDImageCache.h"
 #import "UIView+WebCache.h"
 #import "UIImageView+WebCache.h"
-#import "SDWebImageCompat.h"
-#import "SDWebImageManager.h"
 
 typedef NS_ENUM(NSInteger, CCImageViewStatus) {
     /** 默认 */

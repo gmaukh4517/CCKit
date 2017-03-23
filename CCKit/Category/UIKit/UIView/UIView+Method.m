@@ -26,6 +26,8 @@
 #import "UIView+Method.h"
 #import "SDWebImageManager.h"
 #import <objc/runtime.h>
+//#import "CCCacheManager.h"
+//#import "CCMessageAvatarFactory.h"
 
 @interface GestureCallbackValues : NSObject
 
@@ -406,9 +408,13 @@ static char BUTTONCARRYOBJECTS;
 - (void)disableAllControlsInViewHierarchy
 {
     [self runBlockOnAllSubviews:^(UIView *view) {
-        if ([view isKindOfClass:[UIControl class]]){
+        
+        if ([view isKindOfClass:[UIControl class]])
+        {
             [(UIControl *)view setEnabled:NO];
-        }else if ([view isKindOfClass:[UITextView class]]){
+        }
+        else if ([view isKindOfClass:[UITextView class]])
+        {
             [(UITextView *)view setEditable:NO];
         }
     }];
@@ -1646,6 +1652,410 @@ typedef NS_ENUM(NSInteger, EdgeType) {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:border attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:startPoint]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:border attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-endPoint]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:border attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:borderWidth]];
+}
+
+#pragma mark -
+#pragma mark :. WebCacheOperation
+
+static char loadOperationKey;
+
+- (NSMutableDictionary *)operationDictionary
+{
+    NSMutableDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);
+    if (operations) {
+        return operations;
+    }
+    operations = [NSMutableDictionary dictionary];
+    objc_setAssociatedObject(self, &loadOperationKey, operations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return operations;
+}
+
+- (void)cc_setImageLoadOperation:(id)operation forKey:(NSString *)key
+{
+    [self cc_cancelImageLoadOperationWithKey:key];
+    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    [operationDictionary setObject:operation forKey:key];
+}
+
+- (void)cc_cancelImageLoadOperationWithKey:(NSString *)key
+{
+    // Cancel in progress downloader from queue
+    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    id operations = [operationDictionary objectForKey:key];
+    if (operations) {
+        if ([operations isKindOfClass:[NSArray class]]) {
+            for (id<SDWebImageOperation> operation in operations) {
+                if (operation) {
+                    [operation cancel];
+                }
+            }
+        } else if ([operations conformsToProtocol:@protocol(SDWebImageOperation)]) {
+            [(id<SDWebImageOperation>) operations cancel];
+        }
+        [operationDictionary removeObjectForKey:key];
+    }
+}
+
+- (void)cc_removeImageLoadOperationWithKey:(NSString *)key {
+    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    [operationDictionary removeObjectForKey:key];
+}
+
+
+#pragma mark -
+#pragma mark :. CCRemoteImage
+
+const char* const kCCURLPropertyKey   = "CCURLDownloadURLPropertyKey";
+const char* const kCCLoadingStateKey  = "CCURLDownloadLoadingStateKey";
+const char* const kCCLoadingViewKey   = "CCURLDownloadLoadingViewKey";
+
+const char* const kCCActivityIndicatorViewKey   = "CCActivityIndicatorViewKey";
+
+const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
+
+#define kCCActivityIndicatorViewSize 35
+
++ (id)imageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading {
+    UIImageView *view = [self new];
+    view.url = url;
+    if(autoLoading) {
+        [view load];
+    }
+    return view;
+}
+
++ (id)indicatorImageView {
+    UIImageView *view = [self new];
+    [view setDefaultLoadingView];
+    
+    return view;
+}
+
++ (id)indicatorImageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading {
+    UIImageView *view = [self imageViewWithURL:url autoLoading:autoLoading];
+    [view setDefaultLoadingView];
+    
+    return view;
+}
+
+#pragma mark :. Properties
+
+- (dispatch_queue_t)cachingQueue {
+    static dispatch_queue_t cachingQeueu;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cachingQeueu = dispatch_queue_create("caching image and data", NULL);
+    });
+    return cachingQeueu;
+}
+
+- (void)setActivityIndicatorView:(UIActivityIndicatorView *)activityIndicatorView {
+    objc_setAssociatedObject(self, kCCActivityIndicatorViewKey, activityIndicatorView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIActivityIndicatorView *)activityIndicatorView {
+    return objc_getAssociatedObject(self, kCCActivityIndicatorViewKey);
+}
+
+- (void)setMessageAvatarType:(CCMessageAvatarType)messageAvatarType {
+    objc_setAssociatedObject(self, &kCCMessageAvatarTypeKey, [NSNumber numberWithInteger:messageAvatarType], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CCMessageAvatarType)messageAvatarType {
+    return (CCMessageAvatarType)([objc_getAssociatedObject(self, &kCCMessageAvatarTypeKey) integerValue]);
+}
+
+- (NSURL*)url {
+    return objc_getAssociatedObject(self, kCCURLPropertyKey);
+}
+
+- (void)setUrl:(NSURL *)url {
+    [self setImageUrl:url autoLoading:NO];
+}
+
+- (void)setImageUrl:(NSURL *)url autoLoading:(BOOL)autoLoading {
+    if(![url isEqual:self.url]) {
+        objc_setAssociatedObject(self, kCCURLPropertyKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+        if (url) {
+            self.loadingState = UIImageViewURLDownloadStateWaitingForLoad;
+        }
+        else {
+            self.loadingState = UIImageViewURLDownloadStateUnknown;
+        }
+    }
+    
+    if(autoLoading) {
+        [self load];
+    }
+}
+
+- (void)setImageWithURL:(NSURL *)url {
+    [self setImageWithURL:url placeholer:nil];
+}
+
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage {
+    [self setImageWithURL:url placeholer:placeholerImage showActivityIndicatorView:NO];
+}
+
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show {
+    [self _setupPlaecholerImage:placeholerImage showActivityIndicatorView:show];
+    [self setImageUrl:url autoLoading:YES];
+}
+
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show completionBlock:(void(^)(UIImage *image, NSURL *url, NSError *error))handler {
+    [self _setupPlaecholerImage:placeholerImage showActivityIndicatorView:show];
+    [self setImageUrl:url autoLoading:NO];
+//    [self loadWithCompletionBlock:handler];
+}
+
+- (void)_setupPlaecholerImage:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show {
+    if (placeholerImage) {
+        [self setupImage:placeholerImage];
+    }
+    if (show) {
+        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        activityIndicatorView.frame = CGRectMake(0, 0, kCCActivityIndicatorViewSize, kCCActivityIndicatorViewSize);
+        activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        activityIndicatorView.hidden = YES;
+        [activityIndicatorView startAnimating];
+        [self addSubview:activityIndicatorView];
+        [self setActivityIndicatorView:activityIndicatorView];
+    }
+}
+
+- (UIImageViewURLDownloadState)loadingState {
+    return (NSUInteger)([objc_getAssociatedObject(self, kCCLoadingStateKey) integerValue]);
+}
+
+- (void)setLoadingState:(UIImageViewURLDownloadState)loadingState {
+    objc_setAssociatedObject(self, kCCLoadingStateKey, @(loadingState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)loadingView {
+    return objc_getAssociatedObject(self, kCCLoadingViewKey);
+}
+
+- (void)setLoadingView:(UIView *)loadingView {
+    [self.loadingView removeFromSuperview];
+    
+    objc_setAssociatedObject(self, kCCLoadingViewKey, loadingView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    loadingView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
+    loadingView.alpha  = 0;
+    [self addSubview:loadingView];
+}
+
+- (void)setDefaultLoadingView {
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    indicator.frame = self.frame;
+    indicator.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    indicator.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1];
+    self.loadingView = indicator;
+}
+
+#pragma mark :. Setup Image
+
+- (void)setupImage:(UIImage *)image {
+    if (!image) {
+        return;
+    }
+    if ([self isKindOfClass:[UIButton class]]) {
+        UIButton *currentButton = (UIButton *)self;
+        [currentButton setImage:image forState:UIControlStateNormal];
+    } else if ([self isKindOfClass:[UIImageView class]]) {
+        UIImageView *currentImageView = (UIImageView *)self;
+        currentImageView.image = image;
+    }
+}
+
+#pragma mark :. Loading view
+
+- (void)showLoadingView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.loadingView.alpha = 1;
+        if([self.loadingView respondsToSelector:@selector(startAnimating)]) {
+            [self.loadingView performSelector:@selector(startAnimating)];
+        }
+    });
+}
+
+- (void)hideLoadingView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIActivityIndicatorView *activityIndicatorView = [self activityIndicatorView];
+        if (activityIndicatorView) {
+            [activityIndicatorView stopAnimating];
+            [activityIndicatorView removeFromSuperview];
+        }
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             self.loadingView.alpha = 0;
+                         }
+                         completion:^(BOOL finished) {
+                             if([self.loadingView respondsToSelector:@selector(stopAnimating)]) {
+                                 [self.loadingView performSelector:@selector(stopAnimating)];
+                             }
+                         }
+         ];
+    });
+}
+
+#pragma mark :. Image downloading
+
++ (NSOperationQueue *)downloadQueue {
+    static NSOperationQueue *_sharedQueue = nil;
+    
+    if(_sharedQueue == nil) {
+        _sharedQueue = [NSOperationQueue new];
+        [_sharedQueue setMaxConcurrentOperationCount:3];
+    }
+    
+    return _sharedQueue;
+}
+
++ (void)dataWithContentsOfURL:(NSURL *)url completionBlock:(void (^)(NSURL *, NSData *, NSError *))completion {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"GET"];
+    [request setTimeoutInterval:5.0];
+    
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[self downloadQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               if(completion) {
+                                   completion(url, data, connectionError);
+                               }
+                           }
+     ];
+}
+
+- (void)load {
+//    [self loadWithCompletionBlock:nil];
+}
+
+//- (void)loadWithCompletionBlock:(void(^)(UIImage *image, NSURL *url, NSError *error))handler {
+//    self.loadingState = UIImageViewURLDownloadStateNowLoading;
+//    
+//    [self showLoadingView];
+//    
+//    __weak typeof(self) weakSelf = self;
+//    dispatch_async(self.cachingQueue, ^{
+//        UIImage *cacheImage = [CCCacheManager imageWithURL:weakSelf.url storeMemoryCache:YES];
+//        if (weakSelf.messageAvatarType != CCMessageAvatarTypeNormal) {
+//            cacheImage = [CCMessageAvatarFactory avatarImageNamed:cacheImage messageAvatarType:weakSelf.messageAvatarType];
+//        }
+//        if (cacheImage) {
+//            [weakSelf setImage:cacheImage forURL:weakSelf.url];
+//            if (handler)
+//                handler(cacheImage, weakSelf.url, nil);
+//        } else {
+//            // It could be more better by replacing with a method that has delegates like a progress.
+//            [UIImageView dataWithContentsOfURL:weakSelf.url
+//                               completionBlock:^(NSURL *url, NSData *data, NSError *error) {
+//                                   UIImage *image = [weakSelf didFinishDownloadWithData:data forURL:url error:error];
+//                                   
+//                                   if(handler) {
+//                                       handler(image, url, error);
+//                                   }
+//                               }
+//             ];
+//        }
+//    });
+//}
+//
+//- (void)cachingImageData:(NSData *)imageData url:(NSURL *)url {
+//    dispatch_async(self.cachingQueue, ^{
+//        if (imageData) {
+//            [CCCacheManager storeData:imageData forURL:url storeMemoryCache:NO];
+//            UIImage *image = [UIImage imageWithData:imageData];
+//            if (image)
+//                [CCCacheManager storeMemoryCacheWithImage:image forURL:url];
+//        }
+//    });
+//}
+
+- (UIImage *)didFinishDownloadWithData:(NSData *)data forURL:(NSURL *)url error:(NSError *)error {
+    if (data) {
+//        [self cachingImageData:data url:url];
+    }
+    UIImage *image = [UIImage imageWithData:data];
+    if (self.messageAvatarType != CCMessageAvatarTypeNormal) {
+//        image = [CCMessageAvatarFactory avatarImageNamed:image messageAvatarType:self.messageAvatarType];
+    }
+    if([url isEqual:self.url]) {
+        if(error) {
+            self.loadingState = UIImageViewURLDownloadStateFailed;
+        } else {
+            [self performSelectorOnMainThread:@selector(setupImage:) withObject:image waitUntilDone:NO];
+            self.loadingState = UIImageViewURLDownloadStateLoaded;
+        }
+        [self hideLoadingView];
+    }
+    return image;
+}
+
+- (void)setImage:(UIImage *)image forURL:(NSURL *)url {
+    if([url isEqual:self.url]) {
+        [self performSelectorOnMainThread:@selector(setupImage:) withObject:image waitUntilDone:NO];
+        self.loadingState = UIImageViewURLDownloadStateLoaded;
+        [self hideLoadingView];
+    }
+}
+
+#pragma mark -
+#pragma mark :.  CCBadgeView
+
+static NSString const * CCBadgeViewKey = @"CCBadgeViewKey";
+static NSString const * CCBadgeViewFrameKey = @"CCBadgeViewFrameKey";
+static NSString const * CCCircleBadgeViewKey = @"CCCircleBadgeViewKey";
+
+- (void)setBadgeViewFrame:(CGRect)badgeViewFrame {
+    objc_setAssociatedObject(self, &CCBadgeViewFrameKey, NSStringFromCGRect(badgeViewFrame), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGRect)badgeViewFrame {
+    return CGRectFromString(objc_getAssociatedObject(self, &CCBadgeViewFrameKey));
+}
+
+- (UIView *)badgeView {
+    UIView *badgeView = objc_getAssociatedObject(self, &CCBadgeViewKey);
+    if (badgeView)
+        return badgeView;
+    
+    badgeView = [[UIView alloc] initWithFrame:self.badgeViewFrame];
+    [self addSubview:badgeView];
+    
+    self.badgeView = badgeView;
+    
+    return badgeView;
+}
+
+- (void)setBadgeView:(UIView *)badgeView {
+    objc_setAssociatedObject(self, &CCBadgeViewKey, badgeView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)setupCircleBadge {
+    self.opaque = NO;
+    self.clipsToBounds = NO;
+    CGRect circleViewFrame = CGRectMake(CGRectGetWidth(self.bounds) - 4, 0, 8, 8);
+    
+    CCCircleView *circleView = objc_getAssociatedObject(self, &CCCircleBadgeViewKey);
+    if (!circleView) {
+        circleView = [[CCCircleView alloc] initWithFrame:circleViewFrame];
+        [self addSubview:circleView];
+        objc_setAssociatedObject(self, &CCCircleBadgeViewKey, circleView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    circleView.frame = circleViewFrame;
+    circleView.hidden = NO;
+    
+    return circleView;
+}
+
+- (void)destroyCircleBadge {
+    CCCircleView *circleView = objc_getAssociatedObject(self, &CCCircleBadgeViewKey);
+    if (circleView) {
+        circleView.hidden = YES;
+    }
 }
 
 @end

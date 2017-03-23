@@ -27,6 +27,8 @@
 
 @interface NSObject (Additions)
 
+@property(nonatomic, retain) id carryObjects; 
+
 /**
  *  @brief  catgory runtime实现get set方法增加一个字符串属性
  */
@@ -293,9 +295,13 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
 + (id)InitDefaultMethod:(NSString *)methodName;
 
 /**
- 调用对象
-
- @param methodName 方法名
+ *  @author C C, 2015-10-27
+ *
+ *  @brief  多参数调用
+ *
+ *  @param selector 函数名
+ *
+ *  @return 返回函数值
  */
 - (id)performSelectors:(NSString *)methodName withObject:aObject, ... NS_REQUIRES_NIL_TERMINATION;
 
