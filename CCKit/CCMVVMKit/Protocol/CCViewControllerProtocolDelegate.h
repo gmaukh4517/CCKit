@@ -26,6 +26,8 @@
 #ifndef CCViewControllerProtocolDelegate_h
 #define CCViewControllerProtocolDelegate_h
 
+#import <UIKit/UIKit.h>
+
 @protocol CCViewControllerProtocolDelegate <NSObject>
 @optional
 

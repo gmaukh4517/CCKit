@@ -24,8 +24,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SDWebImageCompat.h"
-#import "SDWebImageManager.h"
 
 @interface UIButton (Additions)
 
@@ -69,13 +67,12 @@
 
 /**
  *  @author CC, 2015-12-09
- *  
+ *
  *  @brief  设置按钮图片
  *
  *  @param imagePath 图片路径
  */
 - (void)setImage:(NSString *)imagePath;
-
 
 
 /**
@@ -156,7 +153,7 @@
 
 /**
  *  @author CC, 2015-12-22
- *  
+ *
  *  @brief  设置标题与背景
  *
  *  @param title           标题
@@ -222,7 +219,7 @@
 
 /**
  *  @author CC, 2016-01-09
- *  
+ *
  *  @brief 左文右图
  *
  *  @param rightImage 右图
@@ -298,7 +295,7 @@
 
 /**
  *  @author CC, 16-03-02
- *  
+ *
  *  @brief 倒计时按钮
  *
  *  @param timeout    倒计时长

@@ -60,7 +60,7 @@
 		42954A831E712BE100F4CC4C /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 42954A541E712BE100F4CC4C /* FLAnimatedImage.m */; };
 		42954A841E712BE100F4CC4C /* FLAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A551E712BE100F4CC4C /* FLAnimatedImageView.h */; };
 		42954A851E712BE100F4CC4C /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42954A561E712BE100F4CC4C /* FLAnimatedImageView.m */; };
-		42954A861E712BE100F4CC4C /* SDWebImageCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A571E712BE100F4CC4C /* SDWebImageCompat.h */; };
+		42954A861E712BE100F4CC4C /* SDWebImageCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A571E712BE100F4CC4C /* SDWebImageCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42954A871E712BE100F4CC4C /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 42954A581E712BE100F4CC4C /* SDWebImageCompat.m */; };
 		42954A881E712BE100F4CC4C /* SDWebImageOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A591E712BE100F4CC4C /* SDWebImageOperation.h */; };
 		42954A891E712BE100F4CC4C /* SDWebImageDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A5B1E712BE100F4CC4C /* SDWebImageDecoder.h */; };

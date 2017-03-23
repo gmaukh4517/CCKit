@@ -23,16 +23,15 @@
 // THE SOFTWARE.
 //
 
-#import "UIViewController+Additions.h"
+#import "CCProperty.h"
 #import "NSObject+Additions.h"
 #import "NSString+Additions.h"
-#import "CCProperty.h"
-#import "UIView+Method.h"
-#import "UITableView+Additions.h"
-#import "UITabBar+Additional.h"
-#import <objc/runtime.h>
-#import "CCNSLog.h"
 #import "UIApplication+Additions.h"
+#import "UITabBar+Additional.h"
+#import "UITableView+Additions.h"
+#import "UIView+Method.h"
+#import "UIViewController+Additions.h"
+#import <objc/runtime.h>
 
 @import StoreKit;
 
@@ -106,7 +105,7 @@ NSString *const CCScrollingHandlerDidScrollBlock = @"CCScrollingHandlerDidScroll
 
 @interface UIViewController (SKStoreProductViewControllerDelegate) <SKStoreProductViewControllerDelegate>
 
-@property (nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
+@property(nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
 
 @property(nonatomic, weak) UIView *navBarView;
 
@@ -150,7 +149,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         cc_NoticePost(noticeStatisticsWillAppear, [NSString stringWithUTF8String:object_getClassName(self)]);
     }
     
-    CCNSLogger(@"viewDidAppear : %@", mClassName);
+    NSLog(@"viewDidAppear : %@", mClassName);
 }
 
 - (void)cc_viewWillDisappear:(BOOL)animated
@@ -172,7 +171,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     objc_setAssociatedObject(self, @selector(cc_willAppearInjectBlock), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
--(UIView *)navigationBarView
+- (UIView *)navigationBarView
 {
     if (!self.navBarView) {
         UIView *navBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 64)];
@@ -182,12 +181,12 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     return self.navBarView;
 }
 
--(UIView *)navBarView
+- (UIView *)navBarView
 {
     return [self associatedValueForKey:@selector(navBarView)];
 }
 
--(void)setNavBarView:(UIView *)navBarView
+- (void)setNavBarView:(UIView *)navBarView
 {
     [self associateValue:navBarView withKey:@selector(navBarView)];
 }
@@ -283,7 +282,7 @@ static const void *BackButtonHandlerKey = &BackButtonHandlerKey;
     }
 }
 
-#pragma mark :. 
+#pragma mark :.
 
 - (BOOL)cc_interactivePopDisabled
 {
@@ -352,8 +351,8 @@ static char NavBarIsLoadingKey;
         self.navigationItem.titleView = navBarLoadingContainer;
         self.isLoading = YES;
         
-        __block UIFont *font;        
-        [self.navigationController.navigationBar.titleTextAttributes enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        __block UIFont *font;
+        [self.navigationController.navigationBar.titleTextAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
             if ([key isEqual:@"NSFont"])
                 font = obj;
         }];
@@ -376,7 +375,7 @@ static char NavBarIsLoadingKey;
         loadingTitleLabel.text = title;
         [loadingTitleLabel sizeToFit];
         [navBarLoadingContainer addSubview:loadingTitleLabel];
-        size.width +=loadingTitleLabel.frame.size.width + 5;
+        size.width += loadingTitleLabel.frame.size.width + 5;
         
         frame = navBarLoadingContainer.frame;
         frame.size = size;
@@ -394,9 +393,9 @@ static char NavBarIsLoadingKey;
 }
 
 #pragma mark :. 操作对象
-- (BaseViewModel *)cc_viewModel
+- (CCViewModel *)cc_viewModel
 {
-    BaseViewModel *curVM = objc_getAssociatedObject(self, @selector(cc_viewModel));
+    CCViewModel *curVM = objc_getAssociatedObject(self, @selector(cc_viewModel));
     if (curVM) return curVM;
     if (![self respondsToSelector:@selector(cc_classOfViewModel)]) {
         NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewModel" reason:@"you forgot to add cc_classOfViewModel() in VivewController" userInfo:nil];
@@ -412,9 +411,9 @@ static char NavBarIsLoadingKey;
     objc_setAssociatedObject(self, @selector(cc_viewModel), cc_viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BaseViewManger *)cc_viewManger
+- (CCViewManger *)cc_viewManger
 {
-    BaseViewManger *curVM = objc_getAssociatedObject(self, @selector(cc_viewManger));
+    CCViewManger *curVM = objc_getAssociatedObject(self, @selector(cc_viewManger));
     if (curVM) return curVM;
     if (![self respondsToSelector:@selector(cc_classOfViewManger)]) {
         NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManger" reason:@"you forgot to add cc_classOfViewManger() in VivewController" userInfo:nil];
@@ -475,16 +474,17 @@ static char NavBarIsLoadingKey;
     
     if (self.navigationController) {
         __block BOOL curFlag = NO;
-        [self.navigationController.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            if (curFlag) {
-                curVC = obj;
-                self.cc_sourceVC = curVC;
-                *stop = YES;
-            }
-            if (obj == self) {
-                curFlag = YES;
-            }
-        }];
+        [self.navigationController.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse
+                                                                    usingBlock:^(__kindof UIViewController *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                                                        if (curFlag) {
+                                                                            curVC = obj;
+                                                                            self.cc_sourceVC = curVC;
+                                                                            *stop = YES;
+                                                                        }
+                                                                        if (obj == self) {
+                                                                            curFlag = YES;
+                                                                        }
+                                                                    }];
     }
     return curVC;
 }
@@ -950,13 +950,17 @@ static void *const keypath = (void *)&keypath;
     // Set starting properties
     popupView.frame = popupStartRect;
     popupView.alpha = 1.0f;
-    [UIView animateWithDuration:kPopupModalAnimationDuration delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.popupViewController viewWillAppear:NO];
-        self.popupBackgroundView.alpha = 1.0f;
-        popupView.frame = popupEndRect;
-    } completion:^(BOOL finished) {
-        [self.popupViewController viewDidAppear:NO];
-    }];
+    [UIView animateWithDuration:kPopupModalAnimationDuration
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self.popupViewController viewWillAppear:NO];
+                         self.popupBackgroundView.alpha = 1.0f;
+                         popupView.frame = popupEndRect;
+                     }
+                     completion:^(BOOL finished) {
+                         [self.popupViewController viewDidAppear:NO];
+                     }];
 }
 
 - (void)slideViewOut:(UIView *)popupView
@@ -998,22 +1002,26 @@ static void *const keypath = (void *)&keypath;
             break;
     }
     
-    [UIView animateWithDuration:kPopupModalAnimationDuration delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [self.popupViewController viewWillDisappear:NO];
-        popupView.frame = popupEndRect;
-        self.popupBackgroundView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        [popupView removeFromSuperview];
-        [overlayView removeFromSuperview];
-        [self.popupViewController viewDidDisappear:NO];
-        self.popupViewController = nil;
-        
-        id dismissed = [self dismissedCallback];
-        if (dismissed != nil){
-            ((void(^)(void))dismissed)();
-            [self setDismissedCallback:nil];
-        }
-    }];
+    [UIView animateWithDuration:kPopupModalAnimationDuration
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self.popupViewController viewWillDisappear:NO];
+                         popupView.frame = popupEndRect;
+                         self.popupBackgroundView.alpha = 0.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         [popupView removeFromSuperview];
+                         [overlayView removeFromSuperview];
+                         [self.popupViewController viewDidDisappear:NO];
+                         self.popupViewController = nil;
+                         
+                         id dismissed = [self dismissedCallback];
+                         if (dismissed != nil) {
+                             ((void (^)(void))dismissed)();
+                             [self setDismissedCallback:nil];
+                         }
+                     }];
 }
 
 #pragma mark--- Fade
@@ -1034,35 +1042,39 @@ static void *const keypath = (void *)&keypath;
     popupView.frame = popupEndRect;
     popupView.alpha = 0.0f;
     
-    [UIView animateWithDuration:kPopupModalAnimationDuration animations:^{
-        [self.popupViewController viewWillAppear:NO];
-        self.popupBackgroundView.alpha = 0.5f;
-        popupView.alpha = 1.0f;
-    } completion:^(BOOL finished) {
-        [self.popupViewController viewDidAppear:NO];
-    }];
+    [UIView animateWithDuration:kPopupModalAnimationDuration
+                     animations:^{
+                         [self.popupViewController viewWillAppear:NO];
+                         self.popupBackgroundView.alpha = 0.5f;
+                         popupView.alpha = 1.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         [self.popupViewController viewDidAppear:NO];
+                     }];
 }
 
 - (void)fadeViewOut:(UIView *)popupView
          sourceView:(UIView *)sourceView
         overlayView:(UIView *)overlayView
 {
-    [UIView animateWithDuration:kPopupModalAnimationDuration animations:^{
-        [self.popupViewController viewWillDisappear:NO];
-        self.popupBackgroundView.alpha = 0.0f;
-        popupView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        [popupView removeFromSuperview];
-        [overlayView removeFromSuperview];
-        [self.popupViewController viewDidDisappear:NO];
-        self.popupViewController = nil;
-        
-        id dismissed = [self dismissedCallback];
-        if (dismissed != nil){
-            ((void(^)(void))dismissed)();
-            [self setDismissedCallback:nil];
-        }
-    }];
+    [UIView animateWithDuration:kPopupModalAnimationDuration
+                     animations:^{
+                         [self.popupViewController viewWillDisappear:NO];
+                         self.popupBackgroundView.alpha = 0.0f;
+                         popupView.alpha = 0.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         [popupView removeFromSuperview];
+                         [overlayView removeFromSuperview];
+                         [self.popupViewController viewDidDisappear:NO];
+                         self.popupViewController = nil;
+                         
+                         id dismissed = [self dismissedCallback];
+                         if (dismissed != nil) {
+                             ((void (^)(void))dismissed)();
+                             [self setDismissedCallback:nil];
+                         }
+                     }];
 }
 
 #pragma mark :. Category Accessors
@@ -1102,15 +1114,16 @@ NSString *const iTunesAppleString = @"itunes.apple.com";
     if (self.loadingStoreKitItemBlock) {
         self.loadingStoreKitItemBlock();
     }
-    [storeViewController loadProductWithParameters:parameters completionBlock:^(BOOL result, NSError *error) {
-        if (self.loadedStoreKitItemBlock) {
-            self.loadedStoreKitItemBlock();
-        }
-        
-        if (result && !error){
-            [self presentViewController:storeViewController animated:YES completion:nil];
-        }
-    }];
+    [storeViewController loadProductWithParameters:parameters
+                                   completionBlock:^(BOOL result, NSError *error) {
+                                       if (self.loadedStoreKitItemBlock) {
+                                           self.loadedStoreKitItemBlock();
+                                       }
+                                       
+                                       if (result && !error) {
+                                           [self presentViewController:storeViewController animated:YES completion:nil];
+                                       }
+                                   }];
 }
 
 #pragma mark--- Delegation - SKStoreProductViewControllerDelegate

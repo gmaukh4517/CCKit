@@ -31,6 +31,7 @@
 #import "SDImageCache.h"
 #import "UIView+WebCache.h"
 #import "UIImageView+WebCache.h"
+#import "Config.h"
 
 typedef NS_ENUM(NSInteger, CCImageViewStatus) {
     /** 默认 */

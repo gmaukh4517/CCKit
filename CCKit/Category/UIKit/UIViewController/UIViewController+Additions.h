@@ -23,10 +23,10 @@
 // THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
 #import "CCViewControllerProtocolDelegate.h"
-#import "BaseViewManger.h"
-#import "BaseViewModel.h"
+#import "CCViewManger.h"
+#import "CCViewModel.h"
+#import <UIKit/UIKit.h>
 
 // noticeStatistics 注册改通知 用于统计
 #define noticeStatisticsWillAppear @"NOTICESTATISTICSWILLAPPEAR"
@@ -50,26 +50,26 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
  */
 @property(nonatomic, assign) BOOL tabBarHidden;
 
-@property(nonatomic, strong) __kindof BaseViewModel *cc_viewModel;
-@property(nonatomic, strong) __kindof BaseViewManger *cc_viewManger;
+@property(nonatomic, strong) __kindof CCViewModel *cc_viewModel;
+@property(nonatomic, strong) __kindof CCViewManger *cc_viewManger;
 
 /**
  包含在导航中时，交互式弹出手势是否禁用
  */
-@property (nonatomic, assign) BOOL cc_interactivePopDisabled;
+@property(nonatomic, assign) BOOL cc_interactivePopDisabled;
 
 /**
  指示此视图控制器喜欢其导航栏隐藏或不隐藏，
  检查基于视图控制器的导航栏的外观是否启用。
  默认为NO，栏更有可能显示。
  */
-@property (nonatomic, assign) BOOL cc_prefersNavigationBarHidden;
+@property(nonatomic, assign) BOOL cc_prefersNavigationBarHidden;
 
 /**
  当开始交互式弹出时，最大允许到左边缘的初始距离
  手势。 0默认情况下，这意味着它将忽略此限制。
  */
-@property (nonatomic, assign) CGFloat cc_interactivePopMaxAllowedInitialDistanceToLeftEdge;
+@property(nonatomic, assign) CGFloat cc_interactivePopMaxAllowedInitialDistanceToLeftEdge;
 
 @property(nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
 

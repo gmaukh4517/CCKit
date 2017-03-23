@@ -24,8 +24,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SDWebImageCompat.h"
-#import "SDWebImageManager.h"
+
 
 typedef void(^CCImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageURL);
 

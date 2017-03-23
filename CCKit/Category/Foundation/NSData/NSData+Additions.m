@@ -24,7 +24,6 @@
 //
 
 #import "NSData+Additions.h"
-#import "CCBase64.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -48,7 +47,7 @@
 
 /**
  *  @author CC, 2015-11-17
- *  
+ *
  *  @brief  data转图片
  */
 - (UIImage *)convertingDataToImage
@@ -101,7 +100,7 @@
             withString:@""];
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Base64
 
 /**
@@ -188,32 +187,7 @@
 }
 
 
-/**
- *  @author CC, 15-09-25
- *
- *  @brief  base64编码
- *
- *  @return 返回编码之后的字符串
- */
-- (NSString *)encodeBase64Data
-{
-    return [[NSString alloc] initWithData:[CCBase64 encodeData:self] encoding:NSUTF8StringEncoding];
-}
-
-/**
- *  @author CC, 15-09-25
- *
- *  @brief  base64解码
- *
- *  @return 返回加密字符串
- */
-- (NSString *)decodeBase64Data
-{
-    return [[NSString alloc] initWithData:[CCBase64 decodeData:self] encoding:NSUTF8StringEncoding];
-}
-
-
-#pragma mark-
+#pragma mark -
 #pragma mark :. Encrypt
 
 /**
@@ -370,7 +344,7 @@
     return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. GZIP
 
 #define SCFW_CHUNK_SIZE 16384
@@ -460,7 +434,7 @@
     return nil;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Hash
 
 /**
@@ -583,7 +557,7 @@
 }
 
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. SDDataCache
 
 #define kSDMaxCacheFileAmount 100
@@ -640,7 +614,7 @@
     return data;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. ZLIB
 
 static const uInt CHUNK_SIZE = 65536;
