@@ -344,6 +344,7 @@
     return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
 }
 
+
 #pragma mark -
 #pragma mark :. GZIP
 
@@ -357,6 +358,7 @@
  */
 - (NSData *)gzippedDataWithCompressionLevel:(float)level
 {
+#if __has_include("libz.tbd")
     if ([self length]) {
         z_stream stream;
         stream.zalloc = Z_NULL;
@@ -383,6 +385,7 @@
             return data;
         }
     }
+#endif
     return nil;
 }
 
@@ -403,6 +406,7 @@
  */
 - (NSData *)gunzippedData
 {
+#if __has_include("libz.tbd")
     if ([self length]) {
         z_stream stream;
         stream.zalloc = Z_NULL;
@@ -431,8 +435,10 @@
             }
         }
     }
+#endif
     return nil;
 }
+
 
 #pragma mark -
 #pragma mark :. Hash
@@ -647,6 +653,7 @@ NSString *const CCZlibErrorInfoKey = @"zerror";
 - (BOOL)inflate:(void (^)(NSData *))processBlock
           error:(NSError *__autoreleasing *)error
 {
+    #if __has_include("libz.tbd")
     z_stream stream;
     stream.zalloc = Z_NULL;
     stream.zfree = Z_NULL;
@@ -693,6 +700,7 @@ NSString *const CCZlibErrorInfoKey = @"zerror";
     } while (ret != Z_STREAM_END);
     
     inflateEnd(&stream);
+    #endif
     return YES;
 }
 
@@ -700,6 +708,7 @@ NSString *const CCZlibErrorInfoKey = @"zerror";
 - (BOOL)deflate:(void (^)(NSData *))processBlock
           error:(NSError *__autoreleasing *)error
 {
+#if __has_include("libz.tbd")
     z_stream stream;
     stream.zalloc = Z_NULL;
     stream.zfree = Z_NULL;
@@ -739,6 +748,7 @@ NSString *const CCZlibErrorInfoKey = @"zerror";
         } while (stream.avail_out == 0);
     } while (flush != Z_FINISH);
     deflateEnd(&stream);
+#endif
     return YES;
 }
 

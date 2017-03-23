@@ -37,7 +37,7 @@
 
 /**
  *  @author CC, 2015-11-17
- *  
+ *
  *  @brief  data转图片
  */
 - (UIImage *)convertingDataToImage;
@@ -58,7 +58,7 @@
  */
 - (NSString *)APNSToken;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Base64
 
 /**
@@ -84,7 +84,7 @@
  */
 - (NSString *)base64EncodedString;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Encrypt
 
 /**
@@ -134,7 +134,7 @@
  */
 - (NSString *)UTF8String;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. GZIP
 
 /**
@@ -160,7 +160,7 @@
  */
 - (NSData *)gunzippedData;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Hash
 
 /**
@@ -213,7 +213,7 @@
  */
 - (NSData *)hmacSHA512DataWithKey:(NSData *)key;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. SDDataCache
 
 /**
@@ -232,7 +232,7 @@
  */
 + (NSData *)getDataCacheWithIdentifier:(NSString *)identifier;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. ZLIB
 
 /**

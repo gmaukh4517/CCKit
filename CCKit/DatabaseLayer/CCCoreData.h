@@ -33,6 +33,5 @@
 #import <CCKit/CoreDataMasterSlave.h>
 #import <CCKit/CoreDataMasterSlave+Manager.h>
 
-#import <CCKit/FMDB.h>
 
 #endif
