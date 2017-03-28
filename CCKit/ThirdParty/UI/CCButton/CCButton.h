@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCButton.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,10 +23,39 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_Ability_h
-#define CCFramework_Ability_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
+/**
+ *  @author CC, 16-04-18
+ *  
+ *  @brief 图标和文本位置变化
+ */
+typedef NS_ENUM(NSInteger, CCAlignmentStatus) {
+    /** 正常 */
+    CCAlignmentStatusNormal,
+    /** 左对齐 */
+    CCAlignmentStatusLeft,
+    /** 居中对齐 */
+    CCAlignmentStatusCenter,
+    /** 右对齐 */
+    CCAlignmentStatusRight,
+    /** 图标在上，文本在下(居中) */
+    CCAlignmentStatusTop,
+    /** 图标在下，文本在上(居中) */
+    CCAlignmentStatusBottom,
+};
 
-#endif
+@interface CCButton : UIButton
+
+/**
+ *  @author CC, 16-04-18
+ *  
+ *  @brief  外界通过设置按钮的status属性，创建不同类型的按钮
+ */
+@property(nonatomic, assign) CCAlignmentStatus status;
+
++ (instancetype)cc_shareButton;
+
+- (instancetype)initWithAlignmentStatus:(CCAlignmentStatus)status;
+
+@end

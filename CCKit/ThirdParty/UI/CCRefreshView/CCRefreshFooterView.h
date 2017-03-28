@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCRefreshTableFooterView.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -22,11 +22,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+//  上拉加载更多
 
-#ifndef CCFramework_Ability_h
-#define CCFramework_Ability_h
+#import "CCRefreshBaseView.h"
 
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
+@interface CCRefreshFooterView : CCRefreshBaseView
 
-#endif
++ (instancetype)footer;
+
+- (void)setActivityImage:(UIImage *)image;
+
+@end

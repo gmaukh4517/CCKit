@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCRefreshHeaderView.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -22,11 +22,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+//  下拉刷新
 
-#ifndef CCFramework_Ability_h
-#define CCFramework_Ability_h
+#import "CCRefreshBaseView.h"
 
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
+@interface CCRefreshHeaderView : CCRefreshBaseView
 
-#endif
+@property(nonatomic, copy) NSString *dateKey;
+
++ (instancetype)header;
+
+- (void)setActivityImage:(UIImage *)image;
+
+@end

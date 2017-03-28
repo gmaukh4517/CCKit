@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCTransformRefresh.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,10 +23,39 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_Ability_h
-#define CCFramework_Ability_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
+@interface CCTransformRefresh : UIView
 
-#endif
+#pragma mark - 父控件
+@property(nonatomic, strong) UIScrollView *scrollView;
+@property(nonatomic, assign, readonly) UIEdgeInsets scrollViewOriginalInset;
+
++ (instancetype)Transformheader:(NSString *)traImage;
+
+#pragma mark - 回调
+/**
+ *  开始进入刷新状态的监听器
+ */
+@property(weak, nonatomic) id beginRefreshingTaget;
+/**
+ *  开始进入刷新状态的监听方法
+ */
+@property(assign, nonatomic) SEL beginRefreshingAction;
+/**
+ *  开始进入刷新状态就会调用
+ */
+@property(nonatomic, copy) void (^beginRefreshingCallback)();
+
+#pragma mark - 刷新相关
+/**
+ *  开始刷新
+ */
+- (void)beginTransformRefreshing;
+/**
+ *  结束刷新
+ */
+- (void)endTransformRefreshing;
+
+
+@end

@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCRefreshConst.m
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,10 +23,20 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_Ability_h
-#define CCFramework_Ability_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
+const CGFloat CCRefreshViewHeight = 64.0;
+const CGFloat CCRefreshFastAnimationDuration = 0.25;
+const CGFloat CCRefreshSlowAnimationDuration = 0.4;
 
-#endif
+NSString *const CCRefreshFooterPullToRefresh = @"上拉可以加载更多数据";
+NSString *const CCRefreshFooterReleaseToRefresh = @"松开立即加载更多数据";
+NSString *const CCRefreshFooterRefreshing = @"正在加载数据...";
+
+NSString *const CCRefreshHeaderPullToRefresh = @"下拉可以刷新";
+NSString *const CCRefreshHeaderReleaseToRefresh = @"松开立即刷新";
+NSString *const CCRefreshHeaderRefreshing = @"正在刷新...";
+NSString *const CCRefreshHeaderTimeKey = @"CCRefreshHeaderView";
+
+NSString *const CCRefreshContentOffset = @"contentOffset";
+NSString *const CCRefreshContentSize = @"contentSize";
