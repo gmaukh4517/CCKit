@@ -128,8 +128,8 @@
  *
  *  @brief  设置背景图与长按背景图片
  *
- *  @param sImage 背景图片
- *  @param image 长按背景图片
+ *  @param FinishedSelectedImage 背景图片
+ *  @param FinishedUnselectedImage 长按背景图片
  *
  *  @since 1.0
  */
@@ -142,8 +142,8 @@
  *  @brief  设置标题与背景
  *
  *  @param title 标题
- *  @param sImage 背景图片
- *  @param image 长按背景图片
+ *  @param FinishedImage 背景图片
+ *  @param FinishedUnImage 长按背景图片
  *
  *  @since 1.0
  */
@@ -195,7 +195,7 @@
  *  @brief  设置背景图片与位置
  *
  *  @param LeftImage 左图片
- *  @param image 背景图片
+ *  @param title 背景图片
  *  @param frame 按钮位置
  *
  *  @since 1.0

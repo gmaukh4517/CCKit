@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
+#import "CCViewProtocol.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "CCViewProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -71,14 +71,14 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 /**
  *  @author CC, 16-07-23
  *
- *  @brief 分组顶部高度
+ *  @brief 分组顶部高度 默认：0.001
  */
 @property(nonatomic, assign) CGFloat titleHeaderHeight;
 
 /**
  *  @author CC, 16-07-23
  *
- *  @brief 分组底部高度
+ *  @brief 分组底部高度 默认：0.001
  */
 @property(nonatomic, assign) CGFloat titleFooterHeight;
 
@@ -252,7 +252,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 /**
  *  @author C C, 2016-09-29
- *  
+ *
  *  @brief  添加分组数据
  *
  *  @param newDataAry 数据源
@@ -261,7 +261,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 /**
  *  @author C C, 2016-09-29
- *  
+ *
  *  @brief  插入分组数据
  *
  *  @param newDataAry 数据源
@@ -273,7 +273,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 /**
  *  @author C C, 2016-09-29
- *  
+ *
  *  @brief  插入多条分组数据
  *
  *  @param newDataAry 数据源

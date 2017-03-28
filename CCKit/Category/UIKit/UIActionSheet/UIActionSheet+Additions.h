@@ -41,11 +41,7 @@
  *
  *  @brief  设置视图
  *
- *  @param views
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ *  @param views 试图
  */
 - (id)initWithContentView:(UIView *)views;
 
@@ -54,11 +50,7 @@
  *
  *  @brief  隐藏视图
  *
- *  @param index
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ *  @param index 下标
  */
 - (void)hide:(NSInteger)index;
 
@@ -67,103 +59,70 @@
  *
  *  @brief  Block返回结果
  *
- *  @param actionSheet
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ *  @param actionSheet 当前对象
+ *  @param buttonIndex 选中下标
  */
 - (void)actionSheet:(UIActionSheet *)actionSheet
 clickedButtonAtIndex:(NSInteger)buttonIndex;
 
+
 /**
- *  @author CC, 2015-07-16
- *
- *  @brief  Block返回结果
- *
- *  @param actionSheet
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ Block返回结果
+ 
+ @param completionHandler block
  */
 - (void)config:(void (^)(NSInteger buttonIndex))completionHandler;
 
 /**
- *  @author CC, 2015-07-16
- *
- *  @brief  Block返回结果
- *
- *  @param view 显示父类视图
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ Block返回结果
+ 
+ @param view 显示父类视图
+ @param completionHandler block
  */
 - (void)showInView:(UIView *)view
 withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
 
+
 /**
- *  @author CC, 2015-07-16
- *
- *  @brief  Block返回结果
- *
- *  @param view 显示父类视图
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ Block 返回结果
+ 
+ @param view 显示父类视图
+ @param completionHandler block
  */
 - (void)showFromToolbar:(UIToolbar *)view
   withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
 
+
 /**
- *  @author CC, 2015-07-16
- *
- *  @brief  Block返回结果
- *
- *  @param view 显示父类视图
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ Block 返回结果
+ 
+ @param view 显示父类视图
+ @param completionHandler block
  */
 - (void)showFromTabBar:(UITabBar *)view
  withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
 
+
 /**
- *  @author CC, 2015-07-16
- *
- *  @brief  Block返回结果
- *
- *  @param view 显示父类视图
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ block显示试图
+ 
+ @param rect 显示位置
+ @param view 显示父类视图
+ @param animated 是否动画
+ @param completionHandler block
  */
 - (void)showFromRect:(CGRect)rect
               inView:(UIView *)view
             animated:(BOOL)animated
 withCompletionHandler:(void (^)(NSInteger buttonIndex))completionHandler;
 
+
 /**
- *  @author CC, 2015-07-16
- *
- *  @brief  Block返回结果
- *
- *  @param view 显示父类视图
- *  @param buttonIndex
- *
- *  @return <#return value description#>
- *
- *  @since 1.0
+ block 显示视图
+
+ @param item time
+ @param animated 是否动画
+ @param completionHandler block
  */
 - (void)showFromBarButtonItem:(UIBarButtonItem *)item
                      animated:(BOOL)animated

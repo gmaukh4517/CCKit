@@ -1,5 +1,5 @@
 //
-//  CCKit.h
+//  TableViewCellEntity.m
 //  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,12 +23,8 @@
 // THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import "TableViewCellEntity.h"
 
-#import <CCKit/Ability.h>
-#import <CCKit/CCMVVM.h>
-#import <CCKit/Category.h>
-#import <CCKit/ModelLayer.h>
-#import <CCKit/RequestProtocol.h>
-#import <CCKit/Tools.h>
-#import <CCKit/UI.h>
+@implementation TableViewCellEntity
+
+@end

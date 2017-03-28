@@ -1,5 +1,5 @@
 //
-//  CCKit.h
+//  ModelLayer.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,12 +23,13 @@
 // THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#ifndef CCKit_ModelLayer_h
+#define CCKit_ModelLayer_h
 
-#import <CCKit/Ability.h>
-#import <CCKit/CCMVVM.h>
-#import <CCKit/Category.h>
-#import <CCKit/ModelLayer.h>
-#import <CCKit/RequestProtocol.h>
-#import <CCKit/Tools.h>
-#import <CCKit/UI.h>
+#import <CCKit/CCCollectionViewHelper.h>
+#import <CCKit/CCExtension.h>
+#import <CCKit/CCTableViewHelper.h>
+#import <CCKit/TableViewCellEntity.h>
+
+
+#endif

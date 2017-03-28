@@ -24,13 +24,13 @@
 //
 
 #import "CCTableViewHelper.h"
-#import "UIView+Method.h"
-#import "UITableView+Additions.h"
-#import "UIViewController+Additions.h"
 #import "CCProperty.h"
-#import "UITableViewCell+Additions.h"
 #import "Config.h"
+#import "UITableView+Additions.h"
+#import "UITableViewCell+Additions.h"
 #import "UIView+CCTransfer.h"
+#import "UIView+Method.h"
+#import "UIViewController+Additions.h"
 
 #define defaultInterval .5 //默认时间间隔
 
@@ -84,6 +84,20 @@
 @end
 
 @implementation CCTableViewHelper
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        [self initialization];
+    }
+    return self;
+}
+
+- (void)initialization
+{
+    self.titleHeaderHeight = 0.001;
+    self.titleFooterHeight = 0.001;
+}
 
 #pragma mark -
 #pragma mark :. getset
@@ -405,14 +419,16 @@
         id curModel = [self currentModelAtIndexPath:indexPath];
         NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
         @weakify(self);
-        curHeight = [tableView cc_heightForCellWithIdentifier:curCellIdentifier cacheByIndexPath:indexPath configuration:^(id cell) {
-            @strongify(self);
-            if (self.didWillDisplayBlock) {
-                self.didWillDisplayBlock(cell, indexPath, curModel,NO);
-            } else if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
-                [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
-            }
-        }];
+        curHeight = [tableView cc_heightForCellWithIdentifier:curCellIdentifier
+                                             cacheByIndexPath:indexPath
+                                                configuration:^(id cell) {
+                                                    @strongify(self);
+                                                    if (self.didWillDisplayBlock) {
+                                                        self.didWillDisplayBlock(cell, indexPath, curModel, NO);
+                                                    } else if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+                                                        [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
+                                                    }
+                                                }];
     } else {
         curHeight = tableView.rowHeight;
     }
@@ -741,7 +757,7 @@
     } else {
         __block NSMutableArray *curIndexPaths = [NSMutableArray arrayWithCapacity:newDataAry.count];
         [newDataAry enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            [curIndexPaths addObject:[NSIndexPath indexPathForRow:subAry.count+idx inSection:cSection]];
+            [curIndexPaths addObject:[NSIndexPath indexPathForRow:subAry.count + idx inSection:cSection]];
         }];
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_tableView beginUpdates];

@@ -49,7 +49,6 @@
  
  This method calls `+customFontWithURL:size`.
  
- @deprecated
  @see +customFontWithURL:size: method
  @param size Font size
  @param name Font filename without extension

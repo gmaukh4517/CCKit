@@ -27,7 +27,7 @@
 
 @interface NSObject (Additions)
 
-@property(nonatomic, retain) id carryObjects; 
+@property(nonatomic, retain) id carryObjects;
 
 /**
  *  @brief  catgory runtime实现get set方法增加一个字符串属性
@@ -59,9 +59,9 @@
  *  @param seconds 延迟时间 秒
  *  @param block   代码块
  */
-- (void)performAfter:(NSTimeInterval)seconds block:(void(^)(void))block;
+- (void)performAfter:(NSTimeInterval)seconds block:(void (^)(void))block;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Reflection
 
 //类名
@@ -101,12 +101,11 @@
 + (NSDictionary *)protocolList;
 
 
-- (BOOL)hasPropertyForKey:(NSString*)key;
-- (BOOL)hasIvarForKey:(NSString*)key;
+- (BOOL)hasPropertyForKey:(NSString *)key;
+- (BOOL)hasIvarForKey:(NSString *)key;
 
 
-
-#pragma mark-
+#pragma mark -
 #pragma mark :. AppInfo
 
 - (NSString *)cc_version;
@@ -115,7 +114,7 @@
 - (NSString *)cc_currentLanguage;
 - (NSString *)cc_deviceModel;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. AssociatedObject
 
 /**
@@ -136,13 +135,13 @@
 
 /**
  *  @author CC, 16-03-14
- *  
+ *
  *  @brief  附加一个copy对象
  *
  *  @param value 被附加的对象
  *  @param key   被附加对象的key
  */
--(void)copyAssociateValue:(id)value withKey:(void *)key;
+- (void)copyAssociateValue:(id)value withKey:(void *)key;
 
 /**
  *  @brief  根据附加对象的key取出附加对象
@@ -153,7 +152,7 @@
  */
 - (id)associatedValueForKey:(void *)key;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. AutoCoding
 
 //coding
@@ -166,7 +165,7 @@
 + (instancetype)objectWithContentsOfFile:(NSString *)path;
 - (BOOL)writeToFile:(NSString *)filePath atomically:(BOOL)useAuxiliaryFile;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Block
 
 + (id)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
@@ -178,7 +177,7 @@
 
 - (void)logTimeTakenToRunBlock:(void (^)(void))block withPrefix:(NSString *)prefixString;
 
-#pragma mark --- KVOBlock
+#pragma mark--- KVOBlock
 typedef void (^KVOBlock)(NSDictionary *change, void *context);
 
 - (void)addObserver:(NSObject *)observer
@@ -197,7 +196,7 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
 
 - (void)removeBlockObserverForKeyPath:(NSString *)keyPath;
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. EasyCopy
 
 /**
@@ -219,7 +218,7 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
 - (BOOL)easyDeepCopy:(NSObject *)instance;
 
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Runtime
 
 /**
@@ -295,13 +294,9 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
 + (id)InitDefaultMethod:(NSString *)methodName;
 
 /**
- *  @author C C, 2015-10-27
- *
- *  @brief  多参数调用
- *
- *  @param selector 函数名
- *
- *  @return 返回函数值
+ 多参数调用
+ 
+ @param methodName 函数名
  */
 - (id)performSelectors:(NSString *)methodName withObject:aObject, ... NS_REQUIRES_NIL_TERMINATION;
 
@@ -312,7 +307,7 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
  @param name 函数名
  @return 返回结果
  */
-- (id)invokeMethod:(Class)clazz 
+- (id)invokeMethod:(Class)clazz
           withName:(NSString *)name;
 
 /**
@@ -323,8 +318,8 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
  @param param 参数
  @return 返回函数结果
  */
-- (id)invokeMethod:(Class)clazz 
-          withName:(NSString *)name 
+- (id)invokeMethod:(Class)clazz
+          withName:(NSString *)name
          withParam:(id)param;
 
 @end

@@ -31,10 +31,10 @@
 #define Bundle                              [NSBundle mainBundle]
 
 /** 资源文件 */
-#define cc_Resource(bundleName,Extaension)  [NSBundle bundleWithURL:[Bundle URLForResource:bundleName withExtension:Extaension]]
+#define cc_Resource(bundleName,Extaension)  ([[NSBundle mainBundle] URLForResource:bundleName withExtension:Extaension] ? [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:bundleName withExtension:Extaension]] : nil)
 
 /** 资源图片 */
-#define CCResourceImage(name)               (cc_Resource(@"CCFramework",@"bundle") ? [UIImage imageWithContentsOfFile:[[cc_Resource(@"CCFramework",@"bundle") resourcePath] stringByAppendingPathComponent:name]] : [UIImage new])
+#define CCResourceImage(name)               (cc_Resource(@"CCKit",@"bundle") ? [UIImage imageWithContentsOfFile:[[cc_Resource(@"CCKit",@"bundle") resourcePath] stringByAppendingPathComponent:name]] : [UIImage new])
 
 /** 版本号 */
 #define VersonNumber                        [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]

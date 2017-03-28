@@ -35,14 +35,13 @@
 - (UIImage *)applyTintEffectWithColor:(UIColor *)tintColor;
 
 /**
- *  @author CC, 2015-07-31
- *
- *  @brief  模糊背景
- *
- *  @param alpha                 透明度 0~1,  0为白,   1为深灰色
- *  @param radius                默认30,推荐值 3   半径值越大越模糊 ,值越小越清楚
- *  @param colorSaturationFactor 色彩饱和度(浓度)因子:  0是黑白灰, 9是浓彩色, 1是原色  默认1.8
- *                               “彩度”，英文是称Saturation，即饱和度。将无彩色的黑白灰定为0，最鲜艳定为9s，这样大致分成十阶段，让数值和人的感官直觉一致。
+ 模糊背景
+ 
+ @param blurRadius 透明度 0~1,  0为白,   1为深灰色
+ @param tintColor 显示颜色
+ @param saturationDeltaFactor 默认30,推荐值 3   半径值越大越模糊 ,值越小越清楚
+ @param maskImage 色彩饱和度(浓度)因子:  0是黑白灰, 9是浓彩色, 1是原色  默认1.8
+ “彩度”，英文是称Saturation，即饱和度。将无彩色的黑白灰定为0，最鲜艳定为9s，这样大致分成十阶段，让数值和人的感官直觉一致。
  */
 - (UIImage *)applyBlurWithRadius:(CGFloat)blurRadius
                        tintColor:(UIColor *)tintColor
@@ -97,15 +96,8 @@
  */
 - (UIImage *)compression:(CGSize)targetSize;
 
-
 /**
- *  @author CC, 2015-12-22
- *
- *  @brief  动态图片压缩
- *
- *  @param sourceImage 原图片
- *
- *  @return 返回图片
+ 动态图片压缩
  */
 - (UIImage *)resetSizeOfImage;
 
@@ -124,8 +116,6 @@
  *  @author CC, 2015-12-23
  *
  *  @brief  动态图片压缩
- *
- *  @param sourceImage 原图
  *  @param maxSize     限定图片大小
  *
  *  @return 返回data数据
@@ -435,7 +425,7 @@ typedef NS_ENUM(NSUInteger, CCAccuracy) {
 /**
  *  @brief  旋转图片
  *
- *  @param degrees 弧度
+ *  @param radians 弧度
  *
  *  @return 旋转后图片
  */
@@ -582,7 +572,7 @@ typedef NS_ENUM(NSUInteger, CCAccuracy) {
  Create a UIImage from a PDF icon.
  @param pdfFile The path of the PDF file.
  @param tintColor The tint color to use for the icon. If nil no tint color will be used.
- @param maxSize The maximum size the resulting image can be. The image will maintain it's aspect ratio and may not encumpas the full size.
+ @param size The maximum size the resulting image can be. The image will maintain it's aspect ratio and may not encumpas the full size.
  @return The resulting image.
  */
 + (UIImage *)imageWithPDFFile:(NSString *)pdfFile

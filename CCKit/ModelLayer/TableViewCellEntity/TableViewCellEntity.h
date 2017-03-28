@@ -1,5 +1,5 @@
 //
-//  CCKit.h
+//  TableViewCellEntity.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,12 +23,13 @@
 // THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIView.h>
 
-#import <CCKit/Ability.h>
-#import <CCKit/CCMVVM.h>
-#import <CCKit/Category.h>
-#import <CCKit/ModelLayer.h>
-#import <CCKit/RequestProtocol.h>
-#import <CCKit/Tools.h>
-#import <CCKit/UI.h>
+@interface TableViewCellEntity : NSObject
+
+@property(nonatomic, strong) NSString *cellImage;
+@property(nonatomic, strong) NSString *cellText;
+@property(nonatomic, strong) NSString *cellDetailText;
+
+@end
