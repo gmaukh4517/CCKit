@@ -184,8 +184,8 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
  */
 - (void)cellWillDisplay:(CCTableHelperDidWillDisplayBlock)cb;
 
-- (void)ccScrollViewWillBeginDragging:(CCScrollViewWillBeginDragging)block;
-- (void)ccScrollViewDidScroll:(CCScrollViewDidScroll)block;
+- (void)didScrollViewWillBeginDragging:(CCScrollViewWillBeginDragging)block;
+- (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block;
 
 /**
  *  @author CC, 16-05-18

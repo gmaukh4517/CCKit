@@ -281,7 +281,7 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
 {
     NSAssert(identifier.length > 0, @"Expect a valid identifier - %@", identifier);
     
-    NSMutableDictionary<NSString *, UITableViewCell *> *templateCellsByIdentifiers = objc_getAssociatedObject(self, _cmd);
+    NSMutableDictionary<NSString *, UICollectionViewCell *> *templateCellsByIdentifiers = objc_getAssociatedObject(self, _cmd);
     if (!templateCellsByIdentifiers) {
         templateCellsByIdentifiers = @{}.mutableCopy;
         objc_setAssociatedObject(self, _cmd, templateCellsByIdentifiers, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -307,7 +307,7 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
         return CGSizeMake(0, 0);
     }
     
-    UITableViewCell *templateLayoutCell = [self cc_templateCellForReuseIdentifier:identifier];
+    UICollectionViewCell *templateLayoutCell = [self cc_templateCellForReuseIdentifier:identifier];
     
     // Manually calls to ensure consistent behavior with actual cells. (that are displayed on screen)
     [templateLayoutCell prepareForReuse];

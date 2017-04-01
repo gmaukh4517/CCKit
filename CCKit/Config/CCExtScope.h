@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 //
 
-#import "CCmetamacros.h"
+#import "CCMetamacros.h"
 
 /**
  * \@onExit defines some code to be executed when the current scope exits. The

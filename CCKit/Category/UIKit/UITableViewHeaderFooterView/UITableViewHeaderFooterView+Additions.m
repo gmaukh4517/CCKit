@@ -90,7 +90,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 
 - (NSInteger)cc_Section
 {
-    return objc_getAssociatedObject(self, @selector(cc_Section));
+    return (NSInteger)objc_getAssociatedObject(self, @selector(cc_Section));
 }
 
 - (void)cc_headerFooterWillDisplayWithModel:(id)cModel

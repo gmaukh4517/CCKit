@@ -326,38 +326,38 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)syncHTTPRequestOperationWithHTTPMethod:(NSString *)method
                                    URLString:(NSString *)URLString
                                   parameters:(NSDictionary *)parameters
-                                   operation:(AFHTTPRequestOperation * __autoreleasing  *)operationPtr
+                                   operation:(AFHTTPRequestOperation * _Nullable __autoreleasing  * _Nullable)operationPtr
                                        error:(NSError *__autoreleasing *)outError;
 
 #pragma mark :.
 - (id)syncGET:(NSString *)URLString
    parameters:(NSDictionary *)parameters
-    operation:(AFHTTPRequestOperation *__autoreleasing *)operationPtr
+    operation:(AFHTTPRequestOperation * _Nullable __autoreleasing *_Nullable)operationPtr
         error:(NSError *__autoreleasing *)outError;
 
 - (id)syncHEAD:(NSString *)URLString
     parameters:(id)parameters
-     operation:(AFHTTPRequestOperation *__autoreleasing *)operationPtr
+     operation:(AFHTTPRequestOperation * _Nullable __autoreleasing *_Nullable)operationPtr
          error:(NSError *__autoreleasing *)outError;
 
 - (id)syncPOST:(NSString *)URLString
     parameters:(NSDictionary *)parameters
-     operation:(AFHTTPRequestOperation *__autoreleasing *)operationPtr
+     operation:(AFHTTPRequestOperation * _Nullable __autoreleasing * _Nullable)operationPtr
          error:(NSError *__autoreleasing *)outError;
 
 - (id)syncPUT:(NSString *)URLString
    parameters:(NSDictionary *)parameters
-    operation:(AFHTTPRequestOperation *__autoreleasing *)operationPtr
+    operation:(AFHTTPRequestOperation * _Nullable __autoreleasing * _Nullable)operationPtr
         error:(NSError *__autoreleasing *)outError;
 
 - (id)syncPATCH:(NSString *)URLString
      parameters:(NSDictionary *)parameters
-      operation:(AFHTTPRequestOperation *__autoreleasing *)operationPtr
+      operation:(AFHTTPRequestOperation * _Nullable __autoreleasing * _Nullable)operationPtr
           error:(NSError *__autoreleasing *)outError;
 
 - (id)syncDELETE:(NSString *)URLString
       parameters:(NSDictionary *)parameters
-       operation:(AFHTTPRequestOperation *__autoreleasing *)operationPtr
+       operation:(AFHTTPRequestOperation * _Nullable __autoreleasing * _Nullable)operationPtr
            error:(NSError *__autoreleasing *)outError;
 
 @end

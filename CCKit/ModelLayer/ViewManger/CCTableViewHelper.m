@@ -210,7 +210,7 @@
     self.didWillDisplayBlock = cb;
 }
 
-- (void)ccScrollViewWillBeginDragging:(CCScrollViewWillBeginDragging)block
+- (void)didScrollViewWillBeginDragging:(CCScrollViewWillBeginDragging)block
 {
     self.scrollViewBdBlock = block;
 }
@@ -255,7 +255,7 @@
     self.currentModelAtIndexPath = cb;
 }
 
-- (void)scrollViewDidEndScrolling:(CCTableHelperScrollViewDidEndScrolling)cb
+- (void)didScrollViewDidEndScrolling:(CCTableHelperScrollViewDidEndScrolling)cb
 {
     self.scrollViewDidEndScrolling = cb;
 }
