@@ -245,7 +245,7 @@
     self.cellViewEventsBlock = cb;
 }
 
-- (void)ccScrollViewDidScroll:(CCScrollViewDidScroll)block
+- (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block
 {
     self.scrollViewddBlock = block;
 }
@@ -692,6 +692,9 @@
     [self.cc_tableView deleteSections:[NSIndexSet indexSetWithIndex:cSection] withRowAnimation:UITableViewRowAnimationNone];
     [self.cc_tableView endUpdates];
 }
+
+#pragma mark -
+#pragma mark :. Plain
 
 - (void)cc_resetDataAry:(NSArray *)newDataAry
 {

@@ -28,5 +28,6 @@
 
 #import <CCKit/CCUserDefaults.h>
 #import <CCKit/CCUncaughtExceptionHandler.h>
+#import <CCKit/CCQRCodeViewController.h>
 
 #endif

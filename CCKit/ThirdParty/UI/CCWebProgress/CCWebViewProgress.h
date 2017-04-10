@@ -1,5 +1,5 @@
 //
-//  UI.h
+//  CCWebViewProgress.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,15 +23,39 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_UI_h
-#define CCFramework_UI_h
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCButton.h>
-#import <CCKit/CCLoadLogoView.h>
-#import <CCKit/CCRingProgressView.h>
-#import <CCKit/CCTransformRefresh.h>
-#import <CCKit/CCWebView.h>
-#import <CCKit/CCWebViewController.h>
-#import <CCKit/UIScrollView+CCRefresh.h>
-
+#undef CC_weak
+#if __has_feature(objc_arc_weak)
+#define CC_weak weak
+#else
+#define CC_weak unsafe_unretained
 #endif
+
+extern const float CCInitialProgressValue;
+extern const float CCInteractiveProgressValue;
+extern const float CCFinalProgressValue;
+
+typedef void (^CCWebViewProgressBlock)(float progress);
+
+@protocol CCWebViewProgressDelegate;
+
+@interface CCWebViewProgress : NSObject<UIWebViewDelegate>
+
+@property (nonatomic, CC_weak) id<CCWebViewProgressDelegate> progressDelegate;
+@property (nonatomic, CC_weak) id<UIWebViewDelegate> webViewProxyDelegate;
+@property (nonatomic, copy) CCWebViewProgressBlock progressBlock;
+@property (nonatomic, readonly) float progress; // 0.0..1.0
+
+- (void)reset;
+
+@end
+
+@protocol CCWebViewProgressDelegate <NSObject>
+
+- (void)webViewProgress:(CCWebViewProgress *)webViewProgress updateProgress:(float)progress;
+
+@end
+
+

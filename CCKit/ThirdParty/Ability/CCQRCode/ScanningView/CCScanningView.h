@@ -1,5 +1,5 @@
 //
-//  UI.h
+//  ScanningView.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,15 +23,30 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_UI_h
-#define CCFramework_UI_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCButton.h>
-#import <CCKit/CCLoadLogoView.h>
-#import <CCKit/CCRingProgressView.h>
-#import <CCKit/CCTransformRefresh.h>
-#import <CCKit/CCWebView.h>
-#import <CCKit/CCWebViewController.h>
-#import <CCKit/UIScrollView+CCRefresh.h>
+/**
+ *  @author C C, 15-08-18
+ *
+ *  @brief  二维码扫描
+ *
+ *  @since <#1.0#>
+ */
+typedef NS_ENUM(NSInteger, CCScanningStyle) {
+    /** 扫描二维码 **/
+    CCScanningStyleQRCode = 0,
+    /** 扫描杂志封面 **/
+    CCScanningStyleBook,
+    /** 扫描街景 **/
+    CCScanningStyleStreet,
+    /** 扫描翻译 **/
+    CCScanningStyleWord,
+};
 
-#endif
+@interface CCScanningView : UIView
+
+@property (nonatomic, assign, readonly) CCScanningStyle scanningStyle;
+
+- (void)transformScanningTypeWithStyle:(CCScanningStyle)style;
+
+@end

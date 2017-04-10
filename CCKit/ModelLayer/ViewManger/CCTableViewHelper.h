@@ -227,7 +227,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 /**
  滚动结束回调
  */
-- (void)scrollViewDidEndScrolling:(CCTableHelperScrollViewDidEndScrolling)cb;
+- (void)didScrollViewDidEndScrolling:(CCTableHelperScrollViewDidEndScrolling)cb;
 
 #pragma mark -
 #pragma mark :. Handler
@@ -283,7 +283,6 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 - (void)cc_insertMultiplGroupDataAry:(NSArray *)newDataAry
                           forSection:(NSInteger)cSection;
 
-
 /**
  删除分组数据
  
@@ -291,6 +290,8 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
  */
 - (void)cc_deleteGroupData:(NSInteger)cSection;
 
+#pragma mark -
+#pragma mark :. Plain
 /**
  *  @author CC, 16-05-18
  *

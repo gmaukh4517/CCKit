@@ -1,5 +1,5 @@
 //
-//  UI.h
+//  CCQRCodeDisplayViewController.h
 //  CCFramework
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -23,15 +23,10 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_UI_h
-#define CCFramework_UI_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCButton.h>
-#import <CCKit/CCLoadLogoView.h>
-#import <CCKit/CCRingProgressView.h>
-#import <CCKit/CCTransformRefresh.h>
-#import <CCKit/CCWebView.h>
-#import <CCKit/CCWebViewController.h>
-#import <CCKit/UIScrollView+CCRefresh.h>
+@interface CCQRCodeDisplayViewController : UIViewController
 
-#endif
+@property (nonatomic, copy) NSString *baseURL;
+
+@end

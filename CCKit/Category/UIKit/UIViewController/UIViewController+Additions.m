@@ -138,18 +138,16 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     [self cc_viewWillAppear:animated];
     
-    if (self.cc_willAppearInjectBlock) {
+    if (self.cc_willAppearInjectBlock)
         self.cc_willAppearInjectBlock(self, animated);
-    }
     
     NSString *mClassName = [NSString stringWithUTF8String:object_getClassName(self)];
     
     if (self.navigationController.visibleViewController) {
         mClassName = [NSString stringWithUTF8String:object_getClassName(self.navigationController.visibleViewController)];
         cc_NoticePost(noticeStatisticsWillAppear, [NSString stringWithUTF8String:object_getClassName(self)]);
+        NSLog(@"viewDidAppear : %@", mClassName);
     }
-    
-    NSLog(@"viewDidAppear : %@", mClassName);
 }
 
 - (void)cc_viewWillDisappear:(BOOL)animated
