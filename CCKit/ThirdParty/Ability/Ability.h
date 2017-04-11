@@ -26,8 +26,9 @@
 #ifndef CCFramework_Ability_h
 #define CCFramework_Ability_h
 
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
+#import <CCKit/CCKeyboardManager.h>
 #import <CCKit/CCQRCodeViewController.h>
+#import <CCKit/CCUncaughtExceptionHandler.h>
+#import <CCKit/CCUserDefaults.h>
 
 #endif

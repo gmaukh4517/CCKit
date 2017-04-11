@@ -32,6 +32,10 @@
 		4233C2011E83CCD80041A015 /* FMDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F61E83CCD80041A015 /* FMDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F71E83CCD80041A015 /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4233C2031E83CCD80041A015 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F81E83CCD80041A015 /* FMResultSet.m */; };
+		4236AC981E9C83A200633FC6 /* CCKeyboardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4236AC961E9C83A200633FC6 /* CCKeyboardManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4236AC991E9C83A200633FC6 /* CCKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4236AC971E9C83A200633FC6 /* CCKeyboardManager.m */; };
+		4236AC9D1E9C88B700633FC6 /* UIView+CCHierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = 4236AC9B1E9C88B700633FC6 /* UIView+CCHierarchy.h */; };
+		4236AC9E1E9C88B700633FC6 /* UIView+CCHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4236AC9C1E9C88B700633FC6 /* UIView+CCHierarchy.m */; };
 		423B4C5A1E88FE60007139EC /* ModelLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4C591E88FE60007139EC /* ModelLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		423B4C6B1E890C8C007139EC /* CCRefreshBaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4C611E890C8C007139EC /* CCRefreshBaseView.h */; };
 		423B4C6C1E890C8C007139EC /* CCRefreshBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4C621E890C8C007139EC /* CCRefreshBaseView.m */; };
@@ -458,6 +462,10 @@
 		4233C1F61E83CCD80041A015 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		4233C1F71E83CCD80041A015 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
 		4233C1F81E83CCD80041A015 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		4236AC961E9C83A200633FC6 /* CCKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCKeyboardManager.h; sourceTree = "<group>"; };
+		4236AC971E9C83A200633FC6 /* CCKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCKeyboardManager.m; sourceTree = "<group>"; };
+		4236AC9B1E9C88B700633FC6 /* UIView+CCHierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CCHierarchy.h"; sourceTree = "<group>"; };
+		4236AC9C1E9C88B700633FC6 /* UIView+CCHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CCHierarchy.m"; sourceTree = "<group>"; };
 		423B4C591E88FE60007139EC /* ModelLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelLayer.h; sourceTree = "<group>"; };
 		423B4C611E890C8C007139EC /* CCRefreshBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRefreshBaseView.h; sourceTree = "<group>"; };
 		423B4C621E890C8C007139EC /* CCRefreshBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCRefreshBaseView.m; sourceTree = "<group>"; };
@@ -908,6 +916,25 @@
 				4233C1F81E83CCD80041A015 /* FMResultSet.m */,
 			);
 			path = FMDB;
+			sourceTree = "<group>";
+		};
+		4236AC951E9C82E900633FC6 /* CCKeyboardManager */ = {
+			isa = PBXGroup;
+			children = (
+				4236AC9A1E9C887000633FC6 /* Category */,
+				4236AC961E9C83A200633FC6 /* CCKeyboardManager.h */,
+				4236AC971E9C83A200633FC6 /* CCKeyboardManager.m */,
+			);
+			path = CCKeyboardManager;
+			sourceTree = "<group>";
+		};
+		4236AC9A1E9C887000633FC6 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				4236AC9B1E9C88B700633FC6 /* UIView+CCHierarchy.h */,
+				4236AC9C1E9C88B700633FC6 /* UIView+CCHierarchy.m */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 		423B4C601E890C8C007139EC /* CCRefreshView */ = {
@@ -2398,6 +2425,7 @@
 			isa = PBXGroup;
 			children = (
 				42954A091E71226F00F4CC4C /* Ability.h */,
+				4236AC951E9C82E900633FC6 /* CCKeyboardManager */,
 				42954A3A1E712BE100F4CC4C /* SDWebImage */,
 				42B5CDD91E70E1C2002D302E /* CCUserDefaults */,
 				42B5CDD41E70E135002D302E /* CCExceptionCatching */,
@@ -2502,6 +2530,7 @@
 				42FC742C1E700B4C00FBBE42 /* QRCodeGenerator.h in Headers */,
 				42FC71721E6FDF1400FBBE42 /* AFNetworkReachabilityManager.h in Headers */,
 				42FC71BE1E6FFC0000FBBE42 /* CCTableViewHelper.h in Headers */,
+				4236AC981E9C83A200633FC6 /* CCKeyboardManager.h in Headers */,
 				42FC73661E70012800FBBE42 /* UIDevice+Additions.h in Headers */,
 				42FC72FB1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h in Headers */,
 				42FC72F91E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h in Headers */,
@@ -2523,6 +2552,7 @@
 				42FC70C71E6FDC7F00FBBE42 /* CCHTTPRequest.h in Headers */,
 				42FC73421E70012800FBBE42 /* MKMapView+Additions.h in Headers */,
 				42FC70A71E6FDB7700FBBE42 /* CCMediator.h in Headers */,
+				4236AC9D1E9C88B700633FC6 /* UIView+CCHierarchy.h in Headers */,
 				42FC71B81E6FFC0000FBBE42 /* NSObject+CCProperty.h in Headers */,
 				42FC71761E6FDF1400FBBE42 /* AFURLRequestSerialization.h in Headers */,
 				42954A7E1E712BE100F4CC4C /* SDWebImageDownloader.h in Headers */,
@@ -2897,6 +2927,7 @@
 				42954A9A1E712BE100F4CC4C /* UIView+WebCache.m in Sources */,
 				42FC73851E70012800FBBE42 /* UITabBar+Additional.m in Sources */,
 				42FC73001E70012800FBBE42 /* NSObject+AvoidCrash.m in Sources */,
+				4236AC991E9C83A200633FC6 /* CCKeyboardManager.m in Sources */,
 				42FC739B1E70012800FBBE42 /* UIWebView+Additions.m in Sources */,
 				42954A1A1E712AC800F4CC4C /* CCProgressHUD.m in Sources */,
 				42FC73511E70012800FBBE42 /* UIAlertView+Additions.m in Sources */,
@@ -2950,6 +2981,7 @@
 				42FC71BB1E6FFC0000FBBE42 /* NSString+CCExtension.m in Sources */,
 				42FC73251E70012800FBBE42 /* NSIndexPath+Additions.m in Sources */,
 				42FC73671E70012800FBBE42 /* UIDevice+Additions.m in Sources */,
+				4236AC9E1E9C88B700633FC6 /* UIView+CCHierarchy.m in Sources */,
 				42FC70A41E6FDB7700FBBE42 /* UIView+CCTransfer.m in Sources */,
 				42FC74361E700B4C00FBBE42 /* split.c in Sources */,
 				42FC736D1E70012800FBBE42 /* UIImage+Additions.m in Sources */,
