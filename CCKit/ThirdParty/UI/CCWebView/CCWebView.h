@@ -83,7 +83,7 @@
  *
  *  @brief 多个JS捕获
  *
- *  @param functionName JS函数名
+ *  @param functionNames JS函数名
  *  @param block        回调事件
  */
 - (void)didCaptures:(NSArray<NSString *> *)functionNames
