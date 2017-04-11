@@ -27,4 +27,31 @@
 
 @implementation TableViewCellEntity
 
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+{
+    TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
+    entity.cellText = cellText;
+    return entity;
+}
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText
+{
+    TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
+    entity.cellText = cellText;
+    entity.cellDetailText = cellDetailText;
+    return entity;
+}
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellImage
+                             CellText:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText
+{
+    TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
+    entity.cellImage = cellImage;
+    entity.cellText = cellText;
+    entity.cellDetailText = cellDetailText;
+    return entity;
+}
+
 @end

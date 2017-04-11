@@ -28,8 +28,17 @@
 
 @interface TableViewCellEntity : NSObject
 
-@property(nonatomic, strong) NSString *cellImage;
-@property(nonatomic, strong) NSString *cellText;
-@property(nonatomic, strong) NSString *cellDetailText;
+@property(nonatomic, copy) NSString *cellImage;
+@property(nonatomic, copy) NSString *cellText;
+@property(nonatomic, copy) NSString *cellDetailText;
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText;
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText;
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellImage
+                             CellText:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText;
 
 @end
