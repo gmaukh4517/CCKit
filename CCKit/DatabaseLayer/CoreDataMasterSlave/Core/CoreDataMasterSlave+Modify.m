@@ -23,24 +23,24 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave+Manager.h"
 #import "CoreDataMasterSlave+Convenience.h"
+#import "CoreDataMasterSlave+Manager.h"
 #import "NSManagedObject+Additions.h"
 
 @implementation CoreDataMasterSlave (Modify)
 
-+(void)cc_SyncUpdateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                      Completion:(void (^)(NSError *error))completion
++ (void)cc_SyncUpdateORInsertCoreData:(NSString *)tableName
+                            Predicate:(NSPredicate *)predicate
+                                 Data:(NSDictionary *)data
+                           Completion:(void (^)(NSError *error))completion
 {
     NSManagedObjectContext *context = [self currentContext];
-    __block NSMutableArray *arrayObj = [NSMutableArray array];
+    //    __block NSMutableArray *arrayObj = [NSMutableArray array];
     [context performBlockAndWait:^{
-        NSManagedObject *managedObject = [self objctWithData:tableName
-                                               SubPredicates:@[ predicate ]
-                                                        Data:data
-                                                   inContext:context];
+        [self objctWithData:tableName
+              SubPredicates:@[ predicate ]
+                       Data:data
+                  inContext:context];
         if (completion) {
             completion(nil);
         }
@@ -98,13 +98,13 @@
  @param condition 修改条件
  @param editData  编辑键值
  */
-+(void)cc_updateCoreData:(NSString *)tableName 
-               Condition:(NSPredicate *)condition 
-                EditData:(NSDictionary *)editData
++ (void)cc_updateCoreData:(NSString *)tableName
+                Condition:(NSPredicate *)condition
+                 EditData:(NSDictionary *)editData
 {
-    [self cc_updateCoreData:tableName 
-                  Condition:condition 
-                   EditData:editData 
+    [self cc_updateCoreData:tableName
+                  Condition:condition
+                   EditData:editData
                  Completion:nil];
 }
 
@@ -118,10 +118,10 @@
  @param editData   编辑键值
  @param completion 完成回调
  */
-+(void)cc_updateCoreData:(NSString *)tableName 
-               Condition:(NSPredicate *)condition
-                EditData:(NSDictionary *)editData 
-              Completion:(void (^)(NSError *error))completion
++ (void)cc_updateCoreData:(NSString *)tableName
+                Condition:(NSPredicate *)condition
+                 EditData:(NSDictionary *)editData
+               Completion:(void (^)(NSError *error))completion
 {
     [self cc_saveContext:^(NSManagedObjectContext *currentContext) {
         NSFetchRequest *fetchRequest = [self cc_AllRequest:tableName];
@@ -136,14 +136,14 @@
                 NSArray *attributes = [entity allAttributeNames];
                 NSArray *relationships = [entity allRelationshipNames];
                 
-                [editData enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                [editData enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
                     id remoteValue = obj;
                     if (remoteValue) {
                         if ([attributes containsObject:key]) {
                             [entity mergeAttributeForKey:key
                                                withValue:remoteValue];
                             
-                        }else if ([relationships containsObject:key]) {
+                        } else if ([relationships containsObject:key]) {
                             [entity mergeRelationshipForKey:key
                                                   withValue:remoteValue
                                                       IsAdd:NO];
@@ -152,7 +152,8 @@
                 }];
             }];
         }
-    } completion:completion];
+    }
+              completion:completion];
 }
 
 /**
@@ -190,7 +191,8 @@
         NSFetchRequest *fetchRequest = [self cc_AllRequest:tableName];
         NSError *error = nil;
         NSArray *datas =
-        [currentContext executeFetchRequest:fetchRequest error:&error];
+        [currentContext executeFetchRequest:fetchRequest
+                                      error:&error];
         if (!error && datas && [datas count]) {
             [datas enumerateObjectsUsingBlock:^(id entity, NSUInteger idx, BOOL *stop) {
                 if ([((NSManagedObject *)entity).objectID isEqual:conditionID]) {
@@ -198,14 +200,14 @@
                     NSArray *attributes = [entity allAttributeNames];
                     NSArray *relationships = [entity allRelationshipNames];
                     
-                    [editData enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                    [editData enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
                         id remoteValue = obj;
                         if (remoteValue) {
                             if ([attributes containsObject:key]) {
                                 [entity mergeAttributeForKey:key
                                                    withValue:remoteValue];
                                 
-                            }else if ([relationships containsObject:key]) {
+                            } else if ([relationships containsObject:key]) {
                                 [entity mergeRelationshipForKey:key
                                                       withValue:remoteValue
                                                           IsAdd:NO];
@@ -216,7 +218,8 @@
             }];
         }
         
-    } completion:completion];
+    }
+                              completion:completion];
 }
 
 
@@ -228,13 +231,13 @@
  @param predicate 条件
  @param data      更新键值
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
 {
-    [self cc_updateORInsertCoreData:tableName 
-                          Predicate:predicate 
-                               Data:data 
+    [self cc_updateORInsertCoreData:tableName
+                          Predicate:predicate
+                               Data:data
                        CallbackData:nil];
 }
 
@@ -247,15 +250,15 @@
  @param data      更新键值
  @param completion 完成回调
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                      Completion:(void (^)(NSError *error))completion
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
+                       Completion:(void (^)(NSError *error))completion
 {
-    [self cc_updateORInsertCoreData:tableName 
-                          Predicate:predicate 
-                               Data:data 
-                       CallbackData:nil 
+    [self cc_updateORInsertCoreData:tableName
+                          Predicate:predicate
+                               Data:data
+                       CallbackData:nil
                          Completion:completion];
 }
 
@@ -268,14 +271,14 @@
  @param data      更新键值
  @param callbackDataArr 回调执行后对象集合
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                    CallbackData:(void (^)(NSDictionary *data))callbackData
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
+                     CallbackData:(void (^)(NSDictionary *data))callbackData
 {
-    [self cc_updateORInsertCoreData:tableName 
-                          Predicate:predicate 
-                               Data:data 
+    [self cc_updateORInsertCoreData:tableName
+                          Predicate:predicate
+                               Data:data
                        CallbackData:callbackData
                          Completion:nil];
 }
@@ -290,11 +293,11 @@
  @param callbackDataArr 回调执行后对象集合
  @param completion 完成回调
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                    CallbackData:(void (^)(NSDictionary *data))callbackData
-                      Completion:(void (^)(NSError *error))completion
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
+                     CallbackData:(void (^)(NSDictionary *data))callbackData
+                       Completion:(void (^)(NSError *error))completion
 {
     [self cc_saveContext:^(NSManagedObjectContext *currentContext) {
         NSManagedObject *managedObject = [self objctWithData:tableName
@@ -302,9 +305,10 @@
                                                         Data:data
                                                    inContext:currentContext];
         if (managedObject) {
-            callbackData?callbackData([managedObject changedDictionary]):nil;
+            callbackData ? callbackData([managedObject changedDictionary]) : nil;
         }
-    } completion:completion];
+    }
+              completion:completion];
 }
 
 
@@ -316,14 +320,14 @@
  @param dataArr         集合
  @param callbackDataArr 完成数据
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                    PredicateArr:(NSArray *)predicateArr
-                         DataArr:(NSArray *)dataArr
-                 CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                     PredicateArr:(NSArray *)predicateArr
+                          DataArr:(NSArray *)dataArr
+                  CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
 {
     [self cc_updateORInsertCoreData:tableName
                        PredicateArr:predicateArr
-                            DataArr:dataArr 
+                            DataArr:dataArr
                     CallbackDataArr:callbackDataArr
                          Completion:nil];
 }
@@ -338,15 +342,15 @@
  @param callbackDataArr 完成数据
  @param completion      完成回调
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                    PredicateArr:(NSArray *)predicateArr
-                         DataArr:(NSArray *)dataArr
-                 CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
-                      Completion:(void (^)(NSError *error))completion
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                     PredicateArr:(NSArray *)predicateArr
+                          DataArr:(NSArray *)dataArr
+                  CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
+                       Completion:(void (^)(NSError *error))completion
 {
     [self cc_saveContext:^(NSManagedObjectContext *currentContext) {
         NSMutableArray *dataArray = [NSMutableArray array];
-        for (NSInteger idx = 0; idx <dataArr.count; idx++) {
+        for (NSInteger idx = 0; idx < dataArr.count; idx++) {
             
             NSPredicate *predicate = [predicateArr objectAtIndex:idx];
             NSDictionary *data = [dataArr objectAtIndex:idx];
@@ -357,8 +361,9 @@
             if (managedObject)
                 [dataArray addObject:[managedObject changedDictionary]];
         }
-        callbackDataArr?callbackDataArr(dataArray):nil;
-    } completion:completion];
+        callbackDataArr ? callbackDataArr(dataArray) : nil;
+    }
+              completion:completion];
 }
 
 /**
@@ -376,7 +381,8 @@
 {
     [self cc_updateORInsertCoreData:tableName
                          PrimaryKey:primaryKey
-                            DataArr:dataArr Completion:nil];
+                            DataArr:dataArr
+                         Completion:nil];
 }
 
 
@@ -395,10 +401,10 @@
                           DataArr:(NSArray *)dataArr
                        Completion:(void (^)(NSError *error))completion
 {
-    [self cc_updateORInsertCoreData:tableName 
+    [self cc_updateORInsertCoreData:tableName
                          PrimaryKey:primaryKey
-                            DataArr:dataArr 
-                    CallbackDataArr:nil 
+                            DataArr:dataArr
+                    CallbackDataArr:nil
                          Completion:completion];
 }
 
@@ -417,9 +423,9 @@
                           DataArr:(NSArray *)dataArr
                   CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
 {
-    [self cc_updateORInsertCoreData:tableName 
-                         PrimaryKey:primaryKey 
-                            DataArr:dataArr 
+    [self cc_updateORInsertCoreData:tableName
+                         PrimaryKey:primaryKey
+                            DataArr:dataArr
                     CallbackDataArr:callbackDataArr
                          Completion:nil];
 }
@@ -452,8 +458,9 @@
             if (managedObject)
                 [dataArray addObject:[managedObject changedDictionary]];
         }
-        callbackDataArr?callbackDataArr(dataArray):nil;
-    } completion:completion];
+        callbackDataArr ? callbackDataArr(dataArray) : nil;
+    }
+              completion:completion];
 }
 
 /**
@@ -469,8 +476,8 @@
                        PrimaryKey:(NSString *)primaryKey
                              Data:(NSDictionary *)data
 {
-    [self cc_updateORInsertCoreData:tableName 
-                         PrimaryKey:primaryKey 
+    [self cc_updateORInsertCoreData:tableName
+                         PrimaryKey:primaryKey
                                Data:data
                        CallbackData:nil];
 }
@@ -490,8 +497,8 @@
                              Data:(NSDictionary *)data
                        Completion:(void (^)(NSError *error))completion
 {
-    [self cc_updateORInsertCoreData:tableName 
-                         PrimaryKey:primaryKey 
+    [self cc_updateORInsertCoreData:tableName
+                         PrimaryKey:primaryKey
                                Data:data
                        CallbackData:nil
                          Completion:completion];
@@ -511,8 +518,8 @@
                              Data:(NSDictionary *)data
                      CallbackData:(void (^)(NSDictionary *data))callbackData
 {
-    [self cc_updateORInsertCoreData:tableName 
-                         PrimaryKey:primaryKey 
+    [self cc_updateORInsertCoreData:tableName
+                         PrimaryKey:primaryKey
                                Data:data
                        CallbackData:callbackData
                          Completion:nil];
@@ -541,9 +548,10 @@
                                                         Data:data
                                                    inContext:currentContext];
         if (managedObject) {
-            callbackData?callbackData([managedObject changedDictionary]):nil;
+            callbackData ? callbackData([managedObject changedDictionary]) : nil;
         }
-    } completion:completion];
+    }
+              completion:completion];
 }
 
 
@@ -601,8 +609,7 @@
           inContext:(NSManagedObjectContext *)context
 {
     __block NSManagedObject *entity = nil;
-    @autoreleasepool
-    {
+    @autoreleasepool {
         NSCompoundPredicate *compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:subPredicates];
         
         NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:tableName];

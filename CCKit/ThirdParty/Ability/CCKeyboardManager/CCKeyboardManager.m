@@ -32,6 +32,8 @@ NSString *const kCCTextFiledReturnKeyType = @"kCCTextFiledRetrurnKeyType";
 
 @property(nonatomic, assign) BOOL keyboardShowing;
 
+@property(nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+
 @end
 
 @implementation CCKeyboardManager
@@ -58,7 +60,7 @@ static dispatch_once_t onceToken;
             textField.delegate = dict[kCCTextFiledDelegate];
         }
     }
-    
+    [_rootViewController.view removeGestureRecognizer:_tapGestureRecognizer];
     [_textFieldInfoCache removeAllObjects];
 }
 
@@ -85,13 +87,20 @@ static dispatch_once_t onceToken;
     return self;
 }
 
+-(void)globalKeyboardHide:(UITapGestureRecognizer *)tap
+{
+    [tap.view endEditing:YES];
+}
+
 #pragma mark -
 #pragma mark :. 初始化注册
 - (void)registeredWithViewController:(nullable UIViewController *)controller
 {
     if (controller.view) {
         _rootViewController = controller;
-        _topViewBeginRect = controller.view.frame;
+        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(globalKeyboardHide:)];
+        _tapGestureRecognizer.cancelsTouchesInView = NO;
+        [controller.view addGestureRecognizer:_tapGestureRecognizer];
         _textFieldInfoCache = [NSMutableSet set];
         [self addResponderFromView:controller.view];
     }
@@ -109,6 +118,7 @@ static dispatch_once_t onceToken;
 #pragma mark :. UIKeyboad Notification methods
 - (void)keyboardWillShow:(NSNotification *)aNotification
 {
+    _topViewBeginRect = self.rootViewController.view.frame;
     _keyboardShowing = YES;
     NSInteger curve = [[aNotification userInfo][UIKeyboardAnimationCurveUserInfoKey] integerValue];
     _animationCurve = curve << 16;

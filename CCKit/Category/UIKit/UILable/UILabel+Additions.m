@@ -72,11 +72,11 @@ static char kAutomaticWritingEdgeInsetsKey;
 
 + (void)load
 {
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        AutomaticWritingSwizzleSelector([self class], @selector(textRectForBounds:limitedToNumberOfLines:), @selector(automaticWritingTextRectForBounds:limitedToNumberOfLines:));
-//        AutomaticWritingSwizzleSelector([self class], @selector(drawTextInRect:), @selector(drawAutomaticWritingTextInRect:));
-//    });
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        AutomaticWritingSwizzleSelector([self class], @selector(textRectForBounds:limitedToNumberOfLines:), @selector(automaticWritingTextRectForBounds:limitedToNumberOfLines:));
+        AutomaticWritingSwizzleSelector([self class], @selector(drawTextInRect:), @selector(drawAutomaticWritingTextInRect:));
+    });
 }
 
 - (void)drawAutomaticWritingTextInRect:(CGRect)rect
@@ -98,15 +98,15 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (UIEdgeInsets)edgeInsets
 {
     NSValue *edgeInsetsValue = objc_getAssociatedObject(self, &kAutomaticWritingEdgeInsetsKey);
-
+    
     if (edgeInsetsValue) {
         return edgeInsetsValue.UIEdgeInsetsValue;
     }
-
+    
     edgeInsetsValue = [NSValue valueWithUIEdgeInsets:UIEdgeInsetsZero];
-
+    
     objc_setAssociatedObject(self, &kAutomaticWritingEdgeInsetsKey, edgeInsetsValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     return edgeInsetsValue.UIEdgeInsetsValue;
 }
 
@@ -118,17 +118,17 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (NSOperationQueue *)automaticWritingOperationQueue
 {
     NSOperationQueue *operationQueue = objc_getAssociatedObject(self, &kAutomaticWritingOperationQueueKey);
-
+    
     if (operationQueue) {
         return operationQueue;
     }
-
+    
     operationQueue = NSOperationQueue.new;
     operationQueue.name = @"Automatic Writing Operation Queue";
     operationQueue.maxConcurrentOperationCount = 1;
-
+    
     objc_setAssociatedObject(self, &kAutomaticWritingOperationQueueKey, operationQueue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     return operationQueue;
 }
 
@@ -161,15 +161,15 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     self.automaticWritingOperationQueue.suspended = YES;
     self.automaticWritingOperationQueue = nil;
-
+    
     self.text = @"";
-
+    
     NSMutableString *automaticWritingText = NSMutableString.new;
-
+    
     if (text) {
         [automaticWritingText appendString:text];
     }
-
+    
     [self.automaticWritingOperationQueue addOperationWithBlock:^{
         [self automaticWriting:automaticWritingText duration:duration mode:blinkingMode character:blinkingCharacter completion:completion];
     }];
@@ -182,36 +182,27 @@ static char kAutomaticWritingEdgeInsetsKey;
     NSOperationQueue *currentQueue = NSOperationQueue.currentQueue;
     if ((text.length || mode >= UILabelCCBlinkingModeWhenFinish) && !currentQueue.isSuspended) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (mode != UILabelCCBlinkingModeNone)
-            {
-                if ([self isLastCharacter:character])
-                {
+            if (mode != UILabelCCBlinkingModeNone) {
+                if ([self isLastCharacter:character]) {
                     [self deleteLastCharacter];
-                }
-                else if (mode != UILabelCCBlinkingModeWhenFinish || !text.length)
-                {
+                } else if (mode != UILabelCCBlinkingModeWhenFinish || !text.length) {
                     [text insertString:[self stringWithCharacter:character] atIndex:0];
                 }
             }
-
-            if (text.length)
-            {
+            
+            if (text.length) {
                 [self appendCharacter:[text characterAtIndex:0]];
                 [text deleteCharactersInRange:NSMakeRange(0, 1)];
-                if ((![self isLastCharacter:character] && mode == UILabelCCBlinkingModeWhenFinishShowing) || (!text.length && mode == UILabelCCBlinkingModeWhenFinishShowing))
-                {
+                if ((![self isLastCharacter:character] && mode == UILabelCCBlinkingModeWhenFinishShowing) || (!text.length && mode == UILabelCCBlinkingModeWhenFinishShowing)) {
                     [self appendCharacter:character];
                 }
             }
-
-            if (!currentQueue.isSuspended)
-            {
+            
+            if (!currentQueue.isSuspended) {
                 [currentQueue addOperationWithBlock:^{
                     [self automaticWriting:text duration:duration mode:mode character:character completion:completion];
                 }];
-            }
-            else if (completion)
-            {
+            } else if (completion) {
                 completion();
             }
         });
@@ -228,11 +219,11 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (NSString *)stringWithCharacters:(NSArray *)characters
 {
     NSMutableString *string = NSMutableString.new;
-
+    
     for (NSNumber *character in characters) {
         [string appendFormat:@"%C", character.unsignedShortValue];
     }
-
+    
     return string.copy;
 }
 
@@ -289,7 +280,7 @@ static char kAutomaticWritingEdgeInsetsKey;
     [self setNumberOfLines:0];
     //    [self setLineBreakMode:UILineBreakModeWordWrap];
     [self setLineBreakMode:NSLineBreakByWordWrapping];
-
+    
     // If maxSize is set to CGSizeZero, then assume the max width
     // is the size of the device screen minus the default
     // recommended edge distances (2 * 20)
@@ -297,12 +288,12 @@ static char kAutomaticWritingEdgeInsetsKey;
         maxSize.width = [[UIScreen mainScreen] bounds].size.width - 40.0;
         maxSize.height = MAXFLOAT; // infinite height
     }
-
+    
     // Now, calculate the size of the label constrained to maxSize
     CGSize tempSize = [[self text] sizeWithFont:[self font]
                               constrainedToSize:maxSize
                                   lineBreakMode:[self lineBreakMode]];
-
+    
     // If minSize is specified (not CGSizeZero) then
     // check if the new calculated size is smaller than
     // the minimum size
@@ -310,19 +301,19 @@ static char kAutomaticWritingEdgeInsetsKey;
         if (tempSize.width <= minSize.width) tempSize.width = minSize.width;
         if (tempSize.height <= minSize.height) tempSize.height = minSize.height;
     }
-
+    
     // Create rect
     CGRect newFrameSize = CGRectMake([self frame].origin.x, [self frame].origin.y, tempSize.width, tempSize.height);
-
+    
     //// 2) Change the font size if necessary
     //// ------------------------------------
     UIFont *labelFont = [self font];	  // temporary label object
     CGFloat fSize = [labelFont pointSize];    // temporary font size value
     CGSize calculatedSizeWithCurrentFontSize; // temporary frame size
-
+    
     // Calculate label size as if there was no constrain
     CGSize unconstrainedSize = CGSizeMake(tempSize.width, MAXFLOAT);
-
+    
     // Keep reducing the font size until the calculated frame size
     // is smaller than the maxSize parameter
     do {
@@ -337,10 +328,10 @@ static char kAutomaticWritingEdgeInsetsKey;
         // Reduce the temporary font size value
         fSize--;
     } while (calculatedSizeWithCurrentFontSize.height > maxSize.height);
-
+    
     // Reset the font size to the last calculated value
     [self setFont:labelFont];
-
+    
     // Reset the frame size
     [self setFrame:newFrameSize];
 }
@@ -385,7 +376,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     if (self.attributedText)
         return [self suggestSizeForAttributedString:self.attributedText width:width];
-
+    
     return [self suggestSizeForString:self.text width:width];
 }
 
@@ -429,7 +420,7 @@ static char kAutomaticWritingEdgeInsetsKey;
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         NSDictionary *attributes = @{NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle.copy};
-
+        
         size = [text boundingRectWithSize:constrainedSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     } else {
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED <= 60000)
@@ -455,7 +446,7 @@ static char kAutomaticWritingEdgeInsetsKey;
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         NSDictionary *attributes = @{NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle.copy};
-
+        
         size = [text boundingRectWithSize:constrainedSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     } else {
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED <= 60000)

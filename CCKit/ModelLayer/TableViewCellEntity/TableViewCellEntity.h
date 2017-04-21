@@ -28,17 +28,31 @@
 
 @interface TableViewCellEntity : NSObject
 
-@property(nonatomic, copy) NSString *cellImage;
-@property(nonatomic, copy) NSString *cellText;
-@property(nonatomic, copy) NSString *cellDetailText;
+@property (nonatomic, copy) NSString *cellImage;
+@property (nonatomic, copy) NSString *cellText;
+@property (nonatomic, copy) NSString *cellDetailText;
+
+/** 自定义处理 **/
+@property (nonatomic, assign) NSInteger cellType;
 
 + (TableViewCellEntity *)initWithCell:(NSString *)cellText;
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+                             cellType:(NSInteger)cellType;
 
 + (TableViewCellEntity *)initWithCell:(NSString *)cellText
                        CellDetailText:(NSString *)cellDetailText;
 
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText
+                             cellType:(NSInteger)cellType;
+
 + (TableViewCellEntity *)initWithCell:(NSString *)cellImage
                              CellText:(NSString *)cellText
                        CellDetailText:(NSString *)cellDetailText;
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellImage
+                             CellText:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText
+                             cellType:(NSInteger)cellType;
 
 @end

@@ -29,6 +29,12 @@
 
 + (TableViewCellEntity *)initWithCell:(NSString *)cellText
 {
+    return [TableViewCellEntity initWithCell:cellText cellType:0];
+}
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+                             cellType:(NSInteger)cellType
+{
     TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
     entity.cellText = cellText;
     return entity;
@@ -43,14 +49,37 @@
     return entity;
 }
 
++ (TableViewCellEntity *)initWithCell:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText
+                             cellType:(NSInteger)cellType
+{
+    TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
+    entity.cellText = cellText;
+    entity.cellDetailText = cellDetailText;
+    entity.cellType = cellType;
+    return entity;
+}
+
 + (TableViewCellEntity *)initWithCell:(NSString *)cellImage
                              CellText:(NSString *)cellText
                        CellDetailText:(NSString *)cellDetailText
+{
+    return [TableViewCellEntity initWithCell:cellImage
+                                    CellText:cellText
+                              CellDetailText:cellDetailText
+                                    cellType:0];
+}
+
++ (TableViewCellEntity *)initWithCell:(NSString *)cellImage
+                             CellText:(NSString *)cellText
+                       CellDetailText:(NSString *)cellDetailText
+                             cellType:(NSInteger)cellType
 {
     TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
     entity.cellImage = cellImage;
     entity.cellText = cellText;
     entity.cellDetailText = cellDetailText;
+    entity.cellType = cellType;
     return entity;
 }
 

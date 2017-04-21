@@ -182,7 +182,7 @@
 
 /**
  *  @author CC, 16-02-22
- *  
+ *
  *  @brief 切换照明
  */
 - (void)switchTorch
@@ -207,8 +207,6 @@
     [_captureInput.device lockForConfiguration:nil];
     _captureInput.device.torchMode = torch;
     [_captureInput.device unlockForConfiguration];
-    
-    
 }
 
 #pragma mark - Life Cycle
@@ -223,6 +221,11 @@
         [self configureDefaultComponents];
     }
     return self;
+}
+
+- (BOOL)isRunning
+{
+    return [self.captureSession isRunning];
 }
 
 /**

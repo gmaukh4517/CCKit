@@ -623,7 +623,7 @@
 #pragma mark -
 #pragma mark :. ZLIB
 
-static const uInt CHUNK_SIZE = 65536;
+
 
 NSString *const CCZlibErrorDomain = @"se.bitba.ZlibErrorDomain";
 NSString *const CCZlibErrorInfoKey = @"zerror";
@@ -654,6 +654,7 @@ NSString *const CCZlibErrorInfoKey = @"zerror";
           error:(NSError *__autoreleasing *)error
 {
     #if __has_include("libz.tbd")
+    static const uInt CHUNK_SIZE = 65536;
     z_stream stream;
     stream.zalloc = Z_NULL;
     stream.zfree = Z_NULL;
@@ -709,6 +710,7 @@ NSString *const CCZlibErrorInfoKey = @"zerror";
           error:(NSError *__autoreleasing *)error
 {
 #if __has_include("libz.tbd")
+    static const uInt CHUNK_SIZE = 65536;
     z_stream stream;
     stream.zalloc = Z_NULL;
     stream.zfree = Z_NULL;

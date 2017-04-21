@@ -49,4 +49,6 @@ typedef NS_ENUM(NSInteger, CCScanningStyle) {
 
 - (void)transformScanningTypeWithStyle:(CCScanningStyle)style;
 
+- (void)scanning;
+
 @end

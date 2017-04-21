@@ -26,6 +26,7 @@
 #ifndef CCFramework_UI_h
 #define CCFramework_UI_h
 
+#import <CCKit/CCActionSheet.h>
 #import <CCKit/CCButton.h>
 #import <CCKit/CCLoadLogoView.h>
 #import <CCKit/CCRingProgressView.h>
@@ -33,5 +34,9 @@
 #import <CCKit/CCWebView.h>
 #import <CCKit/CCWebViewController.h>
 #import <CCKit/UIScrollView+CCRefresh.h>
+
+#import <CCKit/CCDrawerController.h>
+#import <CCKit/UIViewController+CCDrawerController.h>
+#import <CCKit/CCCameraViewController.h>
 
 #endif

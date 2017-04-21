@@ -24,8 +24,8 @@
 //
 
 
-#import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 /**
@@ -81,7 +81,7 @@ typedef void (^DidOutputScanResultBlock)(id scanResult);
 
 /**
  *  @author CC, 16-02-22
- *  
+ *
  *  @brief 是否开启照明
  */
 @property(nonatomic, assign, readonly) BOOL isTorch;
@@ -128,9 +128,11 @@ typedef void (^DidOutputScanResultBlock)(id scanResult);
 
 /**
  *  @author CC, 16-02-22
- *  
+ *
  *  @brief 切换照明
  */
 - (void)switchTorch;
+
+- (BOOL)isRunning;
 
 @end

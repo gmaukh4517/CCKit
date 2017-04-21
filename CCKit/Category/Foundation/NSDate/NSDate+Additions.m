@@ -413,7 +413,7 @@
             month = @"M";
         
         NSString *day = @"dd";
-        if (otherComps.date < 10) {
+        if (otherComps.day < 10) {
             day = @"d";
         }
         strDate = [self timeFormat:[NSString stringWithFormat:@"%@月%@日",month,day]];
@@ -423,7 +423,7 @@
             month = @"M";
         
         NSString *day = @"dd";
-        if (otherComps.date < 10) {
+        if (otherComps.day < 10) {
             day = @"d";
         }
         strDate = [self timeFormat:[NSString stringWithFormat:@"yy年%@月%@日",month,day]];

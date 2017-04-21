@@ -250,14 +250,9 @@
  */
 + (void)close:(NSTimeInterval)delay
 {
-    [self performSelector:@selector(hideDelayed:)
+    [self performSelector:@selector(close:)
                withObject:nil
                afterDelay:delay];
-}
-
-+ (void)hideDelayed
-{
-    [self close];
 }
 
 @end

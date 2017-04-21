@@ -34,7 +34,7 @@
 
 typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
-@interface CCWebViewController () <WKNavigationDelegate, WKUIDelegate, CCWebViewProgressDelegate, CCWebViewProgressDelegate, UIWebViewDelegate>
+@interface CCWebViewController () <WKNavigationDelegate, WKUIDelegate, CCWebViewProgressDelegate, CCWebViewProgressDelegate, UIWebViewDelegate,WKScriptMessageHandler>
 
 @property(nonatomic, strong) JSContext *webViewJSContext;
 
