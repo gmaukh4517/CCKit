@@ -31,8 +31,8 @@
 
 @interface NSString () <NSXMLParserDelegate>
 
-@property(nonatomic, retain) NSMutableArray *currentDictionaries;
-@property(nonatomic, retain) NSMutableString *currentText;
+@property (nonatomic, retain) NSMutableArray *currentDictionaries;
+@property (nonatomic, retain) NSMutableString *currentText;
 
 
 @end
@@ -71,7 +71,7 @@
 
 /**
  *  @author C C, 2016-09-27
- *  
+ *
  *  @brief  获取IP地址
  *
  *  @param preferIPv4 是否IPV4
@@ -80,7 +80,7 @@
 
 /**
  *  @author C C, 2016-09-27
- *  
+ *
  *  @brief  判断IP地址
  *
  *  @param ipAddress IP地址
@@ -89,7 +89,7 @@
 
 /**
  *  @author C C, 2016-09-27
- *  
+ *
  *  @brief  获取设置所有IP
  */
 + (NSDictionary *)obtainIPAddresses;
@@ -237,28 +237,6 @@
  *  @return 反转后字符串
  */
 + (NSString *)reverseString:(NSString *)strSrc;
-
-#pragma mark--- 加密
-/**
- *  @author C C, 15-08-17
- *
- *  @brief  MD5Hash加密
- */
-- (NSString *)MD5Hash;
-
-/**
- *  @author CC, 15-09-02
- *
- *  @brief  MD5 32位加密
- */
-- (NSString *)MD532;
-
-/**
- *  @author CC, 15-09-02
- *
- *  @brief  SHA加密
- */
-- (NSString *)SHA;
 
 #pragma mark--- 文件
 /**
@@ -495,15 +473,51 @@
 #pragma mark -
 #pragma mark :. Hash
 
-@property(readonly) NSString *md5String;
-@property(readonly) NSString *sha1String;
-@property(readonly) NSString *sha256String;
-@property(readonly) NSString *sha512String;
+@property (readonly) NSString *MD5;
+@property (readonly) NSString *SHA1;
+@property (readonly) NSString *SHA256;
+@property (readonly) NSString *SHA512;
 
-- (NSString *)hmacMD5StringWithKey:(NSString *)key;
-- (NSString *)hmacSHA1StringWithKey:(NSString *)key;
-- (NSString *)hmacSHA256StringWithKey:(NSString *)key;
-- (NSString *)hmacSHA512StringWithKey:(NSString *)key;
+- (NSString *)MD5WithDecryptKey:(NSString *)key;
+- (NSString *)SHA1WithDecryptKey:(NSString *)key;
+- (NSString *)SHA256WithDecryptKey:(NSString *)key;
+- (NSString *)SHA512WithDecryptKey:(NSString *)key;
+
+/**
+ DES加密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)DESWithKey:(NSString *)key
+                   desiv:(NSString *)ivDes;
+
+/**
+ DES解密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)DESWithDecryptKey:(NSString *)key
+                          desiv:(NSString *)ivDes;
+
+/**
+ AES128加密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)AES128WithKey:(NSString *)key
+                      desiv:(NSString *)ivDes;
+
+/**
+ AES128解密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)AES128WithDecryptKey:(NSString *)key
+                             desiv:(NSString *)ivDes;
 
 #pragma mark -
 #pragma mark :. Matcher
@@ -720,7 +734,7 @@
 #pragma mark :. Ruby
 
 //Operator-likes
-- (NSString *) : (NSObject *)concat, ...;
+- (NSString *):(NSObject *)concat, ...;
 - (NSString *)x:(NSInteger)mult;
 
 //Shorthand Accessors

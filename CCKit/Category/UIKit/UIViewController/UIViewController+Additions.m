@@ -105,9 +105,9 @@ NSString *const CCScrollingHandlerDidScrollBlock = @"CCScrollingHandlerDidScroll
 
 @interface UIViewController (SKStoreProductViewControllerDelegate) <SKStoreProductViewControllerDelegate>
 
-@property(nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
+@property (nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
 
-@property(nonatomic, weak) UIView *navBarView;
+@property (nonatomic, weak) UIView *navBarView;
 
 @end
 
@@ -141,11 +141,8 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if (self.cc_willAppearInjectBlock)
         self.cc_willAppearInjectBlock(self, animated);
     
-    NSString *mClassName = [NSString stringWithUTF8String:object_getClassName(self)];
-    
     if (self.navigationController.visibleViewController) {
-        mClassName = [NSString stringWithUTF8String:object_getClassName(self.navigationController.visibleViewController)];
-        cc_NoticePost(noticeStatisticsWillAppear, [NSString stringWithUTF8String:object_getClassName(self)]);
+        NSString *mClassName = [NSString stringWithUTF8String:object_getClassName(self.navigationController.visibleViewController)];
         NSLog(@"viewDidAppear : %@", mClassName);
     }
 }
@@ -153,10 +150,6 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 - (void)cc_viewWillDisappear:(BOOL)animated
 {
     [self cc_viewWillDisappear:animated];
-    //    NSString *mClassName = [NSString stringWithUTF8String:object_getClassName(self)];
-    
-    if (self.navigationController.visibleViewController)
-        cc_NoticePost(noticeStatisticsWillDisappear, [NSString stringWithUTF8String:object_getClassName(self)]);
 }
 
 - (_CCViewControllerWillAppearInjectBlock)cc_willAppearInjectBlock
@@ -312,7 +305,7 @@ static const void *BackButtonHandlerKey = &BackButtonHandlerKey;
 #endif
 }
 
-- (void)setCC_interactivePopMaxAllowedInitialDistanceToLeftEdge:(CGFloat)distance
+- (void)setCc_interactivePopMaxAllowedInitialDistanceToLeftEdge:(CGFloat)distance
 {
     SEL key = @selector(cc_interactivePopMaxAllowedInitialDistanceToLeftEdge);
     objc_setAssociatedObject(self, key, @(MAX(0, distance)), OBJC_ASSOCIATION_RETAIN_NONATOMIC);

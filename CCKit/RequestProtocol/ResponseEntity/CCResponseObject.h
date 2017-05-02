@@ -27,44 +27,13 @@
 
 @interface CCResponseObject : NSObject
 
-/**
- *  @author CC, 2015-12-15
- *  
- *  @brief  传递键值
- */
-@property(nonatomic, copy) NSDictionary *userInfo;
+/** 传递键值 */
+@property (nonatomic, copy) NSDictionary *userInfo;
+/** 响应消息 */
+@property (nonatomic, copy) NSString *msg;
+/** 响应数据 */
+@property (nonatomic, copy) NSString *data;
 
-/**
- *  @author C C, 2015-11-07
- *
- *  @brief  响应消息
- */
-@property(nonatomic, copy) NSString *message;
-/**
- *  @author C C, 2015-11-07
- *
- *  @brief  响应状态
- */
-@property(nonatomic, assign) BOOL success;
-
-/**
- *  @author C C, 2015-11-08
- *
- *  @brief  请求状态
- */
-@property(nonatomic, assign) BOOL status;
-
-/**
- *  @author C C, 2015-11-07
- *
- *  @brief  响应数据
- */
-@property(nonatomic, copy) NSString *data;
-
-
-#pragma mark -_- 汇信
-@property(nonatomic, assign) NSInteger code;
-
-@property(nonatomic, copy) id bodyMessage;
+@property (nonatomic, assign) NSInteger code;
 
 @end

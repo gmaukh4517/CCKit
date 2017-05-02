@@ -23,21 +23,22 @@
 // THE SOFTWARE.
 //
 
-#import "NSString+Additions.h"
-#import <objc/runtime.h>
-#import "QRCodeGenerator.h"
 #import "NSData+Additions.h"
+#import "NSString+Additions.h"
+#import "QRCodeGenerator.h"
+#import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
-#import <ifaddrs.h>
 #import <arpa/inet.h>
+#import <ifaddrs.h>
 #import <net/if.h>
+#import <objc/runtime.h>
 
-#define IOS_CELLULAR    @"pdp_ip0"
-#define IOS_WIFI        @"en0"
-#define IOS_VPN         @"utun0"
-#define IP_ADDR_IPv4    @"ipv4"
-#define IP_ADDR_IPv6    @"ipv6"
+#define IOS_CELLULAR @"pdp_ip0"
+#define IOS_WIFI @"en0"
+#define IOS_VPN @"utun0"
+#define IP_ADDR_IPv4 @"ipv4"
+#define IP_ADDR_IPv6 @"ipv6"
 
 @interface NSString (RubyPrivate)
 
@@ -78,7 +79,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 /**
  *  @author CC, 2015-12-11
- *  
+ *
  *  @brief  根据值生成唯一ID
  */
 - (NSString *)pathForTemporaryFileWithPrefix
@@ -120,28 +121,26 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     return jsonDict;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. IPAddress
 
 + (NSString *)obtainIPAddress:(BOOL)preferIPv4
 {
-    NSArray *searchArray = preferIPv4 ?
-    @[ IOS_VPN @"/" IP_ADDR_IPv4, IOS_VPN @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6 ] :
-    @[ IOS_VPN @"/" IP_ADDR_IPv6, IOS_VPN @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4 ] ;
+    NSArray *searchArray = preferIPv4 ? @[ IOS_VPN @"/" IP_ADDR_IPv4, IOS_VPN @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6 ] : @[ IOS_VPN @"/" IP_ADDR_IPv6, IOS_VPN @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4 ];
     
     NSDictionary *addresses = [self obtainIPAddresses];
     
     __block NSString *address;
-    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop)
-     {
-         address = addresses[key];
-         //筛选出IP地址格式
-         if([self isValidatIP:address]) *stop = YES;
-     } ];
+    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+        address = addresses[key];
+        //筛选出IP地址格式
+        if ([self isValidatIP:address]) *stop = YES;
+    }];
     return address ? address : @"0.0.0.0";
 }
 
-+ (BOOL)isValidatIP:(NSString *)ipAddress {
++ (BOOL)isValidatIP:(NSString *)ipAddress
+{
     if (ipAddress.length == 0) {
         return NO;
     }
@@ -154,12 +153,12 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:urlRegEx options:0 error:&error];
     
     if (regex != nil) {
-        NSTextCheckingResult *firstMatch=[regex firstMatchInString:ipAddress options:0 range:NSMakeRange(0, [ipAddress length])];
+        NSTextCheckingResult *firstMatch = [regex firstMatchInString:ipAddress options:0 range:NSMakeRange(0, [ipAddress length])];
         if (firstMatch) {
-//            NSRange resultRange = [firstMatch rangeAtIndex:0];
-//            NSString *result=[ipAddress substringWithRange:resultRange];
+            //            NSRange resultRange = [firstMatch rangeAtIndex:0];
+            //            NSString *result=[ipAddress substringWithRange:resultRange];
             //输出结果
-//            NSLog(@"%@",result);
+            //            NSLog(@"%@",result);
             return YES;
         }
     }
@@ -172,29 +171,29 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     
     // retrieve the current interfaces - returns 0 on success
     struct ifaddrs *interfaces;
-    if(!getifaddrs(&interfaces)) {
+    if (!getifaddrs(&interfaces)) {
         // Loop through linked list of interfaces
         struct ifaddrs *interface;
-        for(interface=interfaces; interface; interface=interface->ifa_next) {
-            if(!(interface->ifa_flags & IFF_UP) /* || (interface->ifa_flags & IFF_LOOPBACK) */ ) {
+        for (interface = interfaces; interface; interface = interface->ifa_next) {
+            if (!(interface->ifa_flags & IFF_UP) /* || (interface->ifa_flags & IFF_LOOPBACK) */) {
                 continue; // deeply nested code harder to read
             }
-            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
-            char addrBuf[ MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN) ];
-            if(addr && (addr->sin_family==AF_INET || addr->sin_family==AF_INET6)) {
+            const struct sockaddr_in *addr = (const struct sockaddr_in *)interface->ifa_addr;
+            char addrBuf[MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN)];
+            if (addr && (addr->sin_family == AF_INET || addr->sin_family == AF_INET6)) {
                 NSString *name = [NSString stringWithUTF8String:interface->ifa_name];
                 NSString *type;
-                if(addr->sin_family == AF_INET) {
-                    if(inet_ntop(AF_INET, &addr->sin_addr, addrBuf, INET_ADDRSTRLEN)) {
+                if (addr->sin_family == AF_INET) {
+                    if (inet_ntop(AF_INET, &addr->sin_addr, addrBuf, INET_ADDRSTRLEN)) {
                         type = IP_ADDR_IPv4;
                     }
                 } else {
-                    const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6*)interface->ifa_addr;
-                    if(inet_ntop(AF_INET6, &addr6->sin6_addr, addrBuf, INET6_ADDRSTRLEN)) {
+                    const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)interface->ifa_addr;
+                    if (inet_ntop(AF_INET6, &addr6->sin6_addr, addrBuf, INET6_ADDRSTRLEN)) {
                         type = IP_ADDR_IPv6;
                     }
                 }
-                if(type) {
+                if (type) {
                     NSString *key = [NSString stringWithFormat:@"%@/%@", name, type];
                     addresses[key] = [NSString stringWithUTF8String:addrBuf];
                 }
@@ -206,7 +205,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     return [addresses count] ? addresses : nil;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. QueryDictionary
 
 - (NSDictionary *)cc_URLQueryDictionary
@@ -238,7 +237,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 }
 
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. XML
 
 /**
@@ -383,7 +382,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 /**
  *  @author CC, 2015-12-02
- *  
+ *
  *  @brief  字符串转换日期带'T'
  */
 - (NSDate *)convertingTStringsToDate
@@ -444,15 +443,15 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 /**
  生成二维码中间带头像
-
+ 
  @param size 生成大小
  @param avatar 头像
  */
-- (UIImage *)becomeQRCodeWithQRstring:(float)size 
+- (UIImage *)becomeQRCodeWithQRstring:(float)size
                           AvatarImage:(UIImage *)avatar
 {
     return [QRCodeGenerator qrImageForString:self
-                                   imageSize:size 
+                                   imageSize:size
                                       Topimg:avatar];
 }
 
@@ -505,7 +504,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
  *  @return 返回长宽
  */
 - (CGSize)calculateTextWidthWidth:(CGFloat)MaxWith
-                              Font:(UIFont *)font
+                             Font:(UIFont *)font
 {
     return [self sizeWithFont:font
             constrainedToSize:CGSizeMake(MaxWith, MAXFLOAT)
@@ -534,7 +533,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                       options:(NSStringDrawingUsesLineFragmentOrigin |
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
-                                      context:nil].size;
+                                      context:nil]
+        .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)
@@ -549,7 +549,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                   options:(NSStringDrawingUsesLineFragmentOrigin |
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
-                                  context:nil].size;
+                                  context:nil]
+    .size;
 #endif
     
     return ceil(textSize.height);
@@ -577,7 +578,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                       options:(NSStringDrawingUsesLineFragmentOrigin |
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
-                                      context:nil].size;
+                                      context:nil]
+        .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(CGFLOAT_MAX, height)
@@ -592,7 +594,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                   options:(NSStringDrawingUsesLineFragmentOrigin |
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
-                                  context:nil].size;
+                                  context:nil]
+    .size;
 #endif
     
     return ceil(textSize.width);
@@ -620,7 +623,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                       options:(NSStringDrawingUsesLineFragmentOrigin |
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
-                                      context:nil].size;
+                                      context:nil]
+        .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)
@@ -635,7 +639,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                   options:(NSStringDrawingUsesLineFragmentOrigin |
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
-                                  context:nil].size;
+                                  context:nil]
+    .size;
 #endif
     
     return CGSizeMake(ceil(textSize.width), ceil(textSize.height));
@@ -663,7 +668,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                       options:(NSStringDrawingUsesLineFragmentOrigin |
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
-                                      context:nil].size;
+                                      context:nil]
+        .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(CGFLOAT_MAX, height)
@@ -678,7 +684,8 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                   options:(NSStringDrawingUsesLineFragmentOrigin |
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
-                                  context:nil].size;
+                                  context:nil]
+    .size;
 #endif
     
     return CGSizeMake(ceil(textSize.width), ceil(textSize.height));
@@ -701,82 +708,6 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
         [reverseString appendString:[strSrc substringWithRange:subStrRange]];
     }
     return reverseString;
-}
-
-#pragma mark--- 加密
-/**
- *  @author CC, 15-08-17
- *
- *  @brief  MD5Hash加密
- *
- *  @return 返回加密字符串
- *
- *  @since 1.0
- */
-- (NSString *)MD5Hash
-{
-    if (self.length == 0) return nil;
-    
-    const char *cStr = [self UTF8String];
-    unsigned char result[16];
-    CC_MD5(cStr, (CC_LONG)strlen(cStr), result);
-    
-    return [NSString stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-            result[0], result[1], result[2], result[3], result[4], result[5],
-            result[6], result[7], result[8], result[9], result[10], result[11],
-            result[12], result[13], result[14], result[15]];
-}
-
-/**
- *  @author CC, 15-09-02
- *
- *  @brief  MD5 32位加密
- *
- *  @return 返回加密字符串
- *
- *  @since 1.0
- */
-- (NSString *)MD532
-{
-    const char *cStr = [self UTF8String];
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    
-    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
-    
-    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [result appendFormat:@"%02x", digest[i]];
-    }
-    
-    return [result copy];
-}
-
-/**
- *  @author CC, 15-09-02
- *
- *  @brief  SHA加密
- *
- *  @return 返回加密字符串
- *
- *  @since 1.0
- */
-- (NSString *)SHA
-{
-    const char *cStr = [self UTF8String];
-    NSData *data = [NSData dataWithBytes:cStr length:self.length];
-    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
-    
-    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
-    
-    NSMutableString *result =
-    [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
-        [result appendFormat:@"%02x", digest[i]];
-    }
-    
-    return [result copy];
 }
 
 #pragma mark--- 文件
@@ -1036,7 +967,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     return [NSData dataWithBase64EncodedString:self];
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Contains
 
 /**
@@ -1158,7 +1089,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  字符串字节长度
  */
 - (NSInteger)byteLength
@@ -1177,7 +1108,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     return (strlength + 1) / 2;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Emoji
 
 static NSDictionary *s_unicodeToCheatCodes = nil;
@@ -2029,7 +1960,8 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
         }
     }];
     
-    @synchronized(self) {
+    @synchronized(self)
+    {
         s_unicodeToCheatCodes = forwardMap;
         s_cheatCodesToUnicode = [reversedMap copy];
     }
@@ -2137,13 +2069,13 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     [self enumerateSubstringsInRange:NSMakeRange(0, [self length])
                              options:NSStringEnumerationByComposedCharacterSequences
                           usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
-                              [buffer appendString:([substring isEmoji])? @"": substring];
+                              [buffer appendString:([substring isEmoji]) ? @"" : substring];
                           }];
     
     return buffer;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Encrypt
 
 - (NSString *)encryptedWithAESUsingKey:(NSString *)key andIV:(NSData *)iv
@@ -2178,10 +2110,10 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return decryptedString;
 }
 
-#pragma mark-
-#pragma mark :. Hash
+#pragma mark -
+#pragma mark :. Hash 加密
 
-- (NSString *)md5String
+- (NSString *)MD5
 {
     const char *string = self.UTF8String;
     int length = (int)strlen(string);
@@ -2190,7 +2122,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [self stringFromBytes:bytes length:CC_MD5_DIGEST_LENGTH];
 }
 
-- (NSString *)sha1String
+- (NSString *)SHA1
 {
     const char *string = self.UTF8String;
     int length = (int)strlen(string);
@@ -2199,7 +2131,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [self stringFromBytes:bytes length:CC_SHA1_DIGEST_LENGTH];
 }
 
-- (NSString *)sha256String
+- (NSString *)SHA256
 {
     const char *string = self.UTF8String;
     int length = (int)strlen(string);
@@ -2208,7 +2140,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [self stringFromBytes:bytes length:CC_SHA256_DIGEST_LENGTH];
 }
 
-- (NSString *)sha512String
+- (NSString *)SHA512
 {
     const char *string = self.UTF8String;
     int length = (int)strlen(string);
@@ -2217,28 +2149,219 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [self stringFromBytes:bytes length:CC_SHA512_DIGEST_LENGTH];
 }
 
-- (NSString *)hmacMD5StringWithKey:(NSString *)key
+- (NSString *)MD5WithDecryptKey:(NSString *)key
 {
-    return [self hmacStringUsingAlg:kCCHmacAlgMD5 withKey:key];
+    return [self decryptUsingAlg:kCCHmacAlgMD5 withKey:key];
 }
 
-- (NSString *)hmacSHA1StringWithKey:(NSString *)key
+- (NSString *)SHA1WithDecryptKey:(NSString *)key
 {
-    return [self hmacStringUsingAlg:kCCHmacAlgSHA1 withKey:key];
+    return [self decryptUsingAlg:kCCHmacAlgSHA1 withKey:key];
 }
 
-- (NSString *)hmacSHA256StringWithKey:(NSString *)key
+- (NSString *)SHA256WithDecryptKey:(NSString *)key
 {
-    return [self hmacStringUsingAlg:kCCHmacAlgSHA256 withKey:key];
+    return [self decryptUsingAlg:kCCHmacAlgSHA256 withKey:key];
 }
 
-- (NSString *)hmacSHA512StringWithKey:(NSString *)key
+- (NSString *)SHA512WithDecryptKey:(NSString *)key
 {
-    return [self hmacStringUsingAlg:kCCHmacAlgSHA512 withKey:key];
+    return [self decryptUsingAlg:kCCHmacAlgSHA512 withKey:key];
 }
 
-#pragma mark --- Helpers
-- (NSString *)hmacStringUsingAlg:(CCHmacAlgorithm)alg withKey:(NSString *)key
+/**
+ DES加密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)DESWithKey:(NSString *)key
+                   desiv:(NSString *)ivDes
+{
+    if ((self == nil || self.length == 0) || (self == nil || self.length == 0) || (ivDes == nil || ivDes.length == 0)) {
+        return @"";
+    }
+    //gb2312 编码
+    NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSData *encryptData = [self dataUsingEncoding:encoding];
+    size_t dataInLength = [encryptData length];
+    const void *dataIn = (const void *)[encryptData bytes];
+    CCCryptorStatus ccStatus = 0;
+    uint8_t *dataOut = NULL; //可以理解位type/typedef 的缩写（有效的维护了代码，比如：一个人用int，一个人用long。最好用typedef来定义）
+    size_t dataOutMoved = 0;
+    size_t dataOutAvailable = (dataInLength + kCCBlockSizeDES) & ~(kCCBlockSizeDES - 1);
+    dataOut = malloc(dataOutAvailable * sizeof(uint8_t));
+    memset((void *)dataOut, 0x0, dataOutAvailable); //将已开辟内存空间buffer的首 1 个字节的值设为值 0
+    const void *iv = (const void *)[ivDes cStringUsingEncoding:NSASCIIStringEncoding];
+    //CCCrypt函数 加密/解密
+    ccStatus = CCCrypt(kCCEncrypt,	    //  加密/解密
+                       kCCAlgorithmDES,       //  加密根据哪个标准（des，3des，aes。。。。）
+                       kCCOptionPKCS7Padding, //  选项分组密码算法(des:对每块分组加一次密  3DES：对每块分组加三个不同的密)
+                       [key UTF8String],      //密钥    加密和解密的密钥必须一致
+                       kCCKeySizeDES,	 //   DES 密钥的大小（kCCKeySizeDES=8）
+                       iv,		      //  可选的初始矢量
+                       dataIn,		      // 数据的存储单元
+                       dataInLength,	  // 数据的大小
+                       (void *)dataOut,       // 用于返回数据
+                       dataOutAvailable,
+                       &dataOutMoved);
+    //编码 base64
+    NSData *data = [NSData dataWithBytes:(const void *)dataOut length:(NSUInteger)dataOutMoved];
+    Byte *bytes = (Byte *)[data bytes];
+    //下面是Byte 转换为16进制。
+    NSString *hexStr = @"";
+    for (int i = 0; i < [data length]; i++) {
+        NSString *newHexStr = [NSString stringWithFormat:@"%x", bytes[i] & 0xff]; ///16进制数
+        if ([newHexStr length] == 1)
+            hexStr = [NSString stringWithFormat:@"%@0%@", hexStr, newHexStr];
+        else
+            hexStr = [NSString stringWithFormat:@"%@%@", hexStr, newHexStr];
+    }
+    free(dataOut);
+    return hexStr;
+}
+
+/**
+ DES解密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)DESWithDecryptKey:(NSString *)key
+                          desiv:(NSString *)ivDes
+{
+    if ((self == nil || self.length == 0) || (self == nil || self.length == 0) || (ivDes == nil || ivDes.length == 0)) {
+        return @"";
+    }
+    const void *dataIn;
+    size_t dataInLength;
+    char *myBuffer = (char *)malloc((int)[self length] / 2 + 1);
+    bzero(myBuffer, [self length] / 2 + 1);
+    for (int i = 0; i < [self length] - 1; i += 2) {
+        unsigned int anInt;
+        NSString *hexCharStr = [self substringWithRange:NSMakeRange(i, 2)];
+        NSScanner *scanner = [[NSScanner alloc] initWithString:hexCharStr];
+        [scanner scanHexInt:&anInt];
+        myBuffer[i / 2] = (char)anInt;
+    }
+    NSData *decryptData = [NSData dataWithBytes:myBuffer length:[self length] / 2]; //转成utf-8并decode
+    dataInLength = [decryptData length];
+    dataIn = [decryptData bytes];
+    free(myBuffer);
+    CCCryptorStatus ccStatus = 0;
+    uint8_t *dataOut = NULL;     //可以理解位type/typedef 的缩写（有效的维护了代码，比如：一个人用int，一个人用long。最好用typedef来定义）
+    size_t dataOutAvailable = 0; //size_t  是操作符sizeof返回的结果类型
+    size_t dataOutMoved = 0;
+    dataOutAvailable = (dataInLength + kCCBlockSizeDES) & ~(kCCBlockSizeDES - 1);
+    dataOut = malloc(dataOutAvailable * sizeof(uint8_t));
+    memset((void *)dataOut, 0x0, dataOutAvailable); //将已开辟内存空间buffer的首 1 个字节的值设为值 0
+    const void *iv = (const void *)[ivDes cStringUsingEncoding:NSASCIIStringEncoding];
+    //CCCrypt函数 加密/解密
+    ccStatus = CCCrypt(kCCDecrypt,	    //  加密/解密
+                       kCCAlgorithmDES,       //  加密根据哪个标准（des，3des，aes。。。。）
+                       kCCOptionPKCS7Padding, //  选项分组密码算法(des:对每块分组加一次密  3DES：对每块分组加三个不同的密)
+                       [key UTF8String],      //密钥    加密和解密的密钥必须一致
+                       kCCKeySizeDES,	 //   DES 密钥的大小（kCCKeySizeDES=8）
+                       iv,		      //  可选的初始矢量
+                       dataIn,		      // 数据的存储单元
+                       dataInLength,	  // 数据的大小
+                       (void *)dataOut,       // 用于返回数据
+                       dataOutAvailable,
+                       &dataOutMoved);
+    NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSString *result = [[NSString alloc] initWithData:[NSData dataWithBytes:(const void *)dataOut length:(NSUInteger)dataOutMoved] encoding:encoding];
+    free(dataOut);
+    return result;
+}
+
+/**
+ AES128加密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)AES128WithKey:(NSString *)key desiv:(NSString *)ivDes
+{
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    
+    char keyPtr[kCCKeySizeAES128 + 1];
+    bzero(keyPtr, sizeof(keyPtr));
+    [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
+    char ivPtr[kCCKeySizeAES128 + 1];
+    bzero(ivPtr, sizeof(ivPtr));
+    [ivDes getCString:ivPtr maxLength:sizeof(ivPtr) encoding:NSUTF8StringEncoding];
+    NSUInteger dataLength = [data length];
+    int diff = kCCKeySizeAES128 - (dataLength % kCCKeySizeAES128);
+    int newSize = 0;
+    if (diff > 0) {
+        newSize = (int)(dataLength + diff);
+    }
+    char dataPtr[newSize];
+    memcpy(dataPtr, [data bytes], [data length]);
+    for (int i = 0; i < diff; i++) {
+        dataPtr[i + dataLength] = 0x00;
+    }
+    size_t bufferSize = newSize + kCCBlockSizeAES128;
+    void *buffer = malloc(bufferSize);
+    size_t numBytesEncrypted = 0;
+    CCCryptorStatus cryptStatus = CCCrypt(kCCEncrypt,
+                                          kCCAlgorithmAES128,
+                                          0x00, //No padding
+                                          keyPtr,
+                                          kCCKeySizeAES128,
+                                          ivPtr,
+                                          dataPtr,
+                                          sizeof(dataPtr),
+                                          buffer,
+                                          bufferSize,
+                                          &numBytesEncrypted);
+    if (cryptStatus == kCCSuccess) {
+        NSData *data = [NSData dataWithBytesNoCopy:buffer length:numBytesEncrypted];
+        return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return nil;
+}
+
+/**
+ AES128解密
+ 
+ @param key 密钥    加密和解密的密钥必须一致
+ @param ivDes 可选的初始矢量
+ */
+- (NSString *)AES128WithDecryptKey:(NSString *)key desiv:(NSString *)ivDes
+{
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    
+    char keyPtr[kCCKeySizeAES128 + 1];
+    bzero(keyPtr, sizeof(keyPtr));
+    [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
+    char ivPtr[kCCKeySizeAES128 + 1];
+    bzero(ivPtr, sizeof(ivPtr));
+    [ivDes getCString:ivPtr maxLength:sizeof(ivPtr) encoding:NSUTF8StringEncoding];
+    NSUInteger dataLength = [data length];
+    size_t bufferSize = dataLength + kCCBlockSizeAES128;
+    void *buffer = malloc(bufferSize);
+    size_t numBytesEncrypted = 0;
+    CCCryptorStatus cryptStatus = CCCrypt(kCCDecrypt,
+                                          kCCAlgorithmAES128,
+                                          0x00, //No padding
+                                          keyPtr,
+                                          kCCKeySizeAES128,
+                                          ivPtr,
+                                          [data bytes],
+                                          dataLength,
+                                          buffer,
+                                          bufferSize,
+                                          &numBytesEncrypted);
+    if (cryptStatus == kCCSuccess) {
+        NSData *data = [NSData dataWithBytesNoCopy:buffer length:numBytesEncrypted];
+        return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return nil;
+}
+
+#pragma mark--- Helpers
+- (NSString *)decryptUsingAlg:(CCHmacAlgorithm)alg withKey:(NSString *)key
 {
     size_t size;
     switch (alg) {
@@ -2279,14 +2402,14 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [NSString stringWithString:mutableString];
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Matcher
 
 - (NSArray *)matchWithRegex:(NSString *)regex
 {
     NSTextCheckingResult *result = [self firstMatchedResultWithRegex:regex];
     NSMutableArray *mArray = [[NSMutableArray alloc] initWithCapacity:[result numberOfRanges]];
-    for (int i = 0 ; i < [result numberOfRanges]; i ++ ) {
+    for (int i = 0; i < [result numberOfRanges]; i++) {
         [mArray addObject:[self substringWithRange:[result rangeAtIndex:i]]];
     }
     return mArray;
@@ -2311,7 +2434,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [regexExpression firstMatchInString:self options:(NSMatchingOptions)0 range:range];
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. MIME
 
 /**
@@ -2549,7 +2672,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return MIMEDict;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Pinyin
 
 - (NSString *)pinyinWithPhoneticSymbol
@@ -2603,10 +2726,10 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return pinyin;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. RegexCategory
 
-#pragma mark --- 正则相关
+#pragma mark--- 正则相关
 - (BOOL)isValidateByRegex:(NSString *)regex
 {
     NSPredicate *pre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
@@ -2742,7 +2865,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     return [self isValidateByRegex:regex];
 }
 
-#pragma mark --- 算法相关
+#pragma mark--- 算法相关
 //精确的身份证号码有效性检测
 + (BOOL)accurateVerifyIDCardNumber:(NSString *)value
 {
@@ -2902,12 +3025,13 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
     
     NSInteger luhmTotal = lastNumber + sumEvenNumTotal + sumOddNum2Total + sumOddNumTotal;
     
-    return (luhmTotal%10 ==0)?YES:NO;
+    return (luhmTotal % 10 == 0) ? YES : NO;
 }
 
-- (BOOL)isIPAddress{
+- (BOOL)isIPAddress
+{
     NSString *regex = [NSString stringWithFormat:@"^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$"];
-    NSPredicate *pre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
     BOOL rc = [pre evaluateWithObject:self];
     
     if (rc) {
@@ -2930,7 +3054,7 @@ static NSDictionary *s_cheatCodesToUnicode = nil;
 #pragma mark -
 #pragma mark :. Ruby
 
-#pragma mark --- Private
+#pragma mark--- Private
 
 NSString *_stringRepresentationOf(id<Concatenatable> object)
 {
@@ -2957,9 +3081,9 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
 }
 
 
-#pragma mark --- Public Operator-likes
+#pragma mark--- Public Operator-likes
 
-- (NSString *) : (id<Concatenatable>)concat, ...
+- (NSString *):(id<Concatenatable>)concat, ...
 {
     NSMutableString *newString = [NSMutableString stringWithString:self];
     va_list args;
@@ -2981,7 +3105,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
     return result;
 }
 
-#pragma mark --- Public Shorthand Accessors
+#pragma mark--- Public Shorthand Accessors
 - (NSString *)ShorthandAccessors:(NSInteger)loc Len:(NSInteger)len
 {
     return [self substringWithRange:NSMakeRange((loc >= 0) ? loc : self.length - labs(loc),
@@ -3005,7 +3129,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
     return nil;
 }
 
-#pragma mark --- Public Ruby String Methods
+#pragma mark--- Public Ruby String Methods
 - (void)bytes:(void (^)(unichar))block
 {
     unichar *characters = calloc(self.length, sizeof(unichar));
@@ -3614,7 +3738,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
 {
     __block NSInteger total = 0;
     [self chars:^(unichar c) {
-        total += (NSInteger )c;
+        total += (NSInteger)c;
     }];
     return (total % (NSInteger)pow(2, bit - 1));
 }
@@ -3632,7 +3756,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
     return [NSString stringWithCharacters:s length:self.length];
 }
 
-#pragma mark --- Subscript Protocol Methods
+#pragma mark--- Subscript Protocol Methods
 
 - (id)objectAtIndexedSubscript:(NSUInteger)index
 {
@@ -3663,7 +3787,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
     return nil;
 }
 
-#pragma mark --- Helper Methods
+#pragma mark--- Helper Methods
 - (NSSet *)unionOfCharactersInStrings:(NSString *)first remaining:(va_list)va_list
 {
     NSMutableArray *sets = [NSMutableArray array];
@@ -3701,7 +3825,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
     return comparisonSet;
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Scire
 
 - (CGFloat)scoreAgainst:(NSString *)otherString

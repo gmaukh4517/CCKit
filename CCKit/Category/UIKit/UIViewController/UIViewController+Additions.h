@@ -28,10 +28,6 @@
 #import "CCViewModel.h"
 #import <UIKit/UIKit.h>
 
-// noticeStatistics 注册改通知 用于统计
-#define noticeStatisticsWillAppear @"NOTICESTATISTICSWILLAPPEAR"
-#define noticeStatisticsWillDisappear @"NOTICESTATISTICSWILLDISAPPEAR"
-
 typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewController, BOOL animated);
 
 @interface UIViewController (Additions) <CCViewControllerProtocolDelegate>

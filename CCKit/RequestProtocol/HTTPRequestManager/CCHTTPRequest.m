@@ -92,6 +92,22 @@
     return [[NSString stringWithFormat:@"%@%@", serviceAddres, methodName] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
+/**
+ 请求地址拼接
+ 格式: /xxxx?type=1&content=xxxx
+ @param url API
+ @param parameter 参数
+ */
++ (NSString *)appendingUrlParameter:(NSString *)url
+                          Parameter:(NSDictionary *)parameter
+{
+    NSMutableString *urlStr = [NSMutableString stringWithFormat:@"%@?", url];
+    for (NSString *key in parameter.allKeys)
+        [urlStr appendFormat:@"%@=%@&", key, [parameter objectForKey:key]];
+    
+    return [urlStr substringToIndex:urlStr.length - 1];
+}
+
 #pragma mark -
 #pragma mark :. 网络请求并解析 异步
 
@@ -116,19 +132,23 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
    response:(responseBlock)response
     failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager GET:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager GET:requestURLString
+            parameters:parameter
+           cachePolicy:cachePolicy
+               success:^(CCResponseObject *responseObject) {
+                   
+                   dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                           modelClass:modelClass];
+                   
+                   if ([dataObj isKindOfClass:modelClass]) {
+                       if (response)
+                           response(dataObj, nil);
+                   } else {
+                       if (failure)
+                           failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                   }
+               }
+               failure:failure];
 }
 
 /**
@@ -150,18 +170,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
     response:(responseBlock)response
      failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager POST:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager POST:requestURLString
+             parameters:parameter
+            cachePolicy:cachePolicy
+                success:^(CCResponseObject *responseObject) {
+                    dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                            modelClass:modelClass];
+                    
+                    if ([dataObj isKindOfClass:modelClass]) {
+                        if (response)
+                            response(dataObj, nil);
+                    } else {
+                        if (failure)
+                            failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                    }
+                }
+                failure:failure];
 }
 
 /**
@@ -183,18 +207,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
       response:(responseBlock)response
        failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager DELETE:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager DELETE:requestURLString
+               parameters:parameter
+              cachePolicy:cachePolicy
+                  success:^(CCResponseObject *responseObject) {
+                      dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                              modelClass:modelClass];
+                      
+                      if ([dataObj isKindOfClass:modelClass]) {
+                          if (response)
+                              response(dataObj, nil);
+                      } else {
+                          if (failure)
+                              failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                      }
+                  }
+                  failure:failure];
 }
 
 /**
@@ -216,10 +244,14 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
     response:(responseBlock)response
      failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager HEAD:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        if (response)
-            response(responseObject,nil);
-    } failure:failure];
+    [CCHTTPManager HEAD:requestURLString
+             parameters:parameter
+            cachePolicy:cachePolicy
+                success:^(CCResponseObject *responseObject) {
+                    if (response)
+                        response(responseObject, nil);
+                }
+                failure:failure];
 }
 
 /**
@@ -241,19 +273,23 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
    response:(responseBlock)response
     failure:(requestFailureBlock)failure
 {
-
-    [CCHTTPManager PUT:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    
+    [CCHTTPManager PUT:requestURLString
+            parameters:parameter
+           cachePolicy:cachePolicy
+               success:^(CCResponseObject *responseObject) {
+                   dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                           modelClass:modelClass];
+                   
+                   if ([dataObj isKindOfClass:modelClass]) {
+                       if (response)
+                           response(dataObj, nil);
+                   } else {
+                       if (failure)
+                           failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                   }
+               }
+               failure:failure];
 }
 
 /**
@@ -275,18 +311,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
      response:(responseBlock)response
       failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager PATCH:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager PATCH:requestURLString
+              parameters:parameter
+             cachePolicy:cachePolicy
+                 success:^(CCResponseObject *responseObject) {
+                     dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                             modelClass:modelClass];
+                     
+                     if ([dataObj isKindOfClass:modelClass]) {
+                         if (response)
+                             response(dataObj, nil);
+                     } else {
+                         if (failure)
+                             failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                     }
+                 }
+                 failure:failure];
 }
 
 #pragma mark :. 网络请求并解析 同步
@@ -310,19 +350,23 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        response:(responseBlock)response
         failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager syncGET:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager syncGET:requestURLString
+                parameters:parameter
+               cachePolicy:cachePolicy
+                   success:^(CCResponseObject *responseObject) {
+                       
+                       dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                               modelClass:modelClass];
+                       
+                       if ([dataObj isKindOfClass:modelClass]) {
+                           if (response)
+                               response(dataObj, nil);
+                       } else {
+                           if (failure)
+                               failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                       }
+                   }
+                   failure:failure];
 }
 
 /**
@@ -344,18 +388,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
         response:(responseBlock)response
          failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager syncPOST:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager syncPOST:requestURLString
+                 parameters:parameter
+                cachePolicy:cachePolicy
+                    success:^(CCResponseObject *responseObject) {
+                        dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                                modelClass:modelClass];
+                        
+                        if ([dataObj isKindOfClass:modelClass]) {
+                            if (response)
+                                response(dataObj, nil);
+                        } else {
+                            if (failure)
+                                failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                        }
+                    }
+                    failure:failure];
 }
 
 /**
@@ -377,18 +425,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
           response:(responseBlock)response
            failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager syncDELETE:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager syncDELETE:requestURLString
+                   parameters:parameter
+                  cachePolicy:cachePolicy
+                      success:^(CCResponseObject *responseObject) {
+                          dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                                  modelClass:modelClass];
+                          
+                          if ([dataObj isKindOfClass:modelClass]) {
+                              if (response)
+                                  response(dataObj, nil);
+                          } else {
+                              if (failure)
+                                  failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                          }
+                      }
+                      failure:failure];
 }
 
 /**
@@ -410,10 +462,14 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
         response:(responseBlock)response
          failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager syncHEAD:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        if (response)
-            response(responseObject,nil);
-    } failure:failure];
+    [CCHTTPManager syncHEAD:requestURLString
+                 parameters:parameter
+                cachePolicy:cachePolicy
+                    success:^(CCResponseObject *responseObject) {
+                        if (response)
+                            response(responseObject, nil);
+                    }
+                    failure:failure];
 }
 
 /**
@@ -435,19 +491,23 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        response:(responseBlock)response
         failure:(requestFailureBlock)failure
 {
-
-    [CCHTTPManager syncPUT:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    
+    [CCHTTPManager syncPUT:requestURLString
+                parameters:parameter
+               cachePolicy:cachePolicy
+                   success:^(CCResponseObject *responseObject) {
+                       dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                               modelClass:modelClass];
+                       
+                       if ([dataObj isKindOfClass:modelClass]) {
+                           if (response)
+                               response(dataObj, nil);
+                       } else {
+                           if (failure)
+                               failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                       }
+                   }
+                   failure:failure];
 }
 
 /**
@@ -469,18 +529,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
          response:(responseBlock)response
           failure:(requestFailureBlock)failure
 {
-    [CCHTTPManager syncPATCH:requestURLString parameters:parameter cachePolicy:cachePolicy success:^(CCResponseObject *responseObject) {
-        dataObj = [self modelTransformationWithResponseObj:responseObject
-                                                modelClass:modelClass];
-
-        if ([dataObj isKindOfClass:modelClass]) {
-            if (response)
-                response(dataObj,nil);
-        }else{
-            if (failure)
-                failure(responseObject.userInfo,[NSError errorWithDomain:dataObj code:0 userInfo:@{@"NSDebugDescription":@"解析对象错误"}]);
-        }
-    } failure:failure];
+    [CCHTTPManager syncPATCH:requestURLString
+                  parameters:parameter
+                 cachePolicy:cachePolicy
+                     success:^(CCResponseObject *responseObject) {
+                         dataObj = [self modelTransformationWithResponseObj:responseObject
+                                                                 modelClass:modelClass];
+                         
+                         if ([dataObj isKindOfClass:modelClass]) {
+                             if (response)
+                                 response(dataObj, nil);
+                         } else {
+                             if (failure)
+                                 failure(responseObject.userInfo, [NSError errorWithDomain:dataObj code:0 userInfo:@{ @"NSDebugDescription" : @"解析对象错误" }]);
+                         }
+                     }
+                     failure:failure];
 }
 
 #pragma mark -
@@ -552,7 +616,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
         parameters:(NSDictionary *)parameter
      responseBlock:(CCRequestBacktrack)responseBlock
 {
-
+    
 }
 
 /**
@@ -568,7 +632,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        parameters:(NSDictionary *)parameter
     responseBlock:(CCRequestBacktrack)responseBlock
 {
-
+    
 }
 
 /**
@@ -584,7 +648,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
          parameters:(NSDictionary *)parameter
       responseBlock:(CCRequestBacktrack)responseBlock
 {
-
+    
 }
 
 @end

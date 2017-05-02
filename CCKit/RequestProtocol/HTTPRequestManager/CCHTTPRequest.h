@@ -23,8 +23,8 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
 #import "CCHTTPManager.h"
+#import <Foundation/Foundation.h>
 
 /**
  *  @author CC, 16-03-10
@@ -73,6 +73,15 @@ typedef void (^CCRequestBacktrack)(id responseObject, NSError *error);
  */
 + (NSString *)appendingServerURLWithString:(NSString *)serviceAddres
                                 MethodName:(NSString *)methodName;
+
+/**
+ 请求地址拼接
+ 格式: /xxxx?type=1&content=xxxx
+ @param url API
+ @param parameter 参数
+ */
++ (NSString *)appendingUrlParameter:(NSString *)url
+                          Parameter:(NSDictionary *)parameter;
 
 #pragma mark -
 #pragma mark :. 网络请求并解析 异步

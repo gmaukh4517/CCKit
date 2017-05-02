@@ -16,23 +16,23 @@ NSString *const kCCTextFiledReturnKeyType = @"kCCTextFiledRetrurnKeyType";
 
 @interface CCKeyboardManager () <UITextFieldDelegate, UITextViewDelegate>
 
-@property(nonatomic, assign) CGFloat keyboardDistanceFromTextField;
+@property (nonatomic, assign) CGFloat keyboardDistanceFromTextField;
 
-@property(nonatomic, weak) UIViewController *rootViewController;
-@property(nonatomic, assign) CGRect topViewBeginRect;
+@property (nonatomic, weak) UIViewController *rootViewController;
+@property (nonatomic, assign) CGRect topViewBeginRect;
 
-@property(nonatomic, strong) NSMutableSet *textFieldInfoCache;
+@property (nonatomic, strong) NSMutableSet *textFieldInfoCache;
 
-@property(nonatomic, weak) UIView *textFieldView;
+@property (nonatomic, weak) UIView *textFieldView;
 
-@property(nonatomic, assign) CGSize kSize;
+@property (nonatomic, assign) CGSize kSize;
 
-@property(nonatomic, assign) CGFloat animationDuration;
-@property(nonatomic, assign) NSInteger animationCurve;
+@property (nonatomic, assign) CGFloat animationDuration;
+@property (nonatomic, assign) NSInteger animationCurve;
 
-@property(nonatomic, assign) BOOL keyboardShowing;
+@property (nonatomic, assign) BOOL keyboardShowing;
 
-@property(nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 @end
 
@@ -87,7 +87,7 @@ static dispatch_once_t onceToken;
     return self;
 }
 
--(void)globalKeyboardHide:(UITapGestureRecognizer *)tap
+- (void)globalKeyboardHide:(UITapGestureRecognizer *)tap
 {
     [tap.view endEditing:YES];
 }
@@ -97,6 +97,8 @@ static dispatch_once_t onceToken;
 - (void)registeredWithViewController:(nullable UIViewController *)controller
 {
     if (controller.view) {
+        controller.edgesForExtendedLayout = UIRectEdgeAll;
+        controller.automaticallyAdjustsScrollViewInsets = NO;
         _rootViewController = controller;
         _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(globalKeyboardHide:)];
         _tapGestureRecognizer.cancelsTouchesInView = NO;
@@ -118,7 +120,9 @@ static dispatch_once_t onceToken;
 #pragma mark :. UIKeyboad Notification methods
 - (void)keyboardWillShow:(NSNotification *)aNotification
 {
-    _topViewBeginRect = self.rootViewController.view.frame;
+    if (CGRectEqualToRect(_topViewBeginRect, CGRectZero))
+        _topViewBeginRect = self.rootViewController.view.frame;
+
     _keyboardShowing = YES;
     NSInteger curve = [[aNotification userInfo][UIKeyboardAnimationCurveUserInfoKey] integerValue];
     _animationCurve = curve << 16;
@@ -164,7 +168,9 @@ static dispatch_once_t onceToken;
 {
     UIWindow *keyWindow = [self keyWindow];
     CGRect textFieldViewRect = [[_textFieldView superview] convertRect:_textFieldView.frame toView:keyWindow];
-    CGRect rootViewRect = self.rootViewController.view.frame;
+    UIViewController *rootViewController = [_textFieldView viewController];
+    if (!rootViewController) rootViewController = [keyWindow topMostController];
+    CGRect rootViewRect = rootViewController.view.frame;
     
     CGSize kbSize = _kSize;
     kbSize.height += _keyboardDistanceFromTextField;

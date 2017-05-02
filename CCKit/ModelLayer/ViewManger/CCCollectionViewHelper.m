@@ -158,7 +158,7 @@
         id curModel = [self currentModelAtIndexPath:indexPath];
         NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
         @weakify(self);
-        curSize = [collectionView cc_heightForCellWithIdentifier:curCellIdentifier cacheByIndexPath:indexPath configuration:^(id cell) {
+        curSize = [collectionView cc_SizeForCellWithIdentifier:curCellIdentifier cacheByIndexPath:indexPath configuration:^(id cell) {
             @strongify(self);
             if (self.cellForItemAtIndexPath) {
                 self.cellForItemAtIndexPath(cell, indexPath, curModel,NO);

@@ -31,7 +31,7 @@
 #pragma mark -
 #pragma mark :. CCIndexPathSizeCache
 
-typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
+typedef NSMutableArray<NSMutableArray<NSValue *> *> CCIndexPathSizesBySection;
 
 @interface CCIndexPathSizeCache ()
 
@@ -66,8 +66,8 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
 - (BOOL)existsSizeAtIndexPath:(NSIndexPath *)indexPath
 {
     [self buildCachesAtIndexPathsIfNeeded:@[ indexPath ]];
-    NSNumber *number = self.SizesBySectionForCurrentOrientation[indexPath.section][indexPath.row];
-    return ![number isEqualToNumber:@-1];
+    NSValue *value = self.SizesBySectionForCurrentOrientation[indexPath.section][indexPath.row];
+    return !value;
 }
 
 - (void)cacheSize:(CGSize)size byIndexPath:(NSIndexPath *)indexPath
@@ -122,7 +122,7 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
 - (void)buildRowsIfNeeded:(NSInteger)targetRow inExistSection:(NSInteger)section
 {
     [self enumerateAllOrientationsUsingBlock:^(CCIndexPathSizesBySection *sizesBySection) {
-        NSMutableArray<NSNumber *> *sizesByRow = sizesBySection[section];
+        NSMutableArray<NSValue *> *sizesByRow = sizesBySection[section];
         for (NSInteger row = 0; row <= targetRow; ++row) {
             if (row >= sizesByRow.count) {
                 sizesByRow[row] = @-1;
@@ -159,7 +159,7 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
     return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? self.mutableSizesByKeyForPortrait : self.mutableSizesByKeyForLandscape;
 }
 
-- (BOOL)existsHeightForKey:(id<NSCopying>)key
+- (BOOL)existsSizeForKey:(id<NSCopying>)key
 {
     NSNumber *number = self.mutableSizesByKeyForCurrentOrientation[key];
     return number && ![number isEqualToNumber:@-1];
@@ -175,13 +175,13 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
     return [self.mutableSizesByKeyForCurrentOrientation[key] CGSizeValue];
 }
 
-- (void)invalidateHeightForKey:(id<NSCopying>)key
+- (void)invalidateSizeForKey:(id<NSCopying>)key
 {
     [self.mutableSizesByKeyForPortrait removeObjectForKey:key];
     [self.mutableSizesByKeyForLandscape removeObjectForKey:key];
 }
 
-- (void)invalidateAllHeightCache
+- (void)invalidateAllSizeCache
 {
     [self.mutableSizesByKeyForPortrait removeAllObjects];
     [self.mutableSizesByKeyForLandscape removeAllObjects];
@@ -320,7 +320,7 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
     return [self cc_systemFittingHeightForConfiguratedCell:templateLayoutCell];
 }
 
-- (CGSize)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByIndexPath:(NSIndexPath *)indexPath configuration:(void (^)(id cell))configuration
+- (CGSize)cc_SizeForCellWithIdentifier:(NSString *)identifier cacheByIndexPath:(NSIndexPath *)indexPath configuration:(void (^)(id cell))configuration
 {
     CGSize viewSize = CGSizeMake(0, 0);
     if (!identifier || !indexPath) {
@@ -338,7 +338,7 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathSizesBySection;
     return viewSize;
 }
 
-- (CGSize)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByKey:(id<NSCopying>)key configuration:(void (^)(id cell))configuration
+- (CGSize)cc_SizeForCellWithIdentifier:(NSString *)identifier cacheByKey:(id<NSCopying>)key configuration:(void (^)(id cell))configuration
 {
      CGSize contentSize = CGSizeMake(0, 0);
     if (!identifier || !key) {

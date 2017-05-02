@@ -14,4 +14,7 @@
 
 @property (nonatomic, getter=isAlertViewTextField, readonly) BOOL alertViewTextField;
 
+@property (nullable, nonatomic, readonly, strong) UIViewController *viewController;
+@property (nullable, nonatomic, readonly, strong) UIViewController *topMostController;
+
 @end

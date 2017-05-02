@@ -33,7 +33,7 @@
 @interface CCIndexPathSizeCache : NSObject
 
 // Enable automatically if you're using index path driven height cache
-@property(nonatomic, assign) BOOL automaticallyInvalidateEnabled;
+@property (nonatomic, assign) BOOL automaticallyInvalidateEnabled;
 
 // Height cache
 - (BOOL)existsSizeAtIndexPath:(NSIndexPath *)indexPath;
@@ -60,7 +60,7 @@
 
 @interface UICollectionView (Additions)
 
-@property(nonatomic, strong) CCCollectionViewHelper *cc_collectionViewHelper;
+@property (nonatomic, strong) CCCollectionViewHelper *cc_collectionViewHelper;
 
 #pragma mark -
 #pragma mark :. CCTemplateLayoutCell
@@ -86,7 +86,7 @@
 ///        to the template cell. The configuration should be minimal for scrolling
 ///        performance yet sufficient for calculating cell's height.
 ///
-- (CGSize)cc_heightForCellWithIdentifier:(NSString *)identifier configuration:(void (^)(id cell))configuration;
+- (CGSize)cc_SizeForCellWithIdentifier:(NSString *)identifier configuration:(void (^)(id cell))configuration;
 
 /// This method does what "-fd_heightForCellWithIdentifier:configuration" does, and
 /// calculated height will be cached by its index path, returns a cached height
@@ -98,7 +98,7 @@
 ///
 /// @param indexPath where this cell's height cache belongs.
 ///
-- (CGSize)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByIndexPath:(NSIndexPath *)indexPath configuration:(void (^)(id cell))configuration;
+- (CGSize)cc_SizeForCellWithIdentifier:(NSString *)identifier cacheByIndexPath:(NSIndexPath *)indexPath configuration:(void (^)(id cell))configuration;
 
 /// This method caches height by your model entity's identifier.
 /// If your model's changed, call "-invalidateHeightForKey:(id <NSCopying>)key" to
@@ -106,7 +106,7 @@
 ///
 /// @param key model entity's identifier whose data configures a cell.
 ///
-- (CGSize)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByKey:(id<NSCopying>)key configuration:(void (^)(id cell))configuration;
+- (CGSize)cc_SizeForCellWithIdentifier:(NSString *)identifier cacheByKey:(id<NSCopying>)key configuration:(void (^)(id cell))configuration;
 
 @end
 
@@ -122,13 +122,13 @@
 ///       }
 ///   }
 ///
-@property(nonatomic, assign) BOOL cc_isTemplateLayoutCell;
+@property (nonatomic, assign) BOOL cc_isTemplateLayoutCell;
 
 /// Enable to enforce this template layout cell to use "frame layout" rather than "auto layout",
 /// and will ask cell's height by calling "-sizeThatFits:", so you must override this method.
 /// Use this property only when you want to manually control this template layout cell's height
 /// calculation mode, default to NO.
 ///
-@property(nonatomic, assign) BOOL cc_enforceFrameLayout;
+@property (nonatomic, assign) BOOL cc_enforceFrameLayout;
 
 @end
