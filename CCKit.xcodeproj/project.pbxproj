@@ -62,6 +62,8 @@
 		4252A0491E9F4D7D0093AFF7 /* CCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 4252A0471E9F4D7D0093AFF7 /* CCKeychain.m */; };
 		4252A0761E9F5E020093AFF7 /* CCKeychainQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 4252A0741E9F5E020093AFF7 /* CCKeychainQuery.h */; };
 		4252A0771E9F5E020093AFF7 /* CCKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 4252A0751E9F5E020093AFF7 /* CCKeychainQuery.m */; };
+		425E192F1EB88B79009B4154 /* CCUnicode.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E192D1EB88B79009B4154 /* CCUnicode.h */; };
+		425E19301EB88B79009B4154 /* CCUnicode.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E192E1EB88B79009B4154 /* CCUnicode.m */; };
 		426B65741EA98E5B006706A2 /* CCCameraViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B654B1EA98E5B006706A2 /* CCCameraViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		426B65751EA98E5B006706A2 /* CCCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 426B654C1EA98E5B006706A2 /* CCCameraViewController.m */; };
 		426B65761EA98E5B006706A2 /* CCImageCropViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B654E1EA98E5B006706A2 /* CCImageCropViewController.h */; };
@@ -582,6 +584,8 @@
 		4252A0471E9F4D7D0093AFF7 /* CCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCKeychain.m; sourceTree = "<group>"; };
 		4252A0741E9F5E020093AFF7 /* CCKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCKeychainQuery.h; sourceTree = "<group>"; };
 		4252A0751E9F5E020093AFF7 /* CCKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCKeychainQuery.m; sourceTree = "<group>"; };
+		425E192D1EB88B79009B4154 /* CCUnicode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUnicode.h; sourceTree = "<group>"; };
+		425E192E1EB88B79009B4154 /* CCUnicode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUnicode.m; sourceTree = "<group>"; };
 		426B654B1EA98E5B006706A2 /* CCCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCCameraViewController.h; sourceTree = "<group>"; };
 		426B654C1EA98E5B006706A2 /* CCCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCCameraViewController.m; sourceTree = "<group>"; };
 		426B654E1EA98E5B006706A2 /* CCImageCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCImageCropViewController.h; sourceTree = "<group>"; };
@@ -1184,6 +1188,15 @@
 				4252A0751E9F5E020093AFF7 /* CCKeychainQuery.m */,
 			);
 			path = CCKeychain;
+			sourceTree = "<group>";
+		};
+		425E192C1EB88B55009B4154 /* CCUnicode */ = {
+			isa = PBXGroup;
+			children = (
+				425E192D1EB88B79009B4154 /* CCUnicode.h */,
+				425E192E1EB88B79009B4154 /* CCUnicode.m */,
+			);
+			path = CCUnicode;
 			sourceTree = "<group>";
 		};
 		426B654A1EA98E5B006706A2 /* CameraViewController */ = {
@@ -2085,6 +2098,7 @@
 		42FC71F11E70012800FBBE42 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				425E192C1EB88B55009B4154 /* CCUnicode */,
 				42FC72071E70012800FBBE42 /* Category.h */,
 				42FC74001E7005F300FBBE42 /* CCUtilities */,
 				42FC71F21E70012800FBBE42 /* AvoidCrash */,
@@ -3151,6 +3165,7 @@
 				42FC70C51E6FDC7F00FBBE42 /* CCHTTPManager.h in Headers */,
 				423B4C761E890CAA007139EC /* UI.h in Headers */,
 				42954A8F1E712BE100F4CC4C /* MKAnnotationView+WebCache.h in Headers */,
+				425E192F1EB88B79009B4154 /* CCUnicode.h in Headers */,
 				42FC70A31E6FDB7700FBBE42 /* UIView+CCTransfer.h in Headers */,
 				42FC730C1E70012800FBBE42 /* CLLocation+CH1903.h in Headers */,
 				42954A0A1E71226F00F4CC4C /* Ability.h in Headers */,
@@ -3334,6 +3349,7 @@
 				426B657F1EA98E5B006706A2 /* NSBundle+TZImagePicker.m in Sources */,
 				42FC731D1E70012800FBBE42 /* NSException+Additions.m in Sources */,
 				42FC738F1E70012800FBBE42 /* UITextField+Additions.m in Sources */,
+				425E19301EB88B79009B4154 /* CCUnicode.m in Sources */,
 				42FC710B1E6FDCF600FBBE42 /* CoreDataMasterSlave+Queries.m in Sources */,
 				4233C2031E83CCD80041A015 /* FMResultSet.m in Sources */,
 				42FC72F41E70012800FBBE42 /* NSAttributedString+AvoidCrash.m in Sources */,

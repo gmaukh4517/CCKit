@@ -1,5 +1,5 @@
 //
-//  ResponseEntity.h
+//  CCUnicode.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -24,16 +24,3 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@interface CCResponseObject : NSObject
-
-/** 传递键值 */
-@property (nonatomic, copy) NSDictionary *userInfo;
-/** 响应消息 */
-@property (nonatomic, copy) NSString *Msg;
-/** 响应数据 */
-@property (nonatomic, copy) NSString *Data;
-
-@property (nonatomic, assign) NSInteger Code;
-
-@end
