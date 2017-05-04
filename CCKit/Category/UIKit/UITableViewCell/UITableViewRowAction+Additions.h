@@ -1,5 +1,5 @@
 //
-//  UITableViewCell+Additions.h
+//  UITableViewRowAction+Additions.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
@@ -25,53 +25,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UITableViewCell (Additions)
+NS_ASSUME_NONNULL_BEGIN
 
-@property(nonatomic, assign) BOOL cc_delaysContentTouches;
+@interface UITableViewRowAction (Additions)
 
-/**
- *  @author CC, 16-06-08
- *  
- *  @brief  当前Cell数据源
- */
-@property(nonatomic, strong) id cc_dataSources;
+@property (nonatomic, strong, nullable) UIImage *image;
+@property (nonatomic, strong, nullable) UIImage *backgroundImage;
 
-/**
- *  @author C C, 16-06-08
- *
- *  @brief  Cell 获取下标
- */
-@property(nonatomic, strong) NSIndexPath *cc_indexPath;
+@property (nonatomic, copy) UIColor *titleColor;
 
-/**
- *  @brief  加载同类名的nib
- *
- *  @return nib
- */
-+ (UINib *)nib;
+@property (nonatomic, assign) BOOL enabled;
 
-/**
- *  登记tableView的Cell
- *  1. nib读取    （优先）
- *  2. 文件名获取
- */
-+ (void)registerTable:(UITableView *)tableView
-        nibIdentifier:(NSString *)identifier;
-/**
- *  配置UITableViewCell，设置UITableViewCell内容
- */
-- (void)configure:(UITableViewCell *)tableViewCell
-        customObj:(id)obj
-        indexPath:(NSIndexPath *)indexPath;
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                             image:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *action, NSIndexPath *indexPath))handler;
 
-
-- (void)cc_cellWillDisplayWithModel:(id)cModel
-                          indexPath:(NSIndexPath *)cIndexPath;
-
-/**
- *  获取自定义对象的cell高度 (已集成UITableView+Additions，现在创建的cell自动计算高度)
- */
-+ (CGFloat)obtainCellHeightWithCustomObj:(id)obj
-                               indexPath:(NSIndexPath *)indexPath;
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                   backgroundImage:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *action, NSIndexPath *indexPath))handler;
 
 @end
+
+NS_ASSUME_NONNULL_END
