@@ -87,6 +87,7 @@
 #import <CCKit/UITableView+Additions.h>
 #import <CCKit/UITableViewCell+Additions.h>
 #import <CCKit/UITableViewHeaderFooterView+Additions.h>
+#import <CCKit/UITableViewRowAction+Additions.h>
 #import <CCKit/UITextField+Additions.h>
 #import <CCKit/UITextView+Additions.h>
 #import <CCKit/UIView+Animation.h>

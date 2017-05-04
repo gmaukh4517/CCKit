@@ -1,6 +1,6 @@
 //
 //  CCExtensionConst.h
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
 //
@@ -23,8 +23,8 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_CCExtensionConst_h
-#define CCFramework_CCExtensionConst_h
+#ifndef CCKit_CCExtensionConst_h
+#define CCKit_CCExtensionConst_h
 
 #import <Foundation/Foundation.h>
 

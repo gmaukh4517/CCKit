@@ -1,6 +1,6 @@
 //
 //  UI.h
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
 //
@@ -23,8 +23,8 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_UI_h
-#define CCFramework_UI_h
+#ifndef CCKit_UI_h
+#define CCKit_UI_h
 
 #import <CCKit/CCActionSheet.h>
 #import <CCKit/CCButton.h>

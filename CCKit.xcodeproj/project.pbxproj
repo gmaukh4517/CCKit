@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		420A7F561EBB0CA500182C77 /* UITableViewRowAction+Additions.h in Headers */ = {isa = PBXBuildFile; fileRef = 420A7F541EBB0CA500182C77 /* UITableViewRowAction+Additions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		420A7F571EBB0CA500182C77 /* UITableViewRowAction+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 420A7F551EBB0CA500182C77 /* UITableViewRowAction+Additions.m */; };
 		421B10E21EA851F10043A1ED /* CCVoiceCommonHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 421B10DE1EA851F10043A1ED /* CCVoiceCommonHelper.h */; };
 		421B10E31EA851F10043A1ED /* CCVoiceCommonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 421B10DF1EA851F10043A1ED /* CCVoiceCommonHelper.m */; };
 		421B10E41EA851F10043A1ED /* CCVoiceRecordHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 421B10E01EA851F10043A1ED /* CCVoiceRecordHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -543,6 +545,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		420A7F541EBB0CA500182C77 /* UITableViewRowAction+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewRowAction+Additions.h"; sourceTree = "<group>"; };
+		420A7F551EBB0CA500182C77 /* UITableViewRowAction+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewRowAction+Additions.m"; sourceTree = "<group>"; };
 		421B10DE1EA851F10043A1ED /* CCVoiceCommonHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCVoiceCommonHelper.h; sourceTree = "<group>"; };
 		421B10DF1EA851F10043A1ED /* CCVoiceCommonHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCVoiceCommonHelper.m; sourceTree = "<group>"; };
 		421B10E01EA851F10043A1ED /* CCVoiceRecordHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCVoiceRecordHelper.h; sourceTree = "<group>"; };
@@ -2784,6 +2788,8 @@
 			children = (
 				42FC72D41E70012800FBBE42 /* UITableViewCell+Additions.h */,
 				42FC72D51E70012800FBBE42 /* UITableViewCell+Additions.m */,
+				420A7F541EBB0CA500182C77 /* UITableViewRowAction+Additions.h */,
+				420A7F551EBB0CA500182C77 /* UITableViewRowAction+Additions.m */,
 			);
 			path = UITableViewCell;
 			sourceTree = "<group>";
@@ -3073,6 +3079,7 @@
 				42FC71801E6FDF1400FBBE42 /* UIButton+AFNetworking.h in Headers */,
 				42FC74031E7005F300FBBE42 /* CCUtilities.h in Headers */,
 				42FC73011E70012800FBBE42 /* NSString+AvoidCrash.h in Headers */,
+				420A7F561EBB0CA500182C77 /* UITableViewRowAction+Additions.h in Headers */,
 				421B10E41EA851F10043A1ED /* CCVoiceRecordHelper.h in Headers */,
 				427146121E9B71500060D5C3 /* CCWebViewProgress.h in Headers */,
 				4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */,
@@ -3426,6 +3433,7 @@
 				42FC73431E70012800FBBE42 /* MKMapView+Additions.m in Sources */,
 				42954A751E712BE100F4CC4C /* NSData+ImageContentType.m in Sources */,
 				42FC73751E70012800FBBE42 /* UINavigationController+Additions.m in Sources */,
+				420A7F571EBB0CA500182C77 /* UITableViewRowAction+Additions.m in Sources */,
 				42FC71031E6FDCF600FBBE42 /* CCCollectionViewFetchResultController.m in Sources */,
 				42FC74041E7005F300FBBE42 /* CCUtilities.m in Sources */,
 				426B65911EA98E5B006706A2 /* TZAssetCell.m in Sources */,

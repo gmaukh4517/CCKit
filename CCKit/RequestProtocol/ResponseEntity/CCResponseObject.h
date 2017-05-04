@@ -32,7 +32,7 @@
 /** 响应消息 */
 @property (nonatomic, copy) NSString *Msg;
 /** 响应数据 */
-@property (nonatomic, copy) NSString *Data;
+@property (nonatomic, copy) id Data;
 
 @property (nonatomic, assign) NSInteger Code;
 

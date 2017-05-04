@@ -1,6 +1,6 @@
 //
 //  NSAttributedString+Teletext.m
-//  CCFramework
+//  CCKit
 //
 //  Created by CC on 16/5/30.
 //  Copyright © 2016年 CC. All rights reserved.

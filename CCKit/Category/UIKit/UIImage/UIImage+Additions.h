@@ -1,6 +1,6 @@
 //
 //  UIImage+Additions.h
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
 //

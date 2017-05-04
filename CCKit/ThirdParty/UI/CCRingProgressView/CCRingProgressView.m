@@ -1,6 +1,6 @@
 //
 //  CCRingProgressView.m
-//  CCFramework
+//  CCKit
 //
 //  Created by CC on 16/8/23.
 //  Copyright © 2016年 CC. All rights reserved.

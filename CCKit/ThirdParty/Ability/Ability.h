@@ -1,6 +1,6 @@
 //
 //  Ability.h
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
 //
@@ -23,8 +23,8 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCFramework_Ability_h
-#define CCFramework_Ability_h
+#ifndef CCKit_Ability_h
+#define CCKit_Ability_h
 
 #import <CCKit/CCKeyboardManager.h>
 #import <CCKit/CCKeychain.h>

@@ -1,6 +1,6 @@
 //
 //  NSBundle+AppIcon.m
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
 //
