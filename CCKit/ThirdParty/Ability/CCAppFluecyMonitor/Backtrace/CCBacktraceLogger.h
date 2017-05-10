@@ -1,5 +1,5 @@
 //
-//  CCMonitorService.h
+//  CCBacktraceLogger.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -24,14 +24,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
-@interface CCMonitorService : NSObject
+@interface CCBacktraceLogger : NSObject
 
-+ (void)start:(UIWindow *)monitorWindow;
++ (NSString *)cc_backtraceOfAllThread;
++ (NSString *)cc_backtraceOfMainThread;
++ (NSString *)cc_backtraceOfCurrentThread;
++ (NSString *)cc_backtraceOfNSThread:(NSThread *)thread;
 
-+ (void)stop;
-
-+ (void)mainColor:(UIColor *)color;
++ (void)cc_logMain;
++ (void)cc_logCurrent;
++ (void)cc_logAllThread;
 
 @end

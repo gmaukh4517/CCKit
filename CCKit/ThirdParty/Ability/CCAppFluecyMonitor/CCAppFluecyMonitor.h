@@ -1,5 +1,5 @@
 //
-//  CCMonitorService.h
+//  CCAppFluecyMonitor.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -24,14 +24,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
-@interface CCMonitorService : NSObject
+#define SHAREDMONITOR [CCAppFluecyMonitor sharedMonitor]
 
-+ (void)start:(UIWindow *)monitorWindow;
+@interface CCAppFluecyMonitor : NSObject
 
-+ (void)stop;
++ (instancetype)sharedMonitor;
 
-+ (void)mainColor:(UIColor *)color;
+- (void)startMonitoring;
+- (void)stopMonitoring;
 
 @end
