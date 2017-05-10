@@ -28,7 +28,7 @@
 #import "CCQRCodeDisplayViewController.h"
 #import "CCScanningView.h"
 #import "Config.h"
-#import "UIButton+Additions.h"
+#import "UIButton+CCAdd.h"
 #import "UIView+Frame.h"
 
 #define kCCScanningButtonPadding 36

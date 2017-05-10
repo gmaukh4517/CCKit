@@ -26,11 +26,11 @@
 #import "CCTableViewHelper.h"
 #import "CCProperty.h"
 #import "Config.h"
-#import "UITableView+Additions.h"
-#import "UITableViewCell+Additions.h"
+#import "UITableView+CCAdd.h"
+#import "UITableViewCell+CCAdd.h"
 #import "UIView+CCTransfer.h"
 #import "UIView+Method.h"
-#import "UIViewController+Additions.h"
+#import "UIViewController+CCAdd.h"
 
 #define defaultInterval .5 //默认时间间隔
 

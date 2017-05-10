@@ -25,7 +25,7 @@
 
 #import "CoreDataMasterSlave+Manager.h"
 #import "CoreDataMasterSlave+Convenience.h"
-#import "NSManagedObject+Additions.h"
+#import "NSManagedObject+CCAdd.h"
 
 @implementation CoreDataMasterSlave (Create)
 

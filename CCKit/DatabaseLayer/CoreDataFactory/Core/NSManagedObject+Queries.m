@@ -26,7 +26,7 @@
 #import <UIKit/UIKit.h>
 #import "BaseManagedObject.h"
 #import "config.h"
-#import "NSManagedObject+Additions.h"
+#import "NSManagedObject+CCAdd.h"
 
 @implementation NSManagedObject (Queries)
 

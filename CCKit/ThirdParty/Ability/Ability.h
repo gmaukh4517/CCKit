@@ -32,5 +32,6 @@
 #import <CCKit/CCUncaughtExceptionHandler.h>
 #import <CCKit/CCUserDefaults.h>
 #import <CCKit/CCVoiceRecordHelper.h>
+#import <CCKit/CCDebugTool.h>
 
 #endif

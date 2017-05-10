@@ -29,7 +29,7 @@
 #import "CCWebViewProgressView.h"
 #import "config.h"
 #import <JavaScriptCore/JavaScriptCore.h>
-#import "UIViewController+Additions.h"
+#import "UIViewController+CCAdd.h"
 #import "CCProgressHUD.h"
 
 typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);

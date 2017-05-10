@@ -26,7 +26,7 @@
 
 #import "CCActionSheetViewController.h"
 #import "CCActionSheet.h"
-#import "UIWindow+Additions.h"
+#import "UIWindow+CCAdd.h"
 
 @interface CCActionSheetViewController ()
 

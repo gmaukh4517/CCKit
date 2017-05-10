@@ -9,7 +9,7 @@
 #import "CCHTTPUpDownLoad.h"
 #import "AFNetworking.h"
 #import "UIKit+AFNetworking.h"
-//#import "NSString+Additions.h"
+//#import "NSString+CCAdd.h"
 #import "HttpFileConfig.h"
 
 @implementation CCHTTPUpDownLoad

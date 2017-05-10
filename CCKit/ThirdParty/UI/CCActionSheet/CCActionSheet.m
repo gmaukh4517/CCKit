@@ -24,8 +24,8 @@
 //
 
 #import "CCActionSheet.h"
-#import "UIImage+Additions.h"
-#import "UIWindow+Additions.h"
+#import "UIImage+CCAdd.h"
+#import "UIWindow+CCAdd.h"
 #import "CCActionSheetViewController.h"
 
 static const NSTimeInterval kDefaultAnimationDuration = 0.5f;

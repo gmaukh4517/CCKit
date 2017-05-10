@@ -1,5 +1,5 @@
 //
-//  FMDatabaseAdditions.m
+//  FMDatabaseCCAdd.m
 //  fmdb
 //
 //  Created by August Mueller on 10/30/05.

@@ -28,7 +28,7 @@
 #import "CCRefreshFooterView.h"
 #import "CCRefreshConst.h"
 #import "UIView+Frame.h"
-#import "UIScrollView+Additions.h"
+#import "UIScrollView+CCAdd.h"
 
 @interface CCRefreshFooterView ()
 

@@ -26,8 +26,8 @@
 #import "CCImageCropViewController.h"
 #import "CCImageScrollView.h"
 #import "CCTouchView.h"
-#import "UIApplication+Additions.h"
-#import "UIImage+Additions.h"
+#import "UIApplication+CCAdd.h"
+#import "UIImage+CCAdd.h"
 #import "CGGeometry+CCImageCropper.h"
 
 static const CGFloat kResetAnimationDuration = 0.4;

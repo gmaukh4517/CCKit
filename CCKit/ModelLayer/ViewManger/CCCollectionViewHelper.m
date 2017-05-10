@@ -25,11 +25,11 @@
 
 #import "CCCollectionViewHelper.h"
 #import "UIView+Method.h"
-#import "UIViewController+Additions.h"
+#import "UIViewController+CCAdd.h"
 #import "Config.h"
-#import "UICollectionViewCell+Additions.h"
-#import "UICollectionView+Additions.h"
-#import "UICollectionReusableView+Additions.h"
+#import "UICollectionViewCell+CCAdd.h"
+#import "UICollectionView+CCAdd.h"
+#import "UICollectionReusableView+CCAdd.h"
 
 @interface CCCollectionViewHelper ()
 

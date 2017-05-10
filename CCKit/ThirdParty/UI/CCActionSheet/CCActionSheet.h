@@ -41,7 +41,7 @@ typedef void (^CCActionSheetHandler)(CCActionSheet *actionSheet);
 // Appearance - all of the following properties should be set before showing the action sheet. See `+initialize` to learn the default values of all properties.
 
 /**
- *  See UIImage+Additions.h/.m to learn how these three properties are used.
+ *  See UIImage+CCAdd.h/.m to learn how these three properties are used.
  */
 @property(nonatomic) CGFloat blurRadius UI_APPEARANCE_SELECTOR;
 @property(strong, nonatomic) UIColor *blurTintColor UI_APPEARANCE_SELECTOR;

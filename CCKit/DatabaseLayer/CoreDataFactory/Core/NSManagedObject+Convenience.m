@@ -24,7 +24,7 @@
 //
 
 #import "BaseManagedObject.h"
-#import "NSManagedObject+Additions.h"
+#import "NSManagedObject+CCAdd.h"
 
 @implementation NSManagedObject (Convenience)
 

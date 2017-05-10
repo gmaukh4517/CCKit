@@ -69,6 +69,25 @@ static CFTypeRef CCKeychainAccessibilityType = NULL;
     return query.valueData;
 }
 
++ (id)loadObjForService:(NSString *)serviceName
+{
+    return [CCKeychain loadObjForService:serviceName account:serviceName];
+}
+
++ (id)loadObjForService:(NSString *)serviceName account:(NSString *)account
+{
+    return [CCKeychain loadObjForService:serviceName account:account error:nil];
+}
+
++ (id)loadObjForService:(NSString *)serviceName account:(NSString *)account error:(NSError *_Nullable __autoreleasing *)error
+{
+    CCKeychainQuery *query = [[CCKeychainQuery alloc] init];
+    query.service = serviceName;
+    query.account = account;
+    [query fetch:error];
+    return query.valueObject;
+}
+
 /** 删除 **/
 + (BOOL)deleteForService:(NSString *)serviceName
 {
@@ -124,6 +143,25 @@ static CFTypeRef CCKeychainAccessibilityType = NULL;
     query.service = serviceName;
     query.account = account;
     query.valueData = value;
+    return [query save:error];
+}
+
++ (BOOL)saveObjForService:(id)value forService:(NSString *)serviceName
+{
+    return [CCKeychain saveObjForService:value forService:serviceName account:serviceName];
+}
+
++ (BOOL)saveObjForService:(id)value forService:(NSString *)serviceName account:(NSString *)account
+{
+    return [CCKeychain saveObjForService:value forService:serviceName account:account error:nil];
+}
+
++ (BOOL)saveObjForService:(id)value forService:(NSString *)serviceName account:(NSString *)account error:(NSError *_Nullable __autoreleasing *)error
+{
+    CCKeychainQuery *query = [[CCKeychainQuery alloc] init];
+    query.service = serviceName;
+    query.account = account;
+    query.valueObject = value;
     return [query save:error];
 }
 

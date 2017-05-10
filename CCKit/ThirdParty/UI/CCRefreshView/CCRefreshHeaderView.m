@@ -28,7 +28,7 @@
 #import "CCRefreshConst.h"
 #import "config.h"
 #import "UIView+Frame.h"
-#import "UIScrollView+Additions.h"
+#import "UIScrollView+CCAdd.h"
 
 @interface CCRefreshHeaderView ()
 // 最后的更新时间

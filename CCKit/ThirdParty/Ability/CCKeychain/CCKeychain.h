@@ -41,6 +41,10 @@ typedef NS_ENUM(OSStatus, CCKeychainErrorCode) {
 + (nullable NSData *)loadDataForService:(NSString *)serviceName account:(NSString *)account;
 + (nullable NSData *)loadDataForService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error __attribute__((swift_error(none)));
 
++ (id)loadObjForService:(NSString *)serviceName;
++ (id)loadObjForService:(NSString *)serviceName account:(NSString *)account;
++ (id)loadObjForService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error __attribute__((swift_error(none)));
+
 /** 删除 **/
 + (BOOL)deleteForService:(NSString *)serviceName;
 + (BOOL)deleteForService:(NSString *)serviceName account:(NSString *)account;
@@ -54,6 +58,10 @@ typedef NS_ENUM(OSStatus, CCKeychainErrorCode) {
 + (BOOL)saveDataForService:(NSData *)value forService:(NSString *)serviceName;
 + (BOOL)saveDataForService:(NSData *)value forService:(NSString *)serviceName account:(NSString *)account;
 + (BOOL)saveDataForService:(NSData *)value forService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error __attribute__((swift_error(none)));
+
++ (BOOL)saveObjForService:(id)value forService:(NSString *)serviceName;
++ (BOOL)saveObjForService:(id)value forService:(NSString *)serviceName account:(NSString *)account;
++ (BOOL)saveObjForService:(id)value forService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error __attribute__((swift_error(none)));
 
 
 + (nullable NSArray<NSDictionary<NSString *, id> *> *)allAccounts;

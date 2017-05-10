@@ -25,7 +25,7 @@
 
 #import "CCTransformRefresh.h"
 #import <objc/message.h>
-#import "UIScrollView+Additions.h"
+#import "UIScrollView+CCAdd.h"
 #import "config.h"
 
 // objc_msgSend

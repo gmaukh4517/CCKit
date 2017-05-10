@@ -29,7 +29,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
 #import "CCImageCropViewController.h"
-#import "UIImage+Additions.h"
+#import "UIImage+CCAdd.h"
 #import "TZImagePickerController.h"
 
 #import "CameraSessionView.h"

@@ -1,5 +1,5 @@
 //
-//  FMDatabaseAdditions.h
+//  FMDatabaseCCAdd.h
 //  fmdb
 //
 //  Created by August Mueller on 10/30/05.
@@ -10,7 +10,7 @@
 #import "FMDatabase.h"
 
 
-/** Category of additions for `<FMDatabase>` class.
+/** Category of CCAdd for `<FMDatabase>` class.
  
  ### See also
 
@@ -30,7 +30,7 @@
 
  @return `int` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (int)intForQuery:(NSString*)query, ...;
@@ -42,7 +42,7 @@
 
  @return `long` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (long)longForQuery:(NSString*)query, ...;
@@ -54,7 +54,7 @@
 
  @return `BOOL` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (BOOL)boolForQuery:(NSString*)query, ...;
@@ -66,7 +66,7 @@
 
  @return `double` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (double)doubleForQuery:(NSString*)query, ...;
@@ -78,7 +78,7 @@
 
  @return `NSString` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (NSString*)stringForQuery:(NSString*)query, ...;
@@ -90,7 +90,7 @@
 
  @return `NSData` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (NSData*)dataForQuery:(NSString*)query, ...;
@@ -102,7 +102,7 @@
 
  @return `NSDate` value.
  
- @note To use this method from Swift, you must include `FMDatabaseAdditionsVariadic.swift` in your project.
+ @note To use this method from Swift, you must include `FMDatabaseCCAddVariadic.swift` in your project.
  */
 
 - (NSDate*)dateForQuery:(NSString*)query, ...;

@@ -6,7 +6,7 @@
 
 #import "MBProgressHUD.h"
 #import "CCLoadLogoView.h"
-#import "UIImage+Additions.h"
+#import "UIImage+CCAdd.h"
 #import <tgmath.h>
 #import "CCLoadingView.h"
 

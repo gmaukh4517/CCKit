@@ -1,5 +1,5 @@
 //
-//  UIViewController+Additions.m
+//  UIViewController+CCAdd.m
 //  CCKit
 //
 // Copyright (c) 2015 CC ( http://www.ccskill.com )
