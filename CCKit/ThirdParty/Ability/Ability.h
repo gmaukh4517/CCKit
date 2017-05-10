@@ -2,7 +2,7 @@
 //  Ability.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( http://www.ccskill.com )
+// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,14 @@
 #ifndef CCKit_Ability_h
 #define CCKit_Ability_h
 
+#import <CCKit/CCAppDelegateSOA.h>
+#import <CCKit/CCAppFluecyMonitor.h>
+#import <CCKit/CCDebugTool.h>
 #import <CCKit/CCKeyboardManager.h>
 #import <CCKit/CCKeychain.h>
 #import <CCKit/CCQRCodeViewController.h>
 #import <CCKit/CCUncaughtExceptionHandler.h>
 #import <CCKit/CCUserDefaults.h>
 #import <CCKit/CCVoiceRecordHelper.h>
-#import <CCKit/CCDebugTool.h>
 
 #endif
