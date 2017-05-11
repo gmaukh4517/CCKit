@@ -111,7 +111,7 @@
     NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
     
     cell.textLabel.text = [dic objectForKey:@"ErrDate"];
-    cell.detailTextLabel.text = [dic objectForKey:@"type"];
+    cell.detailTextLabel.text = [dic objectForKey:@"ErrCause"];
     
     return cell;
 }

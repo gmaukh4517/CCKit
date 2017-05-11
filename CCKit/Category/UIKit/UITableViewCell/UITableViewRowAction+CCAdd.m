@@ -29,6 +29,16 @@
 @implementation UITableViewRowAction (CCAdd)
 
 + (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                             title:(NSString *)title
+                             image:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *_Nonnull, NSIndexPath *_Nonnull))handler
+{
+    UITableViewRowAction *rowAction = [self rowActionWithStyle:style title:title handler:handler];
+    rowAction.image = image;
+    return rowAction;
+}
+
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
                              image:(UIImage *)image
                            handler:(void (^)(UITableViewRowAction *_Nullable, NSIndexPath *_Nullable))handler
 {

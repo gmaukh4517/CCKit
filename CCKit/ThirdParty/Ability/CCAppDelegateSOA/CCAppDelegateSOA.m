@@ -74,8 +74,7 @@
 
 + (void)registeServicesWithName:(NSString *)serviceName
 {
-    Class class = NSClassFromString(serviceName);
-    [[CCAppDelegateSOA instance] registeService:[class new]];
+    [[CCAppDelegateSOA instance] registeService:[NSClassFromString(serviceName) new]];
 }
 
 #pragma mark -

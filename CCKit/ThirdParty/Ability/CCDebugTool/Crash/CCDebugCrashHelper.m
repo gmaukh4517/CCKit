@@ -31,9 +31,8 @@ const int maxCrashLogNum = 20;
 
 @interface CCDebugCrashHelper ()
 
-@property(nonatomic, strong) NSString *
-crashLogPath;
-@property(nonatomic, strong) NSMutableArray *crashLogPlist;
+@property (nonatomic, strong) NSString *crashLogPath;
+@property (nonatomic, strong) NSMutableArray *crashLogPlist;
 
 @end
 
@@ -60,7 +59,7 @@ crashLogPath;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 初始化设置
  */
 - (void)initialization
@@ -86,7 +85,7 @@ crashLogPath;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 保存Crash日志
  *
  *  @param exdic 错误集合
@@ -116,7 +115,7 @@ crashLogPath;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 获取Crash日志
  */
 - (NSArray *)obtainCrashLogs

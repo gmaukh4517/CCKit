@@ -37,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL enabled;
 
 + (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                             title:(NSString *)title
+                             image:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *_Nonnull, NSIndexPath *_Nonnull))handler;
+
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
                              image:(UIImage *)image
                            handler:(void (^)(UITableViewRowAction *action, NSIndexPath *indexPath))handler;
 

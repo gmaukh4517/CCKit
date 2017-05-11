@@ -111,4 +111,7 @@
 #pragma mark MapKit
 #import <CCKit/MKMapView+CCAdd.h>
 
+#pragma mark Grammar
+#import <CCKit/ChainGrammar.h>
+
 #endif

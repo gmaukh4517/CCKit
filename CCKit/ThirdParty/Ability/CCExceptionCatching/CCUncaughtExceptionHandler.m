@@ -24,14 +24,13 @@
 //
 
 #import "CCUncaughtExceptionHandler.h"
-#include <libkern/OSAtomic.h>
-#include <execinfo.h>
+#import "AvoidCrash.h"
+#import "CCDebugCrashHelper.h"
 #import "CCUserDefaults.h"
 #import <UIKit/UIKit.h>
-//#import "CCDebugCrashHelper.h"
+#include <execinfo.h>
+#include <libkern/OSAtomic.h>
 #include <sys/signal.h>
-
-#import "AvoidCrash.h"
 
 NSString *const UncaughtExceptionHandlerSignalExceptionName = @"UncaughtExceptionHandlerSignalExceptionName";
 NSString *const UncaughtExceptionHandlerSignalKey = @"UncaughtExceptionHandlerSignalKey";
@@ -102,6 +101,7 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     
     NSMutableDictionary *carsDic = [NSMutableDictionary dictionary];
     [carsDic setObject:exception.name forKey:@"ErrName"];
+    [carsDic setObject:[exception reason] forKey:@"ErrCause"];
     [carsDic setObject:[NSDate date] forKey:@"ErrDate"];
     [carsDic setObject:errorStr forKey:@"ErrMsg"];
     [carsDic setObject:@"6" forKey:@"ErrType"];
@@ -109,11 +109,13 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     
     [CrashLog manager].crashArr = crashArray;
     
+    [[CCDebugCrashHelper manager] saveCrashException:carsDic];
+    
     CFRunLoopRef runLoop = CFRunLoopGetCurrent();
     CFArrayRef allModes = CFRunLoopCopyAllModes(runLoop);
     
     while (!dismissed) {
-        for (NSString *mode in(__bridge NSArray *)allModes)
+        for (NSString *mode in (__bridge NSArray *)allModes)
             CFRunLoopRunInMode((CFStringRef)mode, 0.001, false);
     }
     

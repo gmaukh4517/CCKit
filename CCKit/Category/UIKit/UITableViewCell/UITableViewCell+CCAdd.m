@@ -56,26 +56,40 @@
             
             UIView *swipeToDeleteConfirmationView = [self valueForKey:@"_swipeToDeleteConfirmationView"];
             if ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending) {
-                for (UIButton *deleteButton in swipeToDeleteConfirmationView.subviews) {
+                for (UIButton *rowButton in swipeToDeleteConfirmationView.subviews) {
                     
-                    UITableViewRowAction *rowAction = [deleteButton valueForKey:@"_action"];
+                    UITableViewRowAction *rowAction = [rowButton valueForKey:@"_action"];
                     if (rowAction.backgroundColor) {
-                        deleteButton.backgroundColor = rowAction.backgroundColor;
+                        rowButton.backgroundColor = rowAction.backgroundColor;
                     }
                     
-                    deleteButton.enabled = rowAction.enabled;
+                    rowButton.enabled = rowAction.enabled;
                     
                     if (rowAction.titleColor)
-                        [deleteButton setTitleColor:rowAction.titleColor forState:UIControlStateNormal];
+                        [rowButton setTitleColor:rowAction.titleColor forState:UIControlStateNormal];
                     
                     if (rowAction.image) {
                         NSTextAttachment *imageAtt = [[NSTextAttachment alloc] init];
                         imageAtt.image = rowAction.image;
-                        [deleteButton setAttributedTitle:[NSAttributedString attributedStringWithAttachment:imageAtt] forState:UIControlStateNormal];
+                        [rowButton setAttributedTitle:[NSAttributedString attributedStringWithAttachment:imageAtt] forState:UIControlStateNormal];
+                    }
+                    
+                    if (![rowAction.title isEqualToString:@"CC"]) {
+                        NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithAttributedString:rowButton.currentAttributedTitle];
+                        [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+                        [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:rowAction.title]];
+                        [attStr addAttribute:NSForegroundColorAttributeName value:rowAction.titleColor range:NSMakeRange(0, [attStr length])];
+                        
+                        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                        [paragraphStyle setLineSpacing:5];
+                        [attStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attStr length])];
+                        
+                        
+                        [rowButton setAttributedTitle:attStr forState:UIControlStateNormal];
                     }
                     
                     if (rowAction.backgroundImage) {
-                        [deleteButton setBackgroundImage:rowAction.backgroundImage forState:UIControlStateNormal];
+                        [rowButton setBackgroundImage:rowAction.backgroundImage forState:UIControlStateNormal];
                     }
                 }
                 return;

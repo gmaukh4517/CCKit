@@ -36,7 +36,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self initNavigation];
+//    [self initNavigation];
     [self initControl];
 }
 

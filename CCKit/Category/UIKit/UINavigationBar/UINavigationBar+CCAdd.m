@@ -45,14 +45,14 @@ static char overlayKey;
 
 /**
  *  @author CC, 2016-12-30
- *  
+ *
  *  @brief  设置背景颜色
  *
  *  @param backgroundColor 颜色
  */
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
-    if (!self.overlay){
+    if (!self.overlay) {
         [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
         
@@ -70,9 +70,6 @@ static char overlayKey;
 - (void)navigationItemView:(CGFloat)alpha
 {
     [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if ([NSStringFromClass([obj class]) isEqualToString:@"UINavigationItemView"])
-            obj.alpha = alpha;
-        
         if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")] || [obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
             obj.alpha = alpha;
         }
@@ -86,7 +83,7 @@ static char overlayKey;
 
 /**
  *  @author CC, 2016-12-30
- *  
+ *
  *  @brief  设置要素透明度
  *
  *  @param alpha 透明度
@@ -114,7 +111,7 @@ static char overlayKey;
 
 /**
  *  @author CC, 2016-12-30
- *  
+ *
  *  @brief  重置
  */
 - (void)reset
