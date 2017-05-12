@@ -27,6 +27,7 @@
 #define CCKit_Tools_h
 
 #import <CCKit/CCAlertView.h>
+#import <CCKit/CCBottomPopupView.h>
 #import <CCKit/CCProgressHUD.h>
 
 #endif

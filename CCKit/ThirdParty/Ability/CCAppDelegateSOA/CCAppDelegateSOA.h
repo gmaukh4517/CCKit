@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @import UIKit;
 
-@interface CCAppDelegateSOA : NSObject <UIApplicationDelegate>
+@interface CCAppDelegateSOA : NSObject
 
 + (instancetype)instance;
 

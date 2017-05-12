@@ -29,7 +29,7 @@
 
 @end
 
-@interface CCAppDelegateSOA ()
+@interface CCAppDelegateSOA () <UIApplicationDelegate>
 
 @property (nonatomic, strong) NSMutableArray<id<UIApplicationDelegate>> *allServices;
 

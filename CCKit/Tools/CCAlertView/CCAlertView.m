@@ -25,9 +25,9 @@
 
 #import "CCAlertView.h"
 #import "CustomIOSAlertView.h"
-#import "config.h"
-#import "UIView+Frame.h"
 #import "NSString+CCAdd.h"
+#import "UIView+Frame.h"
+#import "config.h"
 
 @implementation CCAlertButtonModel
 
@@ -38,7 +38,7 @@
 
 /**
  *  @author CC, 2016-01-04
- *  
+ *
  *  @brief  初始化弹出对象
  */
 + (CustomIOSAlertView *)alertView
@@ -56,9 +56,52 @@
     return alertView;
 }
 
+
+/**
+ 弹出提示输入框
+ 
+ @param title 标题
+ @param placeholder 输入框提示语
+ @param buttonTitles 按钮
+ @param onButtonTouchUpInside 回调
+ */
++ (void)showWithTextInput:(NSString *)title
+              placeholder:(NSString *)placeholder
+     withButtonTitleArray:(NSArray *)buttonTitles
+    OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside
+{
+    CGFloat heigth = 20;
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 0)];
+    if (title && ![title isEqualToString:@""]) {
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, containerView.width - 20, 20)];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.font = [UIFont systemFontOfSize:18];
+        titleLabel.text = title;
+        [containerView addSubview:titleLabel];
+        heigth = titleLabel.bottom + 15;
+    }
+    
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10, heigth, containerView.width - 20, 30)];
+    view.layer.borderWidth = 0.5;
+    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [containerView addSubview:view];
+    
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(5, 0, view.width - 5, 30)];
+    textField.placeholder = placeholder;
+    textField.tag = 1;
+    [view addSubview:textField];
+    
+    containerView.height = view.bottom + 15;
+    
+    [self showWithContainerView:containerView
+           withButtonTitleArray:buttonTitles
+                    handleClose:NO
+          OnButtonTouchUpInside:onButtonTouchUpInside];
+}
+
 /**
  *  @author CC, 16-02-02
- *  
+ *
  *  @brief 提醒框
  *
  *  @param message               消息内容
@@ -89,7 +132,7 @@
 
 /**
  *  @author CC, 16-02-02
- *  
+ *
  *  @brief 弹出提示消息
  *
  *  @param title                 消息标题
@@ -144,7 +187,7 @@
     [self showWithContainerView:containerView
            withButtonTitleArray:buttons
           OnButtonTouchUpInside:^(UIView *containerView, NSInteger buttonIndex) {
-              onButtonTouchUpInside?onButtonTouchUpInside(buttonIndex):nil;
+              onButtonTouchUpInside ? onButtonTouchUpInside(buttonIndex) : nil;
           }];
 }
 
@@ -163,7 +206,7 @@
 
 /**
  *  @author CC, 2016-01-04
- *  
+ *
  *  @brief  弹出框
  *
  *  @param containerView 自定义视图对象
@@ -179,7 +222,7 @@
 
 /**
  *  @author CC, 2016-01-04
- *  
+ *
  *  @brief  弹窗框
  *
  *  @param containerView         自定义对象视图
@@ -227,7 +270,7 @@
         if (handleClose)
             [alertView close];
         if (onButtonTouchUpInside)
-            onButtonTouchUpInside(alertView.containerView,buttonIndex);
+            onButtonTouchUpInside(alertView.containerView, buttonIndex);
     }];
     [alertView show];
 }

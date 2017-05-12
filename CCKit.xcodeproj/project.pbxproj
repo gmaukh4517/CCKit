@@ -123,6 +123,8 @@
 		42657AFD1EC079D30025B2D2 /* ParentMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 42657AFB1EC079D30025B2D2 /* ParentMaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42657AFE1EC079D30025B2D2 /* ParentMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 42657AFC1EC079D30025B2D2 /* ParentMaker.m */; };
 		42657B001EC07A010025B2D2 /* ChainGrammar.h in Headers */ = {isa = PBXBuildFile; fileRef = 42657AFF1EC07A010025B2D2 /* ChainGrammar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		426AF4251EC58FB900188724 /* CCBottomPopupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 426AF4231EC58FB900188724 /* CCBottomPopupView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		426AF4261EC58FB900188724 /* CCBottomPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 426AF4241EC58FB900188724 /* CCBottomPopupView.m */; };
 		426B65741EA98E5B006706A2 /* CCCameraViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B654B1EA98E5B006706A2 /* CCCameraViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		426B65751EA98E5B006706A2 /* CCCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 426B654C1EA98E5B006706A2 /* CCCameraViewController.m */; };
 		426B65761EA98E5B006706A2 /* CCImageCropViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B654E1EA98E5B006706A2 /* CCImageCropViewController.h */; };
@@ -701,6 +703,8 @@
 		42657AFB1EC079D30025B2D2 /* ParentMaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParentMaker.h; sourceTree = "<group>"; };
 		42657AFC1EC079D30025B2D2 /* ParentMaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParentMaker.m; sourceTree = "<group>"; };
 		42657AFF1EC07A010025B2D2 /* ChainGrammar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChainGrammar.h; sourceTree = "<group>"; };
+		426AF4231EC58FB900188724 /* CCBottomPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCBottomPopupView.h; sourceTree = "<group>"; };
+		426AF4241EC58FB900188724 /* CCBottomPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCBottomPopupView.m; sourceTree = "<group>"; };
 		426B654B1EA98E5B006706A2 /* CCCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCCameraViewController.h; sourceTree = "<group>"; };
 		426B654C1EA98E5B006706A2 /* CCCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCCameraViewController.m; sourceTree = "<group>"; };
 		426B654E1EA98E5B006706A2 /* CCImageCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCImageCropViewController.h; sourceTree = "<group>"; };
@@ -1524,6 +1528,15 @@
 			path = Maker;
 			sourceTree = "<group>";
 		};
+		426AF4221EC58FB900188724 /* CCBottomPopupView */ = {
+			isa = PBXGroup;
+			children = (
+				426AF4231EC58FB900188724 /* CCBottomPopupView.h */,
+				426AF4241EC58FB900188724 /* CCBottomPopupView.m */,
+			);
+			path = CCBottomPopupView;
+			sourceTree = "<group>";
+		};
 		426B654A1EA98E5B006706A2 /* CameraViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1772,6 +1785,7 @@
 		42954A101E712AC800F4CC4C /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				426AF4221EC58FB900188724 /* CCBottomPopupView */,
 				42954A9B1E712C1000F4CC4C /* Tools.h */,
 				42954A111E712AC800F4CC4C /* CCAlertView */,
 				42954A141E712AC800F4CC4C /* CCProgressHUD */,
@@ -3399,6 +3413,7 @@
 				4278AA031E8A310200F4FA97 /* CCButton.h in Headers */,
 				42657ADA1EC060080025B2D2 /* CCDebugHttpViewController.h in Headers */,
 				42FC73941E70012800FBBE42 /* UIView+Frame.h in Headers */,
+				426AF4251EC58FB900188724 /* CCBottomPopupView.h in Headers */,
 				42FC716C1E6FDF1400FBBE42 /* AFHTTPRequestOperation.h in Headers */,
 				42954A971E712BE100F4CC4C /* UIImageView+WebCache.h in Headers */,
 				42FC736A1E70012800FBBE42 /* UIGestureRecognizer+CCAdd.h in Headers */,
@@ -3890,6 +3905,7 @@
 				42954A711E712BE100F4CC4C /* SDImageCacheConfig.m in Sources */,
 				42FC733F1E70012800FBBE42 /* NSURLRequest+CCAdd.m in Sources */,
 				42FC71B11E6FFC0000FBBE42 /* CCPropertyType.m in Sources */,
+				426AF4261EC58FB900188724 /* CCBottomPopupView.m in Sources */,
 				42657ACF1EC060080025B2D2 /* CCDebugCrashHelper.m in Sources */,
 				42FC73711E70012800FBBE42 /* UILabel+CCAdd.m in Sources */,
 				42FC70FE1E6FDCF600FBBE42 /* NSManagedObject+Create.m in Sources */,

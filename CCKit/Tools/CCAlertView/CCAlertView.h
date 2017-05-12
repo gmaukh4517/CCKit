@@ -28,8 +28,8 @@
 
 @interface CCAlertButtonModel : NSObject
 
-@property(nonatomic, copy) NSString *buttonTitle;
-@property(nonatomic, copy) UIColor *buttonColor;
+@property (nonatomic, copy) NSString *buttonTitle;
+@property (nonatomic, copy) UIColor *buttonColor;
 
 @end
 
@@ -37,8 +37,22 @@
 @interface CCAlertView : NSObject
 
 /**
+ 弹出提示输入框
+ 
+ @param title 标题
+ @param placeholder 输入框提示语
+ @param buttonTitles 按钮
+ @param onButtonTouchUpInside 回调
+ */
++ (void)showWithTextInput:(NSString *)title
+              placeholder:(NSString *)placeholder
+     withButtonTitleArray:(NSArray *)buttonTitles
+    OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside;
+
+
+/**
  *  @author CC, 16-02-02
- *  
+ *
  *  @brief 提醒框
  *
  *  @param message               消息内容
@@ -51,7 +65,7 @@
 
 /**
  *  @author CC, 16-02-02
- *  
+ *
  *  @brief 弹出提示消息
  *
  *  @param title                 消息标题
@@ -67,7 +81,7 @@
 
 /**
  *  @author CC, 2016-01-04
- *  
+ *
  *  @brief  弹出框
  *
  *  @param containerView 自定义视图对象
@@ -78,7 +92,7 @@
 
 /**
  弹出框
-
+ 
  @param containerView 自定义试图
  @param isPackage 是否显示背景
  @param isExternal 是否点击外部关闭
@@ -89,7 +103,7 @@
 
 /**
  *  @author CC, 2016-01-04
- *  
+ *
  *  @brief  弹窗框
  *
  *  @param containerView         自定义对象视图
@@ -102,7 +116,7 @@
 
 /**
  弹出窗
-
+ 
  @param containerView 自定义对象试图
  @param buttonTitles 按钮名称
  @param handleClose 是否处理关闭窗口

@@ -292,6 +292,13 @@ typedef void (^Outcomeblock)(NSString *outcome);
     }
     self.title = @"扫一扫";
     
+    if (self.navigationController.topViewController == self) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消"
+                                                                                  style:UIBarButtonItemStyleBordered
+                                                                                 target:self
+                                                                                 action:@selector(cancel)];
+    }
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册"
                                                                               style:UIBarButtonItemStyleBordered
                                                                              target:self
@@ -302,6 +309,11 @@ typedef void (^Outcomeblock)(NSString *outcome);
     [self.view addSubview:self.preview];
     [self.view addSubview:self.scanningView];
     _scanDealWithResult = YES;
+}
+
+-(void)cancel
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)showPhotoLibray
