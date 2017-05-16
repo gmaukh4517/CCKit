@@ -23,11 +23,12 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave+Manager.h"
-#import "CoreDataMasterSlave+Convenience.h"
+#import "CCDatabaseManager+Manager.h"
+#import "CCDatabaseManager+Convenience.h"
 #import "NSManagedObject+CCAdd.h"
+#import "CoreDataMasterSlave.h"
 
-@implementation CoreDataMasterSlave (Create)
+@implementation CCDatabaseManager (Create)
 
 /**
  新增对象
@@ -256,7 +257,7 @@
     NSManagedObject *managedObject = [self cc_insertOrUpdateWtihData:tableName
                                                           PrimaryKey:primaryKey
                                                             WithData:data
-                                                           inContext:self.currentContext];
+                                                           inContext:[CoreDataMasterSlave currentContext]];
     return [managedObject changedDictionary];
 }
 

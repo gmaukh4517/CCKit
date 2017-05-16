@@ -1,5 +1,5 @@
 //
-//  CoreDataMasterSlave+Manager.m
+//  CCDatabaseManager+Manager.m
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,18 +23,19 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave+Convenience.h"
-#import "CoreDataMasterSlave+Manager.h"
+#import "CCDatabaseManager+Convenience.h"
+#import "CCDatabaseManager+Manager.h"
 #import "NSManagedObject+CCAdd.h"
+#import "CoreDataMasterSlave.h"
 
-@implementation CoreDataMasterSlave (Modify)
+@implementation CCDatabaseManager (Modify)
 
 + (void)cc_SyncUpdateORInsertCoreData:(NSString *)tableName
                             Predicate:(NSPredicate *)predicate
                                  Data:(NSDictionary *)data
                            Completion:(void (^)(NSError *error))completion
 {
-    NSManagedObjectContext *context = [self currentContext];
+    NSManagedObjectContext *context = [CoreDataMasterSlave currentContext];
     //    __block NSMutableArray *arrayObj = [NSMutableArray array];
     [context performBlockAndWait:^{
         [self objctWithData:tableName
@@ -58,7 +59,7 @@
                  ColumnKeyValue:(NSDictionary *)columnDic
 {
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:tableName
-                                                         inManagedObjectContext:self.currentContext];
+                                                         inManagedObjectContext:[CoreDataMasterSlave currentContext]];
     
     // Initialize Batch Update Request
     NSBatchUpdateRequest *batchUpdateRequest = [[NSBatchUpdateRequest alloc] initWithEntity:entityDescription];
@@ -69,7 +70,7 @@
     
     // Execute Batch Request
     NSError *batchUpdateRequestError = nil;
-    NSBatchUpdateResult *batchUpdateResult = (NSBatchUpdateResult *)[self.currentContext executeRequest:batchUpdateRequest
+    NSBatchUpdateResult *batchUpdateResult = (NSBatchUpdateResult *)[[CoreDataMasterSlave currentContext] executeRequest:batchUpdateRequest
                                                                                                   error:&batchUpdateRequestError];
     
     if (batchUpdateRequestError) {
@@ -80,10 +81,10 @@
         
         for (NSManagedObjectID *objectID in objectIDs) {
             // Turn Managed Objects into Faults
-            NSManagedObject *managedObject = [self.currentContext objectWithID:objectID];
+            NSManagedObject *managedObject = [[CoreDataMasterSlave currentContext] objectWithID:objectID];
             
             if (managedObject) {
-                [self.currentContext refreshObject:managedObject mergeChanges:NO];
+                [[CoreDataMasterSlave currentContext] refreshObject:managedObject mergeChanges:NO];
             }
         }
     }

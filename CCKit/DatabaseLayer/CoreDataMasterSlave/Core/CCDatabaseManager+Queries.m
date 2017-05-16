@@ -1,5 +1,5 @@
 //
-//  CoreDataMasterSlave+Manager.m
+//  CCDatabaseManager+Manager.m
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,12 +23,13 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave+Manager.h"
-#import "CoreDataMasterSlave+Convenience.h"
+#import "CCDatabaseManager+Manager.h"
+#import "CCDatabaseManager+Convenience.h"
 #import "NSManagedObject+CCAdd.h"
+#import "CoreDataMasterSlave.h"
 //#import "NSArray+CCAdd.h"
 
-@implementation CoreDataMasterSlave (Queries)
+@implementation CCDatabaseManager (Queries)
 
 +(NSArray *)cc_SyncSelectCoreData:(NSString *)tableName
                  Condition:(NSPredicate *)condition
@@ -37,7 +38,7 @@
     if (condition)
         [fetchRequest setPredicate:condition];
     
-    NSManagedObjectContext *context = [self currentContext];
+    NSManagedObjectContext *context = [CoreDataMasterSlave currentContext];
     __block NSMutableArray *arrayObj = [NSMutableArray array];
     [context performBlockAndWait:^{
         NSArray *objs = [context executeFetchRequest:fetchRequest error:nil];

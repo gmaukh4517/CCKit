@@ -23,11 +23,11 @@
 // THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
 #import "CCVoiceRecordHelper.h"
 #import "CCVoiceCommonHelper.h"
 #import "Config.h"
+#import <AVFoundation/AVFoundation.h>
+#import <UIKit/UIKit.h>
 
 @interface CCVoiceRecordHelper () <AVAudioRecorderDelegate> {
     NSTimer *_timer;
@@ -39,14 +39,14 @@
 #endif
 }
 
-@property(nonatomic, copy, readwrite) NSString *recordPath;
-@property(nonatomic, readwrite) NSTimeInterval currentTimeInterval;
+@property (nonatomic, copy, readwrite) NSString *recordPath;
+@property (nonatomic, readwrite) NSTimeInterval currentTimeInterval;
 
-@property(nonatomic, strong) AVAudioRecorder *recorder;
+@property (nonatomic, strong) AVAudioRecorder *recorder;
 
-@property(nonatomic, strong) NSString *aVAudioSessionCategory;
+@property (nonatomic, strong) NSString *aVAudioSessionCategory;
 
-@property(nonatomic, assign) BOOL secondaryAudioShouldBeSilencedHint;
+@property (nonatomic, assign) BOOL secondaryAudioShouldBeSilencedHint;
 
 @end
 
@@ -126,13 +126,45 @@
     [self cancelRecording];
     [self resetTimer];
     
+    [self audioShouldBeSilencedHint];
+}
+
+- (void)pauseRecording
+{
+    if ([self.recorder isRecording]) {
+        [self.recorder pause];
+        _isPause = YES;
+        _timer.fireDate = [NSDate distantFuture];
+        
+        [self audioShouldBeSilencedHint];
+    }
+}
+
+- (void)restoreRecording
+{
+    if (![self.recorder isRecording]) {
+        [self.recorder record];
+        _isPause = NO;
+        _timer.fireDate = [NSDate distantPast];
+        
+        self.secondaryAudioShouldBeSilencedHint = [AVAudioSession sharedInstance].secondaryAudioShouldBeSilencedHint;
+        
+        NSError *error = nil;
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        _aVAudioSessionCategory = audioSession.category;
+        [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
+    }
+}
+
+- (void)audioShouldBeSilencedHint
+{
     if (self.secondaryAudioShouldBeSilencedHint) {
         self.secondaryAudioShouldBeSilencedHint = NO;
         [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
     }
 }
 
--(BOOL)isRecording
+- (BOOL)isRecording
 {
     if (!_recorder)
         return NO;
@@ -151,7 +183,7 @@
         
         NSError *error = nil;
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        _aVAudioSessionCategory =  audioSession.category;
+        _aVAudioSessionCategory = audioSession.category;
         [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
         if (error) {
             NSLog(@"audioSession: %@ %ld %@", [error domain], (long)[error code], [[error userInfo] description]);
@@ -167,13 +199,13 @@
         
         if (weakSelf) {
             STRONGSELF;
-            strongSelf.recordPath = path;
+            strongSelf.recordPath = [CCVoiceCommonHelper getPathByFileName:path ofType:@"wav"];
             error = nil;
             
             if (strongSelf.recorder) {
                 [strongSelf cancelRecording];
             } else {
-                strongSelf.recorder = [[AVAudioRecorder alloc] initWithURL:[NSURL fileURLWithPath:[CCVoiceCommonHelper getPathByFileName:strongSelf.recordPath ofType:@"wav"]] settings:[CCVoiceCommonHelper getAudioRecorderSettingDict] error:&error];
+                strongSelf.recorder = [[AVAudioRecorder alloc] initWithURL:[NSURL fileURLWithPath:strongSelf.recordPath] settings:[CCVoiceCommonHelper getAudioRecorderSettingDict] error:&error];
                 strongSelf.recorder.delegate = strongSelf;
                 
                 [strongSelf.recorder prepareToRecord];
@@ -189,8 +221,6 @@
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                
-                //上層如果傳會來說已經取消了, 那這邊就做原先取消的動作
                 if (!prepareRecorderCompletion()) {
                     [strongSelf cancelledDeleteWithCompletion:^{
                     }];
@@ -308,7 +338,7 @@
         
         if (self.currentTimeInterval > self.maxRecordTime) {
             if (!_isSend) {
-                _isSend = YES;   
+                _isSend = YES;
                 [self stopRecord];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     _maxTimeStopRecorderCompletion();

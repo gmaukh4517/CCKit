@@ -32,3 +32,4 @@
 #import <CCKit/RequestProtocol.h>
 #import <CCKit/Tools.h>
 #import <CCKit/UI.h>
+#import <CCKit/CCCoreData.h>

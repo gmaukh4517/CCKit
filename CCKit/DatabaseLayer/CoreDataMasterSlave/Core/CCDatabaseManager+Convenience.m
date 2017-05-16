@@ -23,10 +23,11 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave+Convenience.h"
+#import "CCDatabaseManager+Convenience.h"
 #import "NSManagedObject+CCAdd.h"
+#import "CoreDataMasterSlave.h"
 
-@implementation CoreDataMasterSlave (Convenience)
+@implementation CCDatabaseManager (Convenience)
 
 /**
  *  @author CC, 2015-10-24
@@ -37,7 +38,7 @@
  */
 + (NSManagedObjectContext *)saveCurrentContext
 {
-    return self.currentContext;
+    return [CoreDataMasterSlave currentContext];
 }
 
 #pragma mark + 查询条件
@@ -121,7 +122,7 @@
  */
 + (NSInteger)cc_executeQueriesCount:(NSFetchRequest *)request
 {
-    return [self cc_executeQueriesCount:self.currentContext FetchRequest:request];
+    return [self cc_executeQueriesCount:[CoreDataMasterSlave currentContext] FetchRequest:request];
 }
 
 /**
@@ -136,7 +137,7 @@
                        Handler:(void (^)(NSError *error,
                                          NSInteger requestCount))handler
 {
-    [self cc_executeQueriesCount:self.currentContext
+    [self cc_executeQueriesCount:[CoreDataMasterSlave currentContext]
                     FetchRequest:request
                          Handler:handler];
 }
@@ -198,7 +199,7 @@
  */
 + (NSArray *)cc_executeQueriesContext:(NSFetchRequest *)request
 {
-    return [self cc_executeQueriesContext:self.currentContext
+    return [self cc_executeQueriesContext:[CoreDataMasterSlave currentContext]
                              FetchRequest:request];
 }
 
@@ -214,7 +215,7 @@
                          Handler:(void (^)(NSError *error,
                                            NSArray *requestResults))handler
 {
-    [self cc_executeQueriesContext:self.currentContext
+    [self cc_executeQueriesContext:[CoreDataMasterSlave currentContext]
                       FetchRequest:request
                            Handler:handler];
 }
@@ -292,7 +293,7 @@
 + (void)cc_saveContext:(void (^)(NSManagedObjectContext *currentContext))saveContext
             completion:(void (^)(NSError *error))completion
 {
-    [self cc_saveWithContext:self.currentContext
+    [self cc_saveWithContext:[CoreDataMasterSlave currentContext]
             SaveContextBlock:saveContext
                   completion:completion];
 }
@@ -375,7 +376,7 @@
 + (void)cc_saveAndWaitWithContextError:(void (^)(NSManagedObjectContext *currentContext))saveContextBlock
                             completion:(void (^)(NSError *error))completion
 {
-    [self cc_saveAndWaitWithContext:self.currentContext
+    [self cc_saveAndWaitWithContext:[CoreDataMasterSlave currentContext]
                    SaveContextBlock:saveContextBlock
                          completion:completion];
 }
@@ -392,7 +393,7 @@
 + (void)cc_saveAndWaitWithContext:(NSManagedObjectContext *)saveContext
                  SaveContextBlock:(void (^)(NSManagedObjectContext *currentContext))saveContextBlock
 {
-    [self cc_saveAndWaitWithContext:self.currentContext
+    [self cc_saveAndWaitWithContext:[CoreDataMasterSlave currentContext]
                    SaveContextBlock:saveContextBlock
                          completion:nil];
 }

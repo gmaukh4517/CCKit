@@ -23,14 +23,14 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave.h"
+#import "CCDatabaseManager.h"
 
-@interface CoreDataMasterSlave (Manager)
+@interface CCDatabaseManager (Manager)
 
 @end
 
 #pragma mark - Create 新增对象
-@interface CoreDataMasterSlave (Create)
+@interface CCDatabaseManager (Create)
 
 /**
  *  @author CC, 2015-07-24
@@ -259,7 +259,7 @@
 @end
 
 #pragma mark - Removed 删除对象
-@interface CoreDataMasterSlave (Removed)
+@interface CCDatabaseManager (Removed)
 
 /**
  *  @author C C, 2015-10-25
@@ -409,7 +409,7 @@
 
 #pragma mark - Modify 修改对象
 
-@interface CoreDataMasterSlave (Modify)
+@interface CCDatabaseManager (Modify)
 
 +(void)cc_SyncUpdateORInsertCoreData:(NSString *)tableName
                            Predicate:(NSPredicate *)predicate
@@ -713,7 +713,7 @@
 @end
 
 #pragma mark - Queries 查询
-@interface CoreDataMasterSlave (Queries)
+@interface CCDatabaseManager (Queries)
 
 /**
  同步查询

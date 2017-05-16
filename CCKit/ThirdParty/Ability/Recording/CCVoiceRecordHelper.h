@@ -38,13 +38,13 @@ typedef void (^CCPeakPowerForChannel)(float peakPowerForChannel);
 
 @interface CCVoiceRecordHelper : NSObject
 
-@property(nonatomic, copy) CCStopRecorderCompletion maxTimeStopRecorderCompletion;
-@property(nonatomic, copy) CCRecordProgress recordProgress;
-@property(nonatomic, copy) CCPeakPowerForChannel peakPowerForChannel;
-@property(nonatomic, copy, readonly) NSString *recordPath;
-@property(nonatomic, copy) NSString *recordDuration;
-@property(nonatomic) float maxRecordTime; // 默认 60秒为最大
-@property(nonatomic, readonly) NSTimeInterval currentTimeInterval;
+@property (nonatomic, copy) CCStopRecorderCompletion maxTimeStopRecorderCompletion;
+@property (nonatomic, copy) CCRecordProgress recordProgress;
+@property (nonatomic, copy) CCPeakPowerForChannel peakPowerForChannel;
+@property (nonatomic, copy, readonly) NSString *recordPath;
+@property (nonatomic, copy) NSString *recordDuration;
+@property (nonatomic) float maxRecordTime; // 默认 60秒为最大
+@property (nonatomic, readonly) NSTimeInterval currentTimeInterval;
 
 - (void)prepareRecordingWithPath:(NSString *)path prepareRecorderCompletion:(CCPrepareRecorderCompletion)prepareRecorderCompletion;
 - (void)startRecordingWithStartRecorderCompletion:(CCStartRecorderCompletion)startRecorderCompletion;
@@ -54,5 +54,10 @@ typedef void (^CCPeakPowerForChannel)(float peakPowerForChannel);
 - (void)cancelledDeleteWithCompletion:(CCCancellRecorderDeleteFileCompletion)cancelledDeleteCompletion;
 
 - (BOOL)isRecording;
+
+// 暂停
+- (void)pauseRecording;
+// 恢复
+- (void)restoreRecording;
 
 @end

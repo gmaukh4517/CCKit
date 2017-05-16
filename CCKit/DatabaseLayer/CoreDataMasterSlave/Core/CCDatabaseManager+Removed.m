@@ -1,5 +1,5 @@
 //
-//  CoreDataMasterSlave+Manager.m
+//  CCDatabaseManager+Manager.m
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,11 +23,11 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave+Manager.h"
-#import "CoreDataMasterSlave+Convenience.h"
+#import "CCDatabaseManager+Manager.h"
+#import "CCDatabaseManager+Convenience.h"
 #import "NSManagedObject+CCAdd.h"
 
-@implementation CoreDataMasterSlave (Removed)
+@implementation CCDatabaseManager (Removed)
 
 /**
  *  @author C C, 2015-10-25

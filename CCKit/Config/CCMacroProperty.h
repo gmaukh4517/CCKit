@@ -38,8 +38,8 @@
 #define CCResourceImage(name)               (cc_Resource(@"CCKit",@"bundle") ? [UIImage imageWithContentsOfFile:[[cc_Resource(@"CCKit",@"bundle") resourcePath] stringByAppendingPathComponent:name]] : [UIImage new])
 
 /** 版本号 */
-#define VersonNumber                        [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]
-
+#define kVersonNumber                        [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+#define kBuildNumber                        [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]
 /** 应用名称 */
 #define AppName                             [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey]
 

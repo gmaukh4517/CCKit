@@ -1,5 +1,5 @@
 //
-//  CCCoreData.h
+//  CCDatabaseManager.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,21 +23,9 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_CCCoreData_h
-#define CCKit_CCCoreData_h
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-#import <CCKit/NSFetchRequest+CCAdd.h>
-#import <CCKit/NSManagedObject+CCAdd.h>
-#import <CCKit/NSManagedObjectContext+CCAdd.h>
-#import <CCKit/NSPersistentStoreCoordinator+CCAdd.h>
+@interface CCDatabaseManager : NSObject
 
-#import <CCKit/BaseManagedObject+Facade.h>
-#import <CCKit/CCCollectionViewFetchResultController.h>
-#import <CCKit/CCTableViewFetchResultController.h>
-
-#import <CCKit/CCDatabaseManager+Manager.h>
-#import <CCKit/CCDatabaseManager.h>
-
-#import <CCKit/FMDB.h>
-
-#endif
+@end

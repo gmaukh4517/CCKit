@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
-#import "CoreDataMasterSlave.h"
+#import "CCDatabaseManager.h"
 
-@interface CoreDataMasterSlave (Convenience)
+@interface CCDatabaseManager (Convenience)
 
 /**
  *  @author CC, 2015-10-24

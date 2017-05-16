@@ -25,10 +25,11 @@
 
 #import "NSManagedObject+CCAdd.h"
 #import "CoreDataManager.h"
-#import "CoreDataMasterSlave+Manager.h"
+#import "CCDatabaseManager+Manager.h"
 #import "BaseManagedObject+Facade.h"
 #import "NSManagedObjectContext+CCAdd.h"
 #import <objc/runtime.h>
+
 
 @implementation NSManagedObject (CCAdd)
 
@@ -576,12 +577,12 @@ NSString *const CoreDataCurrentThreadContext = @"CoreData_CurrentThread_Context"
         if ([desClassName isEqualToString:@"NSManagedObject"]) {
             NSString *primaryKey = [relationshipDes.destinationEntity.userInfo objectForKey:@"PrimaryKey"];
             if (primaryKey) {
-                destinationObjs = [CoreDataMasterSlave cc_insertOrUpdateWtihDataArrayObject:relationshipDes.destinationEntity.name
+                destinationObjs = [CCDatabaseManager cc_insertOrUpdateWtihDataArrayObject:relationshipDes.destinationEntity.name
                                                                                  PrimaryKey:primaryKey
                                                                               WithDataArray:value
                                                                                   inContext:self.managedObjectContext];
             } else {
-                destinationObjs = [CoreDataMasterSlave cc_insertCoreDataWithArrayObject:relationshipDes.destinationEntity.name
+                destinationObjs = [CCDatabaseManager cc_insertCoreDataWithArrayObject:relationshipDes.destinationEntity.name
                                                                               DataArray:value];
             }
         } else
@@ -618,12 +619,12 @@ NSString *const CoreDataCurrentThreadContext = @"CoreData_CurrentThread_Context"
         if ([desClassName isEqualToString:@"NSManagedObject"]) {
             NSString *primaryKey = [relationshipDes.destinationEntity.userInfo objectForKey:@"PrimaryKey"];
             if (primaryKey) {
-                destinationObjs = [CoreDataMasterSlave cc_insertOrUpdateWtihData:relationshipDes.destinationEntity.name
+                destinationObjs = [CCDatabaseManager cc_insertOrUpdateWtihData:relationshipDes.destinationEntity.name
                                                                       PrimaryKey:primaryKey
                                                                         WithData:value
                                                                        inContext:self.managedObjectContext];
             } else {
-                destinationObjs = [CoreDataMasterSlave cc_insertCoreDataWithObject:relationshipDes.destinationEntity.name
+                destinationObjs = [CCDatabaseManager cc_insertCoreDataWithObject:relationshipDes.destinationEntity.name
                                                                            DataDic:value];
             }
         } else
