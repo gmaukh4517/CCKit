@@ -29,5 +29,6 @@
 #import <CCKit/CCAlertView.h>
 #import <CCKit/CCBottomPopupView.h>
 #import <CCKit/CCProgressHUD.h>
+#import <CCKit/VoiceConverter.h>
 
 #endif

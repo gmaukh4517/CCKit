@@ -352,14 +352,12 @@
 - (void)getVoiceDuration:(NSString *)recordPath
 {
     NSError *error = nil;
-    NSString *path = [CCVoiceCommonHelper getPathByFileName:recordPath ofType:@"wav"];
-    AVAudioPlayer *play = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
+    AVAudioPlayer *play = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:recordPath] error:&error];
     if (error) {
         self.recordDuration = @"";
     } else {
         self.recordDuration = [NSString stringWithFormat:@"%.0f", play.duration];
     }
 }
-
 
 @end

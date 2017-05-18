@@ -149,19 +149,20 @@
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 0)];
     
     if (title && ![title isEqualToString:@""]) {
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, containerView.width - 20, 20)];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, containerView.width - 20, 20)];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.font = [UIFont systemFontOfSize:18];
         titleLabel.text = title;
         [containerView addSubview:titleLabel];
-        heigth = titleLabel.bottom + 10;
+        heigth = titleLabel.bottom + 15;
     }
     
     if (message && ![message isEqualToString:@""]) {
         UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, heigth, containerView.width - 50, 0)];
         messageLabel.numberOfLines = 0;
         messageLabel.textAlignment = NSTextAlignmentCenter;
-        messageLabel.font = title ? [UIFont systemFontOfSize:12] : [UIFont systemFontOfSize:18];
+        messageLabel.font = title ? [UIFont systemFontOfSize:15] : [UIFont systemFontOfSize:18];
+        messageLabel.textColor = title ? [UIColor grayColor] : [UIColor blackColor];
         messageLabel.text = message;
         [containerView addSubview:messageLabel];
         [messageLabel sizeToFit];

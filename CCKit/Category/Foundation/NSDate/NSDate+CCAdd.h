@@ -687,6 +687,6 @@ typedef enum {
 @property(readonly) NSInteger weekday;
 @property(readonly) NSInteger nthWeekday; // e.g. 2nd Tuesday of the month == 2
 
-
+- (NSDate *)dateWithFormatter:(NSString *)formatter;
 
 @end

@@ -67,14 +67,9 @@
     backgroundView:(UIView *)backgroundView
         completion:(void (^)())completion;
 
-+ (void)showInView:(UIView *)view
-    backgroundView:(UIView *)backgroundView
-         animation:(BOOL)animation
-        completion:(void (^)())completion;
-
 /**
  弹出试图
- 
+
  @param view 试图
  @param backgroundView 背景试图
  @param animation 动画

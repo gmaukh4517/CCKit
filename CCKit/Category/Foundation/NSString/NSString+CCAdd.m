@@ -67,6 +67,15 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 }
 
 /**
+ 获取随机 UUID 例如 E621E1F8C36C495A93FC0C247A3E6E5F
+ 去除中间横线
+ */
++ (NSString *)stringWithUUID
+{
+    return [[NSString UUID] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+}
+
+/**
  *
  *  @brief  毫秒时间戳 例如 1443066826371
  *

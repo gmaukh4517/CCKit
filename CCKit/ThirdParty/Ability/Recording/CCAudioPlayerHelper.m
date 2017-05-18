@@ -23,16 +23,18 @@
 // THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
 #import "CCAudioPlayerHelper.h"
 #import "CCVoiceCommonHelper.h"
+#import <UIKit/UIKit.h>
 //#import "VoiceConverter.h"
-#import "Config.h"
 #import "CCHTTPManager.h"
+#import "Config.h"
 
 @interface CCAudioPlayerHelper ()
 
-@property(nonatomic, assign) BOOL secondaryAudioShouldBeSilencedHint;
+@property (nonatomic, assign) BOOL secondaryAudioShouldBeSilencedHint;
+
+@property (nonatomic, copy) NSString *playPath;
 
 @end
 
@@ -44,6 +46,21 @@
 {
     if (toPlay) {
         [self playAudioWithFileName:amrName];
+    } else {
+        [self pausePlayingAudio];
+    }
+}
+
+- (void)managerAudioWithFileName:(NSString *)path
+                          toPlay:(BOOL)toPlay
+                  voiceConverter:(BOOL)voiceConverter
+{
+    if (toPlay) {
+        if (voiceConverter) {
+            [self playAudioWithFileName:path];
+        } else
+            [self playAudotWithPath:path voiceConverter:voiceConverter];
+        
     } else {
         [self pausePlayingAudio];
     }
@@ -74,7 +91,7 @@
     
     if (self.didAudioPlayerStopPlay)
         self.didAudioPlayerStopPlay(_player);
-
+    
     if (self.secondaryAudioShouldBeSilencedHint) {
         self.secondaryAudioShouldBeSilencedHint = NO;
         [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
@@ -86,13 +103,26 @@
 //播放转换后wav
 - (void)playAudioWithFileName:(NSString *)fileName
 {
-    if (fileName.length > 0) {
+    [self playAudotWithPath:fileName voiceConverter:YES];
+}
+
+- (void)playAudotWithPath:(NSString *)path voiceConverter:(BOOL)voiceConverter
+{
+    if (path.length > 0) {
         
         self.secondaryAudioShouldBeSilencedHint = [AVAudioSession sharedInstance].secondaryAudioShouldBeSilencedHint;
         //不随着静音键和屏幕关闭而静音。code by Aevit
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+        //        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         
-        if (_playingFileName && [fileName isEqualToString:_playingFileName]) { //上次播放的录音
+        if (_playingFileName && [path isEqualToString:_playingFileName]) { //上次播放的录音
+            if (_player) {
+                [_player play];
+                [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+                if ([self.delegate respondsToSelector:@selector(didAudioPlayerBeginPlay:)]) {
+                    [self.delegate didAudioPlayerBeginPlay:_player];
+                }
+            }
+        } else if (_playPath && [path isEqualToString:_playPath]) { //上次播放的录音
             if (_player) {
                 [_player play];
                 [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
@@ -106,16 +136,18 @@
                 self.player = nil;
             }
             
-            NSString *path = [CCVoiceCommonHelper getPathByFileName:fileName ofType:@"wav"];
-            
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            
-            if (![fileManager fileExistsAtPath:path]) {
-                NSString *wavName = [CCVoiceCommonHelper getPathByFileName:[path stringByAppendingString:@"amrToWav"] ofType:@"wav"];
-                if ([fileManager fileExistsAtPath:wavName]) {
-                    path = wavName;
-                } else {
-                    [self convertAmrToWav:fileName];
+            if (voiceConverter) {
+                path = [CCVoiceCommonHelper getPathByFileName:path ofType:@"wav"];
+                
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                
+                if (![fileManager fileExistsAtPath:path]) {
+                    NSString *wavName = [CCVoiceCommonHelper getPathByFileName:[path stringByAppendingString:@"amrToWav"] ofType:@"wav"];
+                    if ([fileManager fileExistsAtPath:wavName]) {
+                        path = wavName;
+                    } else {
+                        [self convertAmrToWav:path];
+                    }
                 }
             }
             
@@ -128,7 +160,11 @@
                 [self.delegate didAudioPlayerBeginPlay:_player];
             }
         }
-        self.playingFileName = fileName;
+        
+        if (voiceConverter)
+            self.playingFileName = path;
+        else
+            self.playPath = path;
     }
 }
 
@@ -139,13 +175,13 @@
     if (amrName.length > 0) {
         NSString *wavName = [amrName stringByReplacingOccurrencesOfString:@"wavToAmr" withString:@"amrToWav"]; // [amrName stringByAppendingString:@"amrToWav"];
         //转格式
-//        [VoiceConverter amrToWav:[CCVoiceCommonHelper getPathByFileName:amrName ofType:@"amr"] wavSavePath:[CCVoiceCommonHelper getPathByFileName:wavName ofType:@"wav"]];
+        //        [VoiceConverter amrToWav:[CCVoiceCommonHelper getPathByFileName:amrName ofType:@"amr"] wavSavePath:[CCVoiceCommonHelper getPathByFileName:wavName ofType:@"wav"]];
     }
 }
 
 /**
  *  @author CC, 2015-12-02
- *  
+ *
  *  @brief  网络获取缓存播放
  *
  *  @param ptah 请求地址
@@ -158,17 +194,18 @@
     NSString *fileName = [[path componentsSeparatedByString:@"/"].lastObject componentsSeparatedByString:@"."].firstObject;
     self.dFileName = fileName;
     @weakify(self);
-    [CCHTTPManager Download:path success:^(id response, NSError *error) {
-        @strongify(self);
-        
-        NSString *path = [self.dFileName stringByAppendingString:@"amrToWav"];
-//        [VoiceConverter amrToWav:response wavSavePath:[CCVoiceCommonHelper getPathByFileName:path ofType:@"wav"]];
-        
-        [self playAudioWithFileName:path];
-        
-        if (complete)
-            complete(path);
-    }];
+    [CCHTTPManager Download:path
+                    success:^(id response, NSError *error) {
+                        @strongify(self);
+                        
+                        NSString *path = [self.dFileName stringByAppendingString:@"amrToWav"];
+                        //        [VoiceConverter amrToWav:response wavSavePath:[CCVoiceCommonHelper getPathByFileName:path ofType:@"wav"]];
+                        
+                        [self playAudioWithFileName:path];
+                        
+                        if (complete)
+                            complete(path);
+                    }];
 }
 
 #pragma mark - Getter
@@ -226,7 +263,7 @@
     [self changeProximityMonitorEnableState:NO];
 }
 
--(void)setDidAudioPlayerStopPlay:(void (^)(AVAudioPlayer *))didAudioPlayerStopPlay
+- (void)setDidAudioPlayerStopPlay:(void (^)(AVAudioPlayer *))didAudioPlayerStopPlay
 {
     _didAudioPlayerStopPlay = didAudioPlayerStopPlay;
 }
@@ -275,10 +312,10 @@
         }
     }
     
-   if (_player || _player.isPlaying) {
-       if (_player.currentTime > 1) {
-           _player.currentTime -= 1; 
-       }
+    if (_player || _player.isPlaying) {
+        if (_player.currentTime > 1) {
+            _player.currentTime -= 1;
+        }
     }
 }
 

@@ -106,7 +106,13 @@ static dispatch_once_t onceToken;
 
 - (void)globalKeyboardHide:(UITapGestureRecognizer *)tap
 {
-    [tap.view endEditing:YES];
+    for (NSDictionary *dict in _textFieldInfoCache) {
+        UIView *view = dict[kCCTextFiled];
+        if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) {
+            UITextField *textField = (UITextField *)view;
+            [textField resignFirstResponder];
+        }
+    }
 }
 
 #pragma mark -
@@ -139,7 +145,7 @@ static dispatch_once_t onceToken;
 {
     if (CGRectEqualToRect(_topViewBeginRect, CGRectZero))
         _topViewBeginRect = self.rootViewController.view.frame;
-
+    
     _keyboardShowing = YES;
     NSInteger curve = [[aNotification userInfo][UIKeyboardAnimationCurveUserInfoKey] integerValue];
     _animationCurve = curve << 16;
@@ -174,7 +180,8 @@ static dispatch_once_t onceToken;
     if (aDuration != 0.0f)
         _animationDuration = aDuration;
     
-    [self setRootViewFrame:self.topViewBeginRect];
+    if (!CGRectEqualToRect(self.topViewBeginRect, CGRectMake(0, 0, 0, 0)))
+        [self setRootViewFrame:self.topViewBeginRect];
     _kSize = CGSizeZero;
 }
 

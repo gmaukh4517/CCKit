@@ -23,8 +23,8 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
 #import <AVFoundation/AVAudioPlayer.h>
+#import <Foundation/Foundation.h>
 
 @protocol CCAudioPlayerHelperDelegate <NSObject>
 
@@ -37,37 +37,47 @@
 
 @interface CCAudioPlayerHelper : NSObject <AVAudioPlayerDelegate>
 
-@property(nonatomic, strong) AVAudioPlayer *player;
+@property (nonatomic, strong) AVAudioPlayer *player;
 
-@property(nonatomic, copy) NSString *playingFileName;
+@property (nonatomic, copy) NSString *playingFileName;
 
-@property(nonatomic, copy) NSString *dFileName;
+@property (nonatomic, copy) NSString *dFileName;
 
-@property(nonatomic, assign) id<CCAudioPlayerHelperDelegate> delegate;
+@property (nonatomic, assign) id<CCAudioPlayerHelperDelegate> delegate;
 
-@property(nonatomic, strong) NSIndexPath *playingIndexPathInFeedList; //给动态列表用
+@property (nonatomic, strong) NSIndexPath *playingIndexPathInFeedList; //给动态列表用
 
-@property(nonatomic, copy) void(^didAudioPlayerStopPlay)(AVAudioPlayer *audioPlayer);
+@property (nonatomic, copy) void (^didAudioPlayerStopPlay)(AVAudioPlayer *audioPlayer);
 
 + (id)shareInstance;
 
 - (AVAudioPlayer *)player;
 - (BOOL)isPlaying;
 
--(void)setDidAudioPlayerStopPlay:(void (^)(AVAudioPlayer *))didAudioPlayerStopPlay;
+- (void)setDidAudioPlayerStopPlay:(void (^)(AVAudioPlayer *))didAudioPlayerStopPlay;
 
 /**
- *  @author CC, 2015-12-02
- *  
- *  @brief  网络获取缓存播放
- *
- *  @param ptah 请求地址
+ 网络获取缓存播放
+ 
+ @param path 请求地址
+ @param complete 完成回调
  */
 - (void)downloadManagerAudioWithFileName:(NSString *)path
                                 Complete:(void (^)(NSString *path))complete;
 
 - (void)managerAudioWithFileName:(NSString *)amrName
                           toPlay:(BOOL)toPlay;
+
+/**
+ 语音播放
+ 
+ @param path 语音路劲
+ @param toPlay 是否暂停
+ @param voiceConverter 是否转换播放
+ */
+- (void)managerAudioWithFileName:(NSString *)path
+                          toPlay:(BOOL)toPlay
+                  voiceConverter:(BOOL)voiceConverter;
 
 - (void)changeProximityMonitorEnableState:(BOOL)enable;
 

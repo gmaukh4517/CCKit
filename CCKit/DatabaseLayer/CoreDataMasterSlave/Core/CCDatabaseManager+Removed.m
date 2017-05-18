@@ -27,16 +27,16 @@
 #import "CCDatabaseManager+Convenience.h"
 #import "NSManagedObject+CCAdd.h"
 
-@implementation CCDatabaseManager (Removed)
+@implementation CCDatabaseManager (Delete)
 
 /**
  *  @author C C, 2015-10-25
  *
  *  @brief  删除所有对象
  */
-+ (void)cc_RemovedAll:(NSString *)tableName
++ (void)cc_DeleteAll:(NSString *)tableName
 {
-    [self cc_RemovedAll:tableName
+    [self cc_DeleteAll:tableName
              completion:nil];
 }
 
@@ -47,7 +47,7 @@
  *
  *  @param completion 完成回调函数
  */
-+ (void)cc_RemovedAll:(NSString *)tableName
++ (void)cc_DeleteAll:(NSString *)tableName
            completion:(void (^)(NSError *error))completion
 {
     [self cc_saveAndWaitWithContextError:^(NSManagedObjectContext *currentContext) {
@@ -70,10 +70,10 @@
  *
  *  @param conditionID 对象ID
  */
-+ (void)cc_RemovedManagedObjectID:(NSString *)tableName
++ (void)cc_DeleteManagedObjectID:(NSString *)tableName
                   ManagedObjectID:(NSManagedObjectID *)conditionID
 {
-    [self cc_RemovedManagedObjectID:tableName
+    [self cc_DeleteManagedObjectID:tableName
                     ManagedObjectID:conditionID
                          completion:nil];
 }
@@ -86,11 +86,11 @@
  *  @param conditionID 对象ID
  *  @param completion  完成回调函数
  */
-+ (void)cc_RemovedManagedObjectID:(NSString *)tableName
++ (void)cc_DeleteManagedObjectID:(NSString *)tableName
                   ManagedObjectID:(NSManagedObjectID *)conditionID
                        completion:(void (^)(NSError *error))completion
 {
-    [self cc_RemovedManagedObjectIds:tableName
+    [self cc_DeleteManagedObjectIds:tableName
                      ManagedObjectId:@[ conditionID ]
                           completion:completion];
 }
@@ -103,10 +103,10 @@
  *  @param tableName     表名
  *  @param arrayObjectID 集合对象ObjectID
  */
-+ (void)cc_RemovedManagedObjectIds:(NSString *)tableName
++ (void)cc_DeleteManagedObjectIds:(NSString *)tableName
                    ManagedObjectId:(NSArray *)arrayObjectID
 {
-    [self cc_RemovedManagedObjectIds:tableName
+    [self cc_DeleteManagedObjectIds:tableName
                      ManagedObjectId:arrayObjectID
                           completion:nil];
 }
@@ -120,7 +120,7 @@
  *  @param arrayObjectID 集合对象ObjectID
  *  @param completion    完成回调
  */
-+ (void)cc_RemovedManagedObjectIds:(NSString *)tableName
++ (void)cc_DeleteManagedObjectIds:(NSString *)tableName
                    ManagedObjectId:(NSArray *)arrayObjectID
                         completion:(void (^)(NSError *error))completion
 {
@@ -151,10 +151,10 @@
  *  @param tableName 表名
  *  @param condition 条件
  */
-+ (void)cc_RemovedWithCondition:(NSString *)tableName
++ (void)cc_DeleteWithCondition:(NSString *)tableName
                       Condition:(NSPredicate *)condition
 {
-    [self cc_RemovedWithCondition:tableName
+    [self cc_DeleteWithCondition:tableName
                         Condition:condition
                        Completion:nil];
 }
@@ -167,7 +167,7 @@
  *  @param tableName 表名
  *  @param condition 条件
  */
-+ (void)cc_RemovedWithCondition:(NSString *)tableName
++ (void)cc_DeleteWithCondition:(NSString *)tableName
                       Condition:(NSPredicate *)condition
                      Completion:(void (^)(NSError *error))completion
 {
@@ -193,11 +193,11 @@
  *  @param propertyName 属性名
  *  @param value        属性值
  */
-+ (void)cc_RemovedProperty:(NSString *)tableName
++ (void)cc_DeleteProperty:(NSString *)tableName
               PropertyName:(NSString *)propertyName
                    toValue:(id)value
 {
-    [self cc_RemovedMultiProperty:tableName
+    [self cc_DeleteMultiProperty:tableName
                     MultiProperty:@{propertyName : value}];
 }
 
@@ -208,10 +208,10 @@
  *
  *  @param propertyKeyValues 属性名与值
  */
-+ (void)cc_RemovedMultiProperty:(NSString *)tableName
++ (void)cc_DeleteMultiProperty:(NSString *)tableName
                   MultiProperty:(NSDictionary *)propertyKeyValues
 {
-    [self cc_RemovedMultiProperty:tableName
+    [self cc_DeleteMultiProperty:tableName
                     MultiProperty:propertyKeyValues
                        completion:nil];
 }
@@ -224,7 +224,7 @@
  *  @param propertyKeyValues 属性名与值
  *  @param completion        完成回调函数
  */
-+ (void)cc_RemovedMultiProperty:(NSString *)tableName
++ (void)cc_DeleteMultiProperty:(NSString *)tableName
                   MultiProperty:(NSDictionary *)propertyKeyValues
                      completion:(void (^)(NSError *error))completion
 {
@@ -258,10 +258,10 @@
  *  @param tableName          表名
  *  @param conditionKeyValues 属性名与值
  */
-+ (void)cc_RemovedMultipleCondition:(NSString *)tableName
++ (void)cc_DeleteMultipleCondition:(NSString *)tableName
                      MultiCondition:(NSArray *)conditionKeyValues
 {
-    [self cc_RemovedMultipleCondition:tableName
+    [self cc_DeleteMultipleCondition:tableName
                        MultiCondition:conditionKeyValues
                            completion:nil];
 }
@@ -275,7 +275,7 @@
  *  @param conditionKeyValues 属性名与值
  *  @param completion         完成回调函数
  */
-+ (void)cc_RemovedMultipleCondition:(NSString *)tableName
++ (void)cc_DeleteMultipleCondition:(NSString *)tableName
                      MultiCondition:(NSArray *)conditionKeyValues
                          completion:(void (^)(NSError *error))completion
 {

@@ -55,6 +55,12 @@
 + (NSString *)UUIDTimestamp;
 
 /**
+ 获取随机 UUID 例如 E621E1F8C36C495A93FC0C247A3E6E5F
+ 去除中间横线
+ */
++ (NSString *)stringWithUUID;
+
+/**
  *  @author CC, 2015-12-11
  *
  *  @brief  根据值生成唯一ID
