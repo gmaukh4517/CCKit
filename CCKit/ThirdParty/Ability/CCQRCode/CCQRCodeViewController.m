@@ -37,15 +37,15 @@ typedef void (^Outcomeblock)(NSString *outcome);
 
 @interface CCQRCodeViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, CCCaptureHelperDelegate>
 
-@property(nonatomic, strong) UIView *preview;
+@property (nonatomic, strong) UIView *preview;
 
-@property(nonatomic, strong) CCScanningView *scanningView;
-@property(nonatomic, strong) UIButton *analysisToast;
+@property (nonatomic, strong) CCScanningView *scanningView;
+@property (nonatomic, strong) UIButton *analysisToast;
 
-@property(nonatomic, strong) CCCaptureHelper *captureHelper;
+@property (nonatomic, strong) CCCaptureHelper *captureHelper;
 
 
-@property(nonatomic, strong) Outcomeblock outcomeblock;
+@property (nonatomic, strong) Outcomeblock outcomeblock;
 
 @end
 
@@ -280,6 +280,14 @@ typedef void (^Outcomeblock)(NSString *outcome);
     [self isCameraUsageRights];
 }
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _scanDealWithResult = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -294,9 +302,9 @@ typedef void (^Outcomeblock)(NSString *outcome);
     
     if (self.navigationController.topViewController == self) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消"
-                                                                                  style:UIBarButtonItemStyleBordered
-                                                                                 target:self
-                                                                                 action:@selector(cancel)];
+                                                                                 style:UIBarButtonItemStyleBordered
+                                                                                target:self
+                                                                                action:@selector(cancel)];
     }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册"
@@ -308,10 +316,9 @@ typedef void (^Outcomeblock)(NSString *outcome);
     
     [self.view addSubview:self.preview];
     [self.view addSubview:self.scanningView];
-    _scanDealWithResult = YES;
 }
 
--(void)cancel
+- (void)cancel
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -383,13 +390,11 @@ typedef void (^Outcomeblock)(NSString *outcome);
     size_t bufferSize = CVPixelBufferGetDataSize(imageBuffer);
     
     // Create a Quartz direct-access data provider that uses data we supply
-    CGDataProviderRef provider =
-    CGDataProviderCreateWithData(NULL, baseAddress, bufferSize, NULL);
+    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, baseAddress, bufferSize, NULL);
     // Create a bitmap image from data supplied by our data provider
-    CGImageRef cgImage =
-    CGImageCreate(width, height, 8, 32, bytesPerRow, colorSpace,
-                  kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little,
-                  provider, NULL, true, kCGRenderingIntentDefault);
+    CGImageRef cgImage = CGImageCreate(width, height, 8, 32, bytesPerRow, colorSpace,
+                                       kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little,
+                                       provider, NULL, true, kCGRenderingIntentDefault);
     CGDataProviderRelease(provider);
     CGColorSpaceRelease(colorSpace);
     

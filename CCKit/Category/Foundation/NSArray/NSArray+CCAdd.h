@@ -83,6 +83,7 @@
  *  @brief  分析数据对象分组
  *
  *  @param analysisName 分析对象名称
+ *          对象可以通过获取 associatedValueForKey: pinyin 得到字段全拼
  */
 - (NSMutableDictionary *)analysisSortGroup:(NSString *)analysisName;
 
@@ -187,7 +188,7 @@
 
 - (void)addRect:(CGRect)o;
 
--(void)addRange:(NSRange)range;
+- (void)addRange:(NSRange)range;
 
 /**
  *  @author CC, 2015-07-22

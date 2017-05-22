@@ -66,62 +66,63 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
  *
  *  @brief 获取当前数据源
  */
-@property(nonatomic, weak, readonly) NSMutableArray *dataSource;
+@property (nonatomic, weak, readonly) NSMutableArray *dataSource;
+@property (nonatomic, copy) NSArray *sectionIndexTitle;
 
 /**
  *  @author CC, 16-07-23
  *
  *  @brief 分组顶部高度 默认：0.001
  */
-@property(nonatomic, assign) CGFloat titleHeaderHeight;
+@property (nonatomic, assign) CGFloat titleHeaderHeight;
 
 /**
  *  @author CC, 16-07-23
  *
  *  @brief 分组底部高度 默认：0.001
  */
-@property(nonatomic, assign) CGFloat titleFooterHeight;
+@property (nonatomic, assign) CGFloat titleFooterHeight;
 
 /**
  *  @author CC, 16-03-19
  *
  *  @brief 是否补齐线(默认不补齐)
  */
-@property(nonatomic, assign) BOOL paddedSeparator;
+@property (nonatomic, assign) BOOL paddedSeparator;
 
 /**
  *  @author CC, 16-07-23
  *
  *  @brief 是否显示侧边字母
  */
-@property(nonatomic, assign) BOOL isSection;
+@property (nonatomic, assign) BOOL isSection;
 
 /**
  是否移动行
  */
-@property(nonatomic, assign) BOOL isCanMoveRow;
+@property (nonatomic, assign) BOOL isCanMoveRow;
 
 /**
  是否防快速点击 (默认：NO 不防止)
  */
-@property(nonatomic, assign) BOOL isAntiHurry;
+@property (nonatomic, assign) BOOL isAntiHurry;
 
 /**
  *  When using the storyboard and a single cell, set the property inspector same identifier
  */
-@property(nullable, nonatomic, copy) NSString *cellIdentifier;
+@property (nullable, nonatomic, copy) NSString *cellIdentifier;
 
-@property(nonatomic, strong) NSArray *cc_CellXIB;
+@property (nonatomic, strong) NSArray *cc_CellXIB;
 
-@property(nonatomic, weak) UITableView *cc_tableView;
-@property(nonatomic, strong) NSIndexPath *cc_indexPath;
+@property (nonatomic, weak) UITableView *cc_tableView;
+@property (nonatomic, strong) NSIndexPath *cc_indexPath;
 
 /**
  *  @author CC, 16-04-07
  *
  *  @brief Cell委托
  */
-@property(nonatomic, weak) id<CCViewProtocol> cellDelegate;
+@property (nonatomic, weak) id<CCViewProtocol> cellDelegate;
 
 /**
  *  When using xib, all incoming nib names

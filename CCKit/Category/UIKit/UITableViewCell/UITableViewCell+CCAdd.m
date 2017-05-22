@@ -74,11 +74,12 @@
                         [rowButton setAttributedTitle:[NSAttributedString attributedStringWithAttachment:imageAtt] forState:UIControlStateNormal];
                     }
                     
-                    if (![rowAction.title isEqualToString:@"CC"]) {
+                    if (![rowAction.title isEqualToString:@"CC"] && rowAction.image) {
                         NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithAttributedString:rowButton.currentAttributedTitle];
                         [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
                         [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:rowAction.title]];
-                        [attStr addAttribute:NSForegroundColorAttributeName value:rowAction.titleColor range:NSMakeRange(0, [attStr length])];
+                        if (rowAction.titleColor)
+                            [attStr addAttribute:NSForegroundColorAttributeName value:rowAction.titleColor range:NSMakeRange(0, [attStr length])];
                         
                         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
                         [paragraphStyle setLineSpacing:5];

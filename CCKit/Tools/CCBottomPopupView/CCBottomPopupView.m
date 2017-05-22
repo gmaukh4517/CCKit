@@ -345,14 +345,12 @@ CG_INLINE CATransform3D CATransform3DMake(CGFloat m11, CGFloat m12, CGFloat m13,
                                               }];
                          }];
     } else {
-        [UIView animateWithDuration:0.2
+        [UIView animateWithDuration:kCCDuration
                          animations:^{
-                             
                              overlayImageView.frame = [[UIScreen mainScreen] bounds];
                              modal.frame = CGRectMake(0, target.frame.size.height, modal.frame.size.width, modal.frame.size.height);
                          }
                          completion:^(BOOL finished) {
-                             
                              [overlay removeFromSuperview];
                              [modal removeFromSuperview];
                              if (completion)

@@ -36,15 +36,15 @@
 
 @interface CCTableViewHelper ()
 
-@property(nonatomic, strong) NSMutableArray<NSMutableArray *> *dataArray;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *dataArray;
 
-@property(nonatomic, strong) NSMutableArray *sectionIndexTitles;
+@property (nonatomic, strong) NSMutableArray *sectionIndexTitles;
 
-@property(nonatomic, strong) UILocalizedIndexedCollation *theCollation;
+@property (nonatomic, strong) UILocalizedIndexedCollation *theCollation;
 
-@property(nonatomic, assign) NSTimeInterval timeInterval;
+@property (nonatomic, assign) NSTimeInterval timeInterval;
 
-@property(nonatomic, assign) BOOL isIgnoreEvent;
+@property (nonatomic, assign) BOOL isIgnoreEvent;
 
 
 /**
@@ -52,34 +52,34 @@
  *
  *  @brief 头部搜索
  */
-@property(nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) UISearchBar *searchBar;
 
-@property(nonatomic, copy) CCTableHelperCellIdentifierBlock cellIdentifierBlock;
-@property(nonatomic, copy) CCTableHelperDidSelectBlock didSelectBlock;
-@property(nonatomic, copy) CCTableHelperDidDeSelectBlock didDeSelectBlock;
-@property(nonatomic, copy) CCTableHelperDidMoveToRowBlock didMoveToRowBlock;
-@property(nonatomic, copy) CCTableHelperDidWillDisplayBlock didWillDisplayBlock;
+@property (nonatomic, copy) CCTableHelperCellIdentifierBlock cellIdentifierBlock;
+@property (nonatomic, copy) CCTableHelperDidSelectBlock didSelectBlock;
+@property (nonatomic, copy) CCTableHelperDidDeSelectBlock didDeSelectBlock;
+@property (nonatomic, copy) CCTableHelperDidMoveToRowBlock didMoveToRowBlock;
+@property (nonatomic, copy) CCTableHelperDidWillDisplayBlock didWillDisplayBlock;
 
-@property(nonatomic, copy) CCTableHelperDidEditingBlock didEditingBlock;
-@property(nonatomic, copy) CCTableHelperDidEditTitleBlock didEditTileBlock;
+@property (nonatomic, copy) CCTableHelperDidEditingBlock didEditingBlock;
+@property (nonatomic, copy) CCTableHelperDidEditTitleBlock didEditTileBlock;
 
-@property(nonatomic, copy) CCTableHelperEditingStyle didEditingStyle;
-@property(nonatomic, copy) CCTableHelperDidEditActionsBlock didEditActionsBlock;
+@property (nonatomic, copy) CCTableHelperEditingStyle didEditingStyle;
+@property (nonatomic, copy) CCTableHelperDidEditActionsBlock didEditActionsBlock;
 
-@property(nonatomic, copy) CCScrollViewWillBeginDragging scrollViewBdBlock;
-@property(nonatomic, copy) CCScrollViewDidScroll scrollViewddBlock;
+@property (nonatomic, copy) CCScrollViewWillBeginDragging scrollViewBdBlock;
+@property (nonatomic, copy) CCScrollViewDidScroll scrollViewddBlock;
 
-@property(nonatomic, copy) CCTableHelperHeaderBlock headerBlock;
-@property(nonatomic, copy) CCTableHelperTitleHeaderBlock headerTitleBlock;
+@property (nonatomic, copy) CCTableHelperHeaderBlock headerBlock;
+@property (nonatomic, copy) CCTableHelperTitleHeaderBlock headerTitleBlock;
 
-@property(nonatomic, copy) CCTableHelperFooterBlock footerBlock;
-@property(nonatomic, copy) CCTableHelperTitleFooterBlock footerTitleBlock;
+@property (nonatomic, copy) CCTableHelperFooterBlock footerBlock;
+@property (nonatomic, copy) CCTableHelperTitleFooterBlock footerTitleBlock;
 
-@property(nonatomic, copy) CCTableHelperNumberRows numberRow;
+@property (nonatomic, copy) CCTableHelperNumberRows numberRow;
 
-@property(nonatomic, copy) CCTableHelperCellBlock cellViewEventsBlock;
-@property(nonatomic, copy) CCTableHelperCurrentModelAtIndexPath currentModelAtIndexPath;
-@property(nonatomic, copy) CCTableHelperScrollViewDidEndScrolling scrollViewDidEndScrolling;
+@property (nonatomic, copy) CCTableHelperCellBlock cellViewEventsBlock;
+@property (nonatomic, copy) CCTableHelperCurrentModelAtIndexPath currentModelAtIndexPath;
+@property (nonatomic, copy) CCTableHelperScrollViewDidEndScrolling scrollViewDidEndScrolling;
 
 @end
 
@@ -95,8 +95,8 @@
 
 - (void)initialization
 {
-    self.titleHeaderHeight = 0.001;
-    self.titleFooterHeight = 0.001;
+    self.titleHeaderHeight = 0.1;
+    self.titleFooterHeight = 0.1;
 }
 
 #pragma mark -
@@ -149,7 +149,10 @@
             [sectionIndex addObject:UITableViewIndexSearch];
         }
         
-        [sectionIndex addObjectsFromArray:[UILocalizedIndexedCollation.currentCollation sectionIndexTitles]];
+        if (self.sectionIndexTitle)
+            [sectionIndex addObjectsFromArray:self.sectionIndexTitle];
+        else
+            [sectionIndex addObjectsFromArray:[UILocalizedIndexedCollation.currentCollation sectionIndexTitles]];
         _sectionIndexTitles = sectionIndex;
     }
     return _sectionIndexTitles;
@@ -698,6 +701,7 @@
 
 - (void)cc_resetDataAry:(NSArray *)newDataAry
 {
+    self.dataArray = nil;
     [self cc_resetDataAry:newDataAry forSection:0];
 }
 
@@ -715,6 +719,7 @@
 
 - (void)cc_reloadDataAry:(NSArray *)newDataAry
 {
+    self.dataArray = nil;
     [self cc_reloadDataAry:newDataAry forSection:0];
 }
 

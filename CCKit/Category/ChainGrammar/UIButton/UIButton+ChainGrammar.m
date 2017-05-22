@@ -116,7 +116,6 @@ static void *touchKey = &touchKey;
     
     NSString *_title;
     UIColor *_titleColor;
-    UIColor *_backgroundColor;
     UIImage *_backgroundImage;
     UIImage *_iconImage;
     
@@ -139,6 +138,16 @@ static void *touchKey = &touchKey;
         return self;
     };
 }
+
+- (UIButtonMaker * (^)(UIColor *))setBackgroundColor
+{
+    return ^UIButtonMaker *(UIColor *color)
+    {
+        _button.backgroundColor = color;
+        return self;
+    };
+}
+
 - (UIButtonMaker * (^)(NSString *))setTitle
 {
     return ^UIButtonMaker *(NSString *title)
@@ -173,11 +182,6 @@ static void *touchKey = &touchKey;
             _titleColor = nil;
         }
         
-        if (_backgroundColor) {
-            [_button setBackgroundColor:_backgroundColor];
-            _backgroundColor = nil;
-        }
-        
         if (_backgroundImage) {
             [_button setBackgroundImage:_backgroundImage forState:state];
             _backgroundImage = nil;
@@ -210,13 +214,5 @@ static void *touchKey = &touchKey;
     };
 }
 
-- (UIButtonMaker * (^)(UIColor *))setBackgroundColor
-{
-    return ^UIButtonMaker *(UIColor *color)
-    {
-        _backgroundColor = color;
-        return self;
-    };
-}
 
 @end
