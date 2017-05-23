@@ -68,9 +68,9 @@
  *
  *  @brief  保存对象
  *
- *  @param saveContext 管理对象
- *  @param block       回调执行函数
- *  @param completion  完成回调函数
+ *  @param saveContext      管理对象
+ *  @param saveContextBlock 回调执行函数
+ *  @param completion       完成回调函数
  */
 + (void)saveWithContext:(NSManagedObjectContext *)saveContext
        SaveContextBlock:(void (^)(NSManagedObjectContext *currentContext))saveContextBlock

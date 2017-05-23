@@ -164,9 +164,10 @@ static void ccRunLoopObserverCallback(CFRunLoopObserverRef observer, CFRunLoopAc
                     dispatch_semaphore_signal(SHAREDMONITOR.eventSemphore);
                 });
                 [NSThread sleepForTimeInterval:cc_time_out_interval];
-                if (timeOut) {
-                    [CCBacktraceLogger cc_logMain];
-                }
+                
+                if (timeOut)
+                    [self backtraceLoggerHandle];
+                
                 dispatch_wait(SHAREDMONITOR.eventSemphore, DISPATCH_TIME_FOREVER);
             }
         }
@@ -182,10 +183,11 @@ static void ccRunLoopObserverCallback(CFRunLoopObserverRef observer, CFRunLoopAc
                     continue;
                 }
                 if (SHAREDMONITOR.currentActivity == kCFRunLoopBeforeSources || SHAREDMONITOR.currentActivity == kCFRunLoopAfterWaiting) {
-                    if (++SHAREDMONITOR.timeOut < 5) {
+                    if (++SHAREDMONITOR.timeOut < 5)
                         continue;
-                    }
-                    [CCBacktraceLogger cc_logMain];
+                    
+                    [self backtraceLoggerHandle];
+                    
                     [NSThread sleepForTimeInterval:cc_restore_interval];
                 }
             }
@@ -206,5 +208,27 @@ static void ccRunLoopObserverCallback(CFRunLoopObserverRef observer, CFRunLoopAc
     _observer = nil;
 }
 
+- (void)backtraceLoggerHandle
+{
+    [CatonLogger manager].isCaton = YES;
+    NSMutableArray *catonArray = [NSMutableArray arrayWithArray:[CatonLogger manager].catonArr];
+    [catonArray addObject:[CCBacktraceLogger cc_backtraceOfMainThread]];
+    [CatonLogger manager].catonArr = catonArray;
+}
+
+@end
+
+@implementation CatonLogger
+
+@dynamic isCaton;
+@dynamic catonArr;
+
+- (NSDictionary *)setupCCDefaults
+{
+    return @{
+             @"isCaton" : @NO,
+             @"catonArr" : [NSArray array],
+             };
+}
 
 @end

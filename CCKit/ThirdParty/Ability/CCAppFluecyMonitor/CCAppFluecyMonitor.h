@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 //
 
+#import "CCUserDefaults.h"
 #import <Foundation/Foundation.h>
 
 #define SHAREDMONITOR [CCAppFluecyMonitor sharedMonitor]
@@ -33,5 +34,15 @@
 
 - (void)startMonitoring;
 - (void)stopMonitoring;
+
+@end
+
+@interface CatonLogger : CCUserDefaults
+
+/** 是否有卡顿日志 */
+@property (nonatomic) BOOL isCaton;
+
+/** 卡顿日志内容 */
+@property (nonatomic, copy) NSArray *catonArr;
 
 @end

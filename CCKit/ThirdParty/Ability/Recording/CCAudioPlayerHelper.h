@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 //
 
-#import <AVFoundation/AVAudioPlayer.h>
+#import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
 
 @protocol CCAudioPlayerHelperDelegate <NSObject>

@@ -198,7 +198,6 @@
  *  @param tableName  表名
  *  @param primaryKey 主键
  *  @param dataArray  数据集合
- *  @param context    管理对象
  *
  *  @return 返回新增或更新对象集
  */
@@ -246,7 +245,7 @@
  *  @brief  新增对象及子对象
  *
  *  @param data        对象数据
- *  @param primaryKeys 主键
+ *  @param tableName   主键
  *  @param context     管理对象
  *
  *  @return 返回新增对象
@@ -276,7 +275,7 @@
  *  @param completion 完成回调函数
  */
 + (void)cc_DeleteAll:(NSString *)tableName
-           completion:(void (^)(NSError *error))completion;
+          completion:(void (^)(NSError *error))completion;
 
 /**
  *  @author C C, 2015-10-25
@@ -286,7 +285,7 @@
  *  @param conditionID 对象ID
  */
 + (void)cc_DeleteManagedObjectID:(NSString *)tableName
-                  ManagedObjectID:(NSManagedObjectID *)conditionID;
+                 ManagedObjectID:(NSManagedObjectID *)conditionID;
 
 /**
  *  @author C C, 2015-10-25
@@ -297,8 +296,8 @@
  *  @param completion  完成回调函数
  */
 + (void)cc_DeleteManagedObjectID:(NSString *)tableName
-                  ManagedObjectID:(NSManagedObjectID *)conditionID
-                       completion:(void (^)(NSError *error))completion;
+                 ManagedObjectID:(NSManagedObjectID *)conditionID
+                      completion:(void (^)(NSError *error))completion;
 
 /**
  *  @author CC, 2015-11-16
@@ -309,7 +308,7 @@
  *  @param arrayObjectID 集合对象ObjectID
  */
 + (void)cc_DeleteManagedObjectIds:(NSString *)tableName
-                   ManagedObjectId:(NSArray *)arrayObjectID;
+                  ManagedObjectId:(NSArray *)arrayObjectID;
 
 /**
  *  @author CC, 2015-11-16
@@ -321,8 +320,8 @@
  *  @param completion    完成回调
  */
 + (void)cc_DeleteManagedObjectIds:(NSString *)tableName
-                   ManagedObjectId:(NSArray *)arrayObjectID
-                        completion:(void (^)(NSError *error))completion;
+                  ManagedObjectId:(NSArray *)arrayObjectID
+                       completion:(void (^)(NSError *error))completion;
 
 /**
  *  @author CC, 2015-10-26
@@ -333,7 +332,7 @@
  *  @param condition 条件
  */
 + (void)cc_DeleteWithCondition:(NSString *)tableName
-                      Condition:(NSPredicate *)condition;
+                     Condition:(NSPredicate *)condition;
 
 /**
  *  @author CC, 2015-10-26
@@ -344,8 +343,8 @@
  *  @param condition 条件
  */
 + (void)cc_DeleteWithCondition:(NSString *)tableName
-                      Condition:(NSPredicate *)condition
-                     Completion:(void (^)(NSError *error))completion;
+                     Condition:(NSPredicate *)condition
+                    Completion:(void (^)(NSError *error))completion;
 
 /**
  *  @author C C, 2015-10-25
@@ -356,8 +355,8 @@
  *  @param value        属性值
  */
 + (void)cc_DeleteProperty:(NSString *)tableName
-              PropertyName:(NSString *)propertyName
-                   toValue:(id)value;
+             PropertyName:(NSString *)propertyName
+                  toValue:(id)value;
 
 /**
  *  @author C C, 2015-10-25
@@ -367,7 +366,7 @@
  *  @param propertyKeyValues 属性名与值
  */
 + (void)cc_DeleteMultiProperty:(NSString *)tableName
-                  MultiProperty:(NSDictionary *)propertyKeyValues;
+                 MultiProperty:(NSDictionary *)propertyKeyValues;
 
 /**
  *  @author C C, 2015-10-25
@@ -378,8 +377,8 @@
  *  @param completion        完成回调函数
  */
 + (void)cc_DeleteMultiProperty:(NSString *)tableName
-                  MultiProperty:(NSDictionary *)propertyKeyValues
-                     completion:(void (^)(NSError *error))completion;
+                 MultiProperty:(NSDictionary *)propertyKeyValues
+                    completion:(void (^)(NSError *error))completion;
 
 /**
  *  @author CC, 16-05-20
@@ -390,7 +389,7 @@
  *  @param conditionKeyValues 属性名与值
  */
 + (void)cc_DeleteMultipleCondition:(NSString *)tableName
-                     MultiCondition:(NSArray *)conditionKeyValues;
+                    MultiCondition:(NSArray *)conditionKeyValues;
 
 /**
  *  @author CC, 16-05-20
@@ -402,8 +401,8 @@
  *  @param completion         完成回调函数
  */
 + (void)cc_DeleteMultipleCondition:(NSString *)tableName
-                     MultiCondition:(NSArray *)conditionKeyValues
-                         completion:(void (^)(NSError *error))completion;
+                    MultiCondition:(NSArray *)conditionKeyValues
+                        completion:(void (^)(NSError *error))completion;
 
 @end
 
@@ -411,10 +410,10 @@
 
 @interface CCDatabaseManager (Modify)
 
-+(void)cc_SyncUpdateORInsertCoreData:(NSString *)tableName
-                           Predicate:(NSPredicate *)predicate
-                                Data:(NSDictionary *)data
-                          Completion:(void (^)(NSError *error))completion;
++ (void)cc_SyncUpdateORInsertCoreData:(NSString *)tableName
+                            Predicate:(NSPredicate *)predicate
+                                 Data:(NSDictionary *)data
+                           Completion:(void (^)(NSError *error))completion;
 
 /**
  批量修改属性值
@@ -433,9 +432,9 @@
  @param condition 修改条件
  @param editData  编辑键值
  */
-+(void)cc_updateCoreData:(NSString *)tableName 
-               Condition:(NSPredicate *)condition 
-                EditData:(NSDictionary *)editData;
++ (void)cc_updateCoreData:(NSString *)tableName
+                Condition:(NSPredicate *)condition
+                 EditData:(NSDictionary *)editData;
 
 /**
  修改数据
@@ -446,10 +445,10 @@
  @param editData   编辑键值
  @param completion 完成回调
  */
-+(void)cc_updateCoreData:(NSString *)tableName 
-               Condition:(NSPredicate *)condition
-                EditData:(NSDictionary *)editData 
-              Completion:(void (^)(NSError *error))completion;
++ (void)cc_updateCoreData:(NSString *)tableName
+                Condition:(NSPredicate *)condition
+                 EditData:(NSDictionary *)editData
+               Completion:(void (^)(NSError *error))completion;
 
 /**
  主键修改数据对象及子项
@@ -483,39 +482,39 @@
  @param predicate 条件
  @param data      更新键值
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data;
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data;
 
 /**
  更新或插入数据
  根据条件先查询符合条件就修改数据对象，不符合就插入数据
  
- @param tableName 表名
- @param predicate 条件
- @param data      更新键值
- @param callbackDataArr 回调执行后对象集合
+ @param tableName    表名
+ @param predicate    条件
+ @param data         更新键值
+ @param callbackData 回调执行后对象集合
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                    CallbackData:(void (^)(NSDictionary *data))callbackData;
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
+                     CallbackData:(void (^)(NSDictionary *data))callbackData;
 
 /**
  更新或插入数据
  根据条件先查询符合条件就修改数据对象，不符合就插入数据
  
- @param tableName 表名
- @param predicate 条件
- @param data      更新键值
- @param callbackDataArr 回调执行后对象集合
+ @param tableName    表名
+ @param predicate    条件
+ @param data         更新键值
+ @param callbackData 回调执行后对象集合
  @param completion 完成回调
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                    CallbackData:(void (^)(NSDictionary *data))callbackData
-                      Completion:(void (^)(NSError *error))completion;
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
+                     CallbackData:(void (^)(NSDictionary *data))callbackData
+                       Completion:(void (^)(NSError *error))completion;
 
 /**
  批量更新或新增数据
@@ -525,10 +524,10 @@
  @param dataArr         集合
  @param callbackDataArr 完成数据
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                    PredicateArr:(NSArray *)predicateArr
-                         DataArr:(NSArray *)dataArr
-                 CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr;
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                     PredicateArr:(NSArray *)predicateArr
+                          DataArr:(NSArray *)dataArr
+                  CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr;
 
 /**
  批量更新或新增数据
@@ -539,11 +538,11 @@
  @param callbackDataArr 完成数据
  @param completion      完成回调
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                    PredicateArr:(NSArray *)predicateArr
-                         DataArr:(NSArray *)dataArr
-                 CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
-                      Completion:(void (^)(NSError *error))completion;
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                     PredicateArr:(NSArray *)predicateArr
+                          DataArr:(NSArray *)dataArr
+                  CallbackDataArr:(void (^)(NSArray *dataArr))callbackDataArr
+                       Completion:(void (^)(NSError *error))completion;
 
 /**
  更新或插入数据
@@ -551,8 +550,7 @@
  
  @param tableName    表名
  @param primaryKey   主键
- @param primaryValue 主键值
- @param data         更新数据
+ @param dataArr      更新数据
  */
 + (void)cc_updateORInsertCoreData:(NSString *)tableName
                        PrimaryKey:(NSString *)primaryKey
@@ -564,8 +562,7 @@
  
  @param tableName    表名
  @param primaryKey   主键
- @param primaryValue 主键值
- @param data         更新数据
+ @param dataArr      更新数据
  @param completion   完成回调
  */
 + (void)cc_updateORInsertCoreData:(NSString *)tableName
@@ -609,7 +606,6 @@
  
  @param tableName    表名
  @param primaryKey   主键
- @param primaryValue 主键值
  @param data         更新数据
  */
 + (void)cc_updateORInsertCoreData:(NSString *)tableName
@@ -625,10 +621,10 @@
  @param data      更新键值
  @param completion 完成回调
  */
-+(void)cc_updateORInsertCoreData:(NSString *)tableName
-                       Predicate:(NSPredicate *)predicate
-                            Data:(NSDictionary *)data
-                      Completion:(void (^)(NSError *error))completion;
++ (void)cc_updateORInsertCoreData:(NSString *)tableName
+                        Predicate:(NSPredicate *)predicate
+                             Data:(NSDictionary *)data
+                       Completion:(void (^)(NSError *error))completion;
 
 /**
  更新或插入数据
@@ -650,9 +646,8 @@
  
  @param tableName    表名
  @param primaryKey   主键
- @param primaryValue 主键值
  @param data         更新数据
- @param Completion   完成回调
+ @param completion   完成回调
  */
 + (void)cc_updateORInsertCoreData:(NSString *)tableName
                        PrimaryKey:(NSString *)primaryKey
@@ -665,7 +660,6 @@
  
  @param tableName    表名
  @param primaryKey   主键
- @param primaryValue 主键值
  @param data         更新数据
  @param callbackData 回调执行后对象
  @param completion   完成回调
@@ -721,8 +715,8 @@
  @param tableName 表名
  @param condition 条件
  */
-+(NSArray *)cc_SyncSelectCoreData:(NSString *)tableName
-                        Condition:(NSPredicate *)condition;
++ (NSArray *)cc_SyncSelectCoreData:(NSString *)tableName
+                         Condition:(NSPredicate *)condition;
 
 /**
  *  @author CC, 2015-10-26
