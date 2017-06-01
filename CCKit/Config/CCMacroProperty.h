@@ -86,6 +86,30 @@
 /** 屏幕大小 */
 #define winsize                             [[UIScreen mainScreen] bounds].size
 
+
+/** 数据验证 **/
+#define StrValid(f)(f!=nil &&[f isKindOfClass:[NSString class]]&& ![f isEqualToString:@""])
+
+#define SafeStr(f)(StrValid(f)?f:@"")
+
+#define HasString(str,eky)([str rangeOfString:key].location!=NSNotFound)
+
+#define ValidStr(f)StrValid(f)
+
+#define ValidDict(f)(f!=nil &&[f isKindOfClass:[NSDictionary class]])
+
+#define ValidArray(f)(f!=nil &&[f isKindOfClass:[NSArray class]]&&[f count]>0)
+
+#define ValidNum(f)(f!=nil &&[f isKindOfClass:[NSNumber class]])
+
+#define ValidClass(f,cls)(f!=nil &&[f isKindOfClass:[cls class]])
+
+#define ValidData(f)(f!=nil &&[f isKindOfClass:[NSData class]])
+
+/** 获取一段时间间隔 */
+#define kStartTime   NSDate *startTime = [NSDate date]
+#define kEndTime   NSLog(@"Time: %f", -[startTime timeIntervalSinceNow])
+
 #pragma mark-
 #pragma mark :. 常用
 

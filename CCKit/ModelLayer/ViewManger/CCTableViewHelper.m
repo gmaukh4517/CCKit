@@ -612,7 +612,7 @@
 
 - (void)cc_reloadGroupDataAry:(NSArray *)newDataAry
 {
-    self.dataArray = nil;
+    [self.dataArray removeAllObjects];
     for (NSInteger i = 0; i < newDataAry.count; i++)
         [self cc_makeUpDataAryForSection:i];
     
