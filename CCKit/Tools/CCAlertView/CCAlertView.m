@@ -70,6 +70,28 @@
      withButtonTitleArray:(NSArray *)buttonTitles
     OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside
 {
+    [CCAlertView showWithTextInput:title
+                              text:nil
+                       placeholder:placeholder
+              withButtonTitleArray:buttonTitles
+             OnButtonTouchUpInside:onButtonTouchUpInside];
+}
+
+/**
+ 弹出提示输入框
+ 
+ @param title 标题
+ @param text  文本框内容
+ @param placeholder 输入框提示语
+ @param buttonTitles 按钮
+ @param onButtonTouchUpInside 回调
+ */
++ (void)showWithTextInput:(NSString *)title
+                     text:(NSString *)text
+              placeholder:(NSString *)placeholder
+     withButtonTitleArray:(NSArray *)buttonTitles
+    OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside
+{
     CGFloat heigth = 20;
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 0)];
     if (title && ![title isEqualToString:@""]) {
@@ -87,7 +109,10 @@
     [containerView addSubview:view];
     
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(5, 0, view.width - 5, 30)];
-    textField.placeholder = placeholder;
+    if (placeholder)
+        textField.placeholder = placeholder;
+    if (text)
+        textField.text = text;
     textField.tag = 1;
     [view addSubview:textField];
     

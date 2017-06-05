@@ -236,7 +236,7 @@
             for (NSString *key in propertyKeyValues.allKeys)
                 [conditions appendFormat:@"%@ = %@ AND ",key,[propertyKeyValues objectForKey:key]];
             
-            NSString *condition = [conditions substringToIndex:conditions.length + 4];
+            NSString *condition = [conditions substringToIndex:conditions.length - 4];
             NSPredicate *predicate = [NSPredicate predicateWithFormat:condition];
             fetchRequest.predicate = predicate;
         }

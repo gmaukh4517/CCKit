@@ -167,6 +167,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if (!self.navBarView) {
         UIView *navBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 64)];
         navBarView.backgroundColor = [UINavigationBar appearance].barTintColor;
+        navBarView.tag = 1111111;
         self.navBarView = navBarView;
     }
     return self.navBarView;

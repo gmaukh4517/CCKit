@@ -37,4 +37,9 @@
 #import <CCKit/CCVoiceRecordHelper.h>
 #import <CCKit/CCAudioPlayerHelper.h>
 
+#import <CCKit/UIButton+WebCache.h>
+#import <CCKit/UIImageView+HighlightedWebCache.h>
+#import <CCKit/UIView+WebCache.h>
+#import <CCKit/UIImageView+WebCache.h>
+
 #endif

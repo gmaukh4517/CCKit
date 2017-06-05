@@ -49,6 +49,20 @@
      withButtonTitleArray:(NSArray *)buttonTitles
     OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside;
 
+/**
+ 弹出提示输入框
+ 
+ @param title 标题
+ @param text  文本框内容
+ @param placeholder 输入框提示语
+ @param buttonTitles 按钮
+ @param onButtonTouchUpInside 回调
+ */
++ (void)showWithTextInput:(NSString *)title
+                     text:(NSString *)text
+              placeholder:(NSString *)placeholder
+     withButtonTitleArray:(NSArray *)buttonTitles
+    OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside;
 
 /**
  *  @author CC, 16-02-02

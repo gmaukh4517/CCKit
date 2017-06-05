@@ -85,6 +85,7 @@
 {
     objc_setAssociatedObject(self, @selector(cc_mediator), cc_mediator, OBJC_ASSOCIATION_RETAIN);
 }
+
 - (CCMediator *)cc_mediator
 {
     return objc_getAssociatedObject(self, @selector(cc_mediator));
