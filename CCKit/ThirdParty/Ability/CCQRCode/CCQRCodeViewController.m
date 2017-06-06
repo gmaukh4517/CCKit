@@ -160,7 +160,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
                         ScanResult:(NSString *)result
 {
     [self.captureHelper stopRunning];
-    [self scanDealWithResult:result];
+    [self performSelectorOnMainThread:@selector(scanDealWithResult:) withObject:result waitUntilDone:NO];
 }
 
 /**
@@ -196,7 +196,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
         /**结果对象 */
         CIQRCodeFeature *feature = [features objectAtIndex:0];
         NSString *scannedResult = feature.messageString;
-        [self scanDealWithResult:scannedResult];
+        [self performSelectorOnMainThread:@selector(scanDealWithResult:) withObject:scannedResult waitUntilDone:NO];
     } else {
         //        [self.captureHelper startRunning];
         self.analysisToast.hidden = NO;
@@ -212,14 +212,11 @@ typedef void (^Outcomeblock)(NSString *outcome);
  */
 - (void)scanDealWithResult:(NSString *)resultAddress
 {
+    [self.scanningView stopRunning];
     if (_scanDealWithResult) { //系统处理
-        @weakify(self);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
-            CCQRCodeDisplayViewController *viewController = [[CCQRCodeDisplayViewController alloc] init];
-            viewController.baseURL = resultAddress;
-            [self.navigationController pushViewController:viewController animated:YES];
-        });
+        CCQRCodeDisplayViewController *viewController = [[CCQRCodeDisplayViewController alloc] init];
+        viewController.baseURL = resultAddress;
+        [self.navigationController pushViewController:viewController animated:YES];
     } else { // 自行处理
         if (_outcomeblock)
             _outcomeblock(resultAddress);
@@ -278,6 +275,10 @@ typedef void (^Outcomeblock)(NSString *outcome);
     [self.captureHelper showCaptureOnView:self.preview];
     
     [self isCameraUsageRights];
+    
+    if (![self.scanningView isRunning]) {
+        [self.scanningView startRunning];
+    }
 }
 
 - (instancetype)init
@@ -300,6 +301,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
     }
     self.title = @"扫一扫";
     
+    self.navigationController.navigationBar.translucent = NO;
     if (self.navigationController.topViewController == self) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消"
                                                                                  style:UIBarButtonItemStyleBordered

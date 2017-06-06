@@ -76,6 +76,8 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)initView
 {
     _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+    _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
+    _backgroundView.hidden = YES;
     [self addSubview:_backgroundView];
 
     _originLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, CGRectGetWidth(self.bounds), 20)];
@@ -83,7 +85,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     _originLable.textAlignment = NSTextAlignmentCenter;
     _originLable.textColor = [UIColor whiteColor];
     _originLable.font = [UIFont systemFontOfSize:12];
-    _originLable.text = @"网页由 www.ccskill.com 提供";
+    _originLable.text = @"网页由 www.cc.com 提供";
     [_backgroundView addSubview:_originLable];
 
     UIView *view;
@@ -117,7 +119,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         _webWKView.UIDelegate = self;
         _webWKView.navigationDelegate = self;
         _webWKView.allowsBackForwardNavigationGestures = YES;
-        _webWKView.scrollView.backgroundColor = [UIColor clearColor];
 
         [_webWKView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_webWKView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
@@ -138,14 +139,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     if (!_webView) {
         _webView = [[UIWebView alloc] initWithFrame:self.bounds];
         _webView.backgroundColor = [UIColor whiteColor];
-        _webView.opaque = NO;
-        for (UIView *subview in [_webView.scrollView subviews]) {
-            if ([subview isKindOfClass:[UIImageView class]]) {
-                ((UIImageView *)subview).image = nil;
-                subview.backgroundColor = [UIColor clearColor];
-            }
-        }
-
         _webViewProgress = [[CCWebViewProgress alloc] init];
         _webView.delegate = _webViewProgress;
         _webViewProgress.webViewProxyDelegate = self;
@@ -155,6 +148,20 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         self.webViewJSContext = [_webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     }
     return _webView;
+}
+
+-(void)settingbackground
+{
+     _webWKView.scrollView.backgroundColor = [UIColor clearColor];
+    
+    _webView.opaque = NO;
+    for (UIView *subview in [_webView.scrollView subviews]) {
+        if ([subview isKindOfClass:[UIImageView class]]) {
+            ((UIImageView *)subview).image = nil;
+            subview.backgroundColor = [UIColor clearColor];
+        }
+    }
+     _backgroundView.hidden = NO;
 }
 
 /**
@@ -231,7 +238,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     if ([keyPath isEqualToString:@"estimatedProgress"]) {
         [self progressChanged:[change objectForKey:NSKeyValueChangeNewKey]];
     } else if ([keyPath isEqualToString:@"title"]) {
-        _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
         if ([self.delegate respondsToSelector:@selector(webViewDidFinishLoad:Title:)])
             [self.delegate webViewDidFinishLoad:self Title:change[NSKeyValueChangeNewKey]];
     }
@@ -241,7 +247,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)webViewProgress:(CCWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
     [_progressView setProgress:progress animated:YES];
-    _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
     if ([self.delegate respondsToSelector:@selector(webViewDidFinishLoad:Title:)])
         [self.delegate webViewDidFinishLoad:self Title:[((UIWebView *)self.webView)stringByEvaluatingJavaScriptFromString:@"document.title"]];
 }
@@ -260,6 +265,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     self.progressView.progress = newValue.floatValue;
     if (self.progressView.progress == 1) {
         self.progressView.progress = 0;
+        [self performSelector:@selector(settingbackground) withObject:nil afterDelay:2];
         [UIView animateWithDuration:.02 animations:^{
             self.progressView.alpha = 0;
         }];

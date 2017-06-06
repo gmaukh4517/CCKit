@@ -33,7 +33,7 @@
 
 #define kCCQRCodeRectPaddingX 55
 
-typedef void(^TransformScanningAnimationBlock)(void);
+typedef void (^TransformScanningAnimationBlock)(void);
 
 @interface CCScanningView ()
 
@@ -47,21 +47,42 @@ typedef void(^TransformScanningAnimationBlock)(void);
 
 @property (nonatomic, strong) UIButton *myQRCodeButton;
 
+@property (nonatomic, assign) BOOL isRunning;
+
 @end
 
 @implementation CCScanningView
 
-- (void)scanning {
+- (BOOL)isRunning
+{
+    return _isRunning;
+}
+
+- (void)startRunning
+{
+    self.scanningImageView.frame = CGRectMake(55, 30, CGRectGetWidth(self.bounds) - 110, 2);
+    [self scanning];
+}
+
+-(void)stopRunning
+{
+    self.isRunning = NO;
+    [self.scanningImageView.layer removeAllAnimations];
+}
+
+- (void)scanning
+{
+    self.isRunning = YES;
     CGRect animationRect = self.scanningImageView.frame;
     animationRect.origin.y += CGRectGetWidth(self.bounds) - CGRectGetMinX(animationRect) * 2 - CGRectGetHeight(animationRect);
-
+    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDelay:0];
     [UIView setAnimationDuration:2];
     [UIView setAnimationCurve:UIViewAnimationCurveLinear];
     [UIView setAnimationRepeatCount:FLT_MAX];
     [UIView setAnimationRepeatAutoreverses:NO];
-
+    
     self.scanningImageView.hidden = NO;
     self.scanningImageView.frame = animationRect;
     [UIView commitAnimations];
@@ -69,7 +90,8 @@ typedef void(^TransformScanningAnimationBlock)(void);
 
 #pragma mark - Propertys
 
-- (UIImageView *)scanningImageView {
+- (UIImageView *)scanningImageView
+{
     if (!_scanningImageView) {
         _scanningImageView = [[UIImageView alloc] initWithFrame:CGRectMake(55, 30, CGRectGetWidth(self.bounds) - 110, 2)];
         _scanningImageView.backgroundColor = [UIColor greenColor];
@@ -77,7 +99,8 @@ typedef void(^TransformScanningAnimationBlock)(void);
     return _scanningImageView;
 }
 
-- (UILabel *)QRCodeTipLabel {
+- (UILabel *)QRCodeTipLabel
+{
     if (!_QRCodeTipLabel) {
         _QRCodeTipLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(self.clearRect) + 30, CGRectGetWidth(self.bounds) - 20, 20)];
         _QRCodeTipLabel.text = kCCQRCodeTipString;
@@ -90,7 +113,8 @@ typedef void(^TransformScanningAnimationBlock)(void);
     return _QRCodeTipLabel;
 }
 
-- (UIButton *)myQRCodeButton {
+- (UIButton *)myQRCodeButton
+{
     if (!_myQRCodeButton) {
         _myQRCodeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_QRCodeTipLabel.frame) + 30, 80, 20)];
         _myQRCodeButton.center = CGPointMake(CGRectGetWidth(self.bounds) / 2.0, _myQRCodeButton.center.y);
@@ -104,29 +128,35 @@ typedef void(^TransformScanningAnimationBlock)(void);
 
 #pragma mark - Public Api
 
-- (void)transformScanningTypeWithStyle:(CCScanningStyle)style {
+- (void)transformScanningTypeWithStyle:(CCScanningStyle)style
+{
     self.scanningStyle = style;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self setNeedsDisplay];
-    } completion:^(BOOL finished) {
-
-    }];
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         [self setNeedsDisplay];
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
 }
 
 #pragma mark - Life Cycle
 
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.500];
-
+        
         self.clearRect = CGRectMake(kCCQRCodeRectPaddingX, 30, CGRectGetWidth(frame) - kCCQRCodeRectPaddingX * 2, CGRectGetWidth(frame) - kCCQRCodeRectPaddingX * 2);
-
+        
         [self addSubview:self.scanningImageView];
         [self addSubview:self.QRCodeTipLabel];
-//        [self addSubview:self.myQRCodeButton];
-
+        //        [self addSubview:self.myQRCodeButton];
+        
         [self scanning];
     }
     return self;
@@ -135,28 +165,29 @@ typedef void(^TransformScanningAnimationBlock)(void);
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
+- (void)drawRect:(CGRect)rect
+{
     // Drawing code
-
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
-
+    
     CGContextSetFillColorWithColor(context, self.backgroundColor.CGColor);
     CGContextFillRect(context, rect);
-
+    
     CGRect clearRect;
     CGFloat paddingX;
-
+    
     CGFloat tipLabelPadding;
-
+    
     self.scanningImageView.hidden = YES;
     self.myQRCodeButton.hidden = YES;
     switch (self.scanningStyle) {
         case CCScanningStyleQRCode: {
             tipLabelPadding = 30;
             self.QRCodeTipLabel.text = kCCQRCodeTipString;
-
+            
             self.myQRCodeButton.hidden = NO;
-            self.scanningImageView .hidden = NO;
+            self.scanningImageView.hidden = NO;
             paddingX = kCCQRCodeRectPaddingX;
             clearRect = CGRectMake(paddingX, 30, CGRectGetWidth(rect) - paddingX * 2, CGRectGetWidth(rect) - paddingX * 2);
             break;
@@ -169,45 +200,45 @@ typedef void(^TransformScanningAnimationBlock)(void);
             } else {
                 self.QRCodeTipLabel.text = kCCBookTipString;
             }
-
+            
             paddingX = 20;
             clearRect = CGRectMake(paddingX, 20, CGRectGetWidth(rect) - paddingX * 2, CGRectGetWidth(rect) - paddingX * 2);
             break;
         case CCScanningStyleWord:
             tipLabelPadding = 25;
             self.QRCodeTipLabel.text = kCCWordTipString;
-
+            
             paddingX = 50;
             clearRect = CGRectMake(paddingX, 100, CGRectGetWidth(rect) - paddingX * 2, 50);
             break;
         default:
             break;
     }
-
+    
     self.clearRect = clearRect;
-
+    
     CGRect QRCodeTipLabelFrame = self.QRCodeTipLabel.frame;
     QRCodeTipLabelFrame.origin.y = CGRectGetMaxY(self.clearRect) + tipLabelPadding;
     self.QRCodeTipLabel.frame = QRCodeTipLabelFrame;
-
+    
     CGContextClearRect(context, clearRect);
-
+    
     CGContextSaveGState(context);
-
-
+    
+    
     UIImage *topLeftImage = CCResourceImage(@"ScanQR1");
     UIImage *topRightImage = CCResourceImage(@"ScanQR2");
     UIImage *bottomLeftImage = CCResourceImage(@"ScanQR3");
     UIImage *bottomRightImage = CCResourceImage(@"ScanQR4");
-
+    
     [topLeftImage drawInRect:CGRectMake(clearRect.origin.x - 2, clearRect.origin.y - 2, topLeftImage.size.width, topLeftImage.size.height)];
-
+    
     [topRightImage drawInRect:CGRectMake(CGRectGetMaxX(clearRect) - topRightImage.size.width + 2, clearRect.origin.y - 2, topRightImage.size.width, topRightImage.size.height)];
-
+    
     [bottomLeftImage drawInRect:CGRectMake(clearRect.origin.x - 2, CGRectGetMaxY(clearRect) - bottomLeftImage.size.height + 2, bottomLeftImage.size.width, bottomLeftImage.size.height)];
-
+    
     [bottomRightImage drawInRect:CGRectMake(CGRectGetMaxX(clearRect) - bottomRightImage.size.width + 2, CGRectGetMaxY(clearRect) - bottomRightImage.size.height + 2, bottomRightImage.size.width, bottomRightImage.size.height)];
-
+    
     CGFloat padding = 0.5;
     CGContextMoveToPoint(context, CGRectGetMinX(clearRect) - padding, CGRectGetMinY(clearRect) - padding);
     CGContextAddLineToPoint(context, CGRectGetMaxX(clearRect) + padding, CGRectGetMinY(clearRect) + padding);

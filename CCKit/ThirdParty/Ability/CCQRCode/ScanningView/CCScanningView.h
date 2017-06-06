@@ -51,4 +51,8 @@ typedef NS_ENUM(NSInteger, CCScanningStyle) {
 
 - (void)scanning;
 
+- (BOOL)isRunning;
+- (void)startRunning;
+-(void)stopRunning;
+
 @end

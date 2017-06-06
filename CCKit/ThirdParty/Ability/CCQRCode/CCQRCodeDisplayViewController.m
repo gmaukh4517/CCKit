@@ -61,9 +61,9 @@
     [super viewWillAppear:animated];
     [self.webView loadRequest:self.baseURL];
     
-    NSMutableArray *array = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-    [array removeObjectAtIndex:array.count - 2];
-    self.navigationController.viewControllers = array;
+//    NSMutableArray *array = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+//    [array removeObjectAtIndex:array.count - 2];
+//    self.navigationController.viewControllers = array;
 }
 
 #pragma mark - CCWebViewDelegate

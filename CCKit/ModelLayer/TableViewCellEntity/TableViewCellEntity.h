@@ -32,6 +32,8 @@
 @property (nonatomic, copy) NSString *cellText;
 @property (nonatomic, copy) NSString *cellDetailText;
 
+@property (nonatomic, copy) id cellData;
+
 /** 自定义处理 **/
 @property (nonatomic, assign) NSInteger cellType;
 
