@@ -103,7 +103,7 @@ typedef enum {
 /** This method returns YES if the current device is better than the hardware passed */
 - (BOOL)isCurrentDeviceHardwareBetterThan:(Hardware)hardware;
 
-/** This method returns the resolution for still image that can be received 
+/** This method returns the resolution for still image that can be received
  from back camera of the current device. Resolution returned for image oriented landscape right. **/
 - (CGSize)backCameraStillImageResolutionInPixels;
 
@@ -136,6 +136,12 @@ typedef enum {
 /// 获取手机硬盘总空间, 返回的是字节数
 + (long long)totalDiskSpaceBytes;
 
+/** 获取缓存大小，指定获取缓存目录下的文件夹 **/
++ (CGFloat)obtainCacheSize:(NSString *)cacheFolder;
+/** 清理缓存，指定清理缓存目录下的文件夹 **/
++ (void)cleanCahe:(NSString *)cacheFolder;
+
+
 #pragma mark -
 #pragma mark :. PasscodeStatus
 
@@ -151,7 +157,7 @@ typedef NS_ENUM(NSUInteger, CCPasscodeStatus) {
 /**
  *  Determines if the device supports the `passcodeStatus` check. Passcode check is only supported on iOS 8.
  */
-@property(readonly) BOOL passcodeStatusSupported;
+@property (readonly) BOOL passcodeStatusSupported;
 
 /**
  *  Checks and returns the devices current passcode status.

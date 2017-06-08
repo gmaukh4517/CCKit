@@ -63,6 +63,7 @@ typedef NSMutableDictionary<NSNumber *, NSURL *> SDStateImageURLDictionary;
                  completed:(nullable SDExternalCompletionBlock)completedBlock {
     if (!url) {
         [self.imageURLStorage removeObjectForKey:@(state)];
+        [self setImage:placeholder forState:state];
         return;
     }
     

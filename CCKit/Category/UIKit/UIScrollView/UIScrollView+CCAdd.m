@@ -24,18 +24,18 @@
 //
 
 #import "UIScrollView+CCAdd.h"
-#import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
+#import <objc/runtime.h>
 
 @interface APParallaxView ()
 
-@property(nonatomic, readwrite) APParallaxTrackingState state;
+@property (nonatomic, readwrite) APParallaxTrackingState state;
 
-@property(nonatomic, weak) UIScrollView *scrollView;
-@property(nonatomic, readwrite) CGFloat originalTopInset;
-@property(nonatomic) CGFloat parallaxHeight;
+@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, readwrite) CGFloat originalTopInset;
+@property (nonatomic) CGFloat parallaxHeight;
 
-@property(nonatomic, assign) BOOL isObserving;
+@property (nonatomic, assign) BOOL isObserving;
 
 @end
 
@@ -51,18 +51,18 @@
 #pragma mark :. CCNEmptyDataSetView
 @interface CCNEmptyDataSetView : UIView
 
-@property(nonatomic, readonly) UIView *contentView;
-@property(nonatomic, readonly) UILabel *titleLabel;
-@property(nonatomic, readonly) UILabel *detailLabel;
-@property(nonatomic, readonly) UIImageView *imageView;
-@property(nonatomic, readonly) UIButton *button;
-@property(nonatomic, strong) UIView *customView;
-@property(nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, readonly) UIView *contentView;
+@property (nonatomic, readonly) UILabel *titleLabel;
+@property (nonatomic, readonly) UILabel *detailLabel;
+@property (nonatomic, readonly) UIImageView *imageView;
+@property (nonatomic, readonly) UIButton *button;
+@property (nonatomic, strong) UIView *customView;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
-@property(nonatomic, assign) CGFloat verticalOffset;
-@property(nonatomic, assign) CGFloat verticalSpace;
+@property (nonatomic, assign) CGFloat verticalOffset;
+@property (nonatomic, assign) CGFloat verticalSpace;
 
-@property(nonatomic, assign) BOOL fadeInOnDisplay;
+@property (nonatomic, assign) BOOL fadeInOnDisplay;
 
 - (void)setupConstraints;
 - (void)prepareForReuse;
@@ -81,7 +81,7 @@ static char const *const kEmptyDataSetView = "emptyDataSetView";
 
 @interface UIScrollView () <UIGestureRecognizerDelegate>
 
-@property(nonatomic, readonly) CCNEmptyDataSetView *emptyDataSetView;
+@property (nonatomic, readonly) CCNEmptyDataSetView *emptyDataSetView;
 
 @end
 
@@ -274,6 +274,19 @@ static NSString *const kCCLogoView = @"kCCLogoView";
 - (void)scrollToHorizontalPageIndex:(NSUInteger)pageIndex animated:(BOOL)animated
 {
     [self setContentOffset:CGPointMake(self.frame.size.width * pageIndex, 0.0f) animated:animated];
+}
+
+- (void)scrollToVerticalItem:(CGFloat)centerX
+{
+    CGFloat offsetX = centerX - self.frame.size.width / 2;
+    if (offsetX < 0)
+        offsetX = 0;
+    
+    CGFloat maxRight = self.contentSize.width - self.frame.size.width;
+    if (offsetX > maxRight)
+        offsetX = maxRight;
+    
+    [self setContentOffset:CGPointMake(offsetX, 0)];
 }
 
 - (void)setLogoView:(UIImageView *)logoView
@@ -1593,7 +1606,8 @@ NSString *cc_implementationKey(id target, SEL selector)
 {
     self.frame = self.superview.bounds;
     
-    void (^fadeInBlock)(void) = ^{_contentView.alpha = 1.0;
+    void (^fadeInBlock)(void) = ^{
+        _contentView.alpha = 1.0;
     };
     
     if (self.fadeInOnDisplay) {

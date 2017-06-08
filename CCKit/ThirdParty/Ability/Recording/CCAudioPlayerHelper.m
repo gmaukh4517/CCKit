@@ -24,11 +24,11 @@
 //
 
 #import "CCAudioPlayerHelper.h"
-#import "CCVoiceCommonHelper.h"
-#import <UIKit/UIKit.h>
-//#import "VoiceConverter.h"
 #import "CCHTTPManager.h"
+#import "CCVoiceCommonHelper.h"
 #import "Config.h"
+#import "VoiceConverter.h"
+#import <UIKit/UIKit.h>
 
 @interface CCAudioPlayerHelper ()
 
@@ -175,7 +175,7 @@
     if (amrName.length > 0) {
         NSString *wavName = [amrName stringByReplacingOccurrencesOfString:@"wavToAmr" withString:@"amrToWav"]; // [amrName stringByAppendingString:@"amrToWav"];
         //转格式
-//                [VoiceConverter amrToWav:[CCVoiceCommonHelper getPathByFileName:amrName ofType:@"amr"] wavSavePath:[CCVoiceCommonHelper getPathByFileName:wavName ofType:@"wav"]];
+        [VoiceConverter amrToWav:[CCVoiceCommonHelper getPathByFileName:amrName ofType:@"amr"] wavSavePath:[CCVoiceCommonHelper getPathByFileName:wavName ofType:@"wav"]];
     }
 }
 

@@ -44,13 +44,13 @@ typedef NS_ENUM(NSUInteger, APParallaxTrackingState) {
 
 @interface APParallaxView : UIView
 
-@property(weak) id<APParallaxViewDelegate> delegate;
+@property (weak) id<APParallaxViewDelegate> delegate;
 
-@property(nonatomic, readonly) APParallaxTrackingState state;
-@property(nonatomic, strong) UIImageView *imageView;
-@property(nonatomic, strong) UIView *currentSubView;
-@property(nonatomic, strong) APParallaxShadowView *shadowView;
-@property(nonatomic, strong) UIView *customView;
+@property (nonatomic, readonly) APParallaxTrackingState state;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIView *currentSubView;
+@property (nonatomic, strong) APParallaxShadowView *shadowView;
+@property (nonatomic, strong) UIView *customView;
 
 - (id)initWithFrame:(CGRect)frame andShadow:(BOOL)shadow;
 
@@ -316,16 +316,16 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
 };
 
 
-@property(nonatomic, assign) CGFloat contentInsetTop;
-@property(nonatomic, assign) CGFloat contentInsetBottom;
-@property(nonatomic, assign) CGFloat contentInsetLeft;
-@property(nonatomic, assign) CGFloat contentInsetRight;
+@property (nonatomic, assign) CGFloat contentInsetTop;
+@property (nonatomic, assign) CGFloat contentInsetBottom;
+@property (nonatomic, assign) CGFloat contentInsetLeft;
+@property (nonatomic, assign) CGFloat contentInsetRight;
 
-@property(nonatomic, assign) CGFloat contentOffsetX;
-@property(nonatomic, assign) CGFloat contentOffsetY;
+@property (nonatomic, assign) CGFloat contentOffsetX;
+@property (nonatomic, assign) CGFloat contentOffsetY;
 
-@property(nonatomic, assign) CGFloat contentSizeWidth;
-@property(nonatomic, assign) CGFloat contentSizeHeight;
+@property (nonatomic, assign) CGFloat contentSizeWidth;
+@property (nonatomic, assign) CGFloat contentSizeHeight;
 
 
 - (ScrollDirection)ScrollDirection;
@@ -341,21 +341,21 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
 
 /**
  *  @author CC, 16-03-04
- *  
+ *
  *  @brief 当前页数（竖）
  */
 - (NSUInteger)verticalPageIndex;
 
 /**
  *  @author CC, 16-03-04
- *  
+ *
  *  @brief 当前页数（横）
  */
 - (NSUInteger)horizontalPageIndex;
 
 /**
  *  @author CC, 16-03-04
- *  
+ *
  *  @brief 滑动到指定页（竖）
  *
  *  @param pageIndex 页数
@@ -366,7 +366,7 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
 
 /**
  *  @author CC, 16-03-04
- *  
+ *
  *  @brief 滑动到指定页（横）
  *
  *  @param pageIndex 页数
@@ -376,8 +376,15 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
                            animated:(BOOL)animated;
 
 /**
+ 滑动到当前Item位置
+ 
+ @param centerX Item CenterX
+ */
+- (void)scrollToVerticalItem:(CGFloat)centerX;
+
+/**
  *  @author CC, 16-03-04
- *  
+ *
  *  @brief 设置顶部logo
  *
  *  @param iconName logo路径
@@ -408,7 +415,7 @@ typedef void (^KeyboardWillSnapBackToPointBlock)(CGPoint point);
 
 typedef void (^KeyboardWillChangeBlock)(CGRect keyboardRect, UIViewAnimationOptions options, double duration, BOOL showKeyboard);
 
-@property(nonatomic, weak) UIView *keyboardView;
+@property (nonatomic, weak) UIView *keyboardView;
 
 /**
  *  根据是否需要手势控制键盘消失注册键盘的通知
@@ -427,37 +434,37 @@ typedef void (^KeyboardWillChangeBlock)(CGRect keyboardRect, UIViewAnimationOpti
 /**
  *  手势控制的时候，将要开始消失了，意思在UIView动画里面的animation里面，告诉键盘也需要跟着移动了，顺便需要移动inputView的位置啊！
  */
-@property(nonatomic, copy) KeyboardWillBeDismissedBlock keyboardWillBeDismissed;
+@property (nonatomic, copy) KeyboardWillBeDismissedBlock keyboardWillBeDismissed;
 
 /**
  *  键盘刚好隐藏
  */
-@property(nonatomic, copy) KeyboardDidHideBlock keyboardDidHide;
+@property (nonatomic, copy) KeyboardDidHideBlock keyboardDidHide;
 
 /**
  *  键盘刚好变换完成
  */
-@property(nonatomic, copy) KeyboardDidShowBlock keyboardDidChange;
+@property (nonatomic, copy) KeyboardDidShowBlock keyboardDidChange;
 
 /**
  *  手势控制键盘，滑动到某一点的回调
  */
-@property(nonatomic, copy) KeyboardDidScrollToPointBlock keyboardDidScrollToPoint;
+@property (nonatomic, copy) KeyboardDidScrollToPointBlock keyboardDidScrollToPoint;
 
 /**
  *  手势控制键盘，滑动到键盘以下的某个位置，然后又想撤销隐藏的手势，告诉键盘又要显示出来啦！顺便需要移动inputView的位置啊！
  */
-@property(nonatomic, copy) KeyboardWillSnapBackToPointBlock keyboardWillSnapBackToPoint;
+@property (nonatomic, copy) KeyboardWillSnapBackToPointBlock keyboardWillSnapBackToPoint;
 
 /**
  *  键盘状态改变的回调
  */
-@property(nonatomic, copy) KeyboardWillChangeBlock keyboardWillChange;
+@property (nonatomic, copy) KeyboardWillChangeBlock keyboardWillChange;
 
 /**
  *  手势控制键盘的偏移量
  */
-@property(nonatomic, assign) CGFloat messageInputBarHeight;
+@property (nonatomic, assign) CGFloat messageInputBarHeight;
 
 #pragma mark -
 #pragma mark :. APParallaxHeader
@@ -466,8 +473,8 @@ typedef void (^KeyboardWillChangeBlock)(CGRect keyboardRect, UIViewAnimationOpti
 - (void)addParallaxWithImage:(UIImage *)image andHeight:(CGFloat)height;
 - (void)addParallaxWithView:(UIView *)view andHeight:(CGFloat)height;
 
-@property(nonatomic, strong, readonly) APParallaxView *parallaxView;
-@property(nonatomic, assign) BOOL showsParallax;
+@property (nonatomic, strong, readonly) APParallaxView *parallaxView;
+@property (nonatomic, assign) BOOL showsParallax;
 
 #pragma mark -
 #pragma mark :. EmptyDataSet

@@ -24,9 +24,9 @@
 //
 
 #import "UIButton+CCAdd.h"
-#import <objc/runtime.h>
 #import "UIImageView+WebCache.h"
 #import "UIView+Method.h"
+#import <objc/runtime.h>
 
 @implementation UIButton (CCAdd)
 
@@ -91,7 +91,7 @@
 
 /**
  *  @author CC, 2015-12-09
- *  
+ *
  *  @brief  设置按钮图片
  *
  *  @param imagePath 图片路径
@@ -275,7 +275,7 @@
 
 /**
  *  @author CC, 2015-12-22
- *  
+ *
  *  @brief  设置标题与背景
  *
  *  @param title           标题
@@ -408,7 +408,7 @@
 
 /**
  *  @author CC, 2016-01-09
- *  
+ *
  *  @brief 左文右图
  *
  *  @param rightImage 右图
@@ -595,7 +595,7 @@
 
 /**
  *  @author CC, 16-03-02
- *  
+ *
  *  @brief 倒计时按钮
  *
  *  @param timeout    倒计时长
@@ -606,31 +606,29 @@
             title:(NSString *)title
        waitTittle:(NSString *)waitTittle
 {
+    UIColor *color = self.titleLabel.textColor;
+    
     __block NSInteger timeOut = timeout; //倒计时时间
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), 1.0 * NSEC_PER_SEC, 0); //每秒执行
     dispatch_source_set_event_handler(_timer, ^{
-        if(timeOut<=0){ //倒计时结束，关闭
+        if (timeOut <= 0) { //倒计时结束，关闭
             dispatch_source_cancel(_timer);
             dispatch_async(dispatch_get_main_queue(), ^{
-                //设置界面的按钮显示 根据自己需求设置
+                [self setTitleColor:color forState:UIControlStateNormal];
                 [self setTitle:title forState:UIControlStateNormal];
                 self.userInteractionEnabled = YES;
             });
-        }else{
-            //            int minutes = timeout / 60;
+        } else {
             int seconds = timeOut % 60;
             NSString *strTime = [NSString stringWithFormat:@"%.2d", seconds];
             dispatch_async(dispatch_get_main_queue(), ^{
-                //设置界面的按钮显示 根据自己需求设置
-                NSLog(@"____%@",strTime);
-                [self setTitle:[NSString stringWithFormat:@"%@%@",strTime,waitTittle] forState:UIControlStateNormal];
+                [self setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                [self setTitle:[NSString stringWithFormat:@"%@%@", strTime, waitTittle] forState:UIControlStateNormal];
                 self.userInteractionEnabled = NO;
-                
             });
             timeOut--;
-            
         }
     });
     dispatch_resume(_timer);

@@ -27,8 +27,8 @@
 #import <objc/runtime.h>
 
 @interface CCUserDefaults ()
-@property(strong, nonatomic) NSMutableDictionary *mapping;
-@property(strong, nonatomic) NSUserDefaults *userDefault;
+@property (strong, nonatomic) NSMutableDictionary *mapping;
+@property (strong, nonatomic) NSUserDefaults *userDefault;
 @end
 
 @implementation CCUserDefaults
@@ -201,6 +201,14 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
     }
     
     return self;
+}
+
+- (void)clear
+{
+    NSArray *keys = [[NSSet setWithArray:self.mapping.allValues] allObjects];
+    for (NSString *key in keys)
+        [self.userDefault removeObjectForKey:key];
+    [self.userDefault synchronize];
 }
 
 - (NSString *)_transformKey:(NSString *)key

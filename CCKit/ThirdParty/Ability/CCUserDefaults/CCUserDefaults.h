@@ -38,4 +38,6 @@
  */
 + (instancetype)manager;
 
+- (void)clear;
+
 @end

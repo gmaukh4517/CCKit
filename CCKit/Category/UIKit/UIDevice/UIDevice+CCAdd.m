@@ -24,19 +24,19 @@
 //
 
 #import "UIDevice+CCAdd.h"
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#import <sys/socket.h>
-#import <sys/param.h>
-#import <sys/mount.h>
-#import <sys/stat.h>
-#import <sys/utsname.h>
-#import <net/if.h>
-#import <net/if_dl.h>
+#import <Security/Security.h>
 #import <mach/mach.h>
 #import <mach/mach_host.h>
 #import <mach/processor_info.h>
-#import <Security/Security.h>
+#import <net/if.h>
+#import <net/if_dl.h>
+#import <sys/mount.h>
+#import <sys/param.h>
+#import <sys/socket.h>
+#import <sys/stat.h>
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#import <sys/utsname.h>
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 #define DEVICE_IOS_VERSION [[UIDevice currentDevice].systemVersion floatValue]
@@ -50,7 +50,8 @@
 
 @implementation UIDevice (CCAdd)
 
-- (BOOL)isPad {
+- (BOOL)isPad
+{
     static dispatch_once_t one;
     static BOOL pad;
     dispatch_once(&one, ^{
@@ -59,7 +60,8 @@
     return pad;
 }
 
-- (BOOL)isSimulator {
+- (BOOL)isSimulator
+{
 #if TARGET_OS_SIMULATOR
     return YES;
 #else
@@ -567,6 +569,31 @@
         totalspace = (long long)buf.f_bsize * buf.f_blocks;
     }
     return totalspace;
+}
+
++ (CGFloat)obtainCacheSize:(NSString *)cacheFolder
+{
+    NSFileManager *fileManger = [NSFileManager defaultManager];
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *fileCachePath = [cachePath stringByAppendingPathComponent:cacheFolder];
+    NSDirectoryEnumerator *fileEnumrator = [fileManger enumeratorAtPath:fileCachePath];
+    
+    NSInteger fileTotalSize = 0;
+    for (NSString *fileName in fileEnumrator) {
+        NSString *filePath = [fileCachePath stringByAppendingPathComponent:fileName];
+        NSDictionary *fileAttributes = [fileManger attributesOfItemAtPath:filePath error:nil];
+        if ([fileAttributes[NSFileType] isEqualToString:NSFileTypeDirectory]) continue;
+        fileTotalSize += [fileAttributes[NSFileSize] integerValue];
+    }
+    
+    return fileTotalSize;
+}
+
++ (void)cleanCahe:(NSString *)cacheFolder
+{
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *fileCachePath = [cachePath stringByAppendingPathComponent:cacheFolder];
+    [[NSFileManager defaultManager] removeItemAtPath:fileCachePath error:nil];
 }
 
 #pragma mark -
