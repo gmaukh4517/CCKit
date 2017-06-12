@@ -25,16 +25,16 @@
 
 #import "CCCameraPreview.h"
 
-@interface CCCameraPreview() {
+@interface CCCameraPreview () {
     BOOL _doubleTap;
 }
 
-@property(nonatomic, assign) CGRect screenBounds;
-@property(nonatomic, assign) CGPoint screenCenter;
+@property (nonatomic, assign) CGRect screenBounds;
+@property (nonatomic, assign) CGPoint screenCenter;
 
-@property(nonatomic, copy) UIImageView *imageView;
+@property (nonatomic, copy) UIImageView *imageView;
 
-@property(nonatomic, copy) UIImage *photoImage;
+@property (nonatomic, copy) UIImage *photoImage;
 
 @end
 
@@ -69,7 +69,6 @@
         // 旋转手势
         UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotateView:)];
         [_imageView addGestureRecognizer:rotationGestureRecognizer];
-    
     }
     return self;
 }
@@ -130,7 +129,7 @@
         imageFrame.origin.y = 0;
     }
     
-     _imageView.frame = imageFrame;
+    _imageView.frame = imageFrame;
 }
 
 - (CGRect)frameWithW:(CGFloat)w h:(CGFloat)h center:(CGPoint)center

@@ -25,12 +25,12 @@
 
 #import "UIImage+CCAdd.h"
 @import Accelerate;
-#import <float.h>
-#import <Accelerate/Accelerate.h>
 #import "NSData+CCAdd.h"
 #import "NSURL+CCAdd.h"
-#import <ImageIO/ImageIO.h>
+#import <Accelerate/Accelerate.h>
 #import <CoreText/CoreText.h>
+#import <ImageIO/ImageIO.h>
+#import <float.h>
 
 @implementation UIImage (CCAdd)
 
@@ -218,6 +218,8 @@
     return outputImage;
 }
 
+#pragma mark -
+#pragma mark :. 图片压缩
 + (UIImage *)resizableImage:(NSString *)name
 {
     UIImage *normal = [UIImage imageNamed:name];
@@ -346,7 +348,7 @@
 
 /**
  *  @author CC, 2015-12-22
- *  
+ *
  *  @brief  动态图片压缩
  *
  *  @param sourceImage 原图片
@@ -395,7 +397,7 @@
 
 /**
  *  @author CC, 2015-12-23
- *  
+ *
  *  @brief  动态图片压缩
  *
  *  @param sourceImage 原图
@@ -426,6 +428,120 @@
     
     return imageData;
 }
+
+/**
+ 压缩图片质量
+ 
+ @param maxLength 最大KB
+ */
+- (UIImage *)compressImageQuality:(NSInteger)maxLength
+{
+    return [UIImage imageWithData:[self compressQuality:maxLength]];
+}
+
+- (NSData *)compressQuality:(NSInteger)maxLength
+{
+    maxLength = maxLength * 1024;
+    NSInteger compression = 1;
+    NSData *data = UIImageJPEGRepresentation(self, compression);
+    if (data.length < maxLength)
+        return data;
+    
+    NSInteger max = 1, min = 0;
+    for (NSInteger i = 0; i < 6; i++) {
+        compression = (max + min) / 2;
+        data = UIImageJPEGRepresentation(self, compression);
+        if (data.length < maxLength * 0.9)
+            min = compression;
+        else if (data.length > maxLength)
+            max = compression;
+        else
+            break;
+    }
+    return data;
+}
+
+/**
+ 压缩图片大小
+ 
+ @param maxLength 最大KB
+ */
+- (UIImage *)compressImageSize:(NSInteger)maxLength
+{
+    return [UIImage imageWithData:[self compressSize:maxLength]];
+}
+
+- (NSData *)compressSize:(NSInteger)maxLength
+{
+    maxLength = maxLength * 1024;
+    NSData *data = UIImageJPEGRepresentation(self, 1);
+    if (!data)
+        return data;
+    
+    UIImage *resultImage = self;
+    NSInteger lastDataLength = 0;
+    while (data.length > maxLength && data.length != lastDataLength) {
+        lastDataLength = data.length;
+        CGFloat ratio = maxLength / data.length;
+        CGSize size = CGSizeMake(resultImage.size.width * sqrt(ratio), resultImage.size.height * sqrt(ratio));
+        UIGraphicsBeginImageContext(size);
+        [resultImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        resultImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        data = UIImageJPEGRepresentation(resultImage, 1);
+    }
+    return data;
+}
+
+/**
+ 压缩图片 (质量、大小)
+ 
+ @param maxLength 最大KB
+ */
+- (UIImage *)compressImage:(NSInteger)maxLength
+{
+    return [UIImage imageWithData:[self compressImageToData:maxLength]];
+}
+
+- (NSData *)compressImageToData:(NSInteger)maxLength
+{
+    maxLength = maxLength * 1024;
+    NSInteger compression = 1;
+    NSData *data = UIImageJPEGRepresentation(self, compression);
+    if (data.length < maxLength)
+        return data;
+    
+    NSInteger max = 1, min = 0;
+    for (NSInteger i = 0; i < 6; i++) {
+        compression = (max + min) / 2;
+        data = UIImageJPEGRepresentation(self, compression);
+        if (data.length < maxLength * 0.9)
+            min = compression;
+        else if (data.length > maxLength)
+            max = compression;
+        else
+            break;
+    }
+    
+    UIImage *resultImage = [UIImage imageWithData:data];
+    if (data.length < maxLength)
+        return data;
+    
+    NSInteger lastDataLength = 0;
+    while (data.length > maxLength && data.length != lastDataLength) {
+        lastDataLength = data.length;
+        CGFloat ratio = maxLength / data.length;
+        CGSize size = CGSizeMake(resultImage.size.width * sqrt(ratio), resultImage.size.height * sqrt(ratio));
+        UIGraphicsBeginImageContext(size);
+        [resultImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        resultImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        data = UIImageJPEGRepresentation(resultImage, 1);
+    }
+    
+    return data;
+}
+
 
 #pragma mark -
 #pragma mark :. 微信群组图标
@@ -463,7 +579,7 @@
         int count = 0;
         for (id obj in array) {
             
-            if (count > rects.count-1) {
+            if (count > rects.count - 1) {
                 break;
             }
             
@@ -471,7 +587,7 @@
             
             if ([obj isKindOfClass:[NSString class]]) {
                 image = [UIImage imageNamed:(NSString *)obj];
-            } else if ([obj isKindOfClass:[UIImage class]]){
+            } else if ([obj isKindOfClass:[UIImage class]]) {
                 image = (UIImage *)obj;
             } else {
                 NSLog(@"%s Unrecognizable class type", __FUNCTION__);
@@ -482,7 +598,7 @@
             [image drawInRect:rect];
             count++;
         }
-    }else{
+    } else {
         UIImage *image = array.lastObject;
         [image drawInRect:rect];
     }
@@ -500,19 +616,19 @@
     CGFloat sizeValue = 100;
     CGFloat padding = 8;
     
-    CGFloat eachWidth = (sizeValue - padding*3) / 2;
+    CGFloat eachWidth = (sizeValue - padding * 3) / 2;
     
-    CGRect rect1 = CGRectMake(sizeValue/2 - eachWidth/2, padding, eachWidth, eachWidth);
+    CGRect rect1 = CGRectMake(sizeValue / 2 - eachWidth / 2, padding, eachWidth, eachWidth);
     
-    CGRect rect2 = CGRectMake(padding, padding*2 + eachWidth, eachWidth, eachWidth);
+    CGRect rect2 = CGRectMake(padding, padding * 2 + eachWidth, eachWidth, eachWidth);
     
-    CGRect rect3 = CGRectMake(padding*2 + eachWidth, padding*2 + eachWidth, eachWidth, eachWidth);
+    CGRect rect3 = CGRectMake(padding * 2 + eachWidth, padding * 2 + eachWidth, eachWidth, eachWidth);
     if (count == 3) {
-        rects = @[NSStringFromCGRect(rect1), NSStringFromCGRect(rect2), NSStringFromCGRect(rect3)];
+        rects = @[ NSStringFromCGRect(rect1), NSStringFromCGRect(rect2), NSStringFromCGRect(rect3) ];
     } else if (count == 4) {
         CGRect rect0 = CGRectMake(padding, padding, eachWidth, eachWidth);
-        rect1 = CGRectMake(padding*2, padding, eachWidth, eachWidth);
-        rects = @[NSStringFromCGRect(rect0), NSStringFromCGRect(rect1), NSStringFromCGRect(rect2), NSStringFromCGRect(rect3)];
+        rect1 = CGRectMake(padding * 2, padding, eachWidth, eachWidth);
+        rects = @[ NSStringFromCGRect(rect0), NSStringFromCGRect(rect1), NSStringFromCGRect(rect2), NSStringFromCGRect(rect3) ];
     }
     
     return rects;
@@ -528,11 +644,11 @@
     CGFloat eachWidth;
     
     if (count <= 4) {
-        eachWidth = (sizeValue - padding*3) / 2;
+        eachWidth = (sizeValue - padding * 3) / 2;
         [self getRects:array padding:padding width:eachWidth count:4];
     } else {
         padding = padding / 2;
-        eachWidth = (sizeValue - padding*4) / 3;
+        eachWidth = (sizeValue - padding * 4) / 3;
         [self getRects:array padding:padding width:eachWidth count:9];
     }
     
@@ -547,7 +663,7 @@
             
             for (NSString *rectStr in array) {
                 CGRect rect = CGRectFromString(rectStr);
-                rect.origin.y -= (padding+eachWidth)/2;
+                rect.origin.y -= (padding + eachWidth) / 2;
                 [tempArray addObject:NSStringFromCGRect(rect)];
             }
             [array removeAllObjects];
@@ -559,7 +675,7 @@
         
         for (NSString *rectStr in array) {
             CGRect rect = CGRectFromString(rectStr);
-            rect.origin.y -= (padding+eachWidth)/2;
+            rect.origin.y -= (padding + eachWidth) / 2;
             [tempArray addObject:NSStringFromCGRect(rect)];
         }
         [array removeAllObjects];
@@ -569,9 +685,9 @@
             [tempArray removeAllObjects];
             [array removeObjectAtIndex:0];
             
-            for (int i=0; i<2; i++) {
+            for (int i = 0; i < 2; i++) {
                 CGRect rect = CGRectFromString([array objectAtIndex:i]);
-                rect.origin.x -= (padding+eachWidth)/2;
+                rect.origin.x -= (padding + eachWidth) / 2;
                 [tempArray addObject:NSStringFromCGRect(rect)];
             }
             [array replaceObjectsInRange:NSMakeRange(0, 2) withObjectsFromArray:tempArray];
@@ -581,9 +697,9 @@
         if (count == 8) {
             [array removeObjectAtIndex:0];
             NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:2];
-            for (int i=0; i<2; i++) {
+            for (int i = 0; i < 2; i++) {
                 CGRect rect = CGRectFromString([array objectAtIndex:i]);
-                rect.origin.x -= (padding+eachWidth)/2;
+                rect.origin.x -= (padding + eachWidth) / 2;
                 [tempArray addObject:NSStringFromCGRect(rect)];
             }
             [array replaceObjectsInRange:NSMakeRange(0, 2) withObjectsFromArray:tempArray];
@@ -597,14 +713,16 @@
 }
 
 + (void)getRects:(NSMutableArray *)array
-         padding:(CGFloat)padding width:(CGFloat)eachWidth count:(int)count
+         padding:(CGFloat)padding
+           width:(CGFloat)eachWidth
+           count:(int)count
 {
     
-    for (int i=0; i<count; i++) {
+    for (int i = 0; i < count; i++) {
         int sqrtInt = (int)sqrt(count);
-        int line = i%sqrtInt;
-        int row = i/sqrtInt;
-        CGRect rect = CGRectMake(padding * (line+1) + eachWidth * line, padding * (row+1) + eachWidth * row, eachWidth, eachWidth);
+        int line = i % sqrtInt;
+        int row = i / sqrtInt;
+        CGRect rect = CGRectMake(padding * (line + 1) + eachWidth * line, padding * (row + 1) + eachWidth * row, eachWidth, eachWidth);
         [array addObject:NSStringFromCGRect(rect)];
     }
 }
@@ -612,7 +730,7 @@
 #pragma mark :. QQ群组图标
 
 #pragma mark :. 识别二维码
--(NSString *)analysisQRCode
+- (NSString *)analysisQRCode
 {
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:[CIContext contextWithOptions:nil] options:@{CIDetectorAccuracy : CIDetectorAccuracyHigh}];
     NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:self.CGImage]];
@@ -2102,34 +2220,29 @@ static int16_t gaussianblur_kernel[25] = {
     4, 16, 24, 16, 4,
     6, 24, 36, 24, 6,
     4, 16, 24, 16, 4,
-    1, 4, 6, 4, 1
-};
+    1, 4, 6, 4, 1};
 
 static int16_t edgedetect_kernel[9] = {
     -1, -1, -1,
     -1, 8, -1,
-    -1, -1, -1
-};
+    -1, -1, -1};
 
 static int16_t emboss_kernel[9] = {
     -2, 0, 0,
     0, 1, 0,
-    0, 0, 2
-};
+    0, 0, 2};
 
 static int16_t sharpen_kernel[9] = {
     -1, -1, -1,
     -1, 9, -1,
-    -1, -1, -1
-};
+    -1, -1, -1};
 
 static int16_t unsharpen_kernel[9] = {
     -1, -1, -1,
     -1, 17, -1,
-    -1, -1, -1
-};
+    -1, -1, -1};
 
-static uint8_t backgroundColorBlack[4] = {0,0,0,0};
+static uint8_t backgroundColorBlack[4] = {0, 0, 0, 0};
 
 static unsigned char morphological_kernel[9] = {
     1, 1, 1,
@@ -2217,8 +2330,9 @@ static unsigned char morphological_kernel[9] = {
     return img;
 }
 
-- (UIImage *)normalizedImage {
-    if (self.imageOrientation == UIImageOrientationUp) return self; 
+- (UIImage *)normalizedImage
+{
+    if (self.imageOrientation == UIImageOrientationUp) return self;
     
     UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
     [self drawInRect:(CGRect){0, 0, self.size}];
@@ -2348,9 +2462,9 @@ static unsigned char morphological_kernel[9] = {
  *
  *  @return 角度
  */
-+(CGFloat)radiansToDegrees:(CGFloat)radians
++ (CGFloat)radiansToDegrees:(CGFloat)radians
 {
-    return radians * 180/M_PI;
+    return radians * 180 / M_PI;
 }
 
 - (UIImage *)gaussianBlur
@@ -2367,15 +2481,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     
@@ -2385,7 +2498,7 @@ static unsigned char morphological_kernel[9] = {
     free(outt);
     
     CGImageRef blurredImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* blurred = [UIImage imageWithCGImage:blurredImageRef];
+    UIImage *blurred = [UIImage imageWithCGImage:blurredImageRef];
     
     CGImageRelease(blurredImageRef);
     CGContextRelease(bmContext);
@@ -2407,15 +2520,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     
@@ -2423,7 +2535,7 @@ static unsigned char morphological_kernel[9] = {
     
     memcpy(data, outt, n);
     CGImageRef edgedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* edged = [UIImage imageWithCGImage:edgedImageRef];
+    UIImage *edged = [UIImage imageWithCGImage:edgedImageRef];
     
     CGImageRelease(edgedImageRef);
     free(outt);
@@ -2446,15 +2558,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     
@@ -2465,7 +2576,7 @@ static unsigned char morphological_kernel[9] = {
     free(outt);
     
     CGImageRef embossImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* emboss = [UIImage imageWithCGImage:embossImageRef];
+    UIImage *emboss = [UIImage imageWithCGImage:embossImageRef];
     
     CGImageRelease(embossImageRef);
     CGContextRelease(bmContext);
@@ -2487,15 +2598,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     vImageConvolve_ARGB8888(&src, &dest, NULL, 0, 0, sharpen_kernel, 3, 3, 1, NULL, kvImageCopyInPlace);
@@ -2505,7 +2615,7 @@ static unsigned char morphological_kernel[9] = {
     free(outt);
     
     CGImageRef sharpenedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* sharpened = [UIImage imageWithCGImage:sharpenedImageRef];
+    UIImage *sharpened = [UIImage imageWithCGImage:sharpenedImageRef];
     
     CGImageRelease(sharpenedImageRef);
     CGContextRelease(bmContext);
@@ -2527,15 +2637,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     vImageConvolve_ARGB8888(&src, &dest, NULL, 0, 0, unsharpen_kernel, 3, 3, 9, NULL, kvImageCopyInPlace);
@@ -2545,7 +2654,7 @@ static unsigned char morphological_kernel[9] = {
     free(outt);
     
     CGImageRef unsharpenedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* unsharpened = [UIImage imageWithCGImage:unsharpenedImageRef];
+    UIImage *unsharpened = [UIImage imageWithCGImage:unsharpenedImageRef];
     
     CGImageRelease(unsharpenedImageRef);
     CGContextRelease(bmContext);
@@ -2570,9 +2679,8 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
@@ -2583,7 +2691,7 @@ static unsigned char morphological_kernel[9] = {
     vImageRotate_ARGB8888(&src, &dest, NULL, radians, bgColor, kvImageBackgroundColorFill);
     
     CGImageRef rotatedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* rotated = [UIImage imageWithCGImage:rotatedImageRef];
+    UIImage *rotated = [UIImage imageWithCGImage:rotatedImageRef];
     
     CGImageRelease(rotatedImageRef);
     CGContextRelease(bmContext);
@@ -2605,15 +2713,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     vImageDilate_ARGB8888(&src, &dest, 0, 0, morphological_kernel, 3, 3, kvImageCopyInPlace);
@@ -2623,7 +2730,7 @@ static unsigned char morphological_kernel[9] = {
     free(outt);
     
     CGImageRef dilatedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* dilated = [UIImage imageWithCGImage:dilatedImageRef];
+    UIImage *dilated = [UIImage imageWithCGImage:dilatedImageRef];
     
     CGImageRelease(dilatedImageRef);
     CGContextRelease(bmContext);
@@ -2645,15 +2752,14 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
     
     const size_t n = sizeof(UInt8) * width * height * 4;
-    void* outt = malloc(n);
+    void *outt = malloc(n);
     vImage_Buffer src = {data, height, width, bytesPerRow};
     vImage_Buffer dest = {outt, height, width, bytesPerRow};
     
@@ -2664,7 +2770,7 @@ static unsigned char morphological_kernel[9] = {
     free(outt);
     
     CGImageRef erodedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* eroded = [UIImage imageWithCGImage:erodedImageRef];
+    UIImage *eroded = [UIImage imageWithCGImage:erodedImageRef];
     
     CGImageRelease(erodedImageRef);
     CGContextRelease(bmContext);
@@ -2672,25 +2778,28 @@ static unsigned char morphological_kernel[9] = {
     return eroded;
 }
 
-- (UIImage *)dilateWithIterations:(int)iterations {
+- (UIImage *)dilateWithIterations:(int)iterations
+{
     
     UIImage *dstImage = self;
-    for (int i=0; i<iterations; i++) {
+    for (int i = 0; i < iterations; i++) {
         dstImage = [dstImage dilate];
     }
     return dstImage;
 }
 
-- (UIImage *)erodeWithIterations:(int)iterations {
+- (UIImage *)erodeWithIterations:(int)iterations
+{
     
     UIImage *dstImage = self;
-    for (int i=0; i<iterations; i++) {
+    for (int i = 0; i < iterations; i++) {
         dstImage = [dstImage erode];
     }
     return dstImage;
 }
 
-- (UIImage *)gradientWithIterations:(int)iterations {
+- (UIImage *)gradientWithIterations:(int)iterations
+{
     
     UIImage *dilated = [self dilateWithIterations:iterations];
     UIImage *eroded = [self erodeWithIterations:iterations];
@@ -2700,7 +2809,8 @@ static unsigned char morphological_kernel[9] = {
     return dstImage;
 }
 
-- (UIImage *)tophatWithIterations:(int)iterations {
+- (UIImage *)tophatWithIterations:(int)iterations
+{
     
     UIImage *dilated = [self dilateWithIterations:iterations];
     
@@ -2709,7 +2819,8 @@ static unsigned char morphological_kernel[9] = {
     return dstImage;
 }
 
-- (UIImage *)blackhatWithIterations:(int)iterations {
+- (UIImage *)blackhatWithIterations:(int)iterations
+{
     
     UIImage *eroded = [self erodeWithIterations:iterations];
     
@@ -2732,9 +2843,8 @@ static unsigned char morphological_kernel[9] = {
     
     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = height}, self.CGImage);
     
-    UInt8* data = (UInt8*)CGBitmapContextGetData(bmContext);
-    if (!data)
-    {
+    UInt8 *data = (UInt8 *)CGBitmapContextGetData(bmContext);
+    if (!data) {
         CGContextRelease(bmContext);
         return nil;
     }
@@ -2745,7 +2855,7 @@ static unsigned char morphological_kernel[9] = {
     vImageEqualization_ARGB8888(&src, &dest, kvImageNoFlags);
     
     CGImageRef destImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* destImage = [UIImage imageWithCGImage:destImageRef];
+    UIImage *destImage = [UIImage imageWithCGImage:destImageRef];
     
     CGImageRelease(destImageRef);
     CGContextRelease(bmContext);
@@ -2766,9 +2876,9 @@ static unsigned char morphological_kernel[9] = {
  *
  *  @since <#1.0#>
  */
-- (UIImage *)imageBlendedWithImage: (UIImage *)overlayImage
-                         blendMode: (CGBlendMode)blendMode
-                             alpha: (CGFloat)alpha
+- (UIImage *)imageBlendedWithImage:(UIImage *)overlayImage
+                         blendMode:(CGBlendMode)blendMode
+                             alpha:(CGFloat)alpha
 {
     
     UIGraphicsBeginImageContext(self.size);
@@ -2806,11 +2916,13 @@ static unsigned char morphological_kernel[9] = {
 {
     NSURLRequest *request = [NSURLRequest requestWithURL:imgURL];
     
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *resp, NSData *d, NSError *e) {
-        NSLog(@"respone%@", [(NSHTTPURLResponse*)resp allHeaderFields]);
-        
-        
-    }];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *resp, NSData *d, NSError *e) {
+                               NSLog(@"respone%@", [(NSHTTPURLResponse *)resp allHeaderFields]);
+                               
+                               
+                           }];
 }
 
 #pragma mark -
@@ -3125,7 +3237,8 @@ static unsigned char morphological_kernel[9] = {
             }
 #pragma clang diagnostic pop
             
-            [[self cache] setObject:image forKey:identifier];
+            [[self cache] setObject:image
+                             forKey:identifier];
         }
     }
     return image;

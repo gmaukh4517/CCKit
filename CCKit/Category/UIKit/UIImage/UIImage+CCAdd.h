@@ -48,7 +48,8 @@
            saturationDeltaFactor:(CGFloat)saturationDeltaFactor
                        maskImage:(UIImage *)maskImage;
 
-
+#pragma mark -
+#pragma mark :. 图片压缩
 /**
  *  压缩上传图片到指定字节
  *
@@ -121,6 +122,33 @@
  *  @return 返回data数据
  */
 - (NSData *)resetSizeOfImageDataWithMaxSize:(NSInteger)maxSize;
+
+/**
+ 压缩图片质量
+ 
+ @param maxLength 最大KB
+ */
+- (UIImage *)compressImageQuality:(NSInteger)maxLength;
+- (NSData *)compressQuality:(NSInteger)maxLength;
+
+/**
+ 压缩图片大小
+ 
+ @param maxLength 最大KB
+ */
+- (UIImage *)compressImageSize:(NSInteger)maxLength;
+- (NSData *)compressSize:(NSInteger)maxLength;
+
+/**
+ 压缩图片 (质量、大小)
+ 
+ @param maxLength 最大KB
+ */
+- (UIImage *)compressImage:(NSInteger)maxLength;
+- (NSData *)compressImageToData:(NSInteger)maxLength;
+
+#pragma mark -
+#pragma mark :.
 
 - (UIImage *)imageCroppedToRect:(CGRect)rect;
 - (UIImage *)imageScaledToSize:(CGSize)size;
