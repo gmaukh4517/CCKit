@@ -25,13 +25,14 @@
 
 #import "CCDebugCrashViewController.h"
 #import "CCDebugContentViewController.h"
-#import "CCDebugTool.h"
 #import "CCDebugCrashHelper.h"
+#import "CCDebugFluencyHelper.h"
+#import "CCDebugTool.h"
 
 @interface CCDebugCrashViewController () <UITableViewDataSource, UITableViewDelegate>
 
-@property(nonatomic, weak) UITableView *crashTableView;
-@property(nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, weak) UITableView *crashTableView;
+@property (nonatomic, strong) NSArray *dataArray;
 
 @end
 
@@ -46,8 +47,27 @@
 
 - (void)initNavigation
 {
-    self.title = @"Crash";
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:@[ @"Crash", @"Caton" ]];
+    segmentedControl.selectedSegmentIndex = 0;
+    segmentedControl.clipsToBounds = YES;
+    segmentedControl.tintColor = [UIColor whiteColor];
+    segmentedControl.frame = CGRectMake(0, 0, 200, 30);
+    segmentedControl.momentary = NO;
+    [segmentedControl addTarget:self action:@selector(didSegmentedControl:) forControlEvents:UIControlEventValueChanged];
+    
+    self.navigationItem.titleView = segmentedControl;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
+}
+
+- (void)didSegmentedControl:(UISegmentedControl *)sender
+{
+    self.title = @"Caton";
+    self.dataArray = [[CCDebugFluencyHelper manager] obtainFluencyLogs];
+    if (sender.selectedSegmentIndex == 0) {
+        self.dataArray = [[CCDebugCrashHelper manager] obtainCrashLogs];
+        self.title = @"Crash";
+    }
+    [self.crashTableView reloadData];
 }
 
 - (void)dismissViewController
@@ -121,7 +141,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     CCDebugContentViewController *viewController = [[CCDebugContentViewController alloc] init];
-    viewController.title = @"Crash日志";
+    viewController.title = [NSString stringWithFormat:@"%@日志",self.title];
     viewController.hidesBottomBarWhenPushed = YES;
     viewController.content = [[self.dataArray objectAtIndex:indexPath.row] objectForKey:@"ErrMsg"];
     [self.navigationController pushViewController:viewController animated:YES];

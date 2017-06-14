@@ -59,7 +59,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
         [self.scanningView transformScanningTypeWithStyle:sender.tag];
     } else {
         sender.hidden = YES;
-        [self.captureHelper startRunning];
+        [self startRunning];
     }
 }
 
@@ -198,7 +198,6 @@ typedef void (^Outcomeblock)(NSString *outcome);
         NSString *scannedResult = feature.messageString;
         [self performSelectorOnMainThread:@selector(scanDealWithResult:) withObject:scannedResult waitUntilDone:NO];
     } else {
-        //        [self.captureHelper startRunning];
         self.analysisToast.hidden = NO;
     }
 }
@@ -212,7 +211,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
  */
 - (void)scanDealWithResult:(NSString *)resultAddress
 {
-    [self.scanningView stopRunning];
+    [self stopRunning];
     if (_scanDealWithResult) { //系统处理
         CCQRCodeDisplayViewController *viewController = [[CCQRCodeDisplayViewController alloc] init];
         viewController.baseURL = resultAddress;
@@ -327,7 +326,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
 
 - (void)showPhotoLibray
 {
-    [self.captureHelper stopRunning];
+    [self stopRunning];
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.allowsEditing = YES;
     picker.delegate = self;
@@ -338,11 +337,13 @@ typedef void (^Outcomeblock)(NSString *outcome);
 - (void)startRunning
 {
     [self.captureHelper startRunning];
+    [self.scanningView startRunning];
 }
 
 - (void)stopRunning
 {
     [self.captureHelper stopRunning];
+    [self.scanningView stopRunning];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picke didFinishPickingMediaWithInfo:(NSDictionary *)info

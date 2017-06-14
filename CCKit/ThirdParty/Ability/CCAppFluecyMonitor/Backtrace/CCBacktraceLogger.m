@@ -181,7 +181,7 @@ thread_t cc_machThreadFromNSThread(NSThread * nsthread) {
 NSString * _cc_backtraceOfThread(thread_t thread) {
     uintptr_t backtraceBuffer[MAX_FRAME_NUMBER];
     int idx = 0;
-    NSMutableString * result = [NSString stringWithFormat: @"Backtrace of Thread %u:\n======================================================================================\n", thread].mutableCopy;
+    NSMutableString * result = [NSString stringWithFormat: @"Backtrace of Thread %u:\n", thread].mutableCopy;
     
     _STRUCT_MCONTEXT machineContext;
     if (!cc_fillThreadStateIntoMachineContext(thread, &machineContext)) {
@@ -219,7 +219,6 @@ NSString * _cc_backtraceOfThread(thread_t thread) {
         [result appendFormat: @"%@", cc_logBacktraceEntry(idx, backtraceBuffer[idx], &symbolicated[idx])];
     }
     [result appendString: @"\n"];
-    [result appendString: @"======================================================================================"];
     return result.copy;
 }
 

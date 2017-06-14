@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCLanguage.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,25 +23,51 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_Ability_h
-#define CCKit_Ability_h
+#import <Foundation/Foundation.h>
 
-#import <CCKit/CCAppDelegateSOA.h>
-#import <CCKit/CCAppFluecyMonitor.h>
-#import <CCKit/CCDebugTool.h>
-#import <CCKit/CCKeyboardManager.h>
-#import <CCKit/CCKeychain.h>
-#import <CCKit/CCQRCodeViewController.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCVoiceRecordHelper.h>
-#import <CCKit/CCAudioPlayerHelper.h>
+#define kCCLanguage [CCLanguage sharedInstance]
+#define CCLocalization(text) [kCCLanguage loalizedStringForKey:(text)]
 
-#import <CCKit/UIButton+WebCache.h>
-#import <CCKit/UIImageView+HighlightedWebCache.h>
-#import <CCKit/UIView+WebCache.h>
-#import <CCKit/UIImageView+WebCache.h>
+/** 切换语言通知 **/
+static NSString *const CCNotificationLanguageChanged = @"CCNotificationLanguageChanged";
 
-#import <CCKit/CCLanguage.h>
+@interface CCLanguage : NSObject
 
-#endif
+/** 支持语言集合 默认(zh-Hans,English) **/
+@property (readonly, nonatomic) NSArray *languagesArray;
+/** 是否设置语言 **/
+@property (assign, nonatomic) BOOL saveInUserDefaults;
+/** 当前语言 **/
+@property (assign, nonatomic) NSString *currentLanguage;
+
++ (id)sharedInstance;
+
+/**
+ 获取语言对应值
+ 
+ @param key 语言对应KEY
+ */
+- (NSString *)loalizedStringForKey:(NSString *)key;
+
+/**
+ 设置当前语言
+ 
+ @param newLanguage 语言KEY
+ */
+- (BOOL)setLanguage:(NSString *)newLanguage;
+
+/**
+ 设置当前语言
+ 
+ @param newLanguage 语言KEY
+ */
+- (void)setSaveLanguage:(NSString *)newLanguage;
+
+/**
+ 设置语言集合
+ 
+ @param languagesArray 语言集合
+ */
+-(void)setLanguagesArray:(NSArray *)languagesArray;
+
+@end

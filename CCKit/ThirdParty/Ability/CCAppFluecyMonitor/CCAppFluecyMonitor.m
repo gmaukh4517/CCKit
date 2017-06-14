@@ -25,6 +25,7 @@
 
 #import "CCAppFluecyMonitor.h"
 #import "CCBacktraceLogger.h"
+#import "CCDebugFluencyHelper.h"
 
 @interface CCAppFluecyMonitor ()
 
@@ -211,9 +212,18 @@ static void ccRunLoopObserverCallback(CFRunLoopObserverRef observer, CFRunLoopAc
 - (void)backtraceLoggerHandle
 {
     [CatonLogger manager].isCaton = YES;
+    
     NSMutableArray *catonArray = [NSMutableArray arrayWithArray:[CatonLogger manager].catonArr];
-    [catonArray addObject:[CCBacktraceLogger cc_backtraceOfMainThread]];
+    
+    NSMutableDictionary *catonDic = [NSMutableDictionary dictionary];
+    //    [carsDic setObject:[exception reason] forKey:@"ErrCause"];
+    [catonDic setObject:[NSDate date] forKey:@"ErrDate"];
+    [catonDic setObject:[CCBacktraceLogger cc_backtraceOfMainThread] forKey:@"ErrMsg"];
+    [catonArray addObject:catonDic];
+    
     [CatonLogger manager].catonArr = catonArray;
+    
+    [[CCDebugFluencyHelper manager] saveFluencyException:catonDic];
 }
 
 @end

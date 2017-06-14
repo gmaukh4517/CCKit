@@ -1,5 +1,5 @@
 //
-//  Ability.h
+//  CCDebugFluencyHelper.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,25 +23,14 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_Ability_h
-#define CCKit_Ability_h
+#import <Foundation/Foundation.h>
 
-#import <CCKit/CCAppDelegateSOA.h>
-#import <CCKit/CCAppFluecyMonitor.h>
-#import <CCKit/CCDebugTool.h>
-#import <CCKit/CCKeyboardManager.h>
-#import <CCKit/CCKeychain.h>
-#import <CCKit/CCQRCodeViewController.h>
-#import <CCKit/CCUncaughtExceptionHandler.h>
-#import <CCKit/CCUserDefaults.h>
-#import <CCKit/CCVoiceRecordHelper.h>
-#import <CCKit/CCAudioPlayerHelper.h>
+@interface CCDebugFluencyHelper : NSObject
 
-#import <CCKit/UIButton+WebCache.h>
-#import <CCKit/UIImageView+HighlightedWebCache.h>
-#import <CCKit/UIView+WebCache.h>
-#import <CCKit/UIImageView+WebCache.h>
++ (instancetype)manager;
 
-#import <CCKit/CCLanguage.h>
+- (void)saveFluencyException:(NSMutableDictionary *)exdic;
 
-#endif
+- (NSArray *)obtainFluencyLogs;
+
+@end

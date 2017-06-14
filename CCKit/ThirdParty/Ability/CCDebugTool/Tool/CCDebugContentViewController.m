@@ -36,14 +36,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [self initNavigation];
+    [self initNavigation];
     [self initControl];
 }
 
 - (void)initNavigation
 {
-    self.title = @"Monitor";
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
 }
 
 - (void)dismissViewController
@@ -69,7 +68,7 @@
     NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:13],
                                  NSParagraphStyleAttributeName : style};
     CGRect r = [self.content boundingRectWithSize:CGSizeMake(self.view.bounds.size.width, MAXFLOAT) options:option attributes:attributes context:nil];
-    contentViewText.contentSize = CGSizeMake(self.view.bounds.size.width, r.size.height);
+    contentViewText.contentSize = CGSizeMake(self.view.bounds.size.width, r.size.height + 20);
     
     self.contentTextView = contentViewText;
 }

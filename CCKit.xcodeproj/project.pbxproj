@@ -108,8 +108,6 @@
 		425E19301EB88B79009B4154 /* CCUnicode.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E192E1EB88B79009B4154 /* CCUnicode.m */; };
 		4262520C1ECD7E0A00A876BC /* CCDatePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4262520A1ECD7E0A00A876BC /* CCDatePicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4262520D1ECD7E0A00A876BC /* CCDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4262520B1ECD7E0A00A876BC /* CCDatePicker.m */; };
-		42657ACE1EC060080025B2D2 /* CCDebugCrashHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 42657AAC1EC060080025B2D2 /* CCDebugCrashHelper.h */; };
-		42657ACF1EC060080025B2D2 /* CCDebugCrashHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42657AAD1EC060080025B2D2 /* CCDebugCrashHelper.m */; };
 		42657AD01EC060080025B2D2 /* CCDebugCrashViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 42657AAE1EC060080025B2D2 /* CCDebugCrashViewController.h */; };
 		42657AD11EC060080025B2D2 /* CCDebugCrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42657AAF1EC060080025B2D2 /* CCDebugCrashViewController.m */; };
 		42657AD21EC060080025B2D2 /* NSURLRequest+Identify.h in Headers */ = {isa = PBXBuildFile; fileRef = 42657AB21EC060080025B2D2 /* NSURLRequest+Identify.h */; };
@@ -212,6 +210,12 @@
 		426B66031EA99523006706A2 /* preview_original_def@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 426B65F21EA99523006706A2 /* preview_original_def@2x.png */; };
 		426B66041EA99523006706A2 /* TableViewArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 426B65F31EA99523006706A2 /* TableViewArrow@2x.png */; };
 		426B66061EA99523006706A2 /* VideoSendIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 426B65F51EA99523006706A2 /* VideoSendIcon@2x.png */; };
+		426B74CF1EEF7BB800042EA0 /* CCLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 426B74CD1EEF7BB800042EA0 /* CCLanguage.m */; };
+		426B74DF1EEFBF6600042EA0 /* CCDebugCrashHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B74DC1EEFBF6600042EA0 /* CCDebugCrashHelper.h */; };
+		426B74E01EEFBF6600042EA0 /* CCDebugCrashHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 426B74DD1EEFBF6600042EA0 /* CCDebugCrashHelper.m */; };
+		426B74E31EEFBF8900042EA0 /* CCDebugFluencyHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B74E11EEFBF8900042EA0 /* CCDebugFluencyHelper.h */; };
+		426B74E41EEFBF8900042EA0 /* CCDebugFluencyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 426B74E21EEFBF8900042EA0 /* CCDebugFluencyHelper.m */; };
+		426B7DC41EF0EB21006C63EB /* CCLanguage.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B7DC31EF0EB21006C63EB /* CCLanguage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4270E1521EC9923300340239 /* CCAudioPlayerHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4270E1501EC9923300340239 /* CCAudioPlayerHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4270E1531EC9923300340239 /* CCAudioPlayerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4270E1511EC9923300340239 /* CCAudioPlayerHelper.m */; };
 		427145F61E9B6FCE0060D5C3 /* CCScanningView.h in Headers */ = {isa = PBXBuildFile; fileRef = 427145F41E9B6FCE0060D5C3 /* CCScanningView.h */; };
@@ -708,8 +712,6 @@
 		425E192E1EB88B79009B4154 /* CCUnicode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUnicode.m; sourceTree = "<group>"; };
 		4262520A1ECD7E0A00A876BC /* CCDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDatePicker.h; sourceTree = "<group>"; };
 		4262520B1ECD7E0A00A876BC /* CCDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDatePicker.m; sourceTree = "<group>"; };
-		42657AAC1EC060080025B2D2 /* CCDebugCrashHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugCrashHelper.h; sourceTree = "<group>"; };
-		42657AAD1EC060080025B2D2 /* CCDebugCrashHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDebugCrashHelper.m; sourceTree = "<group>"; };
 		42657AAE1EC060080025B2D2 /* CCDebugCrashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugCrashViewController.h; sourceTree = "<group>"; };
 		42657AAF1EC060080025B2D2 /* CCDebugCrashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDebugCrashViewController.m; sourceTree = "<group>"; };
 		42657AB21EC060080025B2D2 /* NSURLRequest+Identify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLRequest+Identify.h"; sourceTree = "<group>"; };
@@ -815,6 +817,12 @@
 		426B65F31EA99523006706A2 /* TableViewArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TableViewArrow@2x.png"; sourceTree = "<group>"; };
 		426B65F51EA99523006706A2 /* VideoSendIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VideoSendIcon@2x.png"; sourceTree = "<group>"; };
 		426B65F61EA99523006706A2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		426B74CD1EEF7BB800042EA0 /* CCLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLanguage.m; sourceTree = "<group>"; };
+		426B74DC1EEFBF6600042EA0 /* CCDebugCrashHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugCrashHelper.h; sourceTree = "<group>"; };
+		426B74DD1EEFBF6600042EA0 /* CCDebugCrashHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDebugCrashHelper.m; sourceTree = "<group>"; };
+		426B74E11EEFBF8900042EA0 /* CCDebugFluencyHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugFluencyHelper.h; sourceTree = "<group>"; };
+		426B74E21EEFBF8900042EA0 /* CCDebugFluencyHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDebugFluencyHelper.m; sourceTree = "<group>"; };
+		426B7DC31EF0EB21006C63EB /* CCLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLanguage.h; sourceTree = "<group>"; };
 		4270E1501EC9923300340239 /* CCAudioPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAudioPlayerHelper.h; sourceTree = "<group>"; };
 		4270E1511EC9923300340239 /* CCAudioPlayerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAudioPlayerHelper.m; sourceTree = "<group>"; };
 		427145F41E9B6FCE0060D5C3 /* CCScanningView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCScanningView.h; sourceTree = "<group>"; };
@@ -1532,8 +1540,8 @@
 		42657AAB1EC060080025B2D2 /* Crash */ = {
 			isa = PBXGroup;
 			children = (
-				42657AAC1EC060080025B2D2 /* CCDebugCrashHelper.h */,
-				42657AAD1EC060080025B2D2 /* CCDebugCrashHelper.m */,
+				426B74DB1EEFBF6600042EA0 /* Crash */,
+				426B74DE1EEFBF6600042EA0 /* Fluency */,
 				42657AAE1EC060080025B2D2 /* CCDebugCrashViewController.h */,
 				42657AAF1EC060080025B2D2 /* CCDebugCrashViewController.m */,
 			);
@@ -1846,6 +1854,33 @@
 				426B65F51EA99523006706A2 /* VideoSendIcon@2x.png */,
 			);
 			path = PhotoImagePicker;
+			sourceTree = "<group>";
+		};
+		426B74CB1EEF7BB800042EA0 /* CCLanguage */ = {
+			isa = PBXGroup;
+			children = (
+				426B7DC31EF0EB21006C63EB /* CCLanguage.h */,
+				426B74CD1EEF7BB800042EA0 /* CCLanguage.m */,
+			);
+			path = CCLanguage;
+			sourceTree = "<group>";
+		};
+		426B74DB1EEFBF6600042EA0 /* Crash */ = {
+			isa = PBXGroup;
+			children = (
+				426B74DC1EEFBF6600042EA0 /* CCDebugCrashHelper.h */,
+				426B74DD1EEFBF6600042EA0 /* CCDebugCrashHelper.m */,
+			);
+			path = Crash;
+			sourceTree = "<group>";
+		};
+		426B74DE1EEFBF6600042EA0 /* Fluency */ = {
+			isa = PBXGroup;
+			children = (
+				426B74E11EEFBF8900042EA0 /* CCDebugFluencyHelper.h */,
+				426B74E21EEFBF8900042EA0 /* CCDebugFluencyHelper.m */,
+			);
+			path = Fluency;
 			sourceTree = "<group>";
 		};
 		427145F31E9B6FCE0060D5C3 /* ScanningView */ = {
@@ -3338,6 +3373,7 @@
 		42FC740A1E700B4C00FBBE42 /* Ability */ = {
 			isa = PBXGroup;
 			children = (
+				426B74CB1EEF7BB800042EA0 /* CCLanguage */,
 				423D5A901EC3010B001A02A8 /* CCAppDelegateSOA */,
 				423D5A861EC2C6B2001A02A8 /* CCAppFluecyMonitor */,
 				42657AAA1EC060080025B2D2 /* CCDebugTool */,
@@ -3421,6 +3457,7 @@
 				42FC73801E70012800FBBE42 /* UISearchBar+CCAdd.h in Headers */,
 				42FC72F11E70012800FBBE42 /* NSArray+AvoidCrash.h in Headers */,
 				42954A281E712B1A00F4CC4C /* MBProgressHUD.h in Headers */,
+				426B74E31EEFBF8900042EA0 /* CCDebugFluencyHelper.h in Headers */,
 				423B4C6F1E890C8C007139EC /* CCRefreshFooterView.h in Headers */,
 				42FC711C1E6FDCF600FBBE42 /* CoreDataManager.h in Headers */,
 				424CCD751EC1701100C85E8C /* CCMonitorLabel.h in Headers */,
@@ -3505,9 +3542,9 @@
 				42FC71B81E6FFC0000FBBE42 /* NSObject+CCProperty.h in Headers */,
 				42FC71761E6FDF1400FBBE42 /* AFURLRequestSerialization.h in Headers */,
 				42954A7E1E712BE100F4CC4C /* SDWebImageDownloader.h in Headers */,
-				42657ACE1EC060080025B2D2 /* CCDebugCrashHelper.h in Headers */,
 				427146141E9B71500060D5C3 /* CCWebViewProgressView.h in Headers */,
 				42FC74371E700B4C00FBBE42 /* split.h in Headers */,
+				426B74DF1EEFBF6600042EA0 /* CCDebugCrashHelper.h in Headers */,
 				42FC73761E70012800FBBE42 /* UINavigationItem+CCAdd.h in Headers */,
 				42FC71B21E6FFC0000FBBE42 /* NSObject+CCClass.h in Headers */,
 				42FC70CE1E6FDC7F00FBBE42 /* HttpFileConfig.h in Headers */,
@@ -3662,6 +3699,7 @@
 				42FC73181E70012800FBBE42 /* NSDateFormatter+CCAdd.h in Headers */,
 				42954A331E712B8200F4CC4C /* CCLoadingView.h in Headers */,
 				42FC71361E6FDE0400FBBE42 /* NSManagedObject+CCAdd.h in Headers */,
+				426B7DC41EF0EB21006C63EB /* CCLanguage.h in Headers */,
 				42954A7C1E712BE100F4CC4C /* UIView+WebCacheOperation.h in Headers */,
 				42FC734C1E70012800FBBE42 /* CATransaction+CCAdd.h in Headers */,
 				42FC70C51E6FDC7F00FBBE42 /* CCHTTPManager.h in Headers */,
@@ -3827,7 +3865,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=${PROJECT_NAME}\nFMK_VERSION=CC\nOPEN_PATH=${SRCROOT}/Products\n\n# Install dir will be the final output to the framework or bundle.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${OPEN_PATH}/${FMK_NAME}.framework\nINSTALL_BUNDLE=${OPEN_PATH}/${FMK_NAME}.bundle\n\n# Working dir will be deleted after the framework or bundle creation.\nWRK_DIR=build\n\n# framework\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.framework\n\n# bundle\nDEVICE_BUNDLE=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.bundle\nSIMULATOR_BUNDLE=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.bundle\n\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos clean build\nxcodebuild -configuration \"Debug\" -target \"${FMK_NAME}\" -sdk iphonesimulator clean build\n\n# Cleaning the oldest.\nif [ -d \"${OPEN_PATH}\" ]\nthen\nrm -rf \"${OPEN_PATH}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# bundle\nmkdir -p \"${INSTALL_BUNDLE}\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# bundle\ncp -R \"${DEVICE_BUNDLE}/\" \"${INSTALL_BUNDLE}/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\"\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\nlipo -create \"${DEVICE_BUNDLE}/${FMK_NAME}\" \"${SIMULATOR_BUNDLE}/${FMK_NAME}\" -output \"${INSTALL_BUNDLE}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\nopen \"${OPEN_PATH}\"";
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=${PROJECT_NAME}\nFMK_VERSION=CC\nOPEN_PATH=${SRCROOT}/Products\n\n# Install dir will be the final output to the framework or bundle.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${OPEN_PATH}/${FMK_NAME}.framework\nINSTALL_BUNDLE=${OPEN_PATH}/${FMK_NAME}.bundle\n\n# Working dir will be deleted after the framework or bundle creation.\nWRK_DIR=build\n\n# framework\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.framework\n\n# bundle\nDEVICE_BUNDLE=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.bundle\n#SIMULATOR_BUNDLE=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.bundle\n\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos clean build\nxcodebuild -configuration \"Debug\" -target \"${FMK_NAME}\" -sdk iphonesimulator clean build\n\n# Cleaning the oldest.\nif [ -d \"${OPEN_PATH}\" ]\nthen\nrm -rf \"${OPEN_PATH}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# bundle\nmkdir -p \"${INSTALL_BUNDLE}\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# bundle\ncp -R \"${DEVICE_BUNDLE}/\" \"${INSTALL_BUNDLE}/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\"\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\nlipo -create \"${DEVICE_BUNDLE}/${FMK_NAME}\" \"${SIMULATOR_BUNDLE}/${FMK_NAME}\" -output \"${INSTALL_BUNDLE}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\nopen \"${OPEN_PATH}\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -4041,7 +4079,6 @@
 				42FC733F1E70012800FBBE42 /* NSURLRequest+CCAdd.m in Sources */,
 				42FC71B11E6FFC0000FBBE42 /* CCPropertyType.m in Sources */,
 				426AF4261EC58FB900188724 /* CCBottomPopupView.m in Sources */,
-				42657ACF1EC060080025B2D2 /* CCDebugCrashHelper.m in Sources */,
 				42FC73711E70012800FBBE42 /* UILabel+CCAdd.m in Sources */,
 				42FC70FE1E6FDCF600FBBE42 /* NSManagedObject+Create.m in Sources */,
 				426B65BF1EA98EFD006706A2 /* LaunchCameraButton.m in Sources */,
@@ -4055,11 +4092,13 @@
 				427146151E9B71500060D5C3 /* CCWebViewProgressView.m in Sources */,
 				42FC732F1E70012800FBBE42 /* NSObject+CCAdd.m in Sources */,
 				42FC73311E70012800FBBE42 /* NSRunLoop+CCAdd.m in Sources */,
+				426B74E41EEFBF8900042EA0 /* CCDebugFluencyHelper.m in Sources */,
 				42B5CDD81E70E135002D302E /* CCUncaughtExceptionHandler.m in Sources */,
 				42FC70A61E6FDB7700FBBE42 /* UIViewController+CCProperties.m in Sources */,
 				42FC71A91E6FFC0000FBBE42 /* CCExtensionConst.m in Sources */,
 				42FC73551E70012800FBBE42 /* UIBarButtonItem+CCAdd.m in Sources */,
 				426B65C51EA98EFD006706A2 /* CameraStyleKitClass.m in Sources */,
+				426B74CF1EEF7BB800042EA0 /* CCLanguage.m in Sources */,
 				42FC73371E70012800FBBE42 /* NSString+CCAdd.m in Sources */,
 				42954A8C1E712BE100F4CC4C /* SDWebImageManager.m in Sources */,
 				42FC716B1E6FDF1400FBBE42 /* AFURLSessionManager.m in Sources */,
@@ -4112,6 +4151,7 @@
 				427145FD1E9B70180060D5C3 /* CCQRCodeDisplayViewController.m in Sources */,
 				42FC73931E70012800FBBE42 /* UIView+Animation.m in Sources */,
 				42FC73991E70012800FBBE42 /* UIViewController+CCAdd.m in Sources */,
+				426B74E01EEFBF6600042EA0 /* CCDebugCrashHelper.m in Sources */,
 				42FC73271E70012800FBBE42 /* NSInvocation+CCAdd.m in Sources */,
 				42FC71691E6FDF1400FBBE42 /* AFHTTPSessionManager.m in Sources */,
 				42FC738B1E70012800FBBE42 /* UITableViewCell+CCAdd.m in Sources */,
