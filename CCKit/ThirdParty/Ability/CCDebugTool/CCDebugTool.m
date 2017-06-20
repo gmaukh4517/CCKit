@@ -139,7 +139,8 @@
 - (UINavigationController *)initializationNav:(UIViewController *)viewController tabBarItemName:(NSString *)tabBarItemName
 {
     UINavigationController *debugNav = [[UINavigationController alloc] initWithRootViewController:viewController];
-    debugNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:tabBarItemName image:[[UIImage imageNamed:@""] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] selectedImage:[[UIImage imageNamed:@""] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    debugNav.tabBarItem = [[UITabBarItem alloc] init];
+    debugNav.tabBarItem.title = tabBarItemName;
     [debugNav.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor lightGrayColor],
                                                           NSFontAttributeName : [UIFont systemFontOfSize:30] }
                                               forState:UIControlStateNormal];

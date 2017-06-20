@@ -276,17 +276,21 @@ static NSString *const kCCLogoView = @"kCCLogoView";
     [self setContentOffset:CGPointMake(self.frame.size.width * pageIndex, 0.0f) animated:animated];
 }
 
-- (void)scrollToVerticalItem:(CGFloat)centerX
+- (void)scrollToVerticalItem:(UIView *)item
 {
-    CGFloat offsetX = centerX - self.frame.size.width / 2;
-    if (offsetX < 0)
-        offsetX = 0;
+    CGFloat targetX = CGRectGetMidX(item.frame) - self.bounds.size.width / 2.0f;
+    //左边缘适配
+    if (targetX <= 0)
+        targetX = 0;
     
-    CGFloat maxRight = self.contentSize.width - self.frame.size.width;
-    if (offsetX > maxRight)
-        offsetX = maxRight;
+    //右边缘适配
+    if (targetX >= self.contentSize.width - self.bounds.size.width){
+        targetX = self.contentSize.width - self.bounds.size.width;
+        if (targetX < 0)
+            targetX = 0;
+    }
     
-    [self setContentOffset:CGPointMake(offsetX, 0)];
+    [self setContentOffset:CGPointMake(targetX, 0)];
 }
 
 - (void)setLogoView:(UIImageView *)logoView

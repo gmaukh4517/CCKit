@@ -461,4 +461,110 @@ static char kAutomaticWritingEdgeInsetsKey;
     return self;
 }
 
+#pragma mark -
+#pragma mark :. textSite
+
+- (void)setAttributedString:(NSMutableAttributedString *)attributedString
+{
+    objc_setAssociatedObject(self, @selector(attributedString), attributedString, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSMutableAttributedString *)attributedString
+{
+    return (NSMutableAttributedString *)objc_getAssociatedObject(self, @selector(attributedString));
+}
+
+- (NSMutableAttributedString *)setTextAttributedString
+{
+    if (!self.attributedString)
+        self.attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedText];
+    
+    return self.attributedString;
+}
+
+/**
+ *  @brief  设置文本位置
+ *
+ *  @param Alignment 位置
+ */
+- (void)setAlignmentCenter:(NSTextAlignment)Alignment
+{
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setAlignment:Alignment];
+    [[self setTextAttributedString] addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, self.text.length)];
+    [self drawRectTextAttributedString];
+}
+
+/**
+ *  @brief  设置某段字的颜色
+ *
+ *  @param color    文字颜色
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextColor:(UIColor *)color
+           fromIndex:(NSInteger)location
+              length:(NSInteger)length
+{
+    if (location < 0 || location > self.text.length - 1 || length + location > self.text.length)
+        return;
+    
+    [[self setTextAttributedString] addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(location, length)];
+    [self drawRectTextAttributedString];
+}
+
+/**
+ *  @brief  设置某段字的字体
+ *
+ *  @param font     文字字体
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextFont:(UIFont *)font
+          fromIndex:(NSInteger)location
+             length:(NSInteger)length
+{
+    if (location < 0 || location > self.text.length - 1 || length + location > self.text.length)
+        return;
+    
+    [[self setTextAttributedString] addAttribute:NSFontAttributeName value:font range:NSMakeRange(location, length)];
+    [self drawRectTextAttributedString];
+}
+
+/**
+ *  @brief  设置某段字的风格
+ *
+ *  @param style    文字风格
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextStyle:(NSUnderlineStyle)style
+           fromIndex:(NSInteger)location
+              length:(NSInteger)length
+{
+    if (location < 0 || location > self.text.length - 1 || length + location > self.text.length)
+        return;
+    
+    [[self setTextAttributedString] addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:style] range:NSMakeRange(location, length)];
+    [self drawRectTextAttributedString];
+}
+
+/**
+ *  @brief  设置下划线
+ *
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextUnderline:(NSInteger)location
+                  length:(NSInteger)length
+{
+    [[self setTextAttributedString] addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(location, length)];
+    [self drawRectTextAttributedString];
+}
+
+- (void)drawRectTextAttributedString
+{
+    self.attributedText = self.attributedString;
+}
+
 @end

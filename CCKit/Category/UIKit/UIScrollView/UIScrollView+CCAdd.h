@@ -378,9 +378,9 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
 /**
  滑动到当前Item位置
  
- @param centerX Item CenterX
+ @param item 试图
  */
-- (void)scrollToVerticalItem:(CGFloat)centerX;
+- (void)scrollToVerticalItem:(UIView *)item;
 
 /**
  *  @author CC, 16-03-04

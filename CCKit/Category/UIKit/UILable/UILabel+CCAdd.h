@@ -24,8 +24,8 @@
 //
 
 
-#import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
+#import <UIKit/UIKit.h>
 
 @interface UILabel (CCAdd)
 
@@ -53,8 +53,8 @@ typedef NS_ENUM(NSInteger, UILabelCCBlinkingMode) {
 };
 
 
-@property(strong, nonatomic) NSOperationQueue *automaticWritingOperationQueue;
-@property(assign, nonatomic) UIEdgeInsets edgeInsets;
+@property (strong, nonatomic) NSOperationQueue *automaticWritingOperationQueue;
+@property (assign, nonatomic) UIEdgeInsets edgeInsets;
 
 - (void)setTextWithAutomaticWritingAnimation:(NSString *)text;
 
@@ -138,5 +138,58 @@ typedef NS_ENUM(NSInteger, UILabelCCBlinkingMode) {
  *  @return 原始UILabel修改过的Rect的UILabel(起始位置相同)
  */
 - (UILabel *)resizeLabelVertical:(CGFloat)minimumHeigh;
+
+
+#pragma mark -
+#pragma mark :. textSite
+
+/**
+ *  @brief  设置文本位置
+ *
+ *  @param Alignment 位置
+ */
+- (void)setAlignmentCenter:(NSTextAlignment)Alignment;
+
+/**
+ *  @brief  设置某段字的颜色
+ *
+ *  @param color    文字颜色
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextColor:(UIColor *)color
+           fromIndex:(NSInteger)location
+              length:(NSInteger)length;
+
+/**
+ *  @brief  设置某段字的字体
+ *
+ *  @param font     文字字体
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextFont:(UIFont *)font
+          fromIndex:(NSInteger)location
+             length:(NSInteger)length;
+
+/**
+ *  @brief  设置某段字的风格
+ *
+ *  @param style    文字风格
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextStyle:(NSUnderlineStyle)style
+           fromIndex:(NSInteger)location
+              length:(NSInteger)length;
+
+/**
+ *  @brief  设置下划线
+ *
+ *  @param location 开始位置
+ *  @param length   结束位置
+ */
+- (void)setTextUnderline:(NSInteger)location
+                  length:(NSInteger)length;
 
 @end

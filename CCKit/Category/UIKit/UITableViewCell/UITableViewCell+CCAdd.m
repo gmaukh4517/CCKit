@@ -179,6 +179,8 @@
 - (void)cc_cellWillDisplayWithModel:(id)cModel
                           indexPath:(NSIndexPath *)cIndexPath
 {
+    self.cc_dataSources = cModel;
+    self.cc_indexPath = cIndexPath;
     // Rewrite this func in SubClass !
 }
 

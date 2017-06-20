@@ -80,6 +80,7 @@
 - (void)stopAudio
 {
     [self setPlayingFileName:@""];
+    [self setPlayPath:@""];
     [self setPlayingIndexPathInFeedList:nil];
     if (_player && _player.isPlaying) {
         [_player stop];
@@ -96,6 +97,7 @@
         self.secondaryAudioShouldBeSilencedHint = NO;
         [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
     }
+    _player = nil;
 }
 
 #pragma mark - action
@@ -112,7 +114,7 @@
         
         self.secondaryAudioShouldBeSilencedHint = [AVAudioSession sharedInstance].secondaryAudioShouldBeSilencedHint;
         //不随着静音键和屏幕关闭而静音。code by Aevit
-        //        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         
         if (_playingFileName && [path isEqualToString:_playingFileName]) { //上次播放的录音
             if (_player) {

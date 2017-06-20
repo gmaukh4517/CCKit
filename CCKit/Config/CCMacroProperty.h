@@ -293,4 +293,15 @@ static inline void cc_dispatch_async_on_main_queue(void (^block)()) {
     }
 }
 
+/**
+ 在主队列上提交执行块，并等待直到块完成。
+ */
+static inline void cc_dispatch_sync_on_main_queue(void (^block)()) {
+    if (pthread_main_np()) {
+        block();
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}
+
 #endif /* CCProperty_h */
