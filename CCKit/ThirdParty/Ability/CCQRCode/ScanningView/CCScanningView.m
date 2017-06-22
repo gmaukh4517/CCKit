@@ -31,6 +31,7 @@
 #define kCCStreetTipString @"扫一下周围环境，讯在附近街景"
 #define kCCWordTipString @"将英文单词放入框内"
 
+#define kCCQrCodeTop 70
 #define kCCQRCodeRectPaddingX 55
 
 typedef void (^TransformScanningAnimationBlock)(void);
@@ -40,8 +41,6 @@ typedef void (^TransformScanningAnimationBlock)(void);
 @property (nonatomic, assign, readwrite) CCScanningStyle scanningStyle;
 
 @property (nonatomic, strong) UIImageView *scanningImageView;
-
-@property (nonatomic, assign) CGRect clearRect;
 
 @property (nonatomic, strong) UILabel *QRCodeTipLabel;
 
@@ -60,11 +59,11 @@ typedef void (^TransformScanningAnimationBlock)(void);
 
 - (void)startRunning
 {
-    self.scanningImageView.frame = CGRectMake(55, 30, CGRectGetWidth(self.bounds) - 110, 2);
+    self.scanningImageView.frame = CGRectMake(55, kCCQrCodeTop, CGRectGetWidth(self.bounds) - 110, 2);
     [self scanning];
 }
 
--(void)stopRunning
+- (void)stopRunning
 {
     self.isRunning = NO;
     [self.scanningImageView.layer removeAllAnimations];
@@ -93,8 +92,8 @@ typedef void (^TransformScanningAnimationBlock)(void);
 - (UIImageView *)scanningImageView
 {
     if (!_scanningImageView) {
-        _scanningImageView = [[UIImageView alloc] initWithFrame:CGRectMake(55, 30, CGRectGetWidth(self.bounds) - 110, 2)];
-        _scanningImageView.backgroundColor = [UIColor greenColor];
+        _scanningImageView = [[UIImageView alloc] initWithFrame:CGRectMake(55, kCCQrCodeTop, CGRectGetWidth(self.bounds) - 110, 2)];
+        _scanningImageView.backgroundColor = [UINavigationBar appearance].barTintColor;
     }
     return _scanningImageView;
 }
@@ -102,7 +101,7 @@ typedef void (^TransformScanningAnimationBlock)(void);
 - (UILabel *)QRCodeTipLabel
 {
     if (!_QRCodeTipLabel) {
-        _QRCodeTipLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(self.clearRect) + 30, CGRectGetWidth(self.bounds) - 20, 20)];
+        _QRCodeTipLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(self.clearRect) + kCCQrCodeTop, CGRectGetWidth(self.bounds) - 20, 20)];
         _QRCodeTipLabel.text = kCCQRCodeTipString;
         _QRCodeTipLabel.numberOfLines = 0;
         _QRCodeTipLabel.textColor = [UIColor whiteColor];
@@ -116,7 +115,7 @@ typedef void (^TransformScanningAnimationBlock)(void);
 - (UIButton *)myQRCodeButton
 {
     if (!_myQRCodeButton) {
-        _myQRCodeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_QRCodeTipLabel.frame) + 30, 80, 20)];
+        _myQRCodeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_QRCodeTipLabel.frame) + kCCQrCodeTop, 80, 20)];
         _myQRCodeButton.center = CGPointMake(CGRectGetWidth(self.bounds) / 2.0, _myQRCodeButton.center.y);
         [_myQRCodeButton setTitle:@"我的二维码" forState:UIControlStateNormal];
         [_myQRCodeButton setTitleColor:[UIColor colorWithRed:0.275 green:0.491 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
@@ -151,7 +150,7 @@ typedef void (^TransformScanningAnimationBlock)(void);
         // Initialization code
         self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.500];
         
-        self.clearRect = CGRectMake(kCCQRCodeRectPaddingX, 30, CGRectGetWidth(frame) - kCCQRCodeRectPaddingX * 2, CGRectGetWidth(frame) - kCCQRCodeRectPaddingX * 2);
+        self.clearRect = CGRectMake(kCCQRCodeRectPaddingX, kCCQrCodeTop, CGRectGetWidth(frame) - kCCQRCodeRectPaddingX * 2, CGRectGetWidth(frame) - kCCQRCodeRectPaddingX * 2);
         
         [self addSubview:self.scanningImageView];
         [self addSubview:self.QRCodeTipLabel];
@@ -189,7 +188,7 @@ typedef void (^TransformScanningAnimationBlock)(void);
             self.myQRCodeButton.hidden = NO;
             self.scanningImageView.hidden = NO;
             paddingX = kCCQRCodeRectPaddingX;
-            clearRect = CGRectMake(paddingX, 30, CGRectGetWidth(rect) - paddingX * 2, CGRectGetWidth(rect) - paddingX * 2);
+            clearRect = CGRectMake(paddingX, kCCQrCodeTop, CGRectGetWidth(rect) - paddingX * 2, CGRectGetWidth(rect) - paddingX * 2);
             break;
         }
         case CCScanningStyleStreet:

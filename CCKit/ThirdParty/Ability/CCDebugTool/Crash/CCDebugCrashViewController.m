@@ -57,7 +57,7 @@
     
     self.navigationItem.titleView = segmentedControl;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
-     self.title = @"Caton";
+     self.title = @"Crash";
 }
 
 - (void)didSegmentedControl:(UISegmentedControl *)sender

@@ -27,17 +27,19 @@
 
 @interface CCCaptureHelper () <AVCaptureMetadataOutputObjectsDelegate>
 
-@property(nonatomic, copy) DidOutputScanResultBlock didOutputSampleBuffer;
+@property (nonatomic, copy) DidOutputScanResultBlock didOutputSampleBuffer;
 
-@property(nonatomic, strong) dispatch_queue_t captureSessionQueue;
+@property (nonatomic, strong) dispatch_queue_t captureSessionQueue;
 
-@property(nonatomic, strong) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
-@property(nonatomic, strong) AVCaptureSession *captureSession;
-@property(nonatomic, strong) AVCaptureDeviceInput *captureInput;
-@property(nonatomic, strong) AVCaptureDeviceInput *frontDeviceInput;
-@property(nonatomic, strong) AVCaptureVideoDataOutput *captureOutput;
-@property(nonatomic, strong) AVCaptureMetadataOutput *captureMetadataOutput;
-@property(strong, nonatomic) AVCaptureDevice *defaultDevice;
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
+@property (nonatomic, strong) AVCaptureSession *captureSession;
+@property (nonatomic, strong) AVCaptureDeviceInput *captureInput;
+@property (nonatomic, strong) AVCaptureDeviceInput *frontDeviceInput;
+@property (nonatomic, strong) AVCaptureVideoDataOutput *captureOutput;
+@property (nonatomic, strong) AVCaptureMetadataOutput *captureMetadataOutput;
+@property (strong, nonatomic) AVCaptureDevice *defaultDevice;
+
+@property(nonatomic, assign) CGRect  viewRect;
 @end
 
 @implementation CCCaptureHelper
@@ -63,6 +65,7 @@
  */
 - (void)showCaptureOnView:(UIView *)preview
 {
+    self.viewRect = preview.frame;
     dispatch_async(self.captureSessionQueue, ^{
         [self.captureSession startRunning];
         
@@ -226,6 +229,16 @@
 - (BOOL)isRunning
 {
     return [self.captureSession isRunning];
+}
+
+- (void)scanarea:(CGRect)containerRect
+{
+    CGFloat x = containerRect.origin.y / _viewRect.size.height;
+    CGFloat y = containerRect.origin.x / _viewRect.size.width;
+    CGFloat width = containerRect.size.height / _viewRect.size.height;
+    CGFloat height = containerRect.size.width / _viewRect.size.width;
+    
+    self.captureMetadataOutput.rectOfInterest = CGRectMake(x, y, width, height);
 }
 
 /**

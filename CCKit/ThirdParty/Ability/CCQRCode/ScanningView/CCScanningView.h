@@ -45,6 +45,8 @@ typedef NS_ENUM(NSInteger, CCScanningStyle) {
 
 @interface CCScanningView : UIView
 
+@property (nonatomic, assign) CGRect clearRect;
+
 @property (nonatomic, assign, readonly) CCScanningStyle scanningStyle;
 
 - (void)transformScanningTypeWithStyle:(CCScanningStyle)style;

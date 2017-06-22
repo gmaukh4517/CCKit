@@ -160,6 +160,9 @@
     NSMutableDictionary *sortGroupDic = [NSMutableDictionary dictionary];
     for (id object in self) {
         NSString *persoName = [self obtainObjectPropertyValues:object Attributes:analysisName];
+        if (!persoName)
+            continue;
+        
         NSMutableString *personName = [[NSMutableString alloc] initWithString:persoName];
         //转拼音带音标
         CFStringTransform((__bridge CFMutableStringRef)personName, 0, kCFStringTransformMandarinLatin, NO);

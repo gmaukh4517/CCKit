@@ -77,21 +77,21 @@ typedef void (^DidOutputScanResultBlock)(id scanResult);
  *
  *  @brief  扫描方式
  */
-@property(nonatomic, assign) CCCaptureHelperType captureType;
+@property (nonatomic, assign) CCCaptureHelperType captureType;
 
 /**
  *  @author CC, 16-02-22
  *
  *  @brief 是否开启照明
  */
-@property(nonatomic, assign, readonly) BOOL isTorch;
+@property (nonatomic, assign, readonly) BOOL isTorch;
 
 /**
  *  @author CC, 2015-10-12
  *
  *  @brief  扫描结果委托
  */
-@property(nonatomic, weak) id<CCCaptureHelperDelegate> delegate;
+@property (nonatomic, weak) id<CCCaptureHelperDelegate> delegate;
 
 
 /**
@@ -111,6 +111,13 @@ typedef void (^DidOutputScanResultBlock)(id scanResult);
  *  @param preview 父View
  */
 - (void)showCaptureOnView:(UIView *)preview;
+
+/**
+ 设置扫描区域
+ 
+ @param containerRect 区域位置
+ */
+- (void)scanarea:(CGRect)containerRect;
 
 /**
  *  @author CC, 2015-10-13

@@ -272,6 +272,7 @@ typedef void (^Outcomeblock)(NSString *outcome);
 {
     [super viewDidAppear:animated];
     [self.captureHelper showCaptureOnView:self.preview];
+    [self.captureHelper scanarea:self.scanningView.clearRect];
     
     [self isCameraUsageRights];
     
