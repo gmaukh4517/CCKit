@@ -40,6 +40,68 @@
     });
 }
 
+- (void)ios_8
+{
+    UIView *swipeToDeleteConfirmationView = [self valueForKey:@"_swipeToDeleteConfirmationView"];
+    
+    for (UIButton *rowButton in swipeToDeleteConfirmationView.subviews) {
+        
+        UITableViewRowAction *rowAction = [rowButton valueForKey:@"_action"];
+        if (rowAction.backgroundColor) {
+            rowButton.backgroundColor = rowAction.backgroundColor;
+        }
+        
+        rowButton.enabled = rowAction.enabled;
+        
+        if (rowAction.titleColor)
+            [rowButton setTitleColor:rowAction.titleColor forState:UIControlStateNormal];
+        
+        if (rowAction.image) {
+            NSTextAttachment *imageAtt = [[NSTextAttachment alloc] init];
+            imageAtt.image = rowAction.image;
+            [rowButton setAttributedTitle:[NSAttributedString attributedStringWithAttachment:imageAtt] forState:UIControlStateNormal];
+        }
+        
+        if (![rowAction.title isEqualToString:@"CC"] && rowAction.image) {
+            NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithAttributedString:rowButton.currentAttributedTitle];
+            [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+            [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:rowAction.title]];
+            if (rowAction.titleColor)
+                [attStr addAttribute:NSForegroundColorAttributeName value:rowAction.titleColor range:NSMakeRange(0, [attStr length])];
+            
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            [paragraphStyle setLineSpacing:5];
+            [attStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attStr length])];
+            
+            
+            [rowButton setAttributedTitle:attStr forState:UIControlStateNormal];
+        }
+        
+        if (rowAction.backgroundImage) {
+            [rowButton setBackgroundImage:rowAction.backgroundImage forState:UIControlStateNormal];
+        }
+    }
+}
+
+- (void)IOS_11
+{
+    UIView *swipeToDeleteConfirmationView;
+    for (UIView *v in self.superview.subviews) {
+        if ([[NSString stringWithUTF8String:object_getClassName(v)] isEqualToString:@"UISwipeActionPullView"]) {
+            swipeToDeleteConfirmationView = v;
+        }
+    }
+    
+//    NSArray *rowBtns = [swipeToDeleteConfirmationView valueForKey:@"_buttons"];
+//    NSArray *rowActions = [swipeToDeleteConfirmationView valueForKey:@"_actions"];
+//    
+//    for (NSInteger i = 0; i < rowBtns.count; i++) {
+//        UIButton *rowButton = [rowBtns objectAtIndex:i];
+//        UIContextualAction *rowAction = [rowActions objectAtIndex:i];
+//        UIImage *image = rowAction.image;
+//    }
+}
+
 - (void)__willTransitionToState:(UITableViewCellStateMask)state
 {
     
@@ -53,48 +115,16 @@
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            UIView *swipeToDeleteConfirmationView = [self valueForKey:@"_swipeToDeleteConfirmationView"];
-            if ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending) {
-                for (UIButton *rowButton in swipeToDeleteConfirmationView.subviews) {
-                    
-                    UITableViewRowAction *rowAction = [rowButton valueForKey:@"_action"];
-                    if (rowAction.backgroundColor) {
-                        rowButton.backgroundColor = rowAction.backgroundColor;
-                    }
-                    
-                    rowButton.enabled = rowAction.enabled;
-                    
-                    if (rowAction.titleColor)
-                        [rowButton setTitleColor:rowAction.titleColor forState:UIControlStateNormal];
-                    
-                    if (rowAction.image) {
-                        NSTextAttachment *imageAtt = [[NSTextAttachment alloc] init];
-                        imageAtt.image = rowAction.image;
-                        [rowButton setAttributedTitle:[NSAttributedString attributedStringWithAttachment:imageAtt] forState:UIControlStateNormal];
-                    }
-                    
-                    if (![rowAction.title isEqualToString:@"CC"] && rowAction.image) {
-                        NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithAttributedString:rowButton.currentAttributedTitle];
-                        [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-                        [attStr appendAttributedString:[[NSAttributedString alloc] initWithString:rowAction.title]];
-                        if (rowAction.titleColor)
-                            [attStr addAttribute:NSForegroundColorAttributeName value:rowAction.titleColor range:NSMakeRange(0, [attStr length])];
-                        
-                        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-                        [paragraphStyle setLineSpacing:5];
-                        [attStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attStr length])];
-                        
-                        
-                        [rowButton setAttributedTitle:attStr forState:UIControlStateNormal];
-                    }
-                    
-                    if (rowAction.backgroundImage) {
-                        [rowButton setBackgroundImage:rowAction.backgroundImage forState:UIControlStateNormal];
-                    }
-                }
+            NSString *version = [UIDevice currentDevice].systemVersion;
+            if (version.doubleValue >= 11.0) {
+                [self IOS_11];
+                return;
+            } else if (version.doubleValue >= 8.0) {
+                [self ios_8];
                 return;
             }
+            
+            UIView *swipeToDeleteConfirmationView = [self valueForKey:@"_swipeToDeleteConfirmationView"];
             
             NSIndexPath *indexPath = [tableView indexPathForCell:self];
             

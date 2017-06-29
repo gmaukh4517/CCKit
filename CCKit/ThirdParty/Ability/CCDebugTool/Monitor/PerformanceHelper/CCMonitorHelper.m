@@ -204,10 +204,10 @@ static vm_statistics_data_t ccStats;
         }
         freeifaddrs(addrs);
     }
-    return [NSArray arrayWithObjects:[NSNumber numberWithInt:WiFiSent / 1024],
-            [NSNumber numberWithInt:WiFiReceived / 1024],
-            [NSNumber numberWithInt:WWANSent / 1024],
-            [NSNumber numberWithInt:WWANReceived / 1024], nil];
+    return [NSArray arrayWithObjects:[NSNumber numberWithInt:WiFiSent],
+            [NSNumber numberWithInt:WiFiReceived],
+            [NSNumber numberWithInt:WWANSent],
+            [NSNumber numberWithInt:WWANReceived], nil];
 }
 
 // cpu

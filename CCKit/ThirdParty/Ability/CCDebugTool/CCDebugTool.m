@@ -94,9 +94,11 @@
     [CCMonitorService start:self.debugWindow];
     [CCMonitorService mainColor:self.mainColor];
     
-    UIButton *debugButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    UIButton *debugButton = [[UIButton alloc] initWithFrame:CGRectMake((width - 130) / 2, 0, 130, 22)];
     [debugButton addTarget:self action:@selector(showDebug) forControlEvents:UIControlEventTouchUpInside];
     [self.debugWindow addSubview:debugButton];
+    [self.debugWindow bringSubviewToFront:debugButton];
 }
 
 
@@ -122,7 +124,7 @@
         UINavigationController *debugHTTPNav = [self initializationNav:[CCDebugHttpViewController new] tabBarItemName:@"HTTP"];
         UINavigationController *debugCrashNav = [self initializationNav:[CCDebugCrashViewController new] tabBarItemName:@"Crash"];
         UINavigationController *debugLOGNav = [self initializationNav:[CCDebugLogViewController new] tabBarItemName:@"LOG"];
-//        UINavigationController *debugMonitorNav = [self initializationNav:[CCMonitorViewController new] tabBarItemName:@"Monitor"];
+        //        UINavigationController *debugMonitorNav = [self initializationNav:[CCMonitorViewController new] tabBarItemName:@"Monitor"];
         
         debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugCrashNav, debugLOGNav, nil];
         self.debugTabBar = debugTabBar;
@@ -142,11 +144,11 @@
     debugNav.tabBarItem = [[UITabBarItem alloc] init];
     debugNav.tabBarItem.title = tabBarItemName;
     [debugNav.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor lightGrayColor],
-                                                          NSFontAttributeName : [UIFont systemFontOfSize:30] }
-                                              forState:UIControlStateNormal];
+                                                   NSFontAttributeName : [UIFont systemFontOfSize:30] }
+                                       forState:UIControlStateNormal];
     [debugNav.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : self.mainColor,
-                                                          NSFontAttributeName : [UIFont systemFontOfSize:30] }
-                                              forState:UIControlStateSelected];
+                                                   NSFontAttributeName : [UIFont systemFontOfSize:30] }
+                                       forState:UIControlStateSelected];
     return debugNav;
 }
 

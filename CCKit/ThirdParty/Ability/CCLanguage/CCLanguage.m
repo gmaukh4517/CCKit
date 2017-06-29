@@ -101,6 +101,7 @@ static CCLanguage *_sharedlnstance = nil;
         if (!Str)
             LocalizedString = key;
     }
+    
     return LocalizedString;
 }
 

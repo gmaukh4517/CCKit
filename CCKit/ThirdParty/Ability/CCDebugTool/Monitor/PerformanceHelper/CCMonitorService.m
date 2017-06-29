@@ -116,9 +116,9 @@
 - (void)setBarWindow:(UIWindow *)window
 {
     self.statusBarWindow = window;
-    CGFloat width = 250;
+    CGFloat width = 130;
     
-    _monitorStatusBar = [[CCPerformanceStatusBar alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - width) / 2, 2, width, 18)];
+    _monitorStatusBar = [[CCPerformanceStatusBar alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - width) / 2, 2, width, 20)];
     self.statusBarWindow.hidden = YES;
     self.statusBarWindow.windowLevel = UIWindowLevelAlert + 1;
     [self.statusBarWindow addSubview:self.monitorStatusBar];
@@ -160,29 +160,47 @@
     _lastTimestamp = displayLink.timestamp;
     CGFloat fps = _countPerFrame / interval;
     _countPerFrame = 0;
-    self.monitorStatusBar.fpsLabel.text = [NSString stringWithFormat:@"FPS: %d", (int)round(fps)];
+    self.monitorStatusBar.fpsLabel.text = [NSString stringWithFormat:@"FPS:%d", (int)round(fps)];
     self.monitorStatusBar.fpsLabel.state = [self labelStateWith:CCPerformanceMonitorFPS value:fps];
     
     CGFloat cpu = [CCMonitorHelper cpu_usage];
-    self.monitorStatusBar.cpuLabel.text = [NSString stringWithFormat:@"CPU: %.2f%%", cpu];
+    self.monitorStatusBar.cpuLabel.text = [NSString stringWithFormat:@"CPU:%.2f%%", cpu];
     self.monitorStatusBar.cpuLabel.state = [self labelStateWith:CCPerformanceMonitorCPU value:cpu];
     
-    NSString *networkText;
-    Reachability *reachability = [Reachability reachabilityWithHostName:@"hha"];
+    NSString *networkText = @"↑: -/- ↓: -/-";
+    Reachability *reachability = [Reachability reachabilityWithHostName:@"hah"];
     if (reachability.currentReachabilityStatus == ReachableViaWiFi) {
         float wifiS_preSecond = [[CCMonitorHelper getDataCounters][0] floatValue] - self.preWifi_S;
         float wifiR_preSecond = [[CCMonitorHelper getDataCounters][1] floatValue] - self.preWifi_R;
-        networkText = [NSString stringWithFormat:@"U: %.0f KB/s D: %.0f KB/s", wifiS_preSecond, wifiR_preSecond];
+        networkText = [NSString stringWithFormat:@"↑: %@ ↓: %@", [self number2String:wifiS_preSecond], [self number2String:wifiR_preSecond]];
     } else if (reachability.currentReachabilityStatus == ReachableViaWWAN) {
         float wwanS_preSecond = [[CCMonitorHelper getDataCounters][2] floatValue] - self.preWWAN_S;
         float wwanR_preSecond = [[CCMonitorHelper getDataCounters][3] floatValue] - self.preWWAN_R;
-        networkText = [NSString stringWithFormat:@"U: %.0f KB/s D: %.0f KB/s", wwanS_preSecond, wwanR_preSecond];
+        networkText = [NSString stringWithFormat:@"↑: %@ ↓: %@", [self number2String:wwanS_preSecond], [self number2String:wwanR_preSecond]];
     } else {
     }
     
     self.monitorStatusBar.networkLabel.text = networkText;
     [self currentLiuLiang];
 }
+
+
+#define KB (1024)
+#define MB (KB * 1024)
+#define GB (MB * 1024)
+- (NSString *)number2String:(float)n
+{
+    if (n < KB) {
+        return [NSString stringWithFormat:@"%.0f B/S", n];
+    } else if (n < MB) {
+        return [NSString stringWithFormat:@"%.1f KB/S", n / KB];
+    } else if (n < GB) {
+        return [NSString stringWithFormat:@"%.1f MB/S", n / MB];
+    } else {
+        return [NSString stringWithFormat:@"%.1f G/S", n / GB];
+    }
+}
+
 
 - (void)currentLiuLiang
 {

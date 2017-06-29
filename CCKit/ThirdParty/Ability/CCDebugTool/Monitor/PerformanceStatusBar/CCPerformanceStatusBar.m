@@ -40,26 +40,27 @@
 {
     self.layer.cornerRadius = 3;
     
-    _fpsLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(5, 0, 45, 18)];
-    _fpsLabel.font = [UIFont systemFontOfSize:10];
+    _fpsLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 10)];
+    _fpsLabel.font = [UIFont systemFontOfSize:8];
     _fpsLabel.textAlignment = NSTextAlignmentCenter;
     _fpsLabel.textColor = [UIColor whiteColor];
-    _fpsLabel.text = @"FPS: d-";
+    _fpsLabel.text = @"FPS: -";
     _fpsLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_fpsLabel];
     
-    _cpuLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_fpsLabel.right, _fpsLabel.y, 65, 18)];
-    _cpuLabel.font = [UIFont systemFontOfSize:10];
+    _cpuLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_fpsLabel.right, _fpsLabel.y, self.width - _fpsLabel.right, 10)];
+    _cpuLabel.font = [UIFont systemFontOfSize:8];
     _cpuLabel.textAlignment = NSTextAlignmentCenter;
     _cpuLabel.textColor = [UIColor whiteColor];
     _cpuLabel.text = @"CPU: -";
     _cpuLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_cpuLabel];
     
-    _networkLabel = [[UILabel alloc] initWithFrame:CGRectMake(_cpuLabel.right + 5, _cpuLabel.y, 130, 18)];
-    _networkLabel.font = [UIFont systemFontOfSize:10];
+    _networkLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _fpsLabel.bottom, self.width, 10)];
+    _networkLabel.font = [UIFont systemFontOfSize:8];
+    _networkLabel.textAlignment = NSTextAlignmentCenter;
     _networkLabel.textColor = [UIColor whiteColor];
-    _networkLabel.text = @"NetWork: -";
+    _networkLabel.text = @"↑: -/- ↓: -/-";
     _networkLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_networkLabel];
 }
