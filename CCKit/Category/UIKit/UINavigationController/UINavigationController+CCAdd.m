@@ -62,8 +62,6 @@
     CGPoint translation = [gestureRecognizer translationInView:gestureRecognizer.view];
     if (translation.x <= 0)
         return NO;
-   
-    cc_NoticePost(@"slideBackHandler", nil);
        
     return YES;
 }

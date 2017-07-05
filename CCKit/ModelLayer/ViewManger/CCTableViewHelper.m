@@ -293,8 +293,10 @@
     if (self.headerBlock) {
         
         UIView *headerView = self.headerBlock(tableView, section, [self currentSectionModel:section]);
-        if (headerView)
-            height = headerView.LayoutSizeFittingSize.height;
+        if (headerView){
+            if (headerView.LayoutSizeFittingSize.height > height)
+                height = headerView.LayoutSizeFittingSize.height;
+        }
     }
     return height;
 }
@@ -322,8 +324,10 @@
     CGFloat height = self.titleFooterHeight;
     if (self.footerBlock) {
         UIView *footerView = self.footerBlock(tableView, section, [self currentSectionModel:section]);
-        if (footerView)
-            height = footerView.LayoutSizeFittingSize.height;
+        if (footerView){
+            if (footerView.LayoutSizeFittingSize.height > height)
+                height = footerView.LayoutSizeFittingSize.height;
+        }
     }
     
     return height;

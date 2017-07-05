@@ -93,7 +93,7 @@
     hud.labelText = LabelText;
     hud.detailsLabelText = detailsLabelText;
     [hud show:YES];
-    [hud hide:YES afterDelay:1.5];
+    [hud hide:YES afterDelay:2];
 }
 
 /**
