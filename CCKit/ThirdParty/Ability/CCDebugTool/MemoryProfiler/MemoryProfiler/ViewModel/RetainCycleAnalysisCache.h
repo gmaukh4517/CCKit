@@ -26,9 +26,9 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, CCRetainCycleStatus) {
-    CCRetainCyclePresent,
+    CCRetainCycleUnknown,
     CCRetainCycleNotPresent,
-    CCRetainCycleUnknown
+    CCRetainCyclePresent
 };
 
 @interface RetainCycleAnalysisCache : NSObject

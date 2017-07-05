@@ -61,7 +61,7 @@
     [markGenerationButton addTarget:self action:@selector(markGenerationClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:markGenerationButton];
     
-    UISegmentedControl *sortControl = [[UISegmentedControl alloc] initWithItems:@[ @"Class", @"Alive", @"Size" ]];
+    UISegmentedControl *sortControl = [[UISegmentedControl alloc] initWithItems:@[ @"Class", @"Alive", @"Size", @"Cycle" ]];
     sortControl.selectedSegmentIndex = 0;
     sortControl.frame = CGRectMake(fieldView.x, fieldView.bottom + 7, 200, fieldView.height);
     [sortControl addTarget:self action:@selector(sortControlValueChanged:) forControlEvents:UIControlEventValueChanged];

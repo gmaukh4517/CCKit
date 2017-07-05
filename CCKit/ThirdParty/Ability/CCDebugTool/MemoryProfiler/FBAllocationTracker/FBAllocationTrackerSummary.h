@@ -18,8 +18,9 @@
 @property (nonatomic, copy, readonly, nonnull) NSString *className;
 @property (nonatomic, readonly) NSUInteger instanceSize;
 
-@property (nonatomic, copy,nonnull) UIColor *color;
-@property (nonatomic, copy,nonnull) NSString *byteCount;
+@property (nonatomic, copy, nonnull) UIColor *color;
+@property (nonatomic, copy, nonnull) NSString *byteCount;
+@property (nonatomic, assign) NSInteger status;
 
 - (nonnull instancetype)initWithAllocations:(NSUInteger)allocations
                               deallocations:(NSUInteger)deallocations

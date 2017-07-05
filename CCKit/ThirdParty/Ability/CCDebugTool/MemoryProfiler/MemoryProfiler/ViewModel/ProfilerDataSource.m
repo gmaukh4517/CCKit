@@ -155,9 +155,9 @@ static UIColor *CCMemoryProfilerPaleRedColor()
         NSInteger alive = entry.aliveObjects;
         NSInteger byteCount = alive * entry.instanceSize;
         entry.byteCount = [_byteCountFormatter stringFromByteCount:byteCount];
-        
-        entry.color = [self colorForAnalysisStatus:[_analysisCache statusInGeneration:index
-                                                                        forClassNamed:entry.className]];
+        entry.status = [_analysisCache statusInGeneration:index
+                                            forClassNamed:entry.className];
+        entry.color = [self colorForAnalysisStatus:entry.status];
         
         NSString *className = entry.className.lowercaseString;
         if (_classFilter && [className rangeOfString:_classFilter].location == NSNotFound) {
@@ -172,11 +172,14 @@ static UIColor *CCMemoryProfilerPaleRedColor()
     }]];
     
     switch (_sortingMode) {
+        case CCMemoryProfilerSortByCycle:
+            filtered = [self _sortArray:filtered withKey:@"status" sortAscending:NO];
+            break;
         case CCMemoryProfilerSortByClass:
-            filtered = [self _sortArray:filtered withKey:@"className"];
+            filtered = [self _sortArray:filtered withKey:@"className" sortAscending:YES];
             break;
         case CCMemoryProfilerSortByAlive:
-            filtered = [self _sortArray:filtered withKey:@"aliveObjects"];
+            filtered = [self _sortArray:filtered withKey:@"aliveObjects" sortAscending:NO];
             break;
         case CCMemoryProfilerSortBySize:
             filtered = [filtered sortedArrayUsingComparator:^NSComparisonResult(FBAllocationTrackerSummary *obj1,
@@ -197,9 +200,8 @@ static UIColor *CCMemoryProfilerPaleRedColor()
     return filtered;
 }
 
-- (NSArray *)_sortArray:(NSArray *)array withKey:(NSString *)key
+- (NSArray *)_sortArray:(NSArray *)array withKey:(NSString *)key sortAscending:(BOOL)sortAscending
 {
-    BOOL sortAscending = _sortingOrder == CCMemoryProfilerSortingOrderAscending;
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:key
                                                            ascending:sortAscending];
     return [array sortedArrayUsingDescriptors:@[ sort ]];
@@ -256,14 +258,9 @@ static UIColor *CCMemoryProfilerPaleRedColor()
     
     FBAllocationTrackerSummary *row = _filtered[indexPath.section][indexPath.row];
     
-    NSInteger alive = row.aliveObjects;
-    NSInteger byteCount = alive * row.instanceSize;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld (%@)",
-                                 (long)alive,
-                                 [_byteCountFormatter stringFromByteCount:byteCount]];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%zi (%@)", row.aliveObjects, row.byteCount];
     cell.textLabel.text = row.className;
-    cell.backgroundColor = [self colorForAnalysisStatus:[_analysisCache statusInGeneration:indexPath.section
-                                                                             forClassNamed:row.className]];
+    cell.backgroundColor = row.color;
     
     return cell;
 }

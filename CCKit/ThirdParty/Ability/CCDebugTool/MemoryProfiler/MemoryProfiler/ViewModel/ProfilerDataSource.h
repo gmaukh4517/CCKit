@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, CCMemoryProfilerSortingMode) {
     CCMemoryProfilerSortByClass,
     CCMemoryProfilerSortByAlive,
     CCMemoryProfilerSortBySize,
+    CCMemoryProfilerSortByCycle
 };
 
 typedef NS_ENUM(NSUInteger, CCMemoryProfilerSortingOrder) {
@@ -38,7 +39,7 @@ typedef NS_ENUM(NSUInteger, CCMemoryProfilerSortingOrder) {
     CCMemoryProfilerSortingOrderDescending,
 };
 
-@interface ProfilerDataSource : NSObject<UITableViewDataSource>
+@interface ProfilerDataSource : NSObject <UITableViewDataSource>
 
 /**
  classFilter is a string representing part of class name, used to filter data by class name
