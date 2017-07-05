@@ -24,14 +24,19 @@
 //
 
 #import "CCDebugTool.h"
-#import "CCDebugCrashViewController.h"
+//#import "CCDebugCrashViewController.h"
 #import "CCDebugHttpProtocol.h"
-#import "CCDebugHttpViewController.h"
-#import "CCDebugLogViewController.h"
-#import "CCMonitorViewController.h"
+//#import "CCDebugHttpViewController.h"
+//#import "CCDebugLogViewController.h"
+//#import "CCMonitorViewController.h"
 #import "Config.h"
 
+#import "CCAppFluecyMonitor.h"
 #import "CCMonitorService.h"
+#import "CCUncaughtExceptionHandler.h"
+
+#import "FBAssociationManager.h"
+#import "FBAllocationTrackerManager.h"
 
 @interface CCDebugWindow : UIWindow
 
@@ -110,10 +115,21 @@
 - (void)enableDebugMode
 {
     [NSURLProtocol registerClass:[CCDebugHttpProtocol class]];
+    InstallUncaughtExceptionHandler();
+    [[CCAppFluecyMonitor sharedMonitor] startMonitoring];
+    [self enableProfiler];
+    
     __weak typeof(self) wSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [wSelf showOnStatusBar];
     });
+}
+
+-(void)enableProfiler
+{
+    [FBAssociationManager hook];
+    [[FBAllocationTrackerManager sharedManager] startTrackingAllocations];
+    [[FBAllocationTrackerManager sharedManager] enableGenerations];
 }
 
 - (void)showDebug
@@ -121,12 +137,13 @@
     if (!self.debugTabBar) {
         UITabBarController *debugTabBar = [[UITabBarController alloc] init];
         
-        UINavigationController *debugHTTPNav = [self initializationNav:[CCDebugHttpViewController new] tabBarItemName:@"HTTP"];
-        UINavigationController *debugCrashNav = [self initializationNav:[CCDebugCrashViewController new] tabBarItemName:@"Crash"];
-        UINavigationController *debugLOGNav = [self initializationNav:[CCDebugLogViewController new] tabBarItemName:@"LOG"];
+        UINavigationController *debugHTTPNav = [self initializationNav:NSClassFromString(@"CCDebugHttpViewController") tabBarItemName:@"HTTP"];
+        UINavigationController *debugCrashNav = [self initializationNav:NSClassFromString(@"CCDebugCrashViewController") tabBarItemName:@"Crash"];
+        UINavigationController *debugLOGNav = [self initializationNav:NSClassFromString(@"CCDebugLogViewController") tabBarItemName:@"LOG"];
+        UINavigationController *degugProfilerNab = [self initializationNav:NSClassFromString(@"CCMemoryProfilerViewController") tabBarItemName:@"Cycle"];
         //        UINavigationController *debugMonitorNav = [self initializationNav:[CCMonitorViewController new] tabBarItemName:@"Monitor"];
         
-        debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugCrashNav, debugLOGNav, nil];
+        debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugCrashNav, debugLOGNav,degugProfilerNab, nil];
         self.debugTabBar = debugTabBar;
         
         UIViewController *rootViewController = [[[UIApplication sharedApplication].delegate window] rootViewController];
@@ -138,9 +155,9 @@
     }
 }
 
-- (UINavigationController *)initializationNav:(UIViewController *)viewController tabBarItemName:(NSString *)tabBarItemName
+- (UINavigationController *)initializationNav:(Class)viewController tabBarItemName:(NSString *)tabBarItemName
 {
-    UINavigationController *debugNav = [[UINavigationController alloc] initWithRootViewController:viewController];
+    UINavigationController *debugNav = [[UINavigationController alloc] initWithRootViewController:[viewController new]];
     debugNav.tabBarItem = [[UITabBarItem alloc] init];
     debugNav.tabBarItem.title = tabBarItemName;
     [debugNav.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor lightGrayColor],
@@ -152,4 +169,13 @@
     return debugNav;
 }
 
+- (NSArray *)CatonLogger
+{
+    return [CatonLogger manager].catonArr;
+}
+
+- (NSArray *)CrashLogger
+{
+    return [CrashLog manager].crashArr;
+}
 @end

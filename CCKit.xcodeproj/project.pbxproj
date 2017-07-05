@@ -71,8 +71,81 @@
 		423B4C761E890CAA007139EC /* UI.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4C751E890CAA007139EC /* UI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		423B4C7A1E890D5A007139EC /* CCTransformRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4C781E890D5A007139EC /* CCTransformRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		423B4C7B1E890D5A007139EC /* CCTransformRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4C791E890D5A007139EC /* CCTransformRefresh.m */; };
+		423B4F9E1F0B4A290066EBA4 /* FBAllocationTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F511F0B4A290066EBA4 /* FBAllocationTracker.h */; };
+		423B4F9F1F0B4A290066EBA4 /* FBAllocationTrackerDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F521F0B4A290066EBA4 /* FBAllocationTrackerDefines.h */; };
+		423B4FA01F0B4A290066EBA4 /* FBAllocationTrackerFunctors.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F531F0B4A290066EBA4 /* FBAllocationTrackerFunctors.h */; };
+		423B4FA11F0B4A290066EBA4 /* FBAllocationTrackerHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F541F0B4A290066EBA4 /* FBAllocationTrackerHelpers.h */; };
+		423B4FA21F0B4A290066EBA4 /* FBAllocationTrackerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F551F0B4A290066EBA4 /* FBAllocationTrackerImpl.h */; };
+		423B4FA31F0B4A290066EBA4 /* FBAllocationTrackerImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F561F0B4A290066EBA4 /* FBAllocationTrackerImpl.mm */; };
+		423B4FA41F0B4A290066EBA4 /* FBAllocationTrackerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F571F0B4A290066EBA4 /* FBAllocationTrackerManager.h */; };
+		423B4FA51F0B4A290066EBA4 /* FBAllocationTrackerManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F581F0B4A290066EBA4 /* FBAllocationTrackerManager.mm */; };
+		423B4FA61F0B4A290066EBA4 /* FBAllocationTrackerSummary.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F591F0B4A290066EBA4 /* FBAllocationTrackerSummary.h */; };
+		423B4FA71F0B4A290066EBA4 /* FBAllocationTrackerSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F5A1F0B4A290066EBA4 /* FBAllocationTrackerSummary.m */; };
+		423B4FA81F0B4A290066EBA4 /* FBAllocationTrackerGeneration.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F5C1F0B4A290066EBA4 /* FBAllocationTrackerGeneration.h */; };
+		423B4FA91F0B4A290066EBA4 /* FBAllocationTrackerGeneration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F5D1F0B4A290066EBA4 /* FBAllocationTrackerGeneration.mm */; };
+		423B4FAA1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F5E1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.h */; };
+		423B4FAB1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F5F1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.mm */; };
+		423B4FAC1F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F601F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.h */; };
+		423B4FAD1F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F611F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		423B4FAE1F0B4A290066EBA4 /* NSObject+FBAllocationTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F621F0B4A290066EBA4 /* NSObject+FBAllocationTracker.h */; };
+		423B4FAF1F0B4A290066EBA4 /* NSObject+FBAllocationTracker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F631F0B4A290066EBA4 /* NSObject+FBAllocationTracker.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		423B4FB01F0B4A290066EBA4 /* FBAssociationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F661F0B4A290066EBA4 /* FBAssociationManager.h */; };
+		423B4FB11F0B4A290066EBA4 /* FBAssociationManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F671F0B4A290066EBA4 /* FBAssociationManager.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		423B4FB21F0B4A290066EBA4 /* FBAssociationManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F691F0B4A290066EBA4 /* FBAssociationManager+Internal.h */; };
+		423B4FB31F0B4A290066EBA4 /* FBNodeEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F6B1F0B4A290066EBA4 /* FBNodeEnumerator.h */; };
+		423B4FB41F0B4A290066EBA4 /* FBNodeEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F6C1F0B4A290066EBA4 /* FBNodeEnumerator.mm */; };
+		423B4FB51F0B4A290066EBA4 /* FBRetainCycleDetector+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F6D1F0B4A290066EBA4 /* FBRetainCycleDetector+Internal.h */; };
+		423B4FB61F0B4A290066EBA4 /* FBRetainCycleDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F6E1F0B4A290066EBA4 /* FBRetainCycleDetector.h */; };
+		423B4FB71F0B4A290066EBA4 /* FBRetainCycleDetector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F6F1F0B4A290066EBA4 /* FBRetainCycleDetector.mm */; };
+		423B4FB91F0B4A290066EBA4 /* FBRetainCycleUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F711F0B4A290066EBA4 /* FBRetainCycleUtils.h */; };
+		423B4FBA1F0B4A290066EBA4 /* FBRetainCycleUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F721F0B4A290066EBA4 /* FBRetainCycleUtils.m */; };
+		423B4FBB1F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F741F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.h */; };
+		423B4FBC1F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F751F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.mm */; };
+		423B4FBD1F0B4A290066EBA4 /* FBObjectGraphConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F771F0B4A290066EBA4 /* FBObjectGraphConfiguration.h */; };
+		423B4FBE1F0B4A290066EBA4 /* FBObjectGraphConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F781F0B4A290066EBA4 /* FBObjectGraphConfiguration.m */; };
+		423B4FBF1F0B4A290066EBA4 /* FBObjectiveCBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F791F0B4A290066EBA4 /* FBObjectiveCBlock.h */; };
+		423B4FC01F0B4A290066EBA4 /* FBObjectiveCBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F7A1F0B4A290066EBA4 /* FBObjectiveCBlock.m */; };
+		423B4FC11F0B4A290066EBA4 /* FBObjectiveCGraphElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F7B1F0B4A290066EBA4 /* FBObjectiveCGraphElement.h */; };
+		423B4FC21F0B4A290066EBA4 /* FBObjectiveCGraphElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F7C1F0B4A290066EBA4 /* FBObjectiveCGraphElement.mm */; };
+		423B4FC31F0B4A290066EBA4 /* FBObjectiveCObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F7D1F0B4A290066EBA4 /* FBObjectiveCObject.h */; };
+		423B4FC41F0B4A290066EBA4 /* FBObjectiveCObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F7E1F0B4A290066EBA4 /* FBObjectiveCObject.m */; };
+		423B4FC51F0B4A290066EBA4 /* FBObjectiveCGraphElement+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F801F0B4A290066EBA4 /* FBObjectiveCGraphElement+Internal.h */; };
+		423B4FC61F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F821F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.h */; };
+		423B4FC71F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F831F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.mm */; };
+		423B4FC91F0B4A290066EBA4 /* FBBlockInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F871F0B4A290066EBA4 /* FBBlockInterface.h */; };
+		423B4FCA1F0B4A290066EBA4 /* FBBlockStrongLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F881F0B4A290066EBA4 /* FBBlockStrongLayout.h */; };
+		423B4FCB1F0B4A290066EBA4 /* FBBlockStrongLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F891F0B4A290066EBA4 /* FBBlockStrongLayout.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		423B4FCC1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F8A1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.h */; };
+		423B4FCD1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F8B1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		423B4FCE1F0B4A290066EBA4 /* FBClassStrongLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F8D1F0B4A290066EBA4 /* FBClassStrongLayout.h */; };
+		423B4FCF1F0B4A290066EBA4 /* FBClassStrongLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F8E1F0B4A290066EBA4 /* FBClassStrongLayout.mm */; };
+		423B4FD01F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F8F1F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.h */; };
+		423B4FD11F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F901F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		423B4FD21F0B4A290066EBA4 /* BaseType.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F921F0B4A290066EBA4 /* BaseType.h */; };
+		423B4FD31F0B4A290066EBA4 /* FBStructEncodingParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F931F0B4A290066EBA4 /* FBStructEncodingParser.h */; };
+		423B4FD41F0B4A290066EBA4 /* FBStructEncodingParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F941F0B4A290066EBA4 /* FBStructEncodingParser.mm */; };
+		423B4FD51F0B4A290066EBA4 /* Struct.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F951F0B4A290066EBA4 /* Struct.h */; };
+		423B4FD61F0B4A290066EBA4 /* Struct.mm in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F961F0B4A290066EBA4 /* Struct.mm */; };
+		423B4FD71F0B4A290066EBA4 /* Type.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F971F0B4A290066EBA4 /* Type.h */; };
+		423B4FD81F0B4A290066EBA4 /* FBIvarReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F991F0B4A290066EBA4 /* FBIvarReference.h */; };
+		423B4FD91F0B4A290066EBA4 /* FBIvarReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F9A1F0B4A290066EBA4 /* FBIvarReference.m */; };
+		423B4FDA1F0B4A290066EBA4 /* FBObjectInStructReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F9B1F0B4A290066EBA4 /* FBObjectInStructReference.h */; };
+		423B4FDB1F0B4A290066EBA4 /* FBObjectInStructReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4F9C1F0B4A290066EBA4 /* FBObjectInStructReference.m */; };
+		423B4FDC1F0B4A290066EBA4 /* FBObjectReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4F9D1F0B4A290066EBA4 /* FBObjectReference.h */; };
+		423B4FE21F0B636E0066EBA4 /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = 423B4FDE1F0B636E0066EBA4 /* fishhook.c */; };
+		423B4FE31F0B636E0066EBA4 /* fishhook.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4FDF1F0B636E0066EBA4 /* fishhook.h */; };
+		423B4FEA1F0B64860066EBA4 /* CCMemoryProfilerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4FE81F0B64860066EBA4 /* CCMemoryProfilerViewController.h */; };
+		423B4FEB1F0B64860066EBA4 /* CCMemoryProfilerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4FE91F0B64860066EBA4 /* CCMemoryProfilerViewController.m */; };
+		423B4FEF1F0B66640066EBA4 /* ProfilerTableHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4FED1F0B66640066EBA4 /* ProfilerTableHeader.h */; };
+		423B4FF01F0B66640066EBA4 /* ProfilerTableHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4FEE1F0B66640066EBA4 /* ProfilerTableHeader.m */; };
+		423B4FF71F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B4FF51F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.h */; };
+		423B4FF81F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B4FF61F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.m */; };
+		423B50071F0B79260066EBA4 /* ProfilerDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B50031F0B79260066EBA4 /* ProfilerDataSource.h */; };
+		423B50081F0B79260066EBA4 /* ProfilerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B50041F0B79260066EBA4 /* ProfilerDataSource.m */; };
+		423B50091F0B79260066EBA4 /* RetainCycleAnalysisCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B50051F0B79260066EBA4 /* RetainCycleAnalysisCache.h */; };
+		423B500A1F0B79260066EBA4 /* RetainCycleAnalysisCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B50061F0B79260066EBA4 /* RetainCycleAnalysisCache.m */; };
 		423D58CF1EC2AA17001A02A8 /* NSArray+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D58CE1EC2AA17001A02A8 /* NSArray+CCAdd.m */; };
-		423D5A8A1EC2C6CB001A02A8 /* CCAppFluecyMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 423D5A881EC2C6CB001A02A8 /* CCAppFluecyMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		423D5A8A1EC2C6CB001A02A8 /* CCAppFluecyMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 423D5A881EC2C6CB001A02A8 /* CCAppFluecyMonitor.h */; };
 		423D5A8B1EC2C6CB001A02A8 /* CCAppFluecyMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D5A891EC2C6CB001A02A8 /* CCAppFluecyMonitor.m */; };
 		423D5A8E1EC2E0A7001A02A8 /* CCBacktraceLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 423D5A8C1EC2E0A7001A02A8 /* CCBacktraceLogger.h */; };
 		423D5A8F1EC2E0A7001A02A8 /* CCBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D5A8D1EC2E0A7001A02A8 /* CCBacktraceLogger.m */; };
@@ -238,6 +311,10 @@
 		4278A9FF1E8A0BF500F4FA97 /* TableViewCellEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 4278A9FD1E8A0BF500F4FA97 /* TableViewCellEntity.m */; };
 		4278AA031E8A310200F4FA97 /* CCButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4278AA011E8A310200F4FA97 /* CCButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4278AA041E8A310200F4FA97 /* CCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4278AA021E8A310200F4FA97 /* CCButton.m */; };
+		427D74CF1F0C7DAF00C58554 /* CCRetainCyclePresenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 427D74CD1F0C7DAF00C58554 /* CCRetainCyclePresenter.h */; };
+		427D74D01F0C7DAF00C58554 /* CCRetainCyclePresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 427D74CE1F0C7DAF00C58554 /* CCRetainCyclePresenter.m */; };
+		427D74D31F0C84D700C58554 /* CCSingleRetainCycleViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 427D74D11F0C84D700C58554 /* CCSingleRetainCycleViewController.h */; };
+		427D74D41F0C84D700C58554 /* CCSingleRetainCycleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 427D74D21F0C84D700C58554 /* CCSingleRetainCycleViewController.m */; };
 		42954A0A1E71226F00F4CC4C /* Ability.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A091E71226F00F4CC4C /* Ability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42954A171E712AC800F4CC4C /* CCAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A121E712AC800F4CC4C /* CCAlertView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42954A181E712AC800F4CC4C /* CCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42954A131E712AC800F4CC4C /* CCAlertView.m */; };
@@ -308,7 +385,7 @@
 		429854C71EA6098200255C48 /* CCDrawerVisualState.m in Sources */ = {isa = PBXBuildFile; fileRef = 429854C01EA6098200255C48 /* CCDrawerVisualState.m */; };
 		429854C81EA6098200255C48 /* UIViewController+CCDrawerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 429854C11EA6098200255C48 /* UIViewController+CCDrawerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		429854C91EA6098200255C48 /* UIViewController+CCDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 429854C21EA6098200255C48 /* UIViewController+CCDrawerController.m */; };
-		42B5CDD71E70E135002D302E /* CCUncaughtExceptionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDD51E70E135002D302E /* CCUncaughtExceptionHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42B5CDD71E70E135002D302E /* CCUncaughtExceptionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDD51E70E135002D302E /* CCUncaughtExceptionHandler.h */; };
 		42B5CDD81E70E135002D302E /* CCUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDD61E70E135002D302E /* CCUncaughtExceptionHandler.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
@@ -675,6 +752,79 @@
 		423B4C751E890CAA007139EC /* UI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UI.h; sourceTree = "<group>"; };
 		423B4C781E890D5A007139EC /* CCTransformRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTransformRefresh.h; sourceTree = "<group>"; };
 		423B4C791E890D5A007139EC /* CCTransformRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTransformRefresh.m; sourceTree = "<group>"; };
+		423B4F511F0B4A290066EBA4 /* FBAllocationTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTracker.h; sourceTree = "<group>"; };
+		423B4F521F0B4A290066EBA4 /* FBAllocationTrackerDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerDefines.h; sourceTree = "<group>"; };
+		423B4F531F0B4A290066EBA4 /* FBAllocationTrackerFunctors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerFunctors.h; sourceTree = "<group>"; };
+		423B4F541F0B4A290066EBA4 /* FBAllocationTrackerHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerHelpers.h; sourceTree = "<group>"; };
+		423B4F551F0B4A290066EBA4 /* FBAllocationTrackerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerImpl.h; sourceTree = "<group>"; };
+		423B4F561F0B4A290066EBA4 /* FBAllocationTrackerImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBAllocationTrackerImpl.mm; sourceTree = "<group>"; };
+		423B4F571F0B4A290066EBA4 /* FBAllocationTrackerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerManager.h; sourceTree = "<group>"; };
+		423B4F581F0B4A290066EBA4 /* FBAllocationTrackerManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBAllocationTrackerManager.mm; sourceTree = "<group>"; };
+		423B4F591F0B4A290066EBA4 /* FBAllocationTrackerSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerSummary.h; sourceTree = "<group>"; };
+		423B4F5A1F0B4A290066EBA4 /* FBAllocationTrackerSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAllocationTrackerSummary.m; sourceTree = "<group>"; };
+		423B4F5C1F0B4A290066EBA4 /* FBAllocationTrackerGeneration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerGeneration.h; sourceTree = "<group>"; };
+		423B4F5D1F0B4A290066EBA4 /* FBAllocationTrackerGeneration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBAllocationTrackerGeneration.mm; sourceTree = "<group>"; };
+		423B4F5E1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerGenerationManager.h; sourceTree = "<group>"; };
+		423B4F5F1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBAllocationTrackerGenerationManager.mm; sourceTree = "<group>"; };
+		423B4F601F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAllocationTrackerNSZombieSupport.h; sourceTree = "<group>"; };
+		423B4F611F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBAllocationTrackerNSZombieSupport.mm; sourceTree = "<group>"; };
+		423B4F621F0B4A290066EBA4 /* NSObject+FBAllocationTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FBAllocationTracker.h"; sourceTree = "<group>"; };
+		423B4F631F0B4A290066EBA4 /* NSObject+FBAllocationTracker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+FBAllocationTracker.mm"; sourceTree = "<group>"; };
+		423B4F661F0B4A290066EBA4 /* FBAssociationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAssociationManager.h; sourceTree = "<group>"; };
+		423B4F671F0B4A290066EBA4 /* FBAssociationManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBAssociationManager.mm; sourceTree = "<group>"; };
+		423B4F691F0B4A290066EBA4 /* FBAssociationManager+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBAssociationManager+Internal.h"; sourceTree = "<group>"; };
+		423B4F6B1F0B4A290066EBA4 /* FBNodeEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBNodeEnumerator.h; sourceTree = "<group>"; };
+		423B4F6C1F0B4A290066EBA4 /* FBNodeEnumerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBNodeEnumerator.mm; sourceTree = "<group>"; };
+		423B4F6D1F0B4A290066EBA4 /* FBRetainCycleDetector+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBRetainCycleDetector+Internal.h"; sourceTree = "<group>"; };
+		423B4F6E1F0B4A290066EBA4 /* FBRetainCycleDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRetainCycleDetector.h; sourceTree = "<group>"; };
+		423B4F6F1F0B4A290066EBA4 /* FBRetainCycleDetector.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBRetainCycleDetector.mm; sourceTree = "<group>"; };
+		423B4F711F0B4A290066EBA4 /* FBRetainCycleUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRetainCycleUtils.h; sourceTree = "<group>"; };
+		423B4F721F0B4A290066EBA4 /* FBRetainCycleUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBRetainCycleUtils.m; sourceTree = "<group>"; };
+		423B4F741F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBStandardGraphEdgeFilters.h; sourceTree = "<group>"; };
+		423B4F751F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBStandardGraphEdgeFilters.mm; sourceTree = "<group>"; };
+		423B4F771F0B4A290066EBA4 /* FBObjectGraphConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectGraphConfiguration.h; sourceTree = "<group>"; };
+		423B4F781F0B4A290066EBA4 /* FBObjectGraphConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBObjectGraphConfiguration.m; sourceTree = "<group>"; };
+		423B4F791F0B4A290066EBA4 /* FBObjectiveCBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectiveCBlock.h; sourceTree = "<group>"; };
+		423B4F7A1F0B4A290066EBA4 /* FBObjectiveCBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBObjectiveCBlock.m; sourceTree = "<group>"; };
+		423B4F7B1F0B4A290066EBA4 /* FBObjectiveCGraphElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectiveCGraphElement.h; sourceTree = "<group>"; };
+		423B4F7C1F0B4A290066EBA4 /* FBObjectiveCGraphElement.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBObjectiveCGraphElement.mm; sourceTree = "<group>"; };
+		423B4F7D1F0B4A290066EBA4 /* FBObjectiveCObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectiveCObject.h; sourceTree = "<group>"; };
+		423B4F7E1F0B4A290066EBA4 /* FBObjectiveCObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBObjectiveCObject.m; sourceTree = "<group>"; };
+		423B4F801F0B4A290066EBA4 /* FBObjectiveCGraphElement+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBObjectiveCGraphElement+Internal.h"; sourceTree = "<group>"; };
+		423B4F821F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectiveCNSCFTimer.h; sourceTree = "<group>"; };
+		423B4F831F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBObjectiveCNSCFTimer.mm; sourceTree = "<group>"; };
+		423B4F871F0B4A290066EBA4 /* FBBlockInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBBlockInterface.h; sourceTree = "<group>"; };
+		423B4F881F0B4A290066EBA4 /* FBBlockStrongLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBBlockStrongLayout.h; sourceTree = "<group>"; };
+		423B4F891F0B4A290066EBA4 /* FBBlockStrongLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBBlockStrongLayout.m; sourceTree = "<group>"; };
+		423B4F8A1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBBlockStrongRelationDetector.h; sourceTree = "<group>"; };
+		423B4F8B1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBBlockStrongRelationDetector.m; sourceTree = "<group>"; };
+		423B4F8D1F0B4A290066EBA4 /* FBClassStrongLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBClassStrongLayout.h; sourceTree = "<group>"; };
+		423B4F8E1F0B4A290066EBA4 /* FBClassStrongLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBClassStrongLayout.mm; sourceTree = "<group>"; };
+		423B4F8F1F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBClassStrongLayoutHelpers.h; sourceTree = "<group>"; };
+		423B4F901F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBClassStrongLayoutHelpers.m; sourceTree = "<group>"; };
+		423B4F921F0B4A290066EBA4 /* BaseType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseType.h; sourceTree = "<group>"; };
+		423B4F931F0B4A290066EBA4 /* FBStructEncodingParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBStructEncodingParser.h; sourceTree = "<group>"; };
+		423B4F941F0B4A290066EBA4 /* FBStructEncodingParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBStructEncodingParser.mm; sourceTree = "<group>"; };
+		423B4F951F0B4A290066EBA4 /* Struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Struct.h; sourceTree = "<group>"; };
+		423B4F961F0B4A290066EBA4 /* Struct.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Struct.mm; sourceTree = "<group>"; };
+		423B4F971F0B4A290066EBA4 /* Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Type.h; sourceTree = "<group>"; };
+		423B4F991F0B4A290066EBA4 /* FBIvarReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBIvarReference.h; sourceTree = "<group>"; };
+		423B4F9A1F0B4A290066EBA4 /* FBIvarReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBIvarReference.m; sourceTree = "<group>"; };
+		423B4F9B1F0B4A290066EBA4 /* FBObjectInStructReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectInStructReference.h; sourceTree = "<group>"; };
+		423B4F9C1F0B4A290066EBA4 /* FBObjectInStructReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBObjectInStructReference.m; sourceTree = "<group>"; };
+		423B4F9D1F0B4A290066EBA4 /* FBObjectReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBObjectReference.h; sourceTree = "<group>"; };
+		423B4FDE1F0B636E0066EBA4 /* fishhook.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fishhook.c; sourceTree = "<group>"; };
+		423B4FDF1F0B636E0066EBA4 /* fishhook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fishhook.h; sourceTree = "<group>"; };
+		423B4FE81F0B64860066EBA4 /* CCMemoryProfilerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMemoryProfilerViewController.h; sourceTree = "<group>"; };
+		423B4FE91F0B64860066EBA4 /* CCMemoryProfilerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMemoryProfilerViewController.m; sourceTree = "<group>"; };
+		423B4FED1F0B66640066EBA4 /* ProfilerTableHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilerTableHeader.h; sourceTree = "<group>"; };
+		423B4FEE1F0B66640066EBA4 /* ProfilerTableHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilerTableHeader.m; sourceTree = "<group>"; };
+		423B4FF51F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilerGenerationsSectionHeaderView.h; sourceTree = "<group>"; };
+		423B4FF61F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilerGenerationsSectionHeaderView.m; sourceTree = "<group>"; };
+		423B50031F0B79260066EBA4 /* ProfilerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilerDataSource.h; sourceTree = "<group>"; };
+		423B50041F0B79260066EBA4 /* ProfilerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilerDataSource.m; sourceTree = "<group>"; };
+		423B50051F0B79260066EBA4 /* RetainCycleAnalysisCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetainCycleAnalysisCache.h; sourceTree = "<group>"; };
+		423B50061F0B79260066EBA4 /* RetainCycleAnalysisCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetainCycleAnalysisCache.m; sourceTree = "<group>"; };
 		423D58CE1EC2AA17001A02A8 /* NSArray+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+CCAdd.m"; sourceTree = "<group>"; };
 		423D5A881EC2C6CB001A02A8 /* CCAppFluecyMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppFluecyMonitor.h; sourceTree = "<group>"; };
 		423D5A891EC2C6CB001A02A8 /* CCAppFluecyMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppFluecyMonitor.m; sourceTree = "<group>"; };
@@ -845,6 +995,10 @@
 		4278A9FD1E8A0BF500F4FA97 /* TableViewCellEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellEntity.m; sourceTree = "<group>"; };
 		4278AA011E8A310200F4FA97 /* CCButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCButton.h; sourceTree = "<group>"; };
 		4278AA021E8A310200F4FA97 /* CCButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCButton.m; sourceTree = "<group>"; };
+		427D74CD1F0C7DAF00C58554 /* CCRetainCyclePresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRetainCyclePresenter.h; sourceTree = "<group>"; };
+		427D74CE1F0C7DAF00C58554 /* CCRetainCyclePresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCRetainCyclePresenter.m; sourceTree = "<group>"; };
+		427D74D11F0C84D700C58554 /* CCSingleRetainCycleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSingleRetainCycleViewController.h; sourceTree = "<group>"; };
+		427D74D21F0C84D700C58554 /* CCSingleRetainCycleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSingleRetainCycleViewController.m; sourceTree = "<group>"; };
 		42954A091E71226F00F4CC4C /* Ability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ability.h; sourceTree = "<group>"; };
 		42954A121E712AC800F4CC4C /* CCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAlertView.h; sourceTree = "<group>"; };
 		42954A131E712AC800F4CC4C /* CCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAlertView.m; sourceTree = "<group>"; };
@@ -1400,6 +1554,250 @@
 			path = CCTransformRefresh;
 			sourceTree = "<group>";
 		};
+		423B4F4F1F0B4A290066EBA4 /* MemoryProfiler */ = {
+			isa = PBXGroup;
+			children = (
+				423B4FE61F0B64650066EBA4 /* MemoryProfiler */,
+				423B4F501F0B4A290066EBA4 /* FBAllocationTracker */,
+				423B4F641F0B4A290066EBA4 /* FBRetainCycleDetector */,
+			);
+			path = MemoryProfiler;
+			sourceTree = "<group>";
+		};
+		423B4F501F0B4A290066EBA4 /* FBAllocationTracker */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F511F0B4A290066EBA4 /* FBAllocationTracker.h */,
+				423B4F521F0B4A290066EBA4 /* FBAllocationTrackerDefines.h */,
+				423B4F531F0B4A290066EBA4 /* FBAllocationTrackerFunctors.h */,
+				423B4F541F0B4A290066EBA4 /* FBAllocationTrackerHelpers.h */,
+				423B4F551F0B4A290066EBA4 /* FBAllocationTrackerImpl.h */,
+				423B4F561F0B4A290066EBA4 /* FBAllocationTrackerImpl.mm */,
+				423B4F571F0B4A290066EBA4 /* FBAllocationTrackerManager.h */,
+				423B4F581F0B4A290066EBA4 /* FBAllocationTrackerManager.mm */,
+				423B4F591F0B4A290066EBA4 /* FBAllocationTrackerSummary.h */,
+				423B4F5A1F0B4A290066EBA4 /* FBAllocationTrackerSummary.m */,
+				423B4F5B1F0B4A290066EBA4 /* Generations */,
+				423B4F621F0B4A290066EBA4 /* NSObject+FBAllocationTracker.h */,
+				423B4F631F0B4A290066EBA4 /* NSObject+FBAllocationTracker.mm */,
+			);
+			path = FBAllocationTracker;
+			sourceTree = "<group>";
+		};
+		423B4F5B1F0B4A290066EBA4 /* Generations */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F5C1F0B4A290066EBA4 /* FBAllocationTrackerGeneration.h */,
+				423B4F5D1F0B4A290066EBA4 /* FBAllocationTrackerGeneration.mm */,
+				423B4F5E1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.h */,
+				423B4F5F1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.mm */,
+				423B4F601F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.h */,
+				423B4F611F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.mm */,
+			);
+			path = Generations;
+			sourceTree = "<group>";
+		};
+		423B4F641F0B4A290066EBA4 /* FBRetainCycleDetector */ = {
+			isa = PBXGroup;
+			children = (
+				423B4FDD1F0B636E0066EBA4 /* fishhook */,
+				423B4F651F0B4A290066EBA4 /* Associations */,
+				423B4F6A1F0B4A290066EBA4 /* Detector */,
+				423B4F711F0B4A290066EBA4 /* FBRetainCycleUtils.h */,
+				423B4F721F0B4A290066EBA4 /* FBRetainCycleUtils.m */,
+				423B4F731F0B4A290066EBA4 /* Filtering */,
+				423B4F761F0B4A290066EBA4 /* Graph */,
+				423B4F841F0B4A290066EBA4 /* Layout */,
+			);
+			path = FBRetainCycleDetector;
+			sourceTree = "<group>";
+		};
+		423B4F651F0B4A290066EBA4 /* Associations */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F661F0B4A290066EBA4 /* FBAssociationManager.h */,
+				423B4F671F0B4A290066EBA4 /* FBAssociationManager.mm */,
+				423B4F681F0B4A290066EBA4 /* Internal */,
+			);
+			path = Associations;
+			sourceTree = "<group>";
+		};
+		423B4F681F0B4A290066EBA4 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F691F0B4A290066EBA4 /* FBAssociationManager+Internal.h */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		423B4F6A1F0B4A290066EBA4 /* Detector */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F6B1F0B4A290066EBA4 /* FBNodeEnumerator.h */,
+				423B4F6C1F0B4A290066EBA4 /* FBNodeEnumerator.mm */,
+				423B4F6D1F0B4A290066EBA4 /* FBRetainCycleDetector+Internal.h */,
+				423B4F6E1F0B4A290066EBA4 /* FBRetainCycleDetector.h */,
+				423B4F6F1F0B4A290066EBA4 /* FBRetainCycleDetector.mm */,
+			);
+			path = Detector;
+			sourceTree = "<group>";
+		};
+		423B4F731F0B4A290066EBA4 /* Filtering */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F741F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.h */,
+				423B4F751F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.mm */,
+			);
+			path = Filtering;
+			sourceTree = "<group>";
+		};
+		423B4F761F0B4A290066EBA4 /* Graph */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F771F0B4A290066EBA4 /* FBObjectGraphConfiguration.h */,
+				423B4F781F0B4A290066EBA4 /* FBObjectGraphConfiguration.m */,
+				423B4F791F0B4A290066EBA4 /* FBObjectiveCBlock.h */,
+				423B4F7A1F0B4A290066EBA4 /* FBObjectiveCBlock.m */,
+				423B4F7B1F0B4A290066EBA4 /* FBObjectiveCGraphElement.h */,
+				423B4F7C1F0B4A290066EBA4 /* FBObjectiveCGraphElement.mm */,
+				423B4F7D1F0B4A290066EBA4 /* FBObjectiveCObject.h */,
+				423B4F7E1F0B4A290066EBA4 /* FBObjectiveCObject.m */,
+				423B4F7F1F0B4A290066EBA4 /* Internal */,
+				423B4F811F0B4A290066EBA4 /* Specialization */,
+			);
+			path = Graph;
+			sourceTree = "<group>";
+		};
+		423B4F7F1F0B4A290066EBA4 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F801F0B4A290066EBA4 /* FBObjectiveCGraphElement+Internal.h */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		423B4F811F0B4A290066EBA4 /* Specialization */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F821F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.h */,
+				423B4F831F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.mm */,
+			);
+			path = Specialization;
+			sourceTree = "<group>";
+		};
+		423B4F841F0B4A290066EBA4 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F851F0B4A290066EBA4 /* Blocks */,
+				423B4F8C1F0B4A290066EBA4 /* Classes */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		423B4F851F0B4A290066EBA4 /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F871F0B4A290066EBA4 /* FBBlockInterface.h */,
+				423B4F881F0B4A290066EBA4 /* FBBlockStrongLayout.h */,
+				423B4F891F0B4A290066EBA4 /* FBBlockStrongLayout.m */,
+				423B4F8A1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.h */,
+				423B4F8B1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.m */,
+			);
+			path = Blocks;
+			sourceTree = "<group>";
+		};
+		423B4F8C1F0B4A290066EBA4 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F8D1F0B4A290066EBA4 /* FBClassStrongLayout.h */,
+				423B4F8E1F0B4A290066EBA4 /* FBClassStrongLayout.mm */,
+				423B4F8F1F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.h */,
+				423B4F901F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.m */,
+				423B4F911F0B4A290066EBA4 /* Parser */,
+				423B4F981F0B4A290066EBA4 /* Reference */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		423B4F911F0B4A290066EBA4 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F921F0B4A290066EBA4 /* BaseType.h */,
+				423B4F931F0B4A290066EBA4 /* FBStructEncodingParser.h */,
+				423B4F941F0B4A290066EBA4 /* FBStructEncodingParser.mm */,
+				423B4F951F0B4A290066EBA4 /* Struct.h */,
+				423B4F961F0B4A290066EBA4 /* Struct.mm */,
+				423B4F971F0B4A290066EBA4 /* Type.h */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		423B4F981F0B4A290066EBA4 /* Reference */ = {
+			isa = PBXGroup;
+			children = (
+				423B4F991F0B4A290066EBA4 /* FBIvarReference.h */,
+				423B4F9A1F0B4A290066EBA4 /* FBIvarReference.m */,
+				423B4F9B1F0B4A290066EBA4 /* FBObjectInStructReference.h */,
+				423B4F9C1F0B4A290066EBA4 /* FBObjectInStructReference.m */,
+				423B4F9D1F0B4A290066EBA4 /* FBObjectReference.h */,
+			);
+			path = Reference;
+			sourceTree = "<group>";
+		};
+		423B4FDD1F0B636E0066EBA4 /* fishhook */ = {
+			isa = PBXGroup;
+			children = (
+				423B4FDE1F0B636E0066EBA4 /* fishhook.c */,
+				423B4FDF1F0B636E0066EBA4 /* fishhook.h */,
+			);
+			path = fishhook;
+			sourceTree = "<group>";
+		};
+		423B4FE61F0B64650066EBA4 /* MemoryProfiler */ = {
+			isa = PBXGroup;
+			children = (
+				423B50021F0B79260066EBA4 /* ViewModel */,
+				423B4FEC1F0B65F80066EBA4 /* View */,
+				423B4FE71F0B64650066EBA4 /* Controller */,
+			);
+			path = MemoryProfiler;
+			sourceTree = "<group>";
+		};
+		423B4FE71F0B64650066EBA4 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				423B4FE81F0B64860066EBA4 /* CCMemoryProfilerViewController.h */,
+				423B4FE91F0B64860066EBA4 /* CCMemoryProfilerViewController.m */,
+				427D74CD1F0C7DAF00C58554 /* CCRetainCyclePresenter.h */,
+				427D74CE1F0C7DAF00C58554 /* CCRetainCyclePresenter.m */,
+				427D74D11F0C84D700C58554 /* CCSingleRetainCycleViewController.h */,
+				427D74D21F0C84D700C58554 /* CCSingleRetainCycleViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		423B4FEC1F0B65F80066EBA4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				423B4FED1F0B66640066EBA4 /* ProfilerTableHeader.h */,
+				423B4FEE1F0B66640066EBA4 /* ProfilerTableHeader.m */,
+				423B4FF51F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.h */,
+				423B4FF61F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		423B50021F0B79260066EBA4 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				423B50031F0B79260066EBA4 /* ProfilerDataSource.h */,
+				423B50041F0B79260066EBA4 /* ProfilerDataSource.m */,
+				423B50051F0B79260066EBA4 /* RetainCycleAnalysisCache.h */,
+				423B50061F0B79260066EBA4 /* RetainCycleAnalysisCache.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		423D5A861EC2C6B2001A02A8 /* CCAppFluecyMonitor */ = {
 			isa = PBXGroup;
 			children = (
@@ -1526,6 +1924,7 @@
 		42657AAA1EC060080025B2D2 /* CCDebugTool */ = {
 			isa = PBXGroup;
 			children = (
+				423B4F4F1F0B4A290066EBA4 /* MemoryProfiler */,
 				424CCD651EC16FA500C85E8C /* Monitor */,
 				42657AAB1EC060080025B2D2 /* Crash */,
 				42657AB01EC060080025B2D2 /* HTTP */,
@@ -3438,11 +3837,14 @@
 				42FC716A1E6FDF1400FBBE42 /* AFURLSessionManager.h in Headers */,
 				423D5A8A1EC2C6CB001A02A8 /* CCAppFluecyMonitor.h in Headers */,
 				4271460B1E9B70E90060D5C3 /* CCCaptureHelper.h in Headers */,
+				423B4FA41F0B4A290066EBA4 /* FBAllocationTrackerManager.h in Headers */,
 				42FC71AA1E6FFC0000FBBE42 /* CCFoundation.h in Headers */,
+				423B4FDA1F0B4A290066EBA4 /* FBObjectInStructReference.h in Headers */,
 				42FC73401E70012800FBBE42 /* NSUserDefaults+CCAdd.h in Headers */,
 				42FC730E1E70012800FBBE42 /* CLLocationManager+CCAdd.h in Headers */,
 				427145F61E9B6FCE0060D5C3 /* CCScanningView.h in Headers */,
 				42954A781E712BE100F4CC4C /* UIImage+MultiFormat.h in Headers */,
+				423B4F9F1F0B4A290066EBA4 /* FBAllocationTrackerDefines.h in Headers */,
 				42FC736C1E70012800FBBE42 /* UIImage+CCAdd.h in Headers */,
 				42FC73581E70012800FBBE42 /* UIBezierPath+CCAdd.h in Headers */,
 				42FC71341E6FDE0400FBBE42 /* NSFetchRequest+CCAdd.h in Headers */,
@@ -3451,22 +3853,26 @@
 				42FC70A51E6FDB7700FBBE42 /* UIViewController+CCProperties.h in Headers */,
 				42954A741E712BE100F4CC4C /* NSData+ImageContentType.h in Headers */,
 				42954A761E712BE100F4CC4C /* UIImage+GIF.h in Headers */,
+				423B4FC11F0B4A290066EBA4 /* FBObjectiveCGraphElement.h in Headers */,
 				42FC71681E6FDF1400FBBE42 /* AFHTTPSessionManager.h in Headers */,
 				42FC73341E70012800FBBE42 /* NSAttributedString+Teletext.h in Headers */,
 				42657AD21EC060080025B2D2 /* NSURLRequest+Identify.h in Headers */,
 				42FC73801E70012800FBBE42 /* UISearchBar+CCAdd.h in Headers */,
+				423B4FB91F0B4A290066EBA4 /* FBRetainCycleUtils.h in Headers */,
 				42FC72F11E70012800FBBE42 /* NSArray+AvoidCrash.h in Headers */,
 				42954A281E712B1A00F4CC4C /* MBProgressHUD.h in Headers */,
 				426B74E31EEFBF8900042EA0 /* CCDebugFluencyHelper.h in Headers */,
 				423B4C6F1E890C8C007139EC /* CCRefreshFooterView.h in Headers */,
 				42FC711C1E6FDCF600FBBE42 /* CoreDataManager.h in Headers */,
 				424CCD751EC1701100C85E8C /* CCMonitorLabel.h in Headers */,
+				423B4FD71F0B4A290066EBA4 /* Type.h in Headers */,
 				42FC71021E6FDCF600FBBE42 /* CCCollectionViewFetchResultController.h in Headers */,
 				42954A991E712BE100F4CC4C /* UIView+WebCache.h in Headers */,
 				42FC73681E70012800FBBE42 /* UIFont+CCAdd.h in Headers */,
 				42657ADE1EC060080025B2D2 /* CCDebugHttpProtocol.h in Headers */,
 				42FC71381E6FDE0400FBBE42 /* NSManagedObjectContext+CCAdd.h in Headers */,
 				42FC717A1E6FDF1400FBBE42 /* AFNetworkActivityIndicatorManager.h in Headers */,
+				423B4FA61F0B4A290066EBA4 /* FBAllocationTrackerSummary.h in Headers */,
 				42FC73221E70012800FBBE42 /* NSHTTPCookieStorage+CCAdd.h in Headers */,
 				42FC73601E70012800FBBE42 /* UICollectionViewCell+CCAdd.h in Headers */,
 				422ADD301ECBDB410031D9E0 /* wav.h in Headers */,
@@ -3485,6 +3891,9 @@
 				42657AFD1EC079D30025B2D2 /* ParentMaker.h in Headers */,
 				42FC71231E6FDD4F00FBBE42 /* CCExtScope.h in Headers */,
 				422ADD361ECBDB410031D9E0 /* dec_if.h in Headers */,
+				423B4FAA1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.h in Headers */,
+				423B4FBF1F0B4A290066EBA4 /* FBObjectiveCBlock.h in Headers */,
+				423B4FD31F0B4A290066EBA4 /* FBStructEncodingParser.h in Headers */,
 				423D5A8E1EC2E0A7001A02A8 /* CCBacktraceLogger.h in Headers */,
 				426B65881EA98E5B006706A2 /* TZVideoPlayerController.h in Headers */,
 				42FC73301E70012800FBBE42 /* NSRunLoop+CCAdd.h in Headers */,
@@ -3495,6 +3904,7 @@
 				426B65781EA98E5B006706A2 /* CCImageScrollView.h in Headers */,
 				426B65BA1EA98EFD006706A2 /* CameraShutterButton.h in Headers */,
 				42FC732A1E70012800FBBE42 /* NSDecimalNumber+CCAdd.h in Headers */,
+				423B4FD51F0B4A290066EBA4 /* Struct.h in Headers */,
 				4252A0431E9F18D80093AFF7 /* CCActionSheetViewController.h in Headers */,
 				427145FC1E9B70180060D5C3 /* CCQRCodeDisplayViewController.h in Headers */,
 				42FC74351E700B4C00FBBE42 /* rscode.h in Headers */,
@@ -3511,11 +3921,13 @@
 				42FC72FB1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h in Headers */,
 				42657B001EC07A010025B2D2 /* ChainGrammar.h in Headers */,
 				424CCD791EC1713400C85E8C /* CCMonitorService.h in Headers */,
+				423B4FCA1F0B4A290066EBA4 /* FBBlockStrongLayout.h in Headers */,
 				422ADD3D1ECBE4BA0031D9E0 /* lame.h in Headers */,
 				42FC72F91E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h in Headers */,
 				42FC71BA1E6FFC0000FBBE42 /* NSString+CCExtension.h in Headers */,
 				42FC73521E70012800FBBE42 /* UIApplication+CCAdd.h in Headers */,
 				429854C61EA6098200255C48 /* CCDrawerVisualState.h in Headers */,
+				423B4FA11F0B4A290066EBA4 /* FBAllocationTrackerHelpers.h in Headers */,
 				423B4C711E890C8C007139EC /* CCRefreshHeaderView.h in Headers */,
 				42FC74311E700B4C00FBBE42 /* qrinput.h in Headers */,
 				42657AD81EC060080025B2D2 /* NSURLSessionTask+Data.h in Headers */,
@@ -3526,12 +3938,14 @@
 				42FC73781E70012800FBBE42 /* UIPopoverController+CCAdd.h in Headers */,
 				426B65861EA98E5B006706A2 /* TZPhotoPreviewController.h in Headers */,
 				426B65C61EA98EFD006706A2 /* CCCameraPreview.h in Headers */,
+				423B4FB51F0B4A290066EBA4 /* FBRetainCycleDetector+Internal.h in Headers */,
 				4233C1FD1E83CCD80041A015 /* FMDatabasePool.h in Headers */,
 				429854C41EA6098200255C48 /* CCDrawerController.h in Headers */,
 				4262520C1ECD7E0A00A876BC /* CCDatePicker.h in Headers */,
 				42954A171E712AC800F4CC4C /* CCAlertView.h in Headers */,
 				42954A891E712BE100F4CC4C /* SDWebImageDecoder.h in Headers */,
 				42FC73501E70012800FBBE42 /* UIAlertView+CCAdd.h in Headers */,
+				423B50091F0B79260066EBA4 /* RetainCycleAnalysisCache.h in Headers */,
 				42954A951E712BE100F4CC4C /* UIImageView+HighlightedWebCache.h in Headers */,
 				42FC71041E6FDCF600FBBE42 /* CCTableViewFetchResultController.h in Headers */,
 				42FC73881E70012800FBBE42 /* UITableView+CCAdd.h in Headers */,
@@ -3539,6 +3953,7 @@
 				42FC73421E70012800FBBE42 /* MKMapView+CCAdd.h in Headers */,
 				42FC70A71E6FDB7700FBBE42 /* CCMediator.h in Headers */,
 				4236AC9D1E9C88B700633FC6 /* UIView+CCHierarchy.h in Headers */,
+				423B4FD01F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.h in Headers */,
 				42FC71B81E6FFC0000FBBE42 /* NSObject+CCProperty.h in Headers */,
 				42FC71761E6FDF1400FBBE42 /* AFURLRequestSerialization.h in Headers */,
 				42954A7E1E712BE100F4CC4C /* SDWebImageDownloader.h in Headers */,
@@ -3548,6 +3963,7 @@
 				42FC73761E70012800FBBE42 /* UINavigationItem+CCAdd.h in Headers */,
 				42FC71B21E6FFC0000FBBE42 /* NSObject+CCClass.h in Headers */,
 				42FC70CE1E6FDC7F00FBBE42 /* HttpFileConfig.h in Headers */,
+				423B4FA81F0B4A290066EBA4 /* FBAllocationTrackerGeneration.h in Headers */,
 				42FC70FC1E6FDCF600FBBE42 /* BaseManagedObject+Facade.h in Headers */,
 				4252A0481E9F4D7D0093AFF7 /* CCKeychain.h in Headers */,
 				426B657C1EA98E5B006706A2 /* CGGeometry+CCImageCropper.h in Headers */,
@@ -3557,21 +3973,25 @@
 				42FC72F31E70012800FBBE42 /* NSAttributedString+AvoidCrash.h in Headers */,
 				42657AF01EC0764E0025B2D2 /* UIButton+ChainGrammar.h in Headers */,
 				42954A9C1E712C1000F4CC4C /* Tools.h in Headers */,
+				423B4FC91F0B4A290066EBA4 /* FBBlockInterface.h in Headers */,
 				42FC72FD1E70012800FBBE42 /* NSMutableString+AvoidCrash.h in Headers */,
 				42FC717C1E6FDF1400FBBE42 /* UIActivityIndicatorView+AFNetworking.h in Headers */,
 				42954A841E712BE100F4CC4C /* FLAnimatedImageView.h in Headers */,
+				423B4FCC1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.h in Headers */,
 				42954A381E712BDC00F4CC4C /* CCRingProgressView.h in Headers */,
 				42FC70AA1E6FDB7700FBBE42 /* CCViewManger.h in Headers */,
 				42FC734E1E70012800FBBE42 /* UIActionSheet+CCAdd.h in Headers */,
 				426B65841EA98E5B006706A2 /* TZPhotoPickerController.h in Headers */,
 				426B65741EA98E5B006706A2 /* CCCameraViewController.h in Headers */,
 				42FC70B11E6FDB7700FBBE42 /* CCViewProtocol.h in Headers */,
+				423B4FB21F0B4A290066EBA4 /* FBAssociationManager+Internal.h in Headers */,
 				42FC72FF1E70012800FBBE42 /* NSObject+AvoidCrash.h in Headers */,
 				42FC711A1E6FDCF600FBBE42 /* BaseManagedObject.h in Headers */,
 				423D5A931EC30140001A02A8 /* CCAppDelegateSOA.h in Headers */,
 				42954A721E712BE100F4CC4C /* FLAnimatedImageView+WebCache.h in Headers */,
 				422ADD381ECBDB410031D9E0 /* VoiceConverter.h in Headers */,
 				4278AA031E8A310200F4FA97 /* CCButton.h in Headers */,
+				423B4FC31F0B4A290066EBA4 /* FBObjectiveCObject.h in Headers */,
 				42657ADA1EC060080025B2D2 /* CCDebugHttpViewController.h in Headers */,
 				42FC73941E70012800FBBE42 /* UIView+Frame.h in Headers */,
 				422ADD2E1ECBDB410031D9E0 /* amrFileCodec.h in Headers */,
@@ -3580,10 +4000,13 @@
 				42954A971E712BE100F4CC4C /* UIImageView+WebCache.h in Headers */,
 				42FC736A1E70012800FBBE42 /* UIGestureRecognizer+CCAdd.h in Headers */,
 				426B65B41EA98EFD006706A2 /* CameraDismissButton.h in Headers */,
+				423B4FAE1F0B4A290066EBA4 /* NSObject+FBAllocationTracker.h in Headers */,
 				42FC710D1E6FDCF600FBBE42 /* CoreDataMasterSlave.h in Headers */,
 				42FC71A81E6FFC0000FBBE42 /* CCExtensionConst.h in Headers */,
 				42FC742B1E700B4C00FBBE42 /* mask.h in Headers */,
 				422ADD351ECBDB410031D9E0 /* interf_enc.h in Headers */,
+				423B4F9E1F0B4A290066EBA4 /* FBAllocationTracker.h in Headers */,
+				423B4FAC1F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.h in Headers */,
 				424CCD711EC16FD800C85E8C /* CCPerformanceStatusBar.h in Headers */,
 				42FC738C1E70012800FBBE42 /* UITableViewHeaderFooterView+CCAdd.h in Headers */,
 				42657AD01EC060080025B2D2 /* CCDebugCrashViewController.h in Headers */,
@@ -3600,31 +4023,40 @@
 				42FC74031E7005F300FBBE42 /* CCUtilities.h in Headers */,
 				42FC73011E70012800FBBE42 /* NSString+AvoidCrash.h in Headers */,
 				424CCD7D1EC1764F00C85E8C /* CCPerformanceConfig.h in Headers */,
+				427D74D31F0C84D700C58554 /* CCSingleRetainCycleViewController.h in Headers */,
 				420A7F561EBB0CA500182C77 /* UITableViewRowAction+CCAdd.h in Headers */,
 				421B10E41EA851F10043A1ED /* CCVoiceRecordHelper.h in Headers */,
+				427D74CF1F0C7DAF00C58554 /* CCRetainCyclePresenter.h in Headers */,
 				427146121E9B71500060D5C3 /* CCWebViewProgress.h in Headers */,
 				4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */,
+				423B4FA01F0B4A290066EBA4 /* FBAllocationTrackerFunctors.h in Headers */,
 				42FC73821E70012800FBBE42 /* UISplitViewController+CCAdd.h in Headers */,
 				42FC73261E70012800FBBE42 /* NSInvocation+CCAdd.h in Headers */,
 				42FC73461E70012800FBBE42 /* CALayer+CCAdd.h in Headers */,
 				42FC73641E70012800FBBE42 /* UIControl+CCAdd.h in Headers */,
 				42FC73921E70012800FBBE42 /* UIView+Animation.h in Headers */,
 				42FC739A1E70012800FBBE42 /* UIWebView+CCAdd.h in Headers */,
+				423B4FC61F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.h in Headers */,
 				42FC73981E70012800FBBE42 /* UIViewController+CCAdd.h in Headers */,
 				42FC70AF1E6FDB7700FBBE42 /* CCViewMangerProtocol.h in Headers */,
 				42FC70AC1E6FDB7700FBBE42 /* CCViewModel.h in Headers */,
 				42657AE41EC060080025B2D2 /* CCDebugContentViewController.h in Headers */,
+				423B4FD81F0B4A290066EBA4 /* FBIvarReference.h in Headers */,
 				42FC73961E70012800FBBE42 /* UIView+Method.h in Headers */,
+				423B4FD21F0B4A290066EBA4 /* BaseType.h in Headers */,
 				426B65761EA98E5B006706A2 /* CCImageCropViewController.h in Headers */,
+				423B4FC51F0B4A290066EBA4 /* FBObjectiveCGraphElement+Internal.h in Headers */,
 				42657AF81EC078F20025B2D2 /* UILabel+ChainGrammar.h in Headers */,
 				42FC73841E70012800FBBE42 /* UITabBar+CCAdd.h in Headers */,
 				42FC736E1E70012800FBBE42 /* UIImageView+CCAdd.h in Headers */,
 				42FC71841E6FDF1400FBBE42 /* UIKit+AFNetworking.h in Headers */,
 				42657AE01EC060080025B2D2 /* CCDebugHttpDetailViewController.h in Headers */,
 				42FC73901E70012800FBBE42 /* UITextView+CCAdd.h in Headers */,
+				423B4FF71F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.h in Headers */,
 				42FC71741E6FDF1400FBBE42 /* AFSecurityPolicy.h in Headers */,
 				42FC71261E6FDD4F00FBBE42 /* Config.h in Headers */,
 				42954A701E712BE100F4CC4C /* SDImageCacheConfig.h in Headers */,
+				423B4FDC1F0B4A290066EBA4 /* FBObjectReference.h in Headers */,
 				42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */,
 				426B65BE1EA98EFD006706A2 /* LaunchCameraButton.h in Headers */,
 				42FC733A1E70012800FBBE42 /* NSURL+CCAdd.h in Headers */,
@@ -3637,11 +4069,13 @@
 				426B65901EA98E5B006706A2 /* TZAssetCell.h in Headers */,
 				42FC737C1E70012800FBBE42 /* UIScreen+CCAdd.h in Headers */,
 				42FC73481E70012800FBBE42 /* CAMediaTimingFunction+CCAdd.h in Headers */,
+				423B4FE31F0B636E0066EBA4 /* fishhook.h in Headers */,
 				426B65C41EA98EFD006706A2 /* CameraStyleKitClass.h in Headers */,
 				42FC73721E70012800FBBE42 /* UINavigationBar+CCAdd.h in Headers */,
 				42FC70C91E6FDC7F00FBBE42 /* CCHTTPUpDownLoad.h in Headers */,
 				42FC73361E70012800FBBE42 /* NSString+CCAdd.h in Headers */,
 				42FC732C1E70012800FBBE42 /* NSNumber+CCAdd.h in Headers */,
+				423B4FB61F0B4A290066EBA4 /* FBRetainCycleDetector.h in Headers */,
 				42FC735C1E70012800FBBE42 /* UICollectionReusableView+CCAdd.h in Headers */,
 				424CCD8D1EC1AB4800C85E8C /* CCMonitorViewController.h in Headers */,
 				42954A801E712BE100F4CC4C /* SDWebImageDownloaderOperation.h in Headers */,
@@ -3672,6 +4106,7 @@
 				42FC731E1E70012800FBBE42 /* NSFileHandle+CCAdd.h in Headers */,
 				42954A6E1E712BE100F4CC4C /* SDImageCache.h in Headers */,
 				42FC713A1E6FDE0400FBBE42 /* NSPersistentStoreCoordinator+CCAdd.h in Headers */,
+				423B4FCE1F0B4A290066EBA4 /* FBClassStrongLayout.h in Headers */,
 				422DE1701EC2A9B4008A3C99 /* NSArray+CCAdd.h in Headers */,
 				4233C1F91E83CCD80041A015 /* FMDatabase.h in Headers */,
 				422ADD341ECBDB410031D9E0 /* interf_dec.h in Headers */,
@@ -3686,9 +4121,12 @@
 				42954A7A1E712BE100F4CC4C /* UIImage+WebP.h in Headers */,
 				42FC731C1E70012800FBBE42 /* NSException+CCAdd.h in Headers */,
 				42FC71851E6FDF1400FBBE42 /* UIProgressView+AFNetworking.h in Headers */,
+				423B4FA21F0B4A290066EBA4 /* FBAllocationTrackerImpl.h in Headers */,
 				4233C2011E83CCD80041A015 /* FMDB.h in Headers */,
+				423B50071F0B79260066EBA4 /* ProfilerDataSource.h in Headers */,
 				426B65C21EA98EFD006706A2 /* Constants.h in Headers */,
 				42FC73321E70012800FBBE42 /* NSSet+CCAdd.h in Headers */,
+				423B4FB01F0B4A290066EBA4 /* FBAssociationManager.h in Headers */,
 				42657AD61EC060080025B2D2 /* NSURLSession+Swizzling.h in Headers */,
 				426B658E1EA98E5B006706A2 /* TZImageManager.h in Headers */,
 				42FC733C1E70012800FBBE42 /* NSURLConnection+CCAdd.h in Headers */,
@@ -3696,6 +4134,7 @@
 				42FC70A91E6FDB7700FBBE42 /* CCMVVM.h in Headers */,
 				42954A8D1E712BE100F4CC4C /* SDWebImagePrefetcher.h in Headers */,
 				42FC73201E70012800FBBE42 /* NSFileManager+CCAdd.h in Headers */,
+				423B4FBD1F0B4A290066EBA4 /* FBObjectGraphConfiguration.h in Headers */,
 				42FC73181E70012800FBBE42 /* NSDateFormatter+CCAdd.h in Headers */,
 				42954A331E712B8200F4CC4C /* CCLoadingView.h in Headers */,
 				42FC71361E6FDE0400FBBE42 /* NSManagedObject+CCAdd.h in Headers */,
@@ -3715,9 +4154,11 @@
 				42FC70CC1E6FDC7F00FBBE42 /* CCResponseObject.h in Headers */,
 				42954A261E712B1A00F4CC4C /* CustomIOSAlertView.h in Headers */,
 				423B4C7A1E890D5A007139EC /* CCTransformRefresh.h in Headers */,
+				423B4FEF1F0B66640066EBA4 /* ProfilerTableHeader.h in Headers */,
 				42FC72F71E70012800FBBE42 /* NSMutableArray+AvoidCrash.h in Headers */,
 				42954A2D1E712B5E00F4CC4C /* CCLoadLogoView.h in Headers */,
 				42FC70CB1E6FDC7F00FBBE42 /* RequestProtocol.h in Headers */,
+				423B4FEA1F0B64860066EBA4 /* CCMemoryProfilerViewController.h in Headers */,
 				42FC70FB1E6FDCF600FBBE42 /* CCCoreData.h in Headers */,
 				423B4C6B1E890C8C007139EC /* CCRefreshBaseView.h in Headers */,
 				42FC742F1E700B4C00FBBE42 /* qrencode.h in Headers */,
@@ -3730,6 +4171,7 @@
 				42FC73031E70012800FBBE42 /* Category.h in Headers */,
 				427145FE1E9B70180060D5C3 /* CCQRCodeViewController.h in Headers */,
 				42954A8B1E712BE100F4CC4C /* SDWebImageManager.h in Headers */,
+				423B4FB31F0B4A290066EBA4 /* FBNodeEnumerator.h in Headers */,
 				421B10E21EA851F10043A1ED /* CCVoiceCommonHelper.h in Headers */,
 				426B658C1EA98E5B006706A2 /* TZImageCropManager.h in Headers */,
 				424CCD851EC191D900C85E8C /* Reachability.h in Headers */,
@@ -3737,6 +4179,7 @@
 				42FC71241E6FDD4F00FBBE42 /* CCMetamacros.h in Headers */,
 				42FC73121E70012800FBBE42 /* NSBundle+AppIcon.h in Headers */,
 				427146071E9B70670060D5C3 /* CCWebViewController.h in Headers */,
+				423B4FBB1F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.h in Headers */,
 				42FC71091E6FDCF600FBBE42 /* CCDatabaseManager+Manager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3909,6 +4352,7 @@
 				42FC73151E70012800FBBE42 /* NSData+CCAdd.m in Sources */,
 				42FC71B71E6FFC0000FBBE42 /* NSObject+CCKeyValue.m in Sources */,
 				42657AF11EC0764E0025B2D2 /* UIButton+ChainGrammar.m in Sources */,
+				423B4FF01F0B66640066EBA4 /* ProfilerTableHeader.m in Sources */,
 				42954A6F1E712BE100F4CC4C /* SDImageCache.m in Sources */,
 				42FC731B1E70012800FBBE42 /* NSDictionary+CCAdd.m in Sources */,
 				42FC73971E70012800FBBE42 /* UIView+Method.m in Sources */,
@@ -3923,6 +4367,7 @@
 				42FC74301E700B4C00FBBE42 /* qrinput.c in Sources */,
 				42FC71071E6FDCF600FBBE42 /* CCDatabaseManager+Convenience.m in Sources */,
 				426B65791EA98E5B006706A2 /* CCImageScrollView.m in Sources */,
+				423B4FC41F0B4A290066EBA4 /* FBObjectiveCObject.m in Sources */,
 				42FC73291E70012800FBBE42 /* NSNotificationCenter+CCAdd.m in Sources */,
 				42954A901E712BE100F4CC4C /* MKAnnotationView+WebCache.m in Sources */,
 				423B4C6E1E890C8C007139EC /* CCRefreshConst.m in Sources */,
@@ -3935,12 +4380,15 @@
 				42FC71771E6FDF1400FBBE42 /* AFURLRequestSerialization.m in Sources */,
 				42FC72F01E70012800FBBE42 /* AvoidCrash.m in Sources */,
 				42FC73331E70012800FBBE42 /* NSSet+CCAdd.m in Sources */,
+				423B4FBE1F0B4A290066EBA4 /* FBObjectGraphConfiguration.m in Sources */,
 				426B65B51EA98EFD006706A2 /* CameraDismissButton.m in Sources */,
 				42FC73731E70012800FBBE42 /* UINavigationBar+CCAdd.m in Sources */,
 				426B65851EA98E5B006706A2 /* TZPhotoPickerController.m in Sources */,
 				42FC737F1E70012800FBBE42 /* UIScrollView+CCAdd.m in Sources */,
 				42FC73471E70012800FBBE42 /* CALayer+CCAdd.m in Sources */,
 				422ADD2F1ECBDB410031D9E0 /* amrFileCodec.m in Sources */,
+				427D74D41F0C84D700C58554 /* CCSingleRetainCycleViewController.m in Sources */,
+				423B4FCD1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.m in Sources */,
 				423B4C721E890C8C007139EC /* CCRefreshHeaderView.m in Sources */,
 				424CCD761EC1701100C85E8C /* CCMonitorLabel.m in Sources */,
 				42FC73631E70012800FBBE42 /* UIColor+CCAdd.m in Sources */,
@@ -3949,9 +4397,12 @@
 				42FC71001E6FDCF600FBBE42 /* NSManagedObject+Queries.m in Sources */,
 				42FC71B91E6FFC0000FBBE42 /* NSObject+CCProperty.m in Sources */,
 				42FC71B51E6FFC0000FBBE42 /* NSObject+CCCoding.m in Sources */,
+				423B4FAF1F0B4A290066EBA4 /* NSObject+FBAllocationTracker.mm in Sources */,
 				42FC70C81E6FDC7F00FBBE42 /* CCHTTPRequest.m in Sources */,
 				42FC72FA1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.m in Sources */,
+				423B4FF81F0B71430066EBA4 /* ProfilerGenerationsSectionHeaderView.m in Sources */,
 				42FC71831E6FDF1400FBBE42 /* UIImageView+AFNetworking.m in Sources */,
+				423B500A1F0B79260066EBA4 /* RetainCycleAnalysisCache.m in Sources */,
 				42657AFE1EC079D30025B2D2 /* ParentMaker.m in Sources */,
 				42FC713B1E6FDE0400FBBE42 /* NSPersistentStoreCoordinator+CCAdd.m in Sources */,
 				42FC73531E70012800FBBE42 /* UIApplication+CCAdd.m in Sources */,
@@ -3962,7 +4413,9 @@
 				42954A941E712BE100F4CC4C /* UIButton+WebCache.m in Sources */,
 				42FC717B1E6FDF1400FBBE42 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				42FC732D1E70012800FBBE42 /* NSNumber+CCAdd.m in Sources */,
+				423B4FC01F0B4A290066EBA4 /* FBObjectiveCBlock.m in Sources */,
 				42954A981E712BE100F4CC4C /* UIImageView+WebCache.m in Sources */,
+				423B4FAD1F0B4A290066EBA4 /* FBAllocationTrackerNSZombieSupport.mm in Sources */,
 				42954A8A1E712BE100F4CC4C /* SDWebImageDecoder.m in Sources */,
 				42FC71751E6FDF1400FBBE42 /* AFSecurityPolicy.m in Sources */,
 				42FC74341E700B4C00FBBE42 /* rscode.c in Sources */,
@@ -3984,10 +4437,12 @@
 				42954A751E712BE100F4CC4C /* NSData+ImageContentType.m in Sources */,
 				42FC73751E70012800FBBE42 /* UINavigationController+CCAdd.m in Sources */,
 				420A7F571EBB0CA500182C77 /* UITableViewRowAction+CCAdd.m in Sources */,
+				423B4FA71F0B4A290066EBA4 /* FBAllocationTrackerSummary.m in Sources */,
 				42FC71031E6FDCF600FBBE42 /* CCCollectionViewFetchResultController.m in Sources */,
 				42FC74041E7005F300FBBE42 /* CCUtilities.m in Sources */,
 				423D58CF1EC2AA17001A02A8 /* NSArray+CCAdd.m in Sources */,
 				426B65911EA98E5B006706A2 /* TZAssetCell.m in Sources */,
+				423B50081F0B79260066EBA4 /* ProfilerDataSource.m in Sources */,
 				423B4C6C1E890C8C007139EC /* CCRefreshBaseView.m in Sources */,
 				426B65811EA98E5B006706A2 /* UIView+Layout.m in Sources */,
 				42FC73811E70012800FBBE42 /* UISearchBar+CCAdd.m in Sources */,
@@ -3995,12 +4450,15 @@
 				42FC73351E70012800FBBE42 /* NSAttributedString+Teletext.m in Sources */,
 				42FC735F1E70012800FBBE42 /* UICollectionView+CCAdd.m in Sources */,
 				42FC735D1E70012800FBBE42 /* UICollectionReusableView+CCAdd.m in Sources */,
+				423B4FE21F0B636E0066EBA4 /* fishhook.c in Sources */,
 				42FC70AD1E6FDB7700FBBE42 /* CCViewModel.m in Sources */,
 				42FC73651E70012800FBBE42 /* UIControl+CCAdd.m in Sources */,
 				42FC73491E70012800FBBE42 /* CAMediaTimingFunction+CCAdd.m in Sources */,
 				424CCD7E1EC1764F00C85E8C /* CCPerformanceConfig.m in Sources */,
 				42657AD31EC060080025B2D2 /* NSURLRequest+Identify.m in Sources */,
 				42FC70FF1E6FDCF600FBBE42 /* NSManagedObject+Modify.m in Sources */,
+				423B4FCF1F0B4A290066EBA4 /* FBClassStrongLayout.mm in Sources */,
+				423B4FBA1F0B4A290066EBA4 /* FBRetainCycleUtils.m in Sources */,
 				42657AD71EC060080025B2D2 /* NSURLSession+Swizzling.m in Sources */,
 				426B65C11EA98EFD006706A2 /* CaptureSessionManager.m in Sources */,
 				42954A851E712BE100F4CC4C /* FLAnimatedImageView.m in Sources */,
@@ -4017,12 +4475,14 @@
 				42FC71391E6FDE0400FBBE42 /* NSManagedObjectContext+CCAdd.m in Sources */,
 				42954A271E712B1A00F4CC4C /* CustomIOSAlertView.m in Sources */,
 				42FC73211E70012800FBBE42 /* NSFileManager+CCAdd.m in Sources */,
+				423B4FEB1F0B64860066EBA4 /* CCMemoryProfilerViewController.m in Sources */,
 				42954A961E712BE100F4CC4C /* UIImageView+HighlightedWebCache.m in Sources */,
 				427145F71E9B6FCE0060D5C3 /* CCScanningView.m in Sources */,
 				42FC734B1E70012800FBBE42 /* CAShapeLayer+CCAdd.m in Sources */,
 				42FC73591E70012800FBBE42 /* UIBezierPath+CCAdd.m in Sources */,
 				4252A0491E9F4D7D0093AFF7 /* CCKeychain.m in Sources */,
 				42FC71711E6FDF1400FBBE42 /* AFURLConnectionOperation.m in Sources */,
+				423B4FC71F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.mm in Sources */,
 				42FC71B31E6FFC0000FBBE42 /* NSObject+CCClass.m in Sources */,
 				42954A291E712B1A00F4CC4C /* MBProgressHUD.m in Sources */,
 				42954A2E1E712B5E00F4CC4C /* CCLoadLogoView.m in Sources */,
@@ -4037,17 +4497,21 @@
 				42FC70CD1E6FDC7F00FBBE42 /* CCResponseObject.m in Sources */,
 				42FC734D1E70012800FBBE42 /* CATransaction+CCAdd.m in Sources */,
 				4295CA1F1ECA952900DD3999 /* CCDatabaseManager.m in Sources */,
+				423B4FD61F0B4A290066EBA4 /* Struct.mm in Sources */,
 				42FC716F1E6FDF1400FBBE42 /* AFHTTPRequestOperationManager.m in Sources */,
 				42FC710C1E6FDCF600FBBE42 /* CCDatabaseManager+Removed.m in Sources */,
 				42FC73951E70012800FBBE42 /* UIView+Frame.m in Sources */,
 				423B4C701E890C8C007139EC /* CCRefreshFooterView.m in Sources */,
 				42FC718A1E6FDF1400FBBE42 /* UIWebView+AFNetworking.m in Sources */,
 				426B65891EA98E5B006706A2 /* TZVideoPlayerController.m in Sources */,
+				423B4FA31F0B4A290066EBA4 /* FBAllocationTrackerImpl.mm in Sources */,
+				423B4FCB1F0B4A290066EBA4 /* FBBlockStrongLayout.m in Sources */,
 				42FC70C41E6FDC7F00FBBE42 /* CCKeyValueStore.m in Sources */,
 				426B65871EA98E5B006706A2 /* TZPhotoPreviewController.m in Sources */,
 				42FC73451E70012800FBBE42 /* CAAnimation+CCAdd.m in Sources */,
 				427146131E9B71500060D5C3 /* CCWebViewProgress.m in Sources */,
 				42FC733B1E70012800FBBE42 /* NSURL+CCAdd.m in Sources */,
+				427D74D01F0C7DAF00C58554 /* CCRetainCyclePresenter.m in Sources */,
 				42657ADB1EC060080025B2D2 /* CCDebugHttpViewController.m in Sources */,
 				42FC731F1E70012800FBBE42 /* NSFileHandle+CCAdd.m in Sources */,
 				42FC73191E70012800FBBE42 /* NSDateFormatter+CCAdd.m in Sources */,
@@ -4064,6 +4528,7 @@
 				42FC73851E70012800FBBE42 /* UITabBar+CCAdd.m in Sources */,
 				42FC73001E70012800FBBE42 /* NSObject+AvoidCrash.m in Sources */,
 				4236AC991E9C83A200633FC6 /* CCKeyboardManager.m in Sources */,
+				423B4FBC1F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.mm in Sources */,
 				42FC739B1E70012800FBBE42 /* UIWebView+CCAdd.m in Sources */,
 				424CCD721EC16FD800C85E8C /* CCPerformanceStatusBar.m in Sources */,
 				42954A1A1E712AC800F4CC4C /* CCProgressHUD.m in Sources */,
@@ -4103,6 +4568,7 @@
 				42954A8C1E712BE100F4CC4C /* SDWebImageManager.m in Sources */,
 				42FC716B1E6FDF1400FBBE42 /* AFURLSessionManager.m in Sources */,
 				42954A791E712BE100F4CC4C /* UIImage+MultiFormat.m in Sources */,
+				423B4FA51F0B4A290066EBA4 /* FBAllocationTrackerManager.mm in Sources */,
 				4252A0771E9F5E020093AFF7 /* CCKeychainQuery.m in Sources */,
 				424CCD821EC1918C00C85E8C /* CCMonitorHelper.m in Sources */,
 				42FC734F1E70012800FBBE42 /* UIActionSheet+CCAdd.m in Sources */,
@@ -4110,21 +4576,29 @@
 				42FC71371E6FDE0400FBBE42 /* NSManagedObject+CCAdd.m in Sources */,
 				42FC73571E70012800FBBE42 /* UIBarButtonItem+Badge.m in Sources */,
 				42657AE11EC060080025B2D2 /* CCDebugHttpDetailViewController.m in Sources */,
+				423B4FD11F0B4A290066EBA4 /* FBClassStrongLayoutHelpers.m in Sources */,
 				426B65931EA98E5B006706A2 /* TZPhotoPreviewCell.m in Sources */,
 				4233C1FC1E83CCD80041A015 /* FMDatabaseAdditions.m in Sources */,
 				424CCD8E1EC1AB4800C85E8C /* CCMonitorViewController.m in Sources */,
+				423B4FA91F0B4A290066EBA4 /* FBAllocationTrackerGeneration.mm in Sources */,
 				42954A871E712BE100F4CC4C /* SDWebImageCompat.m in Sources */,
 				42FC73871E70012800FBBE42 /* UITabBarController+CCAdd.m in Sources */,
 				42FC70A81E6FDB7700FBBE42 /* CCMediator.m in Sources */,
+				423B4FDB1F0B4A290066EBA4 /* FBObjectInStructReference.m in Sources */,
+				423B4FB41F0B4A290066EBA4 /* FBNodeEnumerator.mm in Sources */,
 				426B65B31EA98EFD006706A2 /* CameraSessionView.m in Sources */,
+				423B4FD41F0B4A290066EBA4 /* FBStructEncodingParser.mm in Sources */,
 				42954A391E712BDC00F4CC4C /* CCRingProgressView.m in Sources */,
 				42FC73411E70012800FBBE42 /* NSUserDefaults+CCAdd.m in Sources */,
 				42FC71881E6FDF1400FBBE42 /* UIRefreshControl+AFNetworking.m in Sources */,
 				42FC71AD1E6FFC0000FBBE42 /* CCProperty.m in Sources */,
 				42FC71AF1E6FFC0000FBBE42 /* CCPropertyKey.m in Sources */,
 				42FC71811E6FDF1400FBBE42 /* UIButton+AFNetworking.m in Sources */,
+				423B4FC21F0B4A290066EBA4 /* FBObjectiveCGraphElement.mm in Sources */,
 				426B65B71EA98EFD006706A2 /* CameraFlashButton.m in Sources */,
 				42FC730D1E70012800FBBE42 /* CLLocation+CH1903.m in Sources */,
+				423B4FD91F0B4A290066EBA4 /* FBIvarReference.m in Sources */,
+				423B4FAB1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.mm in Sources */,
 				42FC73791E70012800FBBE42 /* UIPopoverController+CCAdd.m in Sources */,
 				426B65C31EA98EFD006706A2 /* Constants.m in Sources */,
 				42FC738D1E70012800FBBE42 /* UITableViewHeaderFooterView+CCAdd.m in Sources */,
@@ -4147,6 +4621,7 @@
 				4252A0441E9F18D80093AFF7 /* CCActionSheetViewController.m in Sources */,
 				424CCD921EC1ABF400C85E8C /* WMGaugeView.m in Sources */,
 				42FC70FD1E6FDCF600FBBE42 /* NSManagedObject+Convenience.m in Sources */,
+				423B4FB11F0B4A290066EBA4 /* FBAssociationManager.mm in Sources */,
 				429854C51EA6098200255C48 /* CCDrawerController.m in Sources */,
 				427145FD1E9B70180060D5C3 /* CCQRCodeDisplayViewController.m in Sources */,
 				42FC73931E70012800FBBE42 /* UIView+Animation.m in Sources */,
@@ -4158,6 +4633,7 @@
 				4233C2001E83CCD80041A015 /* FMDatabaseQueue.m in Sources */,
 				42FC72FE1E70012800FBBE42 /* NSMutableString+AvoidCrash.m in Sources */,
 				42657AD11EC060080025B2D2 /* CCDebugCrashViewController.m in Sources */,
+				423B4FB71F0B4A290066EBA4 /* FBRetainCycleDetector.mm in Sources */,
 				42657AD91EC060080025B2D2 /* NSURLSessionTask+Data.m in Sources */,
 				427146081E9B70670060D5C3 /* CCWebViewController.m in Sources */,
 				424CCD861EC191D900C85E8C /* Reachability.m in Sources */,

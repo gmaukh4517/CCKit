@@ -32,40 +32,46 @@
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 主色调
  */
-@property(nonatomic, copy) UIColor *mainColor;
+@property (nonatomic, copy) UIColor *mainColor;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 日志最大数量，默认50条
  */
-@property(nonatomic, assign) int maxLogsCount;
+@property (nonatomic, assign) int maxLogsCount;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief Crash日志最大数量，默认20条
  */
-@property(nonatomic, assign) NSInteger maxCrashCount;
+@property (nonatomic, assign) NSInteger maxCrashCount;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 设置只抓取的域名，忽略大小写，默认抓取所有
  */
-@property(nonatomic, strong) NSArray *arrOnlyHosts;
+@property (nonatomic, strong) NSArray *arrOnlyHosts;
 
 
 + (instancetype)manager;
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 启动Debug检测
  */
 - (void)enableDebugMode;
+
+/** 卡顿日志 **/
+- (NSArray *)CatonLogger;
+
+/** 奔溃日志 **/
+- (NSArray *)CrashLogger;
 
 @end
