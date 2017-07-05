@@ -24,19 +24,14 @@
 //
 
 #import "CCDebugTool.h"
-//#import "CCDebugCrashViewController.h"
 #import "CCDebugHttpProtocol.h"
-//#import "CCDebugHttpViewController.h"
-//#import "CCDebugLogViewController.h"
-//#import "CCMonitorViewController.h"
-#import "Config.h"
 
 #import "CCAppFluecyMonitor.h"
 #import "CCMonitorService.h"
 #import "CCUncaughtExceptionHandler.h"
 
-#import "FBAssociationManager.h"
 #import "FBAllocationTrackerManager.h"
+#import "FBAssociationManager.h"
 
 @interface CCDebugWindow : UIWindow
 
@@ -78,7 +73,7 @@
 {
     self = [super init];
     if (self) {
-        self.mainColor = cc_ColorRGB(245, 116, 91);
+        self.mainColor = [UIColor colorWithRed:245 / 255.f green:116 / 255.f blue:91 / 255.f alpha:1.f];
         self.maxCrashCount = 20;
         self.maxLogsCount = 50;
         self.debugWindow = [[CCDebugWindow alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
@@ -125,7 +120,7 @@
     });
 }
 
--(void)enableProfiler
+- (void)enableProfiler
 {
     [FBAssociationManager hook];
     [[FBAllocationTrackerManager sharedManager] startTrackingAllocations];
@@ -143,7 +138,7 @@
         UINavigationController *degugProfilerNab = [self initializationNav:NSClassFromString(@"CCMemoryProfilerViewController") tabBarItemName:@"Cycle"];
         //        UINavigationController *debugMonitorNav = [self initializationNav:[CCMonitorViewController new] tabBarItemName:@"Monitor"];
         
-        debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugCrashNav, debugLOGNav,degugProfilerNab, nil];
+        debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugCrashNav, debugLOGNav, degugProfilerNab, nil];
         self.debugTabBar = debugTabBar;
         
         UIViewController *rootViewController = [[[UIApplication sharedApplication].delegate window] rootViewController];
