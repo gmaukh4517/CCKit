@@ -26,8 +26,9 @@
 #ifndef CCKit__Config_h
 #define CCKit__Config_h
 
-#import <CCKit/CCMacroProperty.h>
 #import <CCKit/CCExtScope.h>
+#import <CCKit/CCMacroProperty.h>
+#import <CCKit/CCMacros.h>
 #import <CCKit/CCMetamacros.h>
 
 //输出日志处理

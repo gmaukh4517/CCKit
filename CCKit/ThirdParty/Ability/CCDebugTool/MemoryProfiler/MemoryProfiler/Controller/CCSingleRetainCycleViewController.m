@@ -80,6 +80,7 @@
     }];
     
     [self.singleTableView.cc_tableViewHelper cellWillDisplay:^(UITableViewCell *_Nonnull Cell, NSIndexPath *_Nonnull cIndexPath, id _Nonnull cModel, BOOL IsCelldisplay) {
+        Cell.textLabel.font = [UIFont systemFontOfSize:13];
         Cell.textLabel.text = [cModel description];
     }];
 }

@@ -227,23 +227,25 @@ static NSString *const kProfilerSectionHeaderIdentifier = @"kProfilerSectionHead
             
             NSSet<NSArray<FBObjectiveCGraphElement *> *> *retainCycles = [detector findRetainCyclesWithMaxCycleLength:8];
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([retainCycles count] > 0) {
-                    // We've got a leak
-                    [_analysisCache updateAnalysisStatus:CCRetainCyclePresent
-                                         forInGeneration:generationIndex
-                                           forClassNamed:className];
-                    if (presentDetails) {
+            if ([retainCycles count] > 0) {
+                // We've got a leak
+                [_analysisCache updateAnalysisStatus:CCRetainCyclePresent
+                                     forInGeneration:generationIndex
+                                       forClassNamed:className];
+                if (presentDetails) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
                         CCRetainCyclePresenter *cyclePressenter = [[CCRetainCyclePresenter alloc] init];
                         cyclePressenter.retainCycles = [retainCycles allObjects];
                         [self.navigationController pushViewController:cyclePressenter animated:YES];
-                    }
-                } else {
-                    [_analysisCache updateAnalysisStatus:CCRetainCycleNotPresent
-                                         forInGeneration:generationIndex
-                                           forClassNamed:className];
+                        
+                    });
                 }
-            });
+            } else {
+                [_analysisCache updateAnalysisStatus:CCRetainCycleNotPresent
+                                     forInGeneration:generationIndex
+                                       forClassNamed:className];
+            }
         }
     });
 }

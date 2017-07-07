@@ -96,8 +96,8 @@
 {
     if (!_cc_activityView) {
         CCLoadLogoView *loadingView = [[CCLoadLogoView alloc] initWithLogo:@"arrow" Frame:CGRectMake(0, 0, 40, 40)];
-        loadingView.hidden = YES;
-        [loadingView setLineColor:[UIColor lightGrayColor]];
+//        loadingView.hidden = YES;
+        [loadingView setLineColor:cc_ColorRGB(150, 150, 150)];
         [self addSubview:_cc_activityView = loadingView];
     }
     return _cc_activityView;
@@ -342,10 +342,10 @@
 
         case CCRefreshStateRefreshing: {
 
-            if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
-                [self.activityView startAnimating];
-            } else if (self.style == CCRefreshViewStyleDefault)
-                [self.cc_activityView startAnimation];
+//            if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
+//                [self.activityView startAnimating];
+//            } else if (self.style == CCRefreshViewStyleDefault)
+//                [self.cc_activityView startAnimation];
 
             // 隐藏箭头
             _arrowImage.hidden = YES;

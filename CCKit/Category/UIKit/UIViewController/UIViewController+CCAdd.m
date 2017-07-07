@@ -143,7 +143,8 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     
     if (self.navigationController.visibleViewController) {
         NSString *mClassName = [NSString stringWithUTF8String:object_getClassName(self.navigationController.visibleViewController)];
-        NSLog(@"viewDidAppear : %@", mClassName);
+        if (![mClassName hasPrefix:@"CC"])
+            NSLog(@"viewDidAppear : %@", mClassName);
     }
 }
 

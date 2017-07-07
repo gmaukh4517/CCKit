@@ -42,6 +42,7 @@
 		422ADD3D1ECBE4BA0031D9E0 /* lame.h in Headers */ = {isa = PBXBuildFile; fileRef = 422ADD3B1ECBE4BA0031D9E0 /* lame.h */; };
 		422ADD3E1ECBE4BA0031D9E0 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 422ADD3C1ECBE4BA0031D9E0 /* libmp3lame.a */; };
 		422DE1701EC2A9B4008A3C99 /* NSArray+CCAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC721E1E70012800FBBE42 /* NSArray+CCAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		423388781F0F22950055701E /* CCMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 423388771F0F223C0055701E /* CCMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4233C1F91E83CCD80041A015 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1EE1E83CCD80041A015 /* FMDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4233C1FA1E83CCD80041A015 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1EF1E83CCD80041A015 /* FMDatabase.m */; };
 		4233C1FB1E83CCD80041A015 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -723,6 +724,7 @@
 		422ADD2D1ECBDB410031D9E0 /* VoiceConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoiceConverter.m; sourceTree = "<group>"; };
 		422ADD3B1ECBE4BA0031D9E0 /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
 		422ADD3C1ECBE4BA0031D9E0 /* libmp3lame.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmp3lame.a; sourceTree = "<group>"; };
+		423388771F0F223C0055701E /* CCMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCMacros.h; sourceTree = "<group>"; };
 		4233C1EE1E83CCD80041A015 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		4233C1EF1E83CCD80041A015 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
 		4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -2795,6 +2797,7 @@
 				42FC71201E6FDD4F00FBBE42 /* CCMetamacros.h */,
 				42FC71211E6FDD4F00FBBE42 /* CCMacroProperty.h */,
 				42FC71221E6FDD4F00FBBE42 /* Config.h */,
+				423388771F0F223C0055701E /* CCMacros.h */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -3969,6 +3972,7 @@
 				426B657C1EA98E5B006706A2 /* CGGeometry+CCImageCropper.h in Headers */,
 				42FC731A1E70012800FBBE42 /* NSDictionary+CCAdd.h in Headers */,
 				429854C31EA6098200255C48 /* CCDrawerController+Subclass.h in Headers */,
+				423388781F0F22950055701E /* CCMacros.h in Headers */,
 				42FC70C31E6FDC7F00FBBE42 /* CCKeyValueStore.h in Headers */,
 				42FC72F31E70012800FBBE42 /* NSAttributedString+AvoidCrash.h in Headers */,
 				42657AF01EC0764E0025B2D2 /* UIButton+ChainGrammar.h in Headers */,

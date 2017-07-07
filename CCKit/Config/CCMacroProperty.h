@@ -274,34 +274,4 @@ cc_view_Border(view, width, color);
 [view.layer setBorderWidth:(width)]; \
 [view.layer setBorderColor:[color CGColor]];
 
-
-#pragma mark -
-#pragma mark :. handle
-
-static inline void cc_dispatch_async_on_global_queue(void (^block)()) {
-    dispatch_async(dispatch_get_global_queue(0, 0), block);
-}
-
-/**
- 在主队列上提交用于异步执行的块，并立即返回。
- */
-static inline void cc_dispatch_async_on_main_queue(void (^block)()) {
-    if (pthread_main_np()) {
-        block();
-    } else {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
-}
-
-/**
- 在主队列上提交执行块，并等待直到块完成。
- */
-static inline void cc_dispatch_sync_on_main_queue(void (^block)()) {
-    if (pthread_main_np()) {
-        block();
-    } else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
 #endif /* CCProperty_h */
