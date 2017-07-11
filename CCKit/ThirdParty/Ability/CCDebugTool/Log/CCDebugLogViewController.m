@@ -24,83 +24,20 @@
 //
 
 #import "CCDebugLogViewController.h"
-#import <asl.h>
-#include <stdio.h>
+#import "CCDebugContentViewController.h"
+#import "CCDebugDataSource.h"
+#import "CCDebugEnterLOGHelper.h"
 #import "CCDebugTool.h"
 
-@interface CCDebugLogModel : NSObject
+@interface CCDebugLogViewController () <UITableViewDelegate, UIScrollViewDelegate, UITextViewDelegate>
 
-@property(nonatomic, strong) NSDate *date;
-@property(nonatomic, copy) NSString *sender;
-@property(nonatomic, copy) NSString *messageText;
-@property(nonatomic, assign) long long messageID;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
-@end
+@property (nonatomic, strong) CCDebugDataSource *dataSource;
 
-@implementation CCDebugLogModel
+@property (nonatomic, assign) NSInteger currentIndex;
 
-+ (instancetype)messageFromASLMessage:(aslmsg)aslMessage
-{
-    CCDebugLogModel *logMessage = [[CCDebugLogModel alloc] init];
-    
-    const char *timestamp = asl_get(aslMessage, ASL_KEY_TIME);
-    if (timestamp) {
-        NSTimeInterval timeInterval = [@(timestamp) integerValue];
-        const char *nanoseconds = asl_get(aslMessage, ASL_KEY_TIME_NSEC);
-        if (nanoseconds) {
-            timeInterval += [@(nanoseconds) doubleValue] / NSEC_PER_SEC;
-        }
-        logMessage.date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
-    }
-    
-    const char *sender = asl_get(aslMessage, ASL_KEY_SENDER);
-    if (sender) {
-        logMessage.sender = @(sender);
-    }
-    
-    const char *messageText = asl_get(aslMessage, ASL_KEY_MSG);
-    if (messageText) {
-        NSString *format = @(messageText);
-        format = ({
-            format = [format stringByReplacingOccurrencesOfString:@"\\u" withString:@"\\U"];
-            format = [format stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-            format = [format stringByReplacingOccurrencesOfString:@"\\\\U" withString:@"\\U"];
-            format = [[@"\"" stringByAppendingString:format] stringByAppendingString:@"\""];
-            format = [NSPropertyListSerialization propertyListFromData:[format dataUsingEncoding:NSUTF8StringEncoding]
-                                                      mutabilityOption:NSPropertyListImmutable
-                                                                format:NULL
-                                                      errorDescription:NULL];
-            format = [format stringByReplacingOccurrencesOfString:@"\0" withString:@""];
-            [format stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
-        });
-        logMessage.messageText = format;
-    }
-    
-    const char *messageID = asl_get(aslMessage, ASL_KEY_MSG_ID);
-    if (messageID) {
-        logMessage.messageID = [@(messageID) longLongValue];
-    }
-    
-    return logMessage;
-}
-
-+ (NSString *)stringFormatFromDate:(NSDate *)date
-{
-    static NSDateFormatter *formatter = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
-    });
-    
-    return [formatter stringFromDate:date];
-}
-
-@end
-
-@interface CCDebugLogViewController ()
-
-@property(nonatomic, weak) UITextView *logTextView;
+@property (nonatomic, copy) NSArray *itemTitle;
 
 @end
 
@@ -115,9 +52,29 @@
 
 - (void)initNavigation
 {
-    self.title = @"LOG";
+    _itemTitle = @[ @"Crash", @"Caton", @"LOG" ];
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:_itemTitle];
+    segmentedControl.selectedSegmentIndex = 0;
+    segmentedControl.clipsToBounds = YES;
+    segmentedControl.tintColor = [UIColor whiteColor];
+    segmentedControl.frame = CGRectMake(0, 0, 200, 30);
+    segmentedControl.momentary = NO;
+    [segmentedControl addTarget:self action:@selector(didSegmentedControl:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = segmentedControl;
+    self.navigationItem.title = [_itemTitle objectAtIndex:0];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"刷新" style:UIBarButtonItemStylePlain target:self action:@selector(refreshLogs)];
+}
+
+- (void)didSegmentedControl:(UISegmentedControl *)sender
+{
+    [self reloadData:sender.selectedSegmentIndex];
+    
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         CGPoint offset = self.scrollView.contentOffset;
+                         offset.x = self.scrollView.frame.size.width * sender.selectedSegmentIndex;
+                         self.scrollView.contentOffset = offset;
+                     }];
 }
 
 - (void)dismissViewController
@@ -127,28 +84,73 @@
 
 - (void)initControl
 {
-    UITextView *logTextView = [[UITextView alloc] init];
-    [logTextView setEditable:NO];
-    logTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    logTextView.frame = self.view.bounds;
-    [self.view addSubview:_logTextView = logTextView];
+    _dataSource = [[CCDebugDataSource alloc] init];
+    _dataSource.sourceType = CCDebugDataSourceTypeCrash;
     
-    [self refreshLogs];
+    UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    scrollview.pagingEnabled = YES;
+    scrollview.showsHorizontalScrollIndicator = NO;
+    scrollview.showsVerticalScrollIndicator = NO;
+    scrollview.bounces = NO;
+    scrollview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    scrollview.delegate = self;
+    scrollview.contentSize = CGSizeMake(scrollview.frame.size.width * 3, 0);
+    [self.view addSubview:_scrollView = scrollview];
+    
+    UITableView *crashTableView = [self createTableView:0];
+    crashTableView.tag = 1000;
+    [scrollview addSubview:crashTableView];
+    
+    UITableView *cationTableView = [self createTableView:self.view.frame.size.width];
+    cationTableView.tag = 2000;
+    [scrollview addSubview:cationTableView];
+    
+    UITextView *logTextView = [[UITextView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 2, 0, self.view.frame.size.width, self.view.frame.size.height - 114)];
+    [logTextView setEditable:NO];
+    logTextView.tag = 3000;
+    logTextView.delegate = self;
+    [scrollview addSubview:logTextView];
+}
+
+#pragma mark -
+#pragma mark :. handel
+
+- (void)reloadData:(NSInteger)selectIndex
+{
+    if (selectIndex != self.currentIndex) {
+        self.currentIndex = selectIndex;
+        self.navigationItem.title = [_itemTitle objectAtIndex:selectIndex];
+        UISegmentedControl *segmentedControl = (UISegmentedControl *)self.navigationItem.titleView;
+        [segmentedControl setSelectedSegmentIndex:selectIndex];
+        if (selectIndex == 0) {
+            UITableView *tableView = [_scrollView viewWithTag:1000];
+            _dataSource.sourceType = CCDebugDataSourceTypeCrash;
+            tableView.scrollEnabled = YES;
+            [tableView reloadData];
+        } else if (selectIndex == 1) {
+            UITableView *tableView = [_scrollView viewWithTag:2000];
+            _dataSource.sourceType = CCDebugDataSourceTypeFluency;
+            tableView.scrollEnabled = YES;
+            [tableView reloadData];
+        } else if (selectIndex == 2) {
+            [self refreshLogs];
+        }
+    }
 }
 
 - (void)refreshLogs
 {
-    __weak UITextView *weakTxt = self.logTextView;
+    __weak UITextView *weakTxt = [_scrollView viewWithTag:3000];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSArray* arr = [self logs];
+        NSArray *arr = [CCDebugEnterLOGHelper logs:[CCDebugTool manager].maxLogsCount];
         if (arr.count > 0) {
-            NSMutableAttributedString* string = [[NSMutableAttributedString alloc] init];
-            for (CCDebugLogModel* model in arr) {
-                NSString* date = [CCDebugLogModel stringFormatFromDate:model.date];
-                NSMutableAttributedString* att = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@：",date]];
+            NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+            for (CCDebugLogModel *model in arr) {
+                NSString *date = [CCDebugLogModel stringFormatFromDate:model.date];
+                NSMutableAttributedString *att = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@：", date]];
                 [att addAttribute:NSForegroundColorAttributeName value:[CCDebugTool manager].mainColor range:NSMakeRange(0, att.string.length)];
                 
-                NSMutableAttributedString* att2 = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n",model.messageText]];
+                NSMutableAttributedString *att2 = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", model.messageText]];
                 [att2 addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, att2.string.length)];
                 
                 [string appendAttributedString:att];
@@ -162,28 +164,54 @@
     });
 }
 
-- (NSArray *)logs
+#pragma mark -
+#pragma mark :. UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    asl_object_t query = asl_new(ASL_TYPE_QUERY);
-    char pidStr[100];
-    sprintf(pidStr, "%d", [[NSProcessInfo processInfo] processIdentifier]);
-    asl_set_query(query, ASL_KEY_PID, pidStr, ASL_QUERY_OP_EQUAL);
+    return 55;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    //this is too slow!
-    aslresponse response = asl_search(NULL, query);
-    NSUInteger numberOfLogs = [CCDebugTool manager].maxLogsCount;
-    NSMutableArray *logMessages = [NSMutableArray arrayWithCapacity:numberOfLogs];
-    size_t count = asl_count(response);
-    for (int i = 0; i < numberOfLogs; i++) {
-        aslmsg msg = asl_get_index(response, count - i - 1);
-        if (msg != NULL) {
-            CCDebugLogModel *model = [CCDebugLogModel messageFromASLMessage:msg];
-            [logMessages addObject:model];
-        } else
-            break;
+    CCDebugContentViewController *viewController = [[CCDebugContentViewController alloc] init];
+    viewController.title = [NSString stringWithFormat:@"%@日志", self.navigationItem.title];
+    viewController.hidesBottomBarWhenPushed = YES;
+    viewController.content = [[self.dataSource.dataArr objectAtIndex:indexPath.row] objectForKey:@"ErrMsg"];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+#pragma mark -
+#pragma mark :. UIScrollViewDelegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([scrollView isEqual:self.scrollView]) {
+        CGFloat x = scrollView.contentOffset.x;
+        NSInteger selectIndex = x / scrollView.frame.size.width;
+        [self reloadData:selectIndex];
     }
-    asl_release(response);
-    return logMessages;
+}
+
+
+#pragma mark -
+#pragma mark :. getter/setter
+
+- (UITableView *)createTableView:(CGFloat)x
+{
+    UITableView *logTableView = [[UITableView alloc] initWithFrame:CGRectMake(x, 0, _scrollView.frame.size.width, _scrollView.frame.size.height - 114) style:UITableViewStylePlain];
+    logTableView.backgroundColor = [UIColor clearColor];
+    logTableView.delegate = self;
+    logTableView.dataSource = self.dataSource;
+    logTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    
+    UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
+    v.backgroundColor = [UIColor clearColor];
+    [logTableView setTableFooterView:v];
+    
+    return logTableView;
 }
 
 @end

@@ -133,12 +133,11 @@
         UITabBarController *debugTabBar = [[UITabBarController alloc] init];
         
         UINavigationController *debugHTTPNav = [self initializationNav:NSClassFromString(@"CCDebugHttpViewController") tabBarItemName:@"HTTP"];
-        UINavigationController *debugCrashNav = [self initializationNav:NSClassFromString(@"CCDebugCrashViewController") tabBarItemName:@"Crash"];
         UINavigationController *debugLOGNav = [self initializationNav:NSClassFromString(@"CCDebugLogViewController") tabBarItemName:@"LOG"];
         UINavigationController *degugProfilerNab = [self initializationNav:NSClassFromString(@"CCMemoryProfilerViewController") tabBarItemName:@"Cycle"];
         //        UINavigationController *debugMonitorNav = [self initializationNav:[CCMonitorViewController new] tabBarItemName:@"Monitor"];
         
-        debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugCrashNav, debugLOGNav, degugProfilerNab, nil];
+        debugTabBar.viewControllers = [NSArray arrayWithObjects:debugHTTPNav, debugLOGNav, degugProfilerNab, nil];
         self.debugTabBar = debugTabBar;
         
         UIViewController *rootViewController = [[[UIApplication sharedApplication].delegate window] rootViewController];

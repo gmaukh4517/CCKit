@@ -1,5 +1,5 @@
 //
-//  CCDebugCrashViewController.h
+//  CCDebugDataSource.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,8 +23,18 @@
 // THE SOFTWARE.
 //
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface CCDebugCrashViewController : UIViewController
+typedef NS_ENUM(NSUInteger, CCDebugDataSourceType) {
+    CCDebugDataSourceTypeCrash,
+    CCDebugDataSourceTypeFluency,
+};
+
+@interface CCDebugDataSource : NSObject <UITableViewDataSource>
+
+@property (nonatomic, assign) CCDebugDataSourceType sourceType;
+
+@property (nonatomic, strong) NSArray *dataArr;
 
 @end
