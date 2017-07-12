@@ -26,6 +26,8 @@
 #ifndef CCMacros_h
 #define CCMacros_h
 
+#pragma mark -
+#pragma mark :. GCD 线程处理
 
 /** 快速迭代方法 **/
 static inline void cc_dispatch_apply(int count, void (^block)(size_t index))
@@ -84,5 +86,71 @@ static inline void cc_dispatch_sync_on_main_queue(void (^block)())
     }
 }
 
+#pragma mark -
+#pragma mark :. 数据验证
+
+static inline bool cc_isNull_NilORNull(id ref)
+{
+    return (((ref) == nil) || ([(ref) isEqual:[NSNull null]]) || ([(ref) isEqualToString:@""]));
+}
+
+static inline bool cc_isNull_String(NSString *string)
+{
+    return (string != nil && [string isKindOfClass:[NSString class]] && ![string isEqualToString:@""]);
+}
+
+static inline bool cc_isNull_Array(NSArray *arr)
+{
+    return (arr != nil && [arr isKindOfClass:[NSArray class]] && [arr count] > 0);
+}
+
+static inline bool cc_isNull_Dictionary(NSDictionary *dic)
+{
+    return (dic != nil && [dic isKindOfClass:[NSDictionary class]] && [[dic allKeys] count] > 0);
+}
+
+static inline bool cc_isNull_Data(NSData *data)
+{
+    return (data != nil && [data isKindOfClass:[NSData class]]);
+}
+
+static inline bool cc_isNull_Number(NSNumber *number)
+{
+    return (number != nil && [number isKindOfClass:[NSNumber class]]);
+}
+
+static inline bool cc_isNull_Class(NSObject *obj, Class cls)
+{
+    return (obj != nil && [obj isKindOfClass:cls]);
+}
+
+static inline bool cc_verification_Has(NSString *string, NSString *key)
+{
+    return ([string rangeOfString:key].location != NSNotFound);
+}
+
+#pragma mark -
+#pragma mark :. 其他
+
+/** 越狱工具路径 **/
+const char *jailbreak_tool_pathes[] = {
+    "/Applications/Cydia.app",
+    "/Library/MobileSubstrate/MobileSubstrate.dylib",
+    "/bin/bash",
+    "/usr/sbin/sshd",
+    "/etc/apt",
+};
+
+/** 判断设备是否越狱 **/
+static inline bool cc_isJailbreak()
+{
+    int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[0]);
+    for (int i = 0; i < appay_size; i++) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:jailbreak_tool_pathes[i]]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 
 #endif /* CCMacros_h */

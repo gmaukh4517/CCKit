@@ -29,6 +29,8 @@ const int maxCrashLogNum = 20;
 
 #define carshPlistName @"CCCrashLog.plist"
 
+#define kCrashLogPath [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:@"CCCrashLog"]
+
 @interface CCDebugCrashHelper ()
 
 @property (nonatomic, strong) NSString *crashLogPath;
@@ -64,10 +66,7 @@ const int maxCrashLogNum = 20;
  */
 - (void)initialization
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *sandBoxPath = [paths objectAtIndex:0];
-    
-    _crashLogPath = [sandBoxPath stringByAppendingPathComponent:@"CCCrashLog"];
+    _crashLogPath = kCrashLogPath;
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:_crashLogPath]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:_crashLogPath
@@ -98,11 +97,7 @@ const int maxCrashLogNum = 20;
     [exdic setObject:dateString forKey:@"ErrDate"];
     
     NSString *saceCrashPath = [[_crashLogPath stringByAppendingPathComponent:dateString] stringByAppendingString:@".plist"];
-    
-    if (![exdic writeToFile:saceCrashPath atomically:YES]) {
-        NSLog(@"CCDebugTool:crash report failed!");
-    } else
-        NSLog(@"CCDebugTool:save crash report succeed!");
+    [exdic writeToFile:saceCrashPath atomically:YES];
     
     [_crashLogPlist insertObject:dateString atIndex:0];
     [_crashLogPlist writeToFile:[_crashLogPath stringByAppendingPathComponent:carshPlistName] atomically:YES];
@@ -118,11 +113,14 @@ const int maxCrashLogNum = 20;
  *
  *  @brief 获取Crash日志
  */
-- (NSArray *)obtainCrashLogs
++ (NSArray *)obtainCrashLogs
 {
+    NSString *crashLogPath = kCrashLogPath;
+    NSArray *crashLogPlist = [[NSMutableArray arrayWithContentsOfFile:[crashLogPath stringByAppendingPathComponent:carshPlistName]] mutableCopy];
+    
     NSMutableArray *crashArray = [NSMutableArray array];
-    for (NSString *key in self.crashLogPlist) {
-        NSString *filePath = [_crashLogPath stringByAppendingPathComponent:key];
+    for (NSString *key in crashLogPlist) {
+        NSString *filePath = [crashLogPath stringByAppendingPathComponent:key];
         NSString *path = [filePath stringByAppendingString:@".plist"];
         NSDictionary *log = [NSDictionary dictionaryWithContentsOfFile:path];
         [crashArray addObject:log];

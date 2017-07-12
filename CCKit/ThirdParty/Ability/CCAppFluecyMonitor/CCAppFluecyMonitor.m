@@ -211,34 +211,17 @@ static void ccRunLoopObserverCallback(CFRunLoopObserverRef observer, CFRunLoopAc
 
 - (void)backtraceLoggerHandle
 {
-    [CatonLogger manager].isCaton = YES;
-    
-    NSMutableArray *catonArray = [NSMutableArray arrayWithArray:[CatonLogger manager].catonArr];
-    
     NSMutableDictionary *catonDic = [NSMutableDictionary dictionary];
     //    [carsDic setObject:[exception reason] forKey:@"ErrCause"];
     [catonDic setObject:[NSDate date] forKey:@"ErrDate"];
     [catonDic setObject:[CCBacktraceLogger cc_backtraceOfMainThread] forKey:@"ErrMsg"];
-    [catonArray addObject:catonDic];
-    
-    [CatonLogger manager].catonArr = catonArray;
     
     [[CCDebugFluencyHelper manager] saveFluencyException:catonDic];
 }
 
-@end
-
-@implementation CatonLogger
-
-@dynamic isCaton;
-@dynamic catonArr;
-
-- (NSDictionary *)setupCCDefaults
++ (NSArray *)obtainFluencyLogs
 {
-    return @{
-             @"isCaton" : @NO,
-             @"catonArr" : [NSArray array],
-             };
+    return [CCDebugFluencyHelper obtainFluencyLogs];
 }
 
 @end

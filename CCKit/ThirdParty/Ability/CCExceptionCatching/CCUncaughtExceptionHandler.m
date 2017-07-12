@@ -26,7 +26,6 @@
 #import "CCUncaughtExceptionHandler.h"
 #import "AvoidCrash.h"
 #import "CCDebugCrashHelper.h"
-#import "CCUserDefaults.h"
 #import <UIKit/UIKit.h>
 #include <execinfo.h>
 #include <libkern/OSAtomic.h>
@@ -79,8 +78,6 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
 - (void)handleException:(NSException *)exception
 {
     [self validateAndSaveCriticalApplicationData];
-    //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"抱歉，程序出现了异常", nil) message:[NSString stringWithFormat:NSLocalizedString( @"如果点击继续，程序有可能会出现其他的问题，建议您还是点击退出按钮并重新打开\n\n" @"异常原因如下:\n%@\n%@", nil), [exception reason], [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]] delegate:self cancelButtonTitle:NSLocalizedString(@"退出", nil) otherButtonTitles:NSLocalizedString(@"继续", nil), nil];
-    //    [alert show];
     dismissed = YES;
     
     NSMutableString *errorStr = [NSMutableString string];
@@ -91,13 +88,10 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     [errorStr appendFormat:@"Device Identity：%@ \n", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
     [errorStr appendFormat:@"Application version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     [errorStr appendFormat:@"Application Build version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    //    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"YES" : @"NO"];
     [errorStr appendFormat:@"Error Cause：%@\n", [exception reason]];
     [errorStr appendFormat:@"%@ \n", [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]];
     
-    //存储本地，下次启动发送到服务器
-    [CrashLog manager].isCrash = YES;
-    
-    NSMutableArray *crashArray = [NSMutableArray arrayWithArray:[CrashLog manager].crashArr];
     
     NSMutableDictionary *carsDic = [NSMutableDictionary dictionary];
     [carsDic setObject:exception.name forKey:@"ErrName"];
@@ -105,9 +99,6 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     [carsDic setObject:[NSDate date] forKey:@"ErrDate"];
     [carsDic setObject:errorStr forKey:@"ErrMsg"];
     [carsDic setObject:@"6" forKey:@"ErrType"];
-    [crashArray addObject:carsDic];
-    
-    [CrashLog manager].crashArr = crashArray;
     
     [[CCDebugCrashHelper manager] saveCrashException:carsDic];
     
@@ -135,6 +126,11 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
         [exception raise];
     
     [self performSelector:@selector(setDismissed) withObject:nil afterDelay:2];
+}
+
++ (NSArray *)obtainCrashLogs
+{
+    return [CCDebugCrashHelper obtainCrashLogs];
 }
 
 @end
@@ -186,18 +182,3 @@ void InstallUncaughtExceptionHandler(void)
     signal(SIGBUS, SignalHandler);
     signal(SIGPIPE, SignalHandler);
 }
-
-@implementation CrashLog
-
-@dynamic isCrash;
-@dynamic crashArr;
-
-- (NSDictionary *)setupCCDefaults
-{
-    return @{
-             @"isCrash" : @NO,
-             @"crashArr" : [NSArray array],
-             };
-}
-
-@end

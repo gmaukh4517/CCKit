@@ -23,12 +23,14 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
 #import "CCUserDefaults.h"
+#import <Foundation/Foundation.h>
 
-@interface CCUncaughtExceptionHandler : NSObject{
+@interface CCUncaughtExceptionHandler : NSObject {
     BOOL dismissed;
 }
+
++ (NSArray *)obtainCrashLogs;
 
 @end
 
@@ -36,14 +38,3 @@ void HandleException(NSException *exception);
 void SignalHandler(int signal);
 
 void InstallUncaughtExceptionHandler(void);
-
-
-@interface CrashLog : CCUserDefaults
-
-/** 是否有错误 */
-@property(nonatomic) BOOL isCrash;
-
-/** 错误日志内容 */
-@property(nonatomic, copy) NSArray *crashArr;
-
-@end

@@ -31,7 +31,7 @@
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 保存Crash日志
  *
  *  @param exdic 错误集合
@@ -40,9 +40,9 @@
 
 /**
  *  @author CC, 16-03-05
- *  
+ *
  *  @brief 获取Crash日志
  */
-- (NSArray *)obtainCrashLogs;
++ (NSArray *)obtainCrashLogs;
 
 @end

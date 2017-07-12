@@ -31,6 +31,6 @@
 
 - (void)saveFluencyException:(NSMutableDictionary *)exdic;
 
-- (NSArray *)obtainFluencyLogs;
++ (NSArray *)obtainFluencyLogs;
 
 @end

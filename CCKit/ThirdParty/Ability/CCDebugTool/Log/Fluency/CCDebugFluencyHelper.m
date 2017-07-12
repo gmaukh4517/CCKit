@@ -28,6 +28,7 @@
 const int maxCrashLogNum = 20;
 
 #define fluencyPlistName @"CCfluencyLog.plist"
+#define kFluencyLogPath [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:@"CCfluencyLog"]
 
 @interface CCDebugFluencyHelper ()
 
@@ -59,10 +60,7 @@ const int maxCrashLogNum = 20;
 
 - (void)initialization
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *sandBoxPath = [paths objectAtIndex:0];
-    
-    _fluencyLogPath = [sandBoxPath stringByAppendingPathComponent:@"CCfluencyLog"];
+    _fluencyLogPath = kFluencyLogPath;
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:_fluencyLogPath]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:_fluencyLogPath
@@ -71,7 +69,6 @@ const int maxCrashLogNum = 20;
                                                         error:NULL];
     }
     
-    //creat plist
     if ([[NSFileManager defaultManager] fileExistsAtPath:[_fluencyLogPath stringByAppendingPathComponent:fluencyPlistName]])
         _fluencyLogPlist = [[NSMutableArray arrayWithContentsOfFile:[_fluencyLogPath stringByAppendingPathComponent:fluencyPlistName]] mutableCopy];
     else
@@ -86,11 +83,7 @@ const int maxCrashLogNum = 20;
     [exdic setObject:dateString forKey:@"ErrDate"];
     
     NSString *saceCrashPath = [[_fluencyLogPath stringByAppendingPathComponent:dateString] stringByAppendingString:@".plist"];
-    
-    if (![exdic writeToFile:saceCrashPath atomically:YES]) {
-//        NSLog(@"CCDebugTool:crash report failed!");
-    } else
-//        NSLog(@"CCDebugTool:save crash report succeed!");
+    [exdic writeToFile:saceCrashPath atomically:YES];
     
     [_fluencyLogPlist insertObject:dateString atIndex:0];
     [_fluencyLogPlist writeToFile:[_fluencyLogPath stringByAppendingPathComponent:fluencyPlistName] atomically:YES];
@@ -101,11 +94,14 @@ const int maxCrashLogNum = 20;
     }
 }
 
-- (NSArray *)obtainFluencyLogs
++ (NSArray *)obtainFluencyLogs
 {
+    NSString *crashLogPath = kFluencyLogPath;
+    NSArray *crashLogPlist = [[NSMutableArray arrayWithContentsOfFile:[crashLogPath stringByAppendingPathComponent:fluencyPlistName]] mutableCopy];
+    
     NSMutableArray *crashArray = [NSMutableArray array];
-    for (NSString *key in self.fluencyLogPlist) {
-        NSString *filePath = [_fluencyLogPath stringByAppendingPathComponent:key];
+    for (NSString *key in crashLogPlist) {
+        NSString *filePath = [crashLogPath stringByAppendingPathComponent:key];
         NSString *path = [filePath stringByAppendingString:@".plist"];
         NSDictionary *log = [NSDictionary dictionaryWithContentsOfFile:path];
         [crashArray addObject:log];

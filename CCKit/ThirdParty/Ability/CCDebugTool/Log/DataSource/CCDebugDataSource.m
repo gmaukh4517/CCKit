@@ -39,10 +39,9 @@ static NSString *const kCCDebugLogCellIdentifier = @"kCCDebugLogCellIdentifier";
 
 - (void)refilter
 {
-    _dataArr = [[CCDebugFluencyHelper manager] obtainFluencyLogs];
-    if (_sourceType == CCDebugDataSourceTypeCrash) {
-        _dataArr = [[CCDebugCrashHelper manager] obtainCrashLogs];
-    }
+    _dataArr = [CCDebugFluencyHelper obtainFluencyLogs];
+    if (_sourceType == CCDebugDataSourceTypeCrash)
+        _dataArr = [CCDebugCrashHelper obtainCrashLogs];
 }
 
 - (void)setSourceType:(CCDebugDataSourceType)sourceType
@@ -50,9 +49,8 @@ static NSString *const kCCDebugLogCellIdentifier = @"kCCDebugLogCellIdentifier";
     BOOL sourceTypeChanged = sourceType != _sourceType;
     _sourceType = sourceType;
     
-    if (sourceTypeChanged) {
+    if (sourceTypeChanged)
         [self refilter];
-    }
 }
 
 #pragma mark -

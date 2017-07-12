@@ -109,6 +109,7 @@
  */
 - (void)enableDebugMode
 {
+#if DEBUG
     [NSURLProtocol registerClass:[CCDebugHttpProtocol class]];
     InstallUncaughtExceptionHandler();
     [[CCAppFluecyMonitor sharedMonitor] startMonitoring];
@@ -118,6 +119,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [wSelf showOnStatusBar];
     });
+#endif
 }
 
 - (void)enableProfiler
@@ -165,11 +167,11 @@
 
 - (NSArray *)CatonLogger
 {
-    return [CatonLogger manager].catonArr;
+    return [CCAppFluecyMonitor obtainFluencyLogs];
 }
 
 - (NSArray *)CrashLogger
 {
-    return [CrashLog manager].crashArr;
+    return [CCUncaughtExceptionHandler obtainCrashLogs];
 }
 @end
