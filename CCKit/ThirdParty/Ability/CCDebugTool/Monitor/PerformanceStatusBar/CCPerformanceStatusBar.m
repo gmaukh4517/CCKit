@@ -48,13 +48,23 @@
     _fpsLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_fpsLabel];
     
-    _cpuLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_fpsLabel.right, _fpsLabel.y, self.width - _fpsLabel.right, 10)];
+    CGFloat width = (self.width - _fpsLabel.right);// / 2;
+    
+    _cpuLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_fpsLabel.right, _fpsLabel.y, width, 10)];
     _cpuLabel.font = [UIFont systemFontOfSize:8];
     _cpuLabel.textAlignment = NSTextAlignmentCenter;
     _cpuLabel.textColor = [UIColor whiteColor];
     _cpuLabel.text = @"CPU: -";
     _cpuLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_cpuLabel];
+    
+//    _ramLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_cpuLabel.right, _cpuLabel.y, width, 10)];
+//    _ramLabel.font = [UIFont systemFontOfSize:8];
+//    _ramLabel.textAlignment = NSTextAlignmentCenter;
+//    _ramLabel.textColor = [UIColor whiteColor];
+//    _ramLabel.text = @"RAM: -";
+//    _ramLabel.translatesAutoresizingMaskIntoConstraints = NO;
+//    [self addSubview:_ramLabel];
     
     _networkLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _fpsLabel.bottom, self.width, 10)];
     _networkLabel.font = [UIFont systemFontOfSize:8];

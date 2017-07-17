@@ -30,6 +30,7 @@
 
 @property (nonatomic, strong) CCMonitorLabel *fpsLabel;
 @property (nonatomic, strong) CCMonitorLabel *cpuLabel;
+@property (nonatomic, strong) CCMonitorLabel *ramLabel;
 @property (nonatomic, strong) UILabel *networkLabel;
 
 @end

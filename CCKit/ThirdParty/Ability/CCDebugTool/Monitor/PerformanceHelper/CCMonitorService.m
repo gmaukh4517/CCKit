@@ -160,12 +160,20 @@
     _lastTimestamp = displayLink.timestamp;
     CGFloat fps = _countPerFrame / interval;
     _countPerFrame = 0;
+    
     self.monitorStatusBar.fpsLabel.text = [NSString stringWithFormat:@"FPS:%d", (int)round(fps)];
     self.monitorStatusBar.fpsLabel.state = [self labelStateWith:CCPerformanceMonitorFPS value:fps];
     
+
     CGFloat cpu = [CCMonitorHelper cpu_usage];
     self.monitorStatusBar.cpuLabel.text = [NSString stringWithFormat:@"CPU:%.2f%%", cpu];
     self.monitorStatusBar.cpuLabel.state = [self labelStateWith:CCPerformanceMonitorCPU value:cpu];
+    
+//    int64_t rams = [CCMonitorHelper getUsedMemorySize];
+//    
+//    CGFloat ram = [CCMonitorHelper getResidentMemorySize];
+//    self.monitorStatusBar.ramLabel.text = [self number2String:ram];
+//    self.monitorStatusBar.ramLabel.state = [self labelStateWith:CCPerformanceMonitorMemory value:ram];
     
     NSString *networkText = @"↑: -/- ↓: -/-";
     Reachability *reachability = [Reachability reachabilityWithHostName:@"hah"];

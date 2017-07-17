@@ -30,6 +30,8 @@
 #include <execinfo.h>
 #include <libkern/OSAtomic.h>
 #include <sys/signal.h>
+#import "CCMacros.h"
+#import "UIDevice+CCAdd.h"
 
 NSString *const UncaughtExceptionHandlerSignalExceptionName = @"UncaughtExceptionHandlerSignalExceptionName";
 NSString *const UncaughtExceptionHandlerSignalKey = @"UncaughtExceptionHandlerSignalKey";
@@ -83,12 +85,13 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     NSMutableString *errorStr = [NSMutableString string];
     [errorStr appendFormat:@"Name of the device owner: %@ \n", [[UIDevice currentDevice] name]];
     [errorStr appendFormat:@"Device Type：%@ \n", [[UIDevice currentDevice] model]];
+    [errorStr appendFormat:@"Hardware Model：%@ \n",[[UIDevice currentDevice] hardwareDescription]];
     [errorStr appendFormat:@"Device operation system：%@ \n", [[UIDevice currentDevice] systemName]];
     [errorStr appendFormat:@"Version of the current system：%@ \n", [[UIDevice currentDevice] systemVersion]];
     [errorStr appendFormat:@"Device Identity：%@ \n", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
     [errorStr appendFormat:@"Application version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     [errorStr appendFormat:@"Application Build version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-    //    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"YES" : @"NO"];
+    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"YES" : @"NO"];
     [errorStr appendFormat:@"Error Cause：%@\n", [exception reason]];
     [errorStr appendFormat:@"%@ \n", [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]];
     
@@ -166,8 +169,7 @@ void SignalHandler(int signal)
     [[[CCUncaughtExceptionHandler alloc] init] performSelectorOnMainThread:@selector(handleException:)
                                                                 withObject:[NSException exceptionWithName:UncaughtExceptionHandlerSignalExceptionName
                                                                                                    reason:[NSString stringWithFormat:NSLocalizedString(@"Signal %d was raised.", nil), signal]
-                                                                                                 userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:signal]
-                                                                                                                                      forKey:UncaughtExceptionHandlerSignalKey]]
+                                                                                                 userInfo:userInfo]
                                                              waitUntilDone:YES];
 }
 

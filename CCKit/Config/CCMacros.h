@@ -26,6 +26,8 @@
 #ifndef CCMacros_h
 #define CCMacros_h
 
+#import <pthread.h>
+
 #pragma mark -
 #pragma mark :. GCD 线程处理
 
@@ -142,7 +144,7 @@ const char *jailbreak_tool_pathes[] = {
 };
 
 /** 判断设备是否越狱 **/
-static inline bool cc_isJailbreak()
+static inline int cc_isJailbreak()
 {
     int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[0]);
     for (int i = 0; i < appay_size; i++) {

@@ -39,9 +39,12 @@
 + (NSString *)getTotalMemory;
 + (float)getTotalMemorySize;
 
-// 获取已使用内存
+// 获取当前设备的 Memory 使用情况
 + (NSString *)getUsedMemory;
-+ (float)getUsedMemorySize;
++ (int64_t)getUsedMemorySize;
+//获取当前 App Memory 的使用情况
++ (NSString *)getResidentMemory;
++ (NSUInteger)getResidentMemorySize;
 
 // 获取当前设备可用内存
 + (NSString *)availableMemory;

@@ -97,25 +97,52 @@ static vm_statistics_data_t ccStats;
     return [NSProcessInfo processInfo].physicalMemory;
 }
 
-// 获取已使用内存
+// 获取当前设备的 Memory 使用情况
 + (NSString *)getUsedMemory
 {
     return [self number2String:[self getUsedMemorySize]];
 }
 
-+ (float)getUsedMemorySize
+// 获取当前设备的 Memory 使用情况
++ (int64_t)getUsedMemorySize
 {
-    task_basic_info_data_t taskInfo;
-    mach_msg_type_number_t infoCount = TASK_BASIC_INFO_COUNT;
-    kern_return_t kernReturn = task_info(mach_task_self(),
-                                         TASK_BASIC_INFO,
-                                         (task_info_t)&taskInfo,
-                                         &infoCount);
+    size_t length = 0;
+    int mib[6] = {0};
+    
+    int pagesize = 0;
+    mib[0] = CTL_HW;
+    mib[1] = HW_PAGESIZE;
+    length = sizeof(pagesize);
+    if (sysctl(mib, 2, &pagesize, &length, NULL, 0) < 0)
+        return 0;
+    
+    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
+    vm_statistics_data_t vmstat;
+    if (host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vmstat, &count) != KERN_SUCCESS)
+        return 0;
+    
+    int wireMem = vmstat.wire_count * pagesize;
+    int activeMem = vmstat.active_count * pagesize;
+    return wireMem + activeMem;
+}
+
+//获取当前 App Memory 的使用情况
++ (NSString *)getResidentMemory
+{
+    return [self number2String:[self getResidentMemorySize]];
+}
+
+//获取当前 App Memory 的使用情况
++ (NSUInteger)getResidentMemorySize
+{
+    struct mach_task_basic_info taskInfo;
+    mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+    kern_return_t kernReturn = task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&taskInfo, &infoCount);
     
     if (kernReturn != KERN_SUCCESS)
         return NSNotFound;
     
-    return taskInfo.resident_size;
+    return (NSUInteger)taskInfo.resident_size;
 }
 
 // 获取当前设备可用内存
