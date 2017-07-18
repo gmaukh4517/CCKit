@@ -116,7 +116,7 @@
 - (void)setBarWindow:(UIWindow *)window
 {
     self.statusBarWindow = window;
-    CGFloat width = 130;
+    CGFloat width = 150;
     
     _monitorStatusBar = [[CCPerformanceStatusBar alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - width) / 2, 2, width, 20)];
     self.statusBarWindow.hidden = YES;
@@ -164,16 +164,14 @@
     self.monitorStatusBar.fpsLabel.text = [NSString stringWithFormat:@"FPS:%d", (int)round(fps)];
     self.monitorStatusBar.fpsLabel.state = [self labelStateWith:CCPerformanceMonitorFPS value:fps];
     
-
+    
     CGFloat cpu = [CCMonitorHelper cpu_usage];
     self.monitorStatusBar.cpuLabel.text = [NSString stringWithFormat:@"CPU:%.2f%%", cpu];
     self.monitorStatusBar.cpuLabel.state = [self labelStateWith:CCPerformanceMonitorCPU value:cpu];
     
-//    int64_t rams = [CCMonitorHelper getUsedMemorySize];
-//    
-//    CGFloat ram = [CCMonitorHelper getResidentMemorySize];
-//    self.monitorStatusBar.ramLabel.text = [self number2String:ram];
-//    self.monitorStatusBar.ramLabel.state = [self labelStateWith:CCPerformanceMonitorMemory value:ram];
+    CGFloat ram = [CCMonitorHelper getResidentMemorySize] / 1024.0 / 1024.0;
+    self.monitorStatusBar.ramLabel.text = [NSString stringWithFormat:@"RAM:%.1f MB", ram];
+    self.monitorStatusBar.ramLabel.state = [self labelStateWith:CCPerformanceMonitorMemory value:ram];
     
     NSString *networkText = @"↑: -/- ↓: -/-";
     Reachability *reachability = [Reachability reachabilityWithHostName:@"hah"];

@@ -95,7 +95,7 @@
     [CCMonitorService mainColor:self.mainColor];
     
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
-    UIButton *debugButton = [[UIButton alloc] initWithFrame:CGRectMake((width - 130) / 2, 0, 130, 22)];
+    UIButton *debugButton = [[UIButton alloc] initWithFrame:CGRectMake((width - 150) / 2, 0, 150, 22)];
     [debugButton addTarget:self action:@selector(showDebug) forControlEvents:UIControlEventTouchUpInside];
     [self.debugWindow addSubview:debugButton];
     [self.debugWindow bringSubviewToFront:debugButton];

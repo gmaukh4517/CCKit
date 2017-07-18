@@ -24,7 +24,6 @@
 //
 
 #import "CCPerformanceStatusBar.h"
-#import "UIView+Frame.h"
 
 @implementation CCPerformanceStatusBar
 
@@ -40,34 +39,37 @@
 {
     self.layer.cornerRadius = 3;
     
-    _fpsLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 10)];
-    _fpsLabel.font = [UIFont systemFontOfSize:8];
+    _fpsLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(0, 0, 35, 10)];
+    _fpsLabel.font = [UIFont systemFontOfSize:7];
     _fpsLabel.textAlignment = NSTextAlignmentCenter;
     _fpsLabel.textColor = [UIColor whiteColor];
     _fpsLabel.text = @"FPS: -";
     _fpsLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_fpsLabel];
     
-    CGFloat width = (self.width - _fpsLabel.right);// / 2;
+    CGFloat right = _fpsLabel.frame.origin.x + _fpsLabel.frame.size.width;
+    CGFloat width = (self.bounds.size.width - right) / 2;
     
-    _cpuLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_fpsLabel.right, _fpsLabel.y, width, 10)];
-    _cpuLabel.font = [UIFont systemFontOfSize:8];
+    _cpuLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(right, _fpsLabel.frame.origin.y, width, 10)];
+    _cpuLabel.font = [UIFont systemFontOfSize:7];
     _cpuLabel.textAlignment = NSTextAlignmentCenter;
     _cpuLabel.textColor = [UIColor whiteColor];
     _cpuLabel.text = @"CPU: -";
     _cpuLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_cpuLabel];
     
-//    _ramLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(_cpuLabel.right, _cpuLabel.y, width, 10)];
-//    _ramLabel.font = [UIFont systemFontOfSize:8];
-//    _ramLabel.textAlignment = NSTextAlignmentCenter;
-//    _ramLabel.textColor = [UIColor whiteColor];
-//    _ramLabel.text = @"RAM: -";
-//    _ramLabel.translatesAutoresizingMaskIntoConstraints = NO;
-//    [self addSubview:_ramLabel];
+    right = _cpuLabel.frame.origin.x + _cpuLabel.frame.size.width;
     
-    _networkLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _fpsLabel.bottom, self.width, 10)];
-    _networkLabel.font = [UIFont systemFontOfSize:8];
+    _ramLabel = [[CCMonitorLabel alloc] initWithFrame:CGRectMake(right, _cpuLabel.frame.origin.y, width, 10)];
+    _ramLabel.font = [UIFont systemFontOfSize:7];
+    _ramLabel.textAlignment = NSTextAlignmentCenter;
+    _ramLabel.textColor = [UIColor whiteColor];
+    _ramLabel.text = @"RAM: -";
+    _ramLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:_ramLabel];
+    
+    _networkLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _fpsLabel.frame.origin.y + _fpsLabel.frame.size.height, self.bounds.size.width, 10)];
+    _networkLabel.font = [UIFont systemFontOfSize:7];
     _networkLabel.textAlignment = NSTextAlignmentCenter;
     _networkLabel.textColor = [UIColor whiteColor];
     _networkLabel.text = @"↑: -/- ↓: -/-";

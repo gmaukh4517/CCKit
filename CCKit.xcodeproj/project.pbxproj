@@ -373,6 +373,8 @@
 		42954A9C1E712C1000F4CC4C /* Tools.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A9B1E712C1000F4CC4C /* Tools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4295CA1E1ECA952900DD3999 /* CCDatabaseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4295CA1C1ECA952900DD3999 /* CCDatabaseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4295CA1F1ECA952900DD3999 /* CCDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4295CA1D1ECA952900DD3999 /* CCDatabaseManager.m */; };
+		42970CB41F1DE8D600BDB937 /* CCUncaughtExceptionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 42970CB21F1DE8D600BDB937 /* CCUncaughtExceptionHandler.h */; };
+		42970CB51F1DE8D600BDB937 /* CCUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 42970CB31F1DE8D600BDB937 /* CCUncaughtExceptionHandler.m */; };
 		429854C31EA6098200255C48 /* CCDrawerController+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = 429854BC1EA6098200255C48 /* CCDrawerController+Subclass.h */; };
 		429854C41EA6098200255C48 /* CCDrawerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 429854BD1EA6098200255C48 /* CCDrawerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		429854C51EA6098200255C48 /* CCDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 429854BE1EA6098200255C48 /* CCDrawerController.m */; };
@@ -384,8 +386,6 @@
 		42AFF2731F13569F00C1D184 /* CCDebugEnterLOGHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AFF2711F13569F00C1D184 /* CCDebugEnterLOGHelper.m */; };
 		42AFF2771F13588B00C1D184 /* CCDebugDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 42AFF2751F13588B00C1D184 /* CCDebugDataSource.h */; };
 		42AFF2781F13588B00C1D184 /* CCDebugDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AFF2761F13588B00C1D184 /* CCDebugDataSource.m */; };
-		42B5CDD71E70E135002D302E /* CCUncaughtExceptionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDD51E70E135002D302E /* CCUncaughtExceptionHandler.h */; };
-		42B5CDD81E70E135002D302E /* CCUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDD61E70E135002D302E /* CCUncaughtExceptionHandler.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
 		42F7D5BF1F146F7B004E4CDE /* CCDebugCrashHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 42F7D5BA1F146F7B004E4CDE /* CCDebugCrashHelper.h */; };
@@ -1060,6 +1060,8 @@
 		42954A9B1E712C1000F4CC4C /* Tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tools.h; sourceTree = "<group>"; };
 		4295CA1C1ECA952900DD3999 /* CCDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDatabaseManager.h; sourceTree = "<group>"; };
 		4295CA1D1ECA952900DD3999 /* CCDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDatabaseManager.m; sourceTree = "<group>"; };
+		42970CB21F1DE8D600BDB937 /* CCUncaughtExceptionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUncaughtExceptionHandler.h; sourceTree = "<group>"; };
+		42970CB31F1DE8D600BDB937 /* CCUncaughtExceptionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUncaughtExceptionHandler.m; sourceTree = "<group>"; };
 		429854BC1EA6098200255C48 /* CCDrawerController+Subclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCDrawerController+Subclass.h"; sourceTree = "<group>"; };
 		429854BD1EA6098200255C48 /* CCDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDrawerController.h; sourceTree = "<group>"; };
 		429854BE1EA6098200255C48 /* CCDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDrawerController.m; sourceTree = "<group>"; };
@@ -1071,8 +1073,6 @@
 		42AFF2711F13569F00C1D184 /* CCDebugEnterLOGHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCDebugEnterLOGHelper.m; path = EnterLOG/CCDebugEnterLOGHelper.m; sourceTree = "<group>"; };
 		42AFF2751F13588B00C1D184 /* CCDebugDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCDebugDataSource.h; path = DataSource/CCDebugDataSource.h; sourceTree = "<group>"; };
 		42AFF2761F13588B00C1D184 /* CCDebugDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCDebugDataSource.m; path = DataSource/CCDebugDataSource.m; sourceTree = "<group>"; };
-		42B5CDD51E70E135002D302E /* CCUncaughtExceptionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUncaughtExceptionHandler.h; sourceTree = "<group>"; };
-		42B5CDD61E70E135002D302E /* CCUncaughtExceptionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUncaughtExceptionHandler.m; sourceTree = "<group>"; };
 		42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUserDefaults.h; sourceTree = "<group>"; };
 		42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUserDefaults.m; sourceTree = "<group>"; };
 		42F7D5BA1F146F7B004E4CDE /* CCDebugCrashHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugCrashHelper.h; sourceTree = "<group>"; };
@@ -1930,6 +1930,7 @@
 		42657AAA1EC060080025B2D2 /* CCDebugTool */ = {
 			isa = PBXGroup;
 			children = (
+				42970CB11F1DE8D600BDB937 /* CCExceptionCatching */,
 				423B4F4F1F0B4A290066EBA4 /* MemoryProfiler */,
 				424CCD651EC16FA500C85E8C /* Monitor */,
 				42657AB01EC060080025B2D2 /* HTTP */,
@@ -2516,6 +2517,15 @@
 			path = WebCacheCategories;
 			sourceTree = "<group>";
 		};
+		42970CB11F1DE8D600BDB937 /* CCExceptionCatching */ = {
+			isa = PBXGroup;
+			children = (
+				42970CB21F1DE8D600BDB937 /* CCUncaughtExceptionHandler.h */,
+				42970CB31F1DE8D600BDB937 /* CCUncaughtExceptionHandler.m */,
+			);
+			path = CCExceptionCatching;
+			sourceTree = "<group>";
+		};
 		429854BB1EA6098200255C48 /* CCDrawerController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2546,15 +2556,6 @@
 				42AFF2761F13588B00C1D184 /* CCDebugDataSource.m */,
 			);
 			name = CCDebugDataSource;
-			sourceTree = "<group>";
-		};
-		42B5CDD41E70E135002D302E /* CCExceptionCatching */ = {
-			isa = PBXGroup;
-			children = (
-				42B5CDD51E70E135002D302E /* CCUncaughtExceptionHandler.h */,
-				42B5CDD61E70E135002D302E /* CCUncaughtExceptionHandler.m */,
-			);
-			path = CCExceptionCatching;
 			sourceTree = "<group>";
 		};
 		42B5CDD91E70E1C2002D302E /* CCUserDefaults */ = {
@@ -3800,7 +3801,6 @@
 				4236AC951E9C82E900633FC6 /* CCKeyboardManager */,
 				42954A3A1E712BE100F4CC4C /* SDWebImage */,
 				42B5CDD91E70E1C2002D302E /* CCUserDefaults */,
-				42B5CDD41E70E135002D302E /* CCExceptionCatching */,
 				42FC740B1E700B4C00FBBE42 /* CCQRCode */,
 			);
 			path = Ability;
@@ -4093,6 +4093,7 @@
 				42FC70C91E6FDC7F00FBBE42 /* CCHTTPUpDownLoad.h in Headers */,
 				42FC73361E70012800FBBE42 /* NSString+CCAdd.h in Headers */,
 				42FC732C1E70012800FBBE42 /* NSNumber+CCAdd.h in Headers */,
+				42970CB41F1DE8D600BDB937 /* CCUncaughtExceptionHandler.h in Headers */,
 				423B4FB61F0B4A290066EBA4 /* FBRetainCycleDetector.h in Headers */,
 				42FC735C1E70012800FBBE42 /* UICollectionReusableView+CCAdd.h in Headers */,
 				424CCD8D1EC1AB4800C85E8C /* CCMonitorViewController.h in Headers */,
@@ -4112,7 +4113,6 @@
 				426B65B21EA98EFD006706A2 /* CameraSessionView.h in Headers */,
 				426B65941EA98E5B006706A2 /* TZProgressView.h in Headers */,
 				42657ADC1EC060080025B2D2 /* CCDebugHttpDataSource.h in Headers */,
-				42B5CDD71E70E135002D302E /* CCUncaughtExceptionHandler.h in Headers */,
 				426B657A1EA98E5B006706A2 /* CCTouchView.h in Headers */,
 				42FC737E1E70012800FBBE42 /* UIScrollView+CCAdd.h in Headers */,
 				42954A911E712BE100F4CC4C /* NSImage+WebCache.h in Headers */,
@@ -4576,9 +4576,9 @@
 				424CCD8A1EC1AAA900C85E8C /* CCDebugTool.m in Sources */,
 				42FC74281E700B4C00FBBE42 /* bitstream.c in Sources */,
 				427146151E9B71500060D5C3 /* CCWebViewProgressView.m in Sources */,
+				42970CB51F1DE8D600BDB937 /* CCUncaughtExceptionHandler.m in Sources */,
 				42FC732F1E70012800FBBE42 /* NSObject+CCAdd.m in Sources */,
 				42FC73311E70012800FBBE42 /* NSRunLoop+CCAdd.m in Sources */,
-				42B5CDD81E70E135002D302E /* CCUncaughtExceptionHandler.m in Sources */,
 				42FC70A61E6FDB7700FBBE42 /* UIViewController+CCProperties.m in Sources */,
 				42FC71A91E6FFC0000FBBE42 /* CCExtensionConst.m in Sources */,
 				42FC73551E70012800FBBE42 /* UIBarButtonItem+CCAdd.m in Sources */,
