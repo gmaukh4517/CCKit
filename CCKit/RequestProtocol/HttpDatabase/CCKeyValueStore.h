@@ -57,7 +57,7 @@
 
 - (id)getObjectById:(NSString *)objectId fromTable:(NSString *)tableName;
 
-- (CCKeyValueItem *)getYTKKeyValueItemById:(NSString *)objectId fromTable:(NSString *)tableName;
+- (CCKeyValueItem *)getCCKeyValueItemById:(NSString *)objectId fromTable:(NSString *)tableName;
 
 - (void)putString:(NSString *)string withId:(NSString *)stringId intoTable:(NSString *)tableName;
 

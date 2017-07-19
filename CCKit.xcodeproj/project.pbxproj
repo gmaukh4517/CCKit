@@ -384,7 +384,7 @@
 		42B013A61F1F487E006A752C /* CCBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013A21F1F487E006A752C /* CCBacktraceLogger.m */; };
 		42B013A71F1F487E006A752C /* CCAppFluecyMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013A31F1F487E006A752C /* CCAppFluecyMonitor.h */; };
 		42B013A81F1F487E006A752C /* CCAppFluecyMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013A41F1F487E006A752C /* CCAppFluecyMonitor.m */; };
-		42B013AC1F1F48A0006A752C /* CCAppDelegateSOA.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */; };
+		42B013AC1F1F48A0006A752C /* CCAppDelegateSOA.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B013AD1F1F48A0006A752C /* CCAppDelegateSOA.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };

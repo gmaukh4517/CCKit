@@ -798,7 +798,7 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
         }
     }
     
-    CCKeyValueItem *item = [[CCHTTPManager defaultHttp].store getYTKKeyValueItemById:cacheKey fromTable:CCCacheTableName];
+    CCKeyValueItem *item = [[CCHTTPManager defaultHttp].store getCCKeyValueItemById:cacheKey fromTable:CCCacheTableName];
     id object = item.itemObject;
     
     switch (cachePolicy) {
@@ -821,7 +821,6 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
             if (object)			  // 有缓存
                 successHandler(object);
             return; // 退出从不请求
-            
             break;
         }
             

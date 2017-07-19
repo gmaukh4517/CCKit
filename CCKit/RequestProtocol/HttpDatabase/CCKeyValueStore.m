@@ -40,9 +40,9 @@
 
 @interface CCKeyValueStore ()
 
-@property(nonatomic, strong) FMDatabaseQueue *dbQueue;
+@property (nonatomic, strong) FMDatabaseQueue *dbQueue;
 
-@property(nonatomic, copy) NSString *dbPath;
+@property (nonatomic, copy) NSString *dbPath;
 
 @end
 
@@ -104,6 +104,24 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         _dbQueue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
     }
     return self;
+}
+
+- (BOOL)checkTableName:(NSString *)tableName
+{
+    NSString *sql = [NSString stringWithFormat:@"select count(*) as 'count' from sqlite_master where type ='table' and name = %@", tableName];
+    __block BOOL isCkeck = NO;
+    [_dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:sql];
+        while ([rs next]) {
+            NSInteger count = [rs intForColumn:@"count"];
+            if (0 == count) {
+                isCkeck = NO;
+            } else {
+                isCkeck = YES;
+            }
+        }
+    }];
+    return isCkeck;
 }
 
 - (void)createTableWithName:(NSString *)tableName
@@ -169,8 +187,8 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 - (id)getObjectById:(NSString *)objectId
           fromTable:(NSString *)tableName
 {
-    CCKeyValueItem *item = [self getYTKKeyValueItemById:objectId
-                                              fromTable:tableName];
+    CCKeyValueItem *item = [self getCCKeyValueItemById:objectId
+                                             fromTable:tableName];
     if (item) {
         return item.itemObject;
     } else {
@@ -178,17 +196,21 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
     }
 }
 
-- (CCKeyValueItem *)getYTKKeyValueItemById:(NSString *)objectId
-                                 fromTable:(NSString *)tableName
+- (CCKeyValueItem *)getCCKeyValueItemById:(NSString *)objectId
+                                fromTable:(NSString *)tableName
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return nil;
+    
+    if (![self checkTableName:tableName]) {
+        [self createTableWithName:tableName];
+    }
     
     NSString *sql = [NSString stringWithFormat:QUERY_ITEM_SQL, tableName];
     __block NSString *json = nil;
     __block NSDate *createdTime = nil;
     [_dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet * rs = [db executeQuery:sql, objectId];
+        FMResultSet *rs = [db executeQuery:sql, objectId];
         if ([rs next]) {
             json = [rs stringForColumn:@"json"];
             createdTime = [rs dateForColumn:@"createdTime"];
@@ -272,9 +294,9 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
     NSString *sql = [NSString stringWithFormat:SELECT_ALL_SQL, tableName];
     __block NSMutableArray *result = [NSMutableArray array];
     [_dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet * rs = [db executeQuery:sql];
+        FMResultSet *rs = [db executeQuery:sql];
         while ([rs next]) {
-            CCKeyValueItem * item = [[CCKeyValueItem alloc] init];
+            CCKeyValueItem *item = [[CCKeyValueItem alloc] init];
             item.itemId = [rs stringForColumn:@"id"];
             item.itemObject = [rs stringForColumn:@"json"];
             item.createdTime = [rs dateForColumn:@"createdTime"];
@@ -378,9 +400,9 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
     NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ LIMIT %zd, %zd", tableName, range.location, range.length];
     __block NSMutableArray *result = [NSMutableArray array];
     [_dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet * rs = [db executeQuery:sql];
+        FMResultSet *rs = [db executeQuery:sql];
         while ([rs next]) {
-            CCKeyValueItem * item = [[CCKeyValueItem alloc] init];
+            CCKeyValueItem *item = [[CCKeyValueItem alloc] init];
             item.itemId = [rs stringForColumn:@"id"];
             item.itemObject = [rs stringForColumn:@"json"];
             item.createdTime = [rs dateForColumn:@"createdTime"];
@@ -409,17 +431,13 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
     __block BOOL result;
     
     [_dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet * rs = [db executeQuery:@"select count(*) as 'count' from sqlite_master where type ='table' and name = ?", tableName];
-        while ([rs next])
-        {
+        FMResultSet *rs = [db executeQuery:@"select count(*) as 'count' from sqlite_master where type ='table' and name = ?", tableName];
+        while ([rs next]) {
             // just print out what we've got in a number of formats.
             NSInteger count = [rs intForColumn:@"count"];
-            if (0 == count)
-            {
+            if (0 == count) {
                 result = NO;
-            }
-            else
-            {
+            } else {
                 result = YES;
             }
         }
@@ -434,7 +452,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
     __block BOOL result;
     [_dbQueue inDatabase:^(FMDatabase *db) {
         NSString *sqlstr = [NSString stringWithFormat:@"DROP TABLE %@", tableName];
-        if (![db executeUpdate:sqlstr]){
+        if (![db executeUpdate:sqlstr]) {
             //            CCNSLogger(@"Delete table error!");
             result = NO;
         }
