@@ -25,9 +25,9 @@
 
 #import "CCDebugContentViewController.h"
 
-@interface CCDebugContentViewController ()
+@interface CCDebugContentViewController () <UIScrollViewDelegate>
 
-@property (nonatomic, weak) UITextView *contentTextView;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 @end
 
@@ -42,51 +42,91 @@
 
 - (void)initNavigation
 {
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
-}
-
-- (void)dismissViewController
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (!self.data)
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"复制" style:UIBarButtonItemStyleDone target:self action:@selector(copyAction:)];
 }
 
 - (void)initControl
 {
-    UITextView *contentViewText = [[UITextView alloc] initWithFrame:self.view.bounds];
-    [contentViewText setEditable:NO];
-    contentViewText.textContainer.lineBreakMode = NSLineBreakByWordWrapping;
-    contentViewText.font = [UIFont systemFontOfSize:13];
-    contentViewText.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    contentViewText.text = self.content;
-    [self.view addSubview:contentViewText];
     
-    NSStringDrawingOptions option = NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
-    
-    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-    [style setLineBreakMode:NSLineBreakByWordWrapping];
-    
-    NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:13],
-                                 NSParagraphStyleAttributeName : style};
-    CGRect r = [self.content boundingRectWithSize:CGSizeMake(self.view.bounds.size.width, MAXFLOAT) options:option attributes:attributes context:nil];
-    contentViewText.contentSize = CGSizeMake(self.view.bounds.size.width, r.size.height + 20);
-    
-    self.contentTextView = contentViewText;
+    if (self.dataArr) {
+        UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+        scrollview.pagingEnabled = YES;
+        scrollview.showsHorizontalScrollIndicator = NO;
+        scrollview.showsVerticalScrollIndicator = NO;
+        scrollview.bounces = NO;
+        scrollview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        scrollview.delegate = self;
+        scrollview.contentSize = CGSizeMake(scrollview.frame.size.width * self.dataArr.count, 0);
+        [self.view addSubview:_scrollView = scrollview];
+        
+        CGRect frame = CGRectMake(0, 0, scrollview.frame.size.width, scrollview.frame.size.height - 64);
+        for (NSInteger i = 0; i < self.dataArr.count; i++) {
+            NSDictionary *dataDic = [self.dataArr objectAtIndex:i];
+            
+            UITextView *contentViewText = [[UITextView alloc] initWithFrame:frame];
+            [contentViewText setEditable:NO];
+            contentViewText.textContainer.lineBreakMode = NSLineBreakByWordWrapping;
+            contentViewText.font = [UIFont systemFontOfSize:13];
+            contentViewText.text = [dataDic objectForKey:@"ErrMsg"];
+            contentViewText.tag = 100 + i;
+            [scrollview addSubview:contentViewText];
+            
+            if (i == self.selectedIndex) {
+                self.title = [dataDic objectForKey:@"ErrDate"];
+            }
+            
+            frame.origin.x += frame.size.width;
+        }
+        
+        CGPoint offset = scrollview.contentOffset;
+        offset.x = scrollview.frame.size.width * self.selectedIndex;
+        scrollview.contentOffset = offset;
+    } else if (self.content) {
+        UITextView *contentViewText = [[UITextView alloc] initWithFrame:self.view.bounds];
+        [contentViewText setEditable:NO];
+        contentViewText.textContainer.lineBreakMode = NSLineBreakByWordWrapping;
+        contentViewText.font = [UIFont systemFontOfSize:13];
+        contentViewText.text = self.content;
+        contentViewText.tag = 100;
+        [self.view addSubview:contentViewText];
+    } else if (self.data) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.image = [UIImage imageWithData:self.data];
+        [self.view addSubview:imageView];
+    }
 }
 
 - (void)copyAction:(UIBarButtonItem *)sender
 {
+    UITextView *contentTextView = (UITextView *)[self.view viewWithTag:100 + self.selectedIndex];
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = [self.content copy];
+    pasteboard.string = [contentTextView.text copy];
     
-    self.contentTextView.text = [NSString stringWithFormat:@"%@\n\n%@", @"复制成功！", self.content];
+    self.content = contentTextView.text;
+    contentTextView.text = [NSString stringWithFormat:@"%@\n\n%@", @"复制成功！", self.content];
     
-    __weak typeof(self.contentTextView) weakTxt = self.contentTextView;
+    __weak typeof(contentTextView) weakTxt = contentTextView;
     __weak typeof(self) wSelf = self;
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         weakTxt.text = wSelf.content;
     });
 }
 
+#pragma mark -
+#pragma mark :. UIScrollViewDelegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([scrollView isEqual:self.scrollView]) {
+        CGFloat x = scrollView.contentOffset.x;
+        NSInteger selectIndex = x / scrollView.frame.size.width;
+        self.selectedIndex = selectIndex;
+        NSString *title = [[self.dataArr objectAtIndex:selectIndex] objectForKey:@"ErrDate"];
+        self.title = title;
+        //        [self reloadData:selectIndex];
+    }
+}
 
 @end

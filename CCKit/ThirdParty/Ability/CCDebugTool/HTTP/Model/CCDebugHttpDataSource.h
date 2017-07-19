@@ -27,22 +27,26 @@
 
 @interface CCDebugHttpModel : NSObject
 
-@property(nonatomic, copy) NSString *requestId;
-@property(nonatomic, copy) NSURL *url;
-@property(nonatomic, copy) NSString *method;
-@property(nonatomic, copy) NSString *requestBody;
-@property(nonatomic, copy) NSString *statusCode;
-@property(nonatomic, copy) NSString *responseBody;
-@property(nonatomic, copy) NSString *mineType;
-@property(nonatomic, copy) NSString *startTime;
-@property(nonatomic, copy) NSString *totalDuration;
+@property (nonatomic, copy) NSString *requestId;
+@property (nonatomic, copy) NSURL *url;
+@property (nonatomic, copy) NSString *method;
+@property (nonatomic, copy) NSDictionary *allHeaderFields;
+@property (nonatomic, copy) NSString *requestBody;
+@property (nonatomic, assign) NSInteger requestDataSize;
+@property (nonatomic, copy) NSString *statusCode;
+@property (nonatomic, copy) NSString *responseBody;
+@property (nonatomic, copy) NSData *responseData;
+@property (nonatomic, assign) BOOL isImage;
+@property (nonatomic, copy) NSString *mineType;
+@property (nonatomic, copy) NSString *startTime;
+@property (nonatomic, copy) NSString *totalDuration;
 
 @end
 
 @interface CCDebugHttpDataSource : NSObject
 
-@property(nonatomic, strong, readonly) NSMutableArray *httpArray;
-@property(nonatomic, strong, readonly) NSMutableArray *arrRequest;
+@property (nonatomic, strong, readonly) NSMutableArray *httpArray;
+@property (nonatomic, strong, readonly) NSMutableArray *arrRequest;
 
 
 + (instancetype)manager;
@@ -64,8 +68,8 @@
  *
  *  @param data
  *
- *  @return 
+ *  @return
  */
-+ (NSString *)prettyJSONStringFromData:(NSData *)data;
++ (NSString *)prettyJSONStringFromData:(id)data;
 
 @end

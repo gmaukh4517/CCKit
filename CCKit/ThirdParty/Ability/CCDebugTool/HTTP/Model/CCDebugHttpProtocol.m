@@ -24,19 +24,19 @@
 //
 
 #import "CCDebugHttpProtocol.h"
-#import <UIKit/UIKit.h>
-#import "CCDebugTool.h"
 #import "CCDebugHttpDataSource.h"
+#import "CCDebugTool.h"
+#import <UIKit/UIKit.h>
 
 #define kCCProtocolKey @"CCHttpProtocolKey"
 
 @interface CCDebugHttpProtocol () <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 
-@property(nonatomic, strong) NSURLConnection *connection;
-@property(nonatomic, strong) NSURLResponse *response;
-@property(nonatomic, strong) NSMutableData *data;
-@property(nonatomic, strong) NSError *error;
-@property(nonatomic, assign) NSTimeInterval startTime;
+@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLResponse *response;
+@property (nonatomic, strong) NSMutableData *data;
+@property (nonatomic, strong) NSError *error;
+@property (nonatomic, assign) NSTimeInterval startTime;
 
 @end
 
@@ -53,11 +53,11 @@
         ![request.URL.scheme isEqualToString:@"https"]) {
         return NO;
     }
-
+    
     if ([NSURLProtocol propertyForKey:kCCProtocolKey inRequest:request]) {
         return NO;
     }
-
+    
     if ([[CCDebugTool manager] arrOnlyHosts].count > 0) {
         NSString *url = [request.URL.absoluteString lowercaseString];
         for (NSString *_url in [CCDebugTool manager].arrOnlyHosts) {
@@ -66,7 +66,7 @@
         }
         return NO;
     }
-
+    
     return YES;
 }
 
@@ -90,46 +90,33 @@
 - (void)stopLoading
 {
     [self.connection cancel];
-
+    
     CCDebugHttpModel *model = [[CCDebugHttpModel alloc] init];
     model.url = self.request.URL;
     model.method = self.request.HTTPMethod;
     @try {
-        if (self.request.HTTPBody)
-            model.requestBody = [self prettyJSONStringFromData:self.request.HTTPBody];
+        if (self.request.HTTPBody) {
+            model.requestBody = [CCDebugHttpDataSource prettyJSONStringFromData:self.request.HTTPBody];
+            model.requestDataSize = self.request.HTTPBody.length;
+        }
     } @catch (NSException *exception) {
     } @finally {
     }
-
+    
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)self.response;
     model.statusCode = [NSString stringWithFormat:@"%d", (int)httpResponse.statusCode];
-    if (self.data) {
-        model.responseBody = [self prettyJSONStringFromData:self.data];
-    }
     model.mineType = self.response.MIMEType;
-
+    model.allHeaderFields = httpResponse.allHeaderFields;
+    if (self.data) {
+        model.responseBody = [CCDebugHttpDataSource prettyJSONStringFromData:self.data];
+        model.responseData = self.data;
+    }
+    model.isImage = [self.response.MIMEType rangeOfString:@"image"].location != NSNotFound;
     model.totalDuration = [NSString stringWithFormat:@"%fs", [[NSDate date] timeIntervalSince1970] - self.startTime];
     model.startTime = [NSString stringWithFormat:@"%fs", self.startTime];
-
+    
     [[CCDebugHttpDataSource manager] addHttpRequset:model];
     [[NSNotificationCenter defaultCenter] postNotificationName:kCCNotifyKeyReloadHttp object:nil];
-}
-
-#pragma mark - parse
-- (NSString *)prettyJSONStringFromData:(NSData *)data
-{
-    NSString *prettyString = nil;
-
-    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-    if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
-        prettyString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding];
-        // NSJSONSerialization escapes forward slashes. We want pretty json, so run through and unescape the slashes.
-        prettyString = [prettyString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
-    } else {
-        prettyString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    }
-
-    return prettyString;
 }
 
 #pragma mark - NSURLConnectionDelegate

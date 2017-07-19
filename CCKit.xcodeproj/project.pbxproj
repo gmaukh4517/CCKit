@@ -146,12 +146,6 @@
 		423B50091F0B79260066EBA4 /* RetainCycleAnalysisCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 423B50051F0B79260066EBA4 /* RetainCycleAnalysisCache.h */; };
 		423B500A1F0B79260066EBA4 /* RetainCycleAnalysisCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B50061F0B79260066EBA4 /* RetainCycleAnalysisCache.m */; };
 		423D58CF1EC2AA17001A02A8 /* NSArray+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D58CE1EC2AA17001A02A8 /* NSArray+CCAdd.m */; };
-		423D5A8A1EC2C6CB001A02A8 /* CCAppFluecyMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 423D5A881EC2C6CB001A02A8 /* CCAppFluecyMonitor.h */; };
-		423D5A8B1EC2C6CB001A02A8 /* CCAppFluecyMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D5A891EC2C6CB001A02A8 /* CCAppFluecyMonitor.m */; };
-		423D5A8E1EC2E0A7001A02A8 /* CCBacktraceLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 423D5A8C1EC2E0A7001A02A8 /* CCBacktraceLogger.h */; };
-		423D5A8F1EC2E0A7001A02A8 /* CCBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D5A8D1EC2E0A7001A02A8 /* CCBacktraceLogger.m */; };
-		423D5A931EC30140001A02A8 /* CCAppDelegateSOA.h in Headers */ = {isa = PBXBuildFile; fileRef = 423D5A911EC30140001A02A8 /* CCAppDelegateSOA.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		423D5A941EC30140001A02A8 /* CCAppDelegateSOA.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D5A921EC30140001A02A8 /* CCAppDelegateSOA.m */; };
 		424CCD711EC16FD800C85E8C /* CCPerformanceStatusBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 424CCD6F1EC16FD800C85E8C /* CCPerformanceStatusBar.h */; };
 		424CCD721EC16FD800C85E8C /* CCPerformanceStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 424CCD701EC16FD800C85E8C /* CCPerformanceStatusBar.m */; };
 		424CCD751EC1701100C85E8C /* CCMonitorLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 424CCD731EC1701100C85E8C /* CCMonitorLabel.h */; };
@@ -386,6 +380,12 @@
 		42AFF2731F13569F00C1D184 /* CCDebugEnterLOGHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AFF2711F13569F00C1D184 /* CCDebugEnterLOGHelper.m */; };
 		42AFF2771F13588B00C1D184 /* CCDebugDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 42AFF2751F13588B00C1D184 /* CCDebugDataSource.h */; };
 		42AFF2781F13588B00C1D184 /* CCDebugDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AFF2761F13588B00C1D184 /* CCDebugDataSource.m */; };
+		42B013A51F1F487E006A752C /* CCBacktraceLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013A11F1F487E006A752C /* CCBacktraceLogger.h */; };
+		42B013A61F1F487E006A752C /* CCBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013A21F1F487E006A752C /* CCBacktraceLogger.m */; };
+		42B013A71F1F487E006A752C /* CCAppFluecyMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013A31F1F487E006A752C /* CCAppFluecyMonitor.h */; };
+		42B013A81F1F487E006A752C /* CCAppFluecyMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013A41F1F487E006A752C /* CCAppFluecyMonitor.m */; };
+		42B013AC1F1F48A0006A752C /* CCAppDelegateSOA.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */; };
+		42B013AD1F1F48A0006A752C /* CCAppDelegateSOA.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
 		42F7D5BF1F146F7B004E4CDE /* CCDebugCrashHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 42F7D5BA1F146F7B004E4CDE /* CCDebugCrashHelper.h */; };
@@ -830,12 +830,6 @@
 		423B50051F0B79260066EBA4 /* RetainCycleAnalysisCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetainCycleAnalysisCache.h; sourceTree = "<group>"; };
 		423B50061F0B79260066EBA4 /* RetainCycleAnalysisCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetainCycleAnalysisCache.m; sourceTree = "<group>"; };
 		423D58CE1EC2AA17001A02A8 /* NSArray+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+CCAdd.m"; sourceTree = "<group>"; };
-		423D5A881EC2C6CB001A02A8 /* CCAppFluecyMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppFluecyMonitor.h; sourceTree = "<group>"; };
-		423D5A891EC2C6CB001A02A8 /* CCAppFluecyMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppFluecyMonitor.m; sourceTree = "<group>"; };
-		423D5A8C1EC2E0A7001A02A8 /* CCBacktraceLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCBacktraceLogger.h; sourceTree = "<group>"; };
-		423D5A8D1EC2E0A7001A02A8 /* CCBacktraceLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCBacktraceLogger.m; sourceTree = "<group>"; };
-		423D5A911EC30140001A02A8 /* CCAppDelegateSOA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppDelegateSOA.h; sourceTree = "<group>"; };
-		423D5A921EC30140001A02A8 /* CCAppDelegateSOA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegateSOA.m; sourceTree = "<group>"; };
 		424CCD6F1EC16FD800C85E8C /* CCPerformanceStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPerformanceStatusBar.h; sourceTree = "<group>"; };
 		424CCD701EC16FD800C85E8C /* CCPerformanceStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCPerformanceStatusBar.m; sourceTree = "<group>"; };
 		424CCD731EC1701100C85E8C /* CCMonitorLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMonitorLabel.h; sourceTree = "<group>"; };
@@ -1073,6 +1067,12 @@
 		42AFF2711F13569F00C1D184 /* CCDebugEnterLOGHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCDebugEnterLOGHelper.m; path = EnterLOG/CCDebugEnterLOGHelper.m; sourceTree = "<group>"; };
 		42AFF2751F13588B00C1D184 /* CCDebugDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCDebugDataSource.h; path = DataSource/CCDebugDataSource.h; sourceTree = "<group>"; };
 		42AFF2761F13588B00C1D184 /* CCDebugDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCDebugDataSource.m; path = DataSource/CCDebugDataSource.m; sourceTree = "<group>"; };
+		42B013A11F1F487E006A752C /* CCBacktraceLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCBacktraceLogger.h; sourceTree = "<group>"; };
+		42B013A21F1F487E006A752C /* CCBacktraceLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCBacktraceLogger.m; sourceTree = "<group>"; };
+		42B013A31F1F487E006A752C /* CCAppFluecyMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppFluecyMonitor.h; sourceTree = "<group>"; };
+		42B013A41F1F487E006A752C /* CCAppFluecyMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppFluecyMonitor.m; sourceTree = "<group>"; };
+		42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppDelegateSOA.h; sourceTree = "<group>"; };
+		42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegateSOA.m; sourceTree = "<group>"; };
 		42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUserDefaults.h; sourceTree = "<group>"; };
 		42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUserDefaults.m; sourceTree = "<group>"; };
 		42F7D5BA1F146F7B004E4CDE /* CCDebugCrashHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugCrashHelper.h; sourceTree = "<group>"; };
@@ -1804,34 +1804,6 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		423D5A861EC2C6B2001A02A8 /* CCAppFluecyMonitor */ = {
-			isa = PBXGroup;
-			children = (
-				423D5A871EC2C6B2001A02A8 /* Backtrace */,
-				423D5A881EC2C6CB001A02A8 /* CCAppFluecyMonitor.h */,
-				423D5A891EC2C6CB001A02A8 /* CCAppFluecyMonitor.m */,
-			);
-			path = CCAppFluecyMonitor;
-			sourceTree = "<group>";
-		};
-		423D5A871EC2C6B2001A02A8 /* Backtrace */ = {
-			isa = PBXGroup;
-			children = (
-				423D5A8C1EC2E0A7001A02A8 /* CCBacktraceLogger.h */,
-				423D5A8D1EC2E0A7001A02A8 /* CCBacktraceLogger.m */,
-			);
-			path = Backtrace;
-			sourceTree = "<group>";
-		};
-		423D5A901EC3010B001A02A8 /* CCAppDelegateSOA */ = {
-			isa = PBXGroup;
-			children = (
-				423D5A911EC30140001A02A8 /* CCAppDelegateSOA.h */,
-				423D5A921EC30140001A02A8 /* CCAppDelegateSOA.m */,
-			);
-			path = CCAppDelegateSOA;
-			sourceTree = "<group>";
-		};
 		424CCD651EC16FA500C85E8C /* Monitor */ = {
 			isa = PBXGroup;
 			children = (
@@ -1930,6 +1902,7 @@
 		42657AAA1EC060080025B2D2 /* CCDebugTool */ = {
 			isa = PBXGroup;
 			children = (
+				42B0139F1F1F487E006A752C /* CCAppFluecyMonitor */,
 				42970CB11F1DE8D600BDB937 /* CCExceptionCatching */,
 				423B4F4F1F0B4A290066EBA4 /* MemoryProfiler */,
 				424CCD651EC16FA500C85E8C /* Monitor */,
@@ -2556,6 +2529,34 @@
 				42AFF2761F13588B00C1D184 /* CCDebugDataSource.m */,
 			);
 			name = CCDebugDataSource;
+			sourceTree = "<group>";
+		};
+		42B0139F1F1F487E006A752C /* CCAppFluecyMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				42B013A01F1F487E006A752C /* Backtrace */,
+				42B013A31F1F487E006A752C /* CCAppFluecyMonitor.h */,
+				42B013A41F1F487E006A752C /* CCAppFluecyMonitor.m */,
+			);
+			path = CCAppFluecyMonitor;
+			sourceTree = "<group>";
+		};
+		42B013A01F1F487E006A752C /* Backtrace */ = {
+			isa = PBXGroup;
+			children = (
+				42B013A11F1F487E006A752C /* CCBacktraceLogger.h */,
+				42B013A21F1F487E006A752C /* CCBacktraceLogger.m */,
+			);
+			path = Backtrace;
+			sourceTree = "<group>";
+		};
+		42B013A91F1F48A0006A752C /* CCAppDelegateSOA */ = {
+			isa = PBXGroup;
+			children = (
+				42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */,
+				42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */,
+			);
+			path = CCAppDelegateSOA;
 			sourceTree = "<group>";
 		};
 		42B5CDD91E70E1C2002D302E /* CCUserDefaults */ = {
@@ -3790,9 +3791,8 @@
 		42FC740A1E700B4C00FBBE42 /* Ability */ = {
 			isa = PBXGroup;
 			children = (
+				42B013A91F1F48A0006A752C /* CCAppDelegateSOA */,
 				426B74CB1EEF7BB800042EA0 /* CCLanguage */,
-				423D5A901EC3010B001A02A8 /* CCAppDelegateSOA */,
-				423D5A861EC2C6B2001A02A8 /* CCAppFluecyMonitor */,
 				42657AAA1EC060080025B2D2 /* CCDebugTool */,
 				42954A091E71226F00F4CC4C /* Ability.h */,
 				426B65961EA98EFD006706A2 /* CCCamera */,
@@ -3852,7 +3852,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				42FC716A1E6FDF1400FBBE42 /* AFURLSessionManager.h in Headers */,
-				423D5A8A1EC2C6CB001A02A8 /* CCAppFluecyMonitor.h in Headers */,
 				4271460B1E9B70E90060D5C3 /* CCCaptureHelper.h in Headers */,
 				423B4FA41F0B4A290066EBA4 /* FBAllocationTrackerManager.h in Headers */,
 				42FC71AA1E6FFC0000FBBE42 /* CCFoundation.h in Headers */,
@@ -3910,7 +3909,6 @@
 				423B4FAA1F0B4A290066EBA4 /* FBAllocationTrackerGenerationManager.h in Headers */,
 				423B4FBF1F0B4A290066EBA4 /* FBObjectiveCBlock.h in Headers */,
 				423B4FD31F0B4A290066EBA4 /* FBStructEncodingParser.h in Headers */,
-				423D5A8E1EC2E0A7001A02A8 /* CCBacktraceLogger.h in Headers */,
 				426B65881EA98E5B006706A2 /* TZVideoPlayerController.h in Headers */,
 				42FC73301E70012800FBBE42 /* NSRunLoop+CCAdd.h in Headers */,
 				42FC70A11E6FDB7700FBBE42 /* NSObject+CCProperties.h in Headers */,
@@ -4004,7 +4002,6 @@
 				423B4FB21F0B4A290066EBA4 /* FBAssociationManager+Internal.h in Headers */,
 				42FC72FF1E70012800FBBE42 /* NSObject+AvoidCrash.h in Headers */,
 				42FC711A1E6FDCF600FBBE42 /* BaseManagedObject.h in Headers */,
-				423D5A931EC30140001A02A8 /* CCAppDelegateSOA.h in Headers */,
 				42954A721E712BE100F4CC4C /* FLAnimatedImageView+WebCache.h in Headers */,
 				422ADD381ECBDB410031D9E0 /* VoiceConverter.h in Headers */,
 				4278AA031E8A310200F4FA97 /* CCButton.h in Headers */,
@@ -4062,7 +4059,9 @@
 				42FC73961E70012800FBBE42 /* UIView+Method.h in Headers */,
 				423B4FD21F0B4A290066EBA4 /* BaseType.h in Headers */,
 				426B65761EA98E5B006706A2 /* CCImageCropViewController.h in Headers */,
+				42B013A51F1F487E006A752C /* CCBacktraceLogger.h in Headers */,
 				423B4FC51F0B4A290066EBA4 /* FBObjectiveCGraphElement+Internal.h in Headers */,
+				42B013A71F1F487E006A752C /* CCAppFluecyMonitor.h in Headers */,
 				42657AF81EC078F20025B2D2 /* UILabel+ChainGrammar.h in Headers */,
 				42FC73841E70012800FBBE42 /* UITabBar+CCAdd.h in Headers */,
 				42FC736E1E70012800FBBE42 /* UIImageView+CCAdd.h in Headers */,
@@ -4077,6 +4076,7 @@
 				423B4FDC1F0B4A290066EBA4 /* FBObjectReference.h in Headers */,
 				42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */,
 				426B65BE1EA98EFD006706A2 /* LaunchCameraButton.h in Headers */,
+				42B013AC1F1F48A0006A752C /* CCAppDelegateSOA.h in Headers */,
 				42FC733A1E70012800FBBE42 /* NSURL+CCAdd.h in Headers */,
 				42FC71251E6FDD4F00FBBE42 /* CCMacroProperty.h in Headers */,
 				42FC71891E6FDF1400FBBE42 /* UIWebView+AFNetworking.h in Headers */,
@@ -4365,7 +4365,6 @@
 				42FC70CF1E6FDC7F00FBBE42 /* HttpFileConfig.m in Sources */,
 				42FC742A1E700B4C00FBBE42 /* mask.c in Sources */,
 				429854C91EA6098200255C48 /* UIViewController+CCDrawerController.m in Sources */,
-				423D5A8B1EC2C6CB001A02A8 /* CCAppFluecyMonitor.m in Sources */,
 				421B10E31EA851F10043A1ED /* CCVoiceCommonHelper.m in Sources */,
 				42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */,
 				42FC73151E70012800FBBE42 /* NSData+CCAdd.m in Sources */,
@@ -4375,10 +4374,8 @@
 				42954A6F1E712BE100F4CC4C /* SDImageCache.m in Sources */,
 				42FC731B1E70012800FBBE42 /* NSDictionary+CCAdd.m in Sources */,
 				42FC73971E70012800FBBE42 /* UIView+Method.m in Sources */,
-				423D5A8F1EC2E0A7001A02A8 /* CCBacktraceLogger.m in Sources */,
 				42FC73131E70012800FBBE42 /* NSBundle+AppIcon.m in Sources */,
 				42954A341E712B8200F4CC4C /* CCLoadingView.m in Sources */,
-				423D5A941EC30140001A02A8 /* CCAppDelegateSOA.m in Sources */,
 				42FC711B1E6FDCF600FBBE42 /* BaseManagedObject.m in Sources */,
 				42657AD51EC060080025B2D2 /* NSURLResponse+Data.m in Sources */,
 				42AFF2781F13588B00C1D184 /* CCDebugDataSource.m in Sources */,
@@ -4427,6 +4424,7 @@
 				42FC713B1E6FDE0400FBBE42 /* NSPersistentStoreCoordinator+CCAdd.m in Sources */,
 				42FC73531E70012800FBBE42 /* UIApplication+CCAdd.m in Sources */,
 				42FC72FC1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m in Sources */,
+				42B013A81F1F487E006A752C /* CCAppFluecyMonitor.m in Sources */,
 				42954A831E712BE100F4CC4C /* FLAnimatedImage.m in Sources */,
 				42FC72F21E70012800FBBE42 /* NSArray+AvoidCrash.m in Sources */,
 				42FC71731E6FDF1400FBBE42 /* AFNetworkReachabilityManager.m in Sources */,
@@ -4587,6 +4585,7 @@
 				42FC73371E70012800FBBE42 /* NSString+CCAdd.m in Sources */,
 				42954A8C1E712BE100F4CC4C /* SDWebImageManager.m in Sources */,
 				42FC716B1E6FDF1400FBBE42 /* AFURLSessionManager.m in Sources */,
+				42B013AD1F1F48A0006A752C /* CCAppDelegateSOA.m in Sources */,
 				42954A791E712BE100F4CC4C /* UIImage+MultiFormat.m in Sources */,
 				423B4FA51F0B4A290066EBA4 /* FBAllocationTrackerManager.mm in Sources */,
 				4252A0771E9F5E020093AFF7 /* CCKeychainQuery.m in Sources */,
@@ -4611,6 +4610,7 @@
 				42954A391E712BDC00F4CC4C /* CCRingProgressView.m in Sources */,
 				42FC73411E70012800FBBE42 /* NSUserDefaults+CCAdd.m in Sources */,
 				42FC71881E6FDF1400FBBE42 /* UIRefreshControl+AFNetworking.m in Sources */,
+				42B013A61F1F487E006A752C /* CCBacktraceLogger.m in Sources */,
 				42FC71AD1E6FFC0000FBBE42 /* CCProperty.m in Sources */,
 				42FC71AF1E6FFC0000FBBE42 /* CCPropertyKey.m in Sources */,
 				42FC71811E6FDF1400FBBE42 /* UIButton+AFNetworking.m in Sources */,

@@ -29,7 +29,7 @@
 #import "CCDebugEnterLOGHelper.h"
 #import "CCDebugTool.h"
 
-@interface CCDebugLogViewController () <UITableViewDelegate, UIScrollViewDelegate, UITextViewDelegate>
+@interface CCDebugLogViewController () <UITableViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 
@@ -63,6 +63,7 @@
     self.navigationItem.titleView = segmentedControl;
     self.navigationItem.title = [_itemTitle objectAtIndex:0];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
+    [self reloadData:0];
 }
 
 - (void)didSegmentedControl:(UISegmentedControl *)sender
@@ -108,7 +109,6 @@
     UITextView *logTextView = [[UITextView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 2, 0, self.view.frame.size.width, self.view.frame.size.height - 114)];
     [logTextView setEditable:NO];
     logTextView.tag = 3000;
-    logTextView.delegate = self;
     [scrollview addSubview:logTextView];
 }
 
@@ -179,7 +179,8 @@
     CCDebugContentViewController *viewController = [[CCDebugContentViewController alloc] init];
     viewController.title = [NSString stringWithFormat:@"%@日志", self.navigationItem.title];
     viewController.hidesBottomBarWhenPushed = YES;
-    viewController.content = [[self.dataSource.dataArr objectAtIndex:indexPath.row] objectForKey:@"ErrMsg"];
+    viewController.dataArr = self.dataSource.dataArr;
+    viewController.selectedIndex = indexPath.row;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

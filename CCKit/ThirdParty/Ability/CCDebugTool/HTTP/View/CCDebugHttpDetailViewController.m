@@ -27,12 +27,12 @@
 #import "CCDebugContentViewController.h"
 #import "CCDebugTool.h"
 
-#define detailTitles @[ @"Request Url", @"Method", @"Status Code", @"Mime Type", @"Start Time", @"Total Duration", @"Request Body", @"Response Body" ]
+#define detailTitles @[ @"Request Url", @"Header Fields", @"Method", @"Status Code", @"Mime Type", @"Start Time", @"Total Duration", @"Request Body", @"Response Body" ]
 
 @interface CCDebugHttpDetailViewController () <UITableViewDataSource, UITableViewDelegate>
 
-@property(nonatomic, strong) UITableView *httpDetailtableView;
-@property(nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong) UITableView *httpDetailtableView;
+@property (nonatomic, strong) NSArray *dataArr;
 
 @end
 
@@ -44,6 +44,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"详情";
     [self initControl];
+    [self initLoadData];
 }
 
 - (void)initControl
@@ -57,6 +58,33 @@
     [self.view addSubview:self.httpDetailtableView];
 }
 
+- (void)initLoadData
+{
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:@{ @"Request Url" : self.detail.url.absoluteString }];
+    [array addObject:@{ @"Header Fields" : [NSString stringWithFormat:@"Server : %@", [self.detail.allHeaderFields objectForKey:@"Server"]] }];
+    [array addObject:@{ @"Method" : self.detail.method }];
+    [array addObject:@{ @"Status Code" : self.detail.statusCode }];
+    [array addObject:@{ @"Mime Type" : self.detail.mineType }];
+    [array addObject:@{ @"Start Time" : self.detail.startTime }];
+    [array addObject:@{ @"Total Duration" : self.detail.totalDuration }];
+    
+    NSString *value;
+    if (self.detail.requestDataSize > 0)
+        value = [self dataSize:self.detail.requestDataSize];
+    else
+        value = @"Empty";
+    [array addObject:@{ @"Request Body" : value }];
+    
+    if (self.detail.responseData.length > 0)
+        value = [self dataSize:self.detail.responseData.length];
+    else
+        value = @"Empty";
+    [array addObject:@{ @"Response Body" : value }];
+    
+    _dataArr = array;
+}
+
 #pragma mark - UITableView Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -65,7 +93,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return detailTitles.count;
+    return _dataArr.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -89,71 +117,79 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifer];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifer];
-        cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.textColor = [CCDebugTool manager].mainColor;
     }
     
-    NSString *value = @"";
-    if (indexPath.row == 0) {
-        value = self.detail.url.absoluteString;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else if (indexPath.row == 1) {
-        value = self.detail.method;
-    } else if (indexPath.row == 2) {
-        value = self.detail.statusCode;
-    } else if (indexPath.row == 3) {
-        value = self.detail.mineType;
-    } else if (indexPath.row == 4) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        value = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.detail.startTime.doubleValue]];
-    } else if (indexPath.row == 5) {
-        value = self.detail.totalDuration;
-    } else if (indexPath.row == 6) {
-        if (self.detail.requestBody.length > 0) {
-            value = @"Tap to view";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
-            value = @"Empty";
-        }
-    } else if (indexPath.row == 7) {
-        if (self.detail.responseBody.length > 0) {
-            value = @"Tap to view";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
-            value = @"Empty";
-        }
-    }
-    
-    cell.textLabel.text = [detailTitles objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:19];
-    
-    cell.detailTextLabel.text = value;
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
     cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
     
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *key = [[self.dataArr objectAtIndex:indexPath.row] allKeys].lastObject;
+    cell.textLabel.text = key;
+    NSString *value = [[self.dataArr objectAtIndex:indexPath.row] objectForKey:key];
+    cell.detailTextLabel.text = value;
+    
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    if ([key isEqualToString:@"Request Url"] ||
+        [key isEqualToString:@"Header Fields"] ||
+        (([key isEqualToString:@"Request Body"] || [key isEqualToString:@"Response Body"]) && ![value isEqualToString:@"Empty"]))
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+}
+
+#define KB (1024)
+#define MB (KB * 1024)
+#define GB (MB * 1024)
+- (NSString *)dataSize:(NSInteger)n
+{
+    NSString *value;
+    if (n < KB) {
+        value = [NSString stringWithFormat:@"( %ziB ) Tap to view", n];
+    } else if (n < MB) {
+        value = [NSString stringWithFormat:@"( %.2fKB ) Tap to view", (float)n / (float)KB];
+    } else if (n < GB) {
+        value = [NSString stringWithFormat:@"( %.2fMB ) Tap to view", (float)n / (float)MB];
+    } else {
+        value = [NSString stringWithFormat:@"( %.2fG ) Tap to view", (float)n / (float)GB];
+    }
+    return value;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    NSString *key = [[self.dataArr objectAtIndex:indexPath.row] allKeys].lastObject;
+    NSString *value = [[self.dataArr objectAtIndex:indexPath.row] objectForKey:key];
+    
     CCDebugContentViewController *vc = [[CCDebugContentViewController alloc] init];
+    
     vc.hidesBottomBarWhenPushed = YES;
-    if (indexPath.row == 0) {
+    if ([key isEqualToString:@"Request Url"]) {
         vc.content = self.detail.url.absoluteString;
         vc.title = @"接口地址";
-    } else if (indexPath.row == 6 && self.detail.requestBody.length > 0) {
+    } else if ([key isEqualToString:@"Header Fields"]) {
+        vc.title = @"请求Header";
+        vc.content = [CCDebugHttpDataSource prettyJSONStringFromData:self.detail.allHeaderFields];
+    } else if ([key isEqualToString:@"Request Body"] && ![value isEqualToString:@"Empty"]) {
         vc.content = self.detail.requestBody;
         vc.title = @"请求数据";
-    } else if (indexPath.row == 7 && self.detail.responseBody.length > 0) {
+    } else if ([key isEqualToString:@"Response Body"] && ![value isEqualToString:@"Empty"]) {
         vc.content = self.detail.responseBody;
+        if (self.detail.isImage) {
+            vc.content = nil;
+            vc.data = self.detail.responseData;
+        }
         vc.title = @"返回数据";
     } else {
         return;
     }
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 

@@ -26,6 +26,14 @@
 #import "CCDebugHttpDataSource.h"
 
 @implementation CCDebugHttpModel
+
+- (NSString *)startTime
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    return [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:_startTime.doubleValue]];
+}
+
 @end
 
 @implementation CCDebugHttpDataSource
@@ -79,20 +87,25 @@
 
 
 #pragma mark - parse
-+ (NSString *)prettyJSONStringFromData:(NSData *)data
++ (NSString *)prettyJSONStringFromData:(id)data
 {
     NSString *prettyString = nil;
-    
-    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-    if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
-        prettyString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding];
-        // NSJSONSerialization escapes forward slashes. We want pretty json, so run through and unescape the slashes.
-        prettyString = [prettyString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
-    } else {
-        prettyString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if ([data isKindOfClass:[NSDictionary class]]) {
+        prettyString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding];
+    } else if ([data isKindOfClass:[NSData class]]) {
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
+            prettyString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding];
+        } else {
+            prettyString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
     }
+    
+    if (prettyString)
+        prettyString = [prettyString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
     
     return prettyString;
 }
+
 
 @end

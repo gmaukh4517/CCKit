@@ -27,6 +27,9 @@
 
 @interface CCDebugContentViewController : UIViewController
 
-@property(nonatomic, copy) NSString *content;
+@property (nonatomic, copy) NSString *content;
+@property (nonatomic, copy) NSData *data;
+@property (nonatomic, copy) NSArray *dataArr;
+@property (nonatomic, assign) NSInteger selectedIndex;
 
 @end
