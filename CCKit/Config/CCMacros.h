@@ -26,6 +26,7 @@
 #ifndef CCMacros_h
 #define CCMacros_h
 
+#import <UIKit/UIKit.h>
 #import <pthread.h>
 
 #pragma mark -
@@ -129,6 +130,52 @@ static inline bool cc_isNull_Class(NSObject *obj, Class cls)
 static inline bool cc_verification_Has(NSString *string, NSString *key)
 {
     return ([string rangeOfString:key].location != NSNotFound);
+}
+
+#pragma mark -
+#pragma mark :. View
+/** view 圆角 */
+static inline void cc_view_radius(UIView *view, CGFloat radius)
+{
+    [view.layer setCornerRadius:radius];
+    [view.layer setMasksToBounds:YES];
+}
+
+/** view 边框 */
+static inline void cc_view_border(UIView *view, CGFloat width, UIColor *color)
+{
+    [view.layer setBorderWidth:(width)];
+    [view.layer setBorderColor:[color CGColor]];
+}
+
+/** view 圆角 边框 */
+static inline void cc_view_border_radius(UIView *view, CGFloat radius, CGFloat width, UIColor *color)
+{
+    cc_view_radius(view, radius);
+    cc_view_border(view, width, color);
+}
+
+/**
+ view 单个圆角
+ 
+ @param view 试图
+ @param angle 某个圆角
+ * UIRectCornerTopLeft
+ * UIRectCornerTopRight
+ * UIRectCornerBottomLeft
+ * UIRectCornerBottomRight
+ * UIRectCornerAllCorners
+ @param radius 圆角度
+ */
+static inline void cc_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat radius)
+{
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+                                                   byRoundingCorners:angle
+                                                         cornerRadii:CGSizeMake(radius, radius)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = view.bounds;
+    maskLayer.path = maskPath.CGPath;
+    view.layer.mask = maskLayer;
 }
 
 #pragma mark -

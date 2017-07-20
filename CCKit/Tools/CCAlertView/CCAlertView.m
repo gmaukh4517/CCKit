@@ -221,7 +221,7 @@
                 withIsPackage:(BOOL)isPackage
                withIsExternal:(BOOL)isExternal
 {
-    cc_View_SingleFillet(containerView, UIRectCornerTopLeft | UIRectCornerTopRight, 5);
+    cc_view_singleFillet(containerView, UIRectCornerTopLeft | UIRectCornerTopRight, 5);
     
     CustomIOSAlertView *alertView = [self alertView];
     alertView.containerView = containerView;
