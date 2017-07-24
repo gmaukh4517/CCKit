@@ -34,6 +34,33 @@
     return [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:_startTime.doubleValue]];
 }
 
+- (void)cpmversopmCachePolicy:(NSInteger)cachePolicy
+{
+    switch (cachePolicy) {
+        case 0:
+            self.requestCachePolicy = @"NSURLRequestUseProtocolCachePolicy";
+            break;
+        case 1:
+            self.requestCachePolicy = @"NSURLRequestReloadIgnoringLocalCacheData";
+            break;
+        case 2:
+            self.requestCachePolicy = @"NSURLRequestReturnCacheDataElseLoad";
+            break;
+        case 3:
+            self.requestCachePolicy = @"NSURLRequestReturnCacheDataDontLoad";
+            break;
+        case 4:
+            self.requestCachePolicy = @"NSURLRequestUseProtocolCachePolicy";
+            break;
+        case 5:
+            self.requestCachePolicy = @"NSURLRequestReloadRevalidatingCacheData";
+            break;
+        default:
+            self.requestCachePolicy = @"";
+            break;
+    }
+}
+
 @end
 
 @implementation CCDebugHttpDataSource

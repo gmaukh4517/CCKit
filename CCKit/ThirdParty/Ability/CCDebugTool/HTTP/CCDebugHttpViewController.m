@@ -48,7 +48,14 @@
 
 - (void)initNavigation
 {
-    self.title = @"HTTP";
+    UILabel *titleText = [[UILabel alloc] initWithFrame:CGRectMake(([[UIScreen mainScreen] bounds].size.width - 120) / 2, 20, 120, 44)];
+    titleText.backgroundColor = [UIColor clearColor];
+    titleText.textColor = [UIColor whiteColor];
+    titleText.textAlignment = NSTextAlignmentCenter;
+    titleText.numberOfLines = 0;
+    titleText.text = @"HTTP";
+    self.navigationItem.titleView = titleText;
+    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"清空" style:UIBarButtonItemStyleDone target:self action:@selector(clearAction)];
 }
@@ -81,7 +88,50 @@
 - (void)initLoadData
 {
     self.dataArray = [[[CCDebugHttpDataSource manager] httpArray] copy];
+    __block double flowCount = 0;
+    [self.dataArray enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        flowCount += [obj expectedContentLength];
+    }];
+    
+    if (!flowCount) {
+        flowCount = 0.0;
+    }
+    
+    NSMutableDictionary *flowDic = [NSMutableDictionary dictionaryWithDictionary:[UINavigationBar appearance].titleTextAttributes];
+    [flowDic setObject:[UIFont systemFontOfSize:12.0] forKey:NSFontAttributeName];
+    
+    NSMutableAttributedString *titleString = [[NSMutableAttributedString alloc] initWithString:@"HTTP\n"
+                                                                                    attributes:[UINavigationBar appearance].titleTextAttributes];
+    
+    NSMutableAttributedString *flowCountString = [[NSMutableAttributedString alloc] initWithString:[self dataSize:flowCount]
+                                                                                        attributes:flowDic];
+    
+    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] init];
+    [attrText appendAttributedString:titleString];
+    [attrText appendAttributedString:flowCountString];
+    
+    UILabel *titleText = (UILabel *)self.navigationItem.titleView;
+    titleText.attributedText = attrText;
+    
     [self.httpViewTableView reloadData];
+}
+
+#define KB (1024)
+#define MB (KB * 1024)
+#define GB (MB * 1024)
+- (NSString *)dataSize:(NSInteger)n
+{
+    NSString *value;
+    if (n < KB) {
+        value = [NSString stringWithFormat:@"流量共%ziB", n];
+    } else if (n < MB) {
+        value = [NSString stringWithFormat:@"流量共%.2fKB", (float)n / (float)KB];
+    } else if (n < GB) {
+        value = [NSString stringWithFormat:@"流量共%.2fMB", (float)n / (float)MB];
+    } else {
+        value = [NSString stringWithFormat:@"流量共%.2fG", (float)n / (float)GB];
+    }
+    return value;
 }
 
 #pragma mark - UITableView Delegate
@@ -132,7 +182,7 @@
     [detailAtt addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0, detailText.length)];
     
     if ([model.statusCode integerValue] != 200) {
-         [detailAtt addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(model.method.length + 1, model.statusCode.length)];
+        [detailAtt addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(model.method.length + 1, model.statusCode.length)];
     }
     
     cell.detailTextLabel.attributedText = detailAtt;

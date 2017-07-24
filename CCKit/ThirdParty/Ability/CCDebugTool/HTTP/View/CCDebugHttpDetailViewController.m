@@ -62,13 +62,14 @@
 {
     NSMutableArray *array = [NSMutableArray array];
     [array addObject:@{ @"Request Url" : self.detail.url.absoluteString }];
-    [array addObject:@{ @"Header Fields" : [NSString stringWithFormat:@"Server : %@", [self.detail.allHeaderFields objectForKey:@"Server"]] }];
+    [array addObject:@{ @"CachePolicy" : self.detail.requestCachePolicy }];
     [array addObject:@{ @"Method" : self.detail.method }];
     [array addObject:@{ @"Status Code" : self.detail.statusCode }];
     [array addObject:@{ @"Mime Type" : self.detail.mineType }];
     [array addObject:@{ @"Start Time" : self.detail.startTime }];
     [array addObject:@{ @"Total Duration" : self.detail.totalDuration }];
     
+    [array addObject:@{ @"Request Header" : [NSString stringWithFormat:@"User-Agent : %@", [self.detail.requestAllHeaderFields objectForKey:@"User-Agent"]] }];
     NSString *value;
     if (self.detail.requestDataSize > 0)
         value = [self dataSize:self.detail.requestDataSize];
@@ -76,6 +77,7 @@
         value = @"Empty";
     [array addObject:@{ @"Request Body" : value }];
     
+    [array addObject:@{ @"Response Header" : [NSString stringWithFormat:@"Server : %@", [self.detail.responseAllHeaderFields objectForKey:@"Server"]] }];
     if (self.detail.responseData.length > 0)
         value = [self dataSize:self.detail.responseData.length];
     else
@@ -138,6 +140,8 @@
     cell.accessoryType = UITableViewCellAccessoryNone;
     if ([key isEqualToString:@"Request Url"] ||
         [key isEqualToString:@"Header Fields"] ||
+        [key isEqualToString:@"Request Header"] ||
+        [key isEqualToString:@"Response Header"] ||
         (([key isEqualToString:@"Request Body"] || [key isEqualToString:@"Response Body"]) && ![value isEqualToString:@"Empty"]))
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
@@ -173,9 +177,12 @@
     if ([key isEqualToString:@"Request Url"]) {
         vc.content = self.detail.url.absoluteString;
         vc.title = @"接口地址";
-    } else if ([key isEqualToString:@"Header Fields"]) {
+    } else if ([key isEqualToString:@"Request Header"]) {
         vc.title = @"请求Header";
-        vc.content = [CCDebugHttpDataSource prettyJSONStringFromData:self.detail.allHeaderFields];
+        vc.content = [CCDebugHttpDataSource prettyJSONStringFromData:self.detail.requestAllHeaderFields];
+    } else if ([key isEqualToString:@"Response Header"]) {
+        vc.title = @"返回Header";
+        vc.content = [CCDebugHttpDataSource prettyJSONStringFromData:self.detail.responseAllHeaderFields];
     } else if ([key isEqualToString:@"Request Body"] && ![value isEqualToString:@"Empty"]) {
         vc.content = self.detail.requestBody;
         vc.title = @"请求数据";

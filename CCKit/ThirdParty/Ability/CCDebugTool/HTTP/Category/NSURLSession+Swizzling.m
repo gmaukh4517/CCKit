@@ -215,6 +215,7 @@
     model.requestId = req.requestId;
     model.url = req.URL;
     model.method = req.HTTPMethod;
+    model.requestAllHeaderFields = req.allHTTPHeaderFields;
     if (req.HTTPBody) {
         model.requestBody = [CCDebugHttpDataSource prettyJSONStringFromData:req.HTTPBody];
         model.requestDataSize = req.HTTPBody.length;
@@ -226,10 +227,11 @@
         model.responseData = task.responseDatas;
     }
     model.mineType = resp.MIMEType;
-    model.allHeaderFields = httpResponse.allHeaderFields;
+    model.responseAllHeaderFields = httpResponse.allHeaderFields;
     model.isImage = [resp.MIMEType rangeOfString:@"image"].location != NSNotFound;
     model.totalDuration = [NSString stringWithFormat:@"%fs", [[NSDate date] timeIntervalSince1970] - req.startTime.doubleValue];
     model.startTime = [NSString stringWithFormat:@"%fs", req.startTime.doubleValue];
+    model.expectedContentLength += resp.expectedContentLength;
     
     [[CCDebugHttpDataSource manager] addHttpRequset:model];
     [[NSNotificationCenter defaultCenter] postNotificationName:kCCNotifyKeyReloadHttp object:nil];

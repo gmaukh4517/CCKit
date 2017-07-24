@@ -94,6 +94,8 @@
     CCDebugHttpModel *model = [[CCDebugHttpModel alloc] init];
     model.url = self.request.URL;
     model.method = self.request.HTTPMethod;
+    model.requestAllHeaderFields = self.request.allHTTPHeaderFields;
+    [model cpmversopmCachePolicy:self.request.cachePolicy];
     @try {
         if (self.request.HTTPBody) {
             model.requestBody = [CCDebugHttpDataSource prettyJSONStringFromData:self.request.HTTPBody];
@@ -105,8 +107,13 @@
     
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)self.response;
     model.statusCode = [NSString stringWithFormat:@"%d", (int)httpResponse.statusCode];
-    model.mineType = self.response.MIMEType;
-    model.allHeaderFields = httpResponse.allHeaderFields;
+    
+    NSString *mineType = self.response.MIMEType;
+    if ([self.response textEncodingName])
+        mineType = [NSString stringWithFormat:@"%@; charset=%@", self.response.MIMEType, [self.response textEncodingName]];
+    
+    model.mineType = mineType;
+    model.responseAllHeaderFields = httpResponse.allHeaderFields;
     if (self.data) {
         model.responseBody = [CCDebugHttpDataSource prettyJSONStringFromData:self.data];
         model.responseData = self.data;
@@ -114,6 +121,7 @@
     model.isImage = [self.response.MIMEType rangeOfString:@"image"].location != NSNotFound;
     model.totalDuration = [NSString stringWithFormat:@"%fs", [[NSDate date] timeIntervalSince1970] - self.startTime];
     model.startTime = [NSString stringWithFormat:@"%fs", self.startTime];
+    model.expectedContentLength += self.response.expectedContentLength;
     
     [[CCDebugHttpDataSource manager] addHttpRequset:model];
     [[NSNotificationCenter defaultCenter] postNotificationName:kCCNotifyKeyReloadHttp object:nil];
