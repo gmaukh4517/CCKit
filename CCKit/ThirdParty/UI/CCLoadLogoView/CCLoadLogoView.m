@@ -29,8 +29,8 @@
 
 @interface CCLoadLogoView ()
 
-@property(nonatomic, strong) CCLoadView *LoadViews;
-@property(nonatomic) BOOL isAnimating;
+@property (nonatomic, strong) CCLoadView *LoadViews;
+@property (nonatomic) BOOL isAnimating;
 
 @end
 
@@ -74,10 +74,21 @@
             LogoImageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
             [self addSubview:LogoImageView];
         }
+    
         //按home键回来 继续转动
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
     }
     return self;
+}
+
+-(void)updateConstraints
+{
+    [super updateConstraints];
+    NSLayoutConstraint *loadLogoWidth = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeWidth multiplier:1 constant:self.frame.size.width];
+    [self addConstraint:loadLogoWidth];
+    NSLayoutConstraint *loadLogoHeight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeHeight multiplier:1 constant:self.frame.size.height];
+    
+    [self addConstraint:loadLogoHeight];
 }
 
 - (instancetype)initWithLoading:(CGRect)frame
@@ -130,9 +141,9 @@
 @interface CCLoadView ()
 
 //0.0 - 1.0
-@property(nonatomic, assign) CGFloat anglePer;
+@property (nonatomic, assign) CGFloat anglePer;
 
-@property(nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -221,13 +232,15 @@ static int stage = 0;
 
 - (void)stopRotateAnimation
 {
-    [UIView animateWithDuration:0.3f animations:^{
-        self.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.anglePer = 0;
-        [self.layer removeAllAnimations];
-        self.alpha = 1;
-    }];
+    [UIView animateWithDuration:0.3f
+                     animations:^{
+                         self.alpha = 0;
+                     }
+                     completion:^(BOOL finished) {
+                         self.anglePer = 0;
+                         [self.layer removeAllAnimations];
+                         self.alpha = 1;
+                     }];
 }
 
 - (void)drawRect:(CGRect)rect

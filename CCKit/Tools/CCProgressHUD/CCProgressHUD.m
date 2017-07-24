@@ -31,7 +31,7 @@
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  初始化弹出对象
  */
 + (MBProgressHUD *)initialization
@@ -41,9 +41,8 @@
     if (!hud) {
         hud = [MBProgressHUD showHUDAddedTo:windowView animated:YES];
         hud.removeFromSuperViewOnHide = YES;
-        hud.dimBackground = NO;
-        hud.coveredNavigationBar = YES;
-        //        hud.IndeterminateLogo = @"";
+        hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
+        hud.backgroundView.color = [UIColor clearColor];
         hud.tag = 999999;
     }
     
@@ -52,7 +51,7 @@
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  初始化弹窗消息类型
  */
 + (MBProgressHUD *)initializationMessages
@@ -60,131 +59,82 @@
     MBProgressHUD *hud = [self initialization];
     hud.mode = MBProgressHUDModeText;
     //    HUD.labelFont = Font19And17(systemFontOfSize, 15);
-    hud.labelColor = [UIColor whiteColor];
+    hud.label.textColor = [UIColor whiteColor];
     //    HUD.detailsLabelFont = Font19And17(systemFontOfSize, 15);
-    hud.detailsLabelColor = [UIColor whiteColor];
+    hud.detailsLabel.textColor = [UIColor whiteColor];
     return hud;
 }
 
 /**
  *  @author CC, 16-03-21
- *  
+ *
  *  @brief 提示消息
  *
  *  @param detailsLabelText 消息内容
  */
-+ (void)hudMessages:(NSString *)detailsLabelText
++ (void)showMessages:(NSString *)detailsLabelText
 {
-    [self hudMessages:nil DetailsLabelText:detailsLabelText];
+    [self showMessages:nil DetailsLabelText:detailsLabelText];
 }
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  提示消息
  *
  *  @param LabelText        标题内容
  *  @param detailsLabelText 详细内容
  */
-+ (void)hudMessages:(NSString *)LabelText
-   DetailsLabelText:(NSString *)detailsLabelText
++ (void)showMessages:(NSString *)LabelText
+    DetailsLabelText:(NSString *)detailsLabelText
 {
     MBProgressHUD *hud = [self initializationMessages];
-    hud.labelText = LabelText;
-    hud.detailsLabelText = detailsLabelText;
-    [hud show:YES];
-    [hud hide:YES afterDelay:2];
+    hud.label.text = LabelText;
+    hud.detailsLabel.text = detailsLabelText;
+    [hud showAnimated:YES];
+    [hud hideAnimated:YES afterDelay:2];
+}
+
+/**
+ 提示消息
+ 
+ @param icon 提示图标
+ @param message 提示消息
+ */
++ (void)showMessageWithIcon:(NSString *)icon
+                    Message:(NSString *)message
+{
+    MBProgressHUD *hud = [self initializationMessages];
+    hud.mode = MBProgressHUDModeCustomView;
+    UIImage *image = [[UIImage imageNamed:icon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    hud.customView = [[UIImageView alloc] initWithImage:image];
+    hud.square = YES;
+    hud.label.text = message;
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  底部提示
  *
  *  @param detailsLabelText 提示内容
  */
-+ (void)hudToastMessage:(NSString *)detailsLabelText
++ (void)showToastMessage:(NSString *)detailsLabelText
 {
     MBProgressHUD *hud = [self initializationMessages];
-    hud.yOffset = (winsize.height - 64) / 2 - 20;
-    hud.labelText = nil;
-    hud.detailsLabelText = detailsLabelText;
-    [hud show:YES];
-    [hud hide:YES afterDelay:1.5];
-}
-
-/**
- *  @author CC, 2016-12-30
- *  
- *  @brief  提示
- *
- *  @param LabelText 标题
- *  @param animated  是否动画
- *  @param block     执行函数
- */
-+ (void)showMessage:(NSString *)LabelText
-           Animated:(BOOL)animated
-whileExecutingBlock:(dispatch_block_t)block
-{
-    [self showMessage:LabelText
-     DetailsLabelText:nil
-             Animated:animated
-  whileExecutingBlock:block];
-}
-
-/**
- *  @author CC, 2016-12-30
- *  
- *  @brief  提示
- *
- *  @param LabelText        标题
- *  @param detailsLabelText 详细内容
- *  @param animated         是否动画
- *  @param block            执行函数
- */
-+ (void)showMessage:(NSString *)LabelText
-   DetailsLabelText:(NSString *)detailsLabelText
-           Animated:(BOOL)animated
-whileExecutingBlock:(dispatch_block_t)block
-{
-    [self showMessage:LabelText
-     DetailsLabelText:detailsLabelText
-             Animated:animated
-  whileExecutingBlock:block
-      completionBlock:nil];
-}
-
-/**
- *  @author CC, 2016-12-30
- *  
- *  @brief  提示
- *
- *  @param LabelText        标题
- *  @param detailsLabelText 详细内容
- *  @param animated         是否动画
- *  @param block            执行函数
- *  @param completion       完成函数
- */
-+ (void)showMessage:(NSString *)LabelText
-   DetailsLabelText:(NSString *)detailsLabelText
-           Animated:(BOOL)animated
-whileExecutingBlock:(dispatch_block_t)block
-    completionBlock:(void (^)())completion
-{
-    MBProgressHUD *hud = [self initializationMessages];
-    hud.labelText = LabelText;
-    hud.detailsLabelText = detailsLabelText;
-    
-    [hud showAnimated:animated
-  whileExecutingBlock:block
-      completionBlock:completion];
+    hud.label.text = nil;
+    hud.detailsLabel.text = detailsLabelText;
+    hud.offset = CGPointMake(0.f, MBProgressMaxOffset);
+    [hud showAnimated:YES];
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 
 #pragma mark :. Show & hide
 /**
  *  @author CC, 2016-01-08
- *  
+ *
  *  @brief  预留导航栏位置
  *
  *  @param animated 动画
@@ -197,7 +147,7 @@ whileExecutingBlock:(dispatch_block_t)block
 
 /**
  *  @author CC, 16-03-07
- *  
+ *
  *  @brief 预留导航栏并显示提示信息
  *
  *  @param labeText 提示信息
@@ -207,64 +157,64 @@ whileExecutingBlock:(dispatch_block_t)block
                             Animated:(BOOL)animated
 {
     MBProgressHUD *hud = [self initialization];
-    hud.detailsLabelText = labeText;
+    hud.detailsLabel.text = labeText;
     hud.coveredNavigationBar = YES;
-    [hud show:YES];
+    [hud showAnimated:YES];
 }
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  显弹窗
  *
  *  @param animated 动画
  */
-+ (void)show:(BOOL)animated
++ (void)showAnimated:(BOOL)animated
 {
-    [[self initialization] show:animated];
+    [[self initialization] showAnimated:animated];
 }
 
-+(void)showNavigationBar:(BOOL)animated
++ (void)showNavigationBar:(BOOL)animated
 {
-    MBProgressHUD *hud =  [self initialization];
+    MBProgressHUD *hud = [self initialization];
     hud.coveredNavigationBar = NO;
-    [hud show:animated];
+    [hud showAnimated:animated];
 }
 
 /**
  显示弹窗
-
+ 
  @param title 提示消息
  */
-+(void)showWithTitle:(NSString *)title
++ (void)showWithTitle:(NSString *)title
 {
     MBProgressHUD *hud = [self initialization];
-    hud.labelText = title;
-    [hud show:YES];
+    hud.label.text = title;
+    [hud showAnimated:YES];
 }
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  隐藏弹窗
  *
  *  @param animated 动画
  */
-+ (void)hide:(BOOL)animated
++ (void)hideAnimated:(BOOL)animated
 {
-    [[self initialization] hide:animated];
+    [[self initialization] hideAnimated:animated];
 }
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  隐藏弹窗
  *
  *  @param animated 动画
  *  @param delay    时长
  */
-+ (void)hide:(BOOL)animated
-  afterDelay:(NSTimeInterval)delay
++ (void)hideAnimated:(BOOL)animated
+          afterDelay:(NSTimeInterval)delay
 {
     [self performSelector:@selector(hideDelayed:)
                withObject:[NSNumber numberWithBool:animated]
@@ -273,7 +223,7 @@ whileExecutingBlock:(dispatch_block_t)block
 
 + (void)hideDelayed:(NSNumber *)animated
 {
-    [self hide:[animated boolValue]];
+    [self hideAnimated:[animated boolValue]];
 }
 
 @end

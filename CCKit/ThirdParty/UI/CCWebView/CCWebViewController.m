@@ -460,7 +460,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
 - (void)delaySetColor
 {
-    [CCProgressHUD hide:YES];
+    [CCProgressHUD hideAnimated:YES];
     
     if (NSClassFromString(@"WKWebView")) {
         self.webWKView.opaque = NO;

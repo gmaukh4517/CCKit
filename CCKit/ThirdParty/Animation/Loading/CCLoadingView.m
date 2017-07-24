@@ -62,6 +62,16 @@
     _lineCap = lineCapStyle;
 }
 
+-(void)updateConstraints
+{
+    [super updateConstraints];
+    NSLayoutConstraint *loadLogoWidth = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeWidth multiplier:1 constant:self.frame.size.width];
+    [self addConstraint:loadLogoWidth];
+    NSLayoutConstraint *loadLogoHeight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeHeight multiplier:1 constant:self.frame.size.height];
+    
+    [self addConstraint:loadLogoHeight];
+}
+
 #pragma mark - Private
 
 - (void)startTimer

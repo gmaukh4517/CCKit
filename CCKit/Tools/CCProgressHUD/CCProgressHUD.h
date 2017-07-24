@@ -29,83 +29,48 @@
 
 /**
  *  @author CC, 16-03-21
- *  
+ *
  *  @brief 提示消息
  *
  *  @param detailsLabelText 消息内容
  */
-+ (void)hudMessages:(NSString *)detailsLabelText;
++ (void)showMessages:(NSString *)detailsLabelText;
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  提示消息
  *
  *  @param LabelText        标题内容
  *  @param detailsLabelText 详细内容
  */
-+ (void)hudMessages:(NSString *)LabelText
++ (void)showMessages:(NSString *)LabelText
    DetailsLabelText:(NSString *)detailsLabelText;
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  底部提示
  *
  *  @param detailsLabelText 提示内容
  */
-+ (void)hudToastMessage:(NSString *)detailsLabelText;
++ (void)showToastMessage:(NSString *)detailsLabelText;
 
 /**
- *  @author CC, 2016-12-30
- *  
- *  @brief  提示
- *
- *  @param LabelText 标题
- *  @param animated  是否动画
- *  @param block     执行函数
+ 提示消息
+ 
+ @param icon 提示图标
+ @param message 提示消息
  */
-+ (void)showMessage:(NSString *)LabelText
-           Animated:(BOOL)animated
-whileExecutingBlock:(dispatch_block_t)block;
++ (void)showMessageWithIcon:(NSString *)icon
+                    Message:(NSString *)message;
 
-/**
- *  @author CC, 2016-12-30
- *  
- *  @brief  提示
- *
- *  @param LabelText        标题
- *  @param detailsLabelText 详细内容
- *  @param animated         是否动画
- *  @param block            执行函数
- */
-+ (void)showMessage:(NSString *)LabelText
-   DetailsLabelText:(NSString *)detailsLabelText
-           Animated:(BOOL)animated
-whileExecutingBlock:(dispatch_block_t)block;
-
-/**
- *  @author CC, 2016-12-30
- *  
- *  @brief  提示
- *
- *  @param LabelText        标题
- *  @param detailsLabelText 详细内容
- *  @param animated         是否动画
- *  @param block            执行函数
- *  @param completion       完成函数
- */
-+ (void)showMessage:(NSString *)LabelText
-   DetailsLabelText:(NSString *)detailsLabelText
-           Animated:(BOOL)animated
-whileExecutingBlock:(dispatch_block_t)block
-    completionBlock:(void (^)())completion;
 
 #pragma mark :. Show & hide
 
 /**
  *  @author CC, 2016-01-08
- *  
+ *
  *  @brief  预留导航栏位置
  *
  *  @param animated 动画
@@ -114,7 +79,7 @@ whileExecutingBlock:(dispatch_block_t)block
 
 /**
  *  @author CC, 16-03-07
- *  
+ *
  *  @brief 预留导航栏并显示提示信息
  *
  *  @param labeText 提示信息
@@ -125,39 +90,39 @@ whileExecutingBlock:(dispatch_block_t)block
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  显弹窗
  *
  *  @param animated 动画
  */
-+ (void)show:(BOOL)animated;
-+(void)showNavigationBar:(BOOL)animated;
++ (void)showAnimated:(BOOL)animated;
++ (void)showNavigationBar:(BOOL)animated;
 
 /**
  显示弹窗
  
  @param title 提示消息
  */
-+(void)showWithTitle:(NSString *)title;
++ (void)showWithTitle:(NSString *)title;
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  隐藏弹窗
  *
  *  @param animated 动画
  */
-+ (void)hide:(BOOL)animated;
++ (void)hideAnimated:(BOOL)animated;
 
 /**
  *  @author CC, 2016-12-29
- *  
+ *
  *  @brief  隐藏弹窗
  *
  *  @param animated 动画
  *  @param delay    时长
  */
-+ (void)hide:(BOOL)animated
++ (void)hideAnimated:(BOOL)animated
   afterDelay:(NSTimeInterval)delay;
 
 

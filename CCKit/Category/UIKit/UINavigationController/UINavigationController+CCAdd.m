@@ -115,6 +115,8 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     
     // Forward to primary implementation.
     if (![self.viewControllers containsObject:viewController]) {
+        UIWindow *windowView = [UIApplication sharedApplication].keyWindow;
+        [[windowView viewWithTag:999999] removeFromSuperview];
         [self cc_pushViewController:viewController animated:animated];
     }
 }
