@@ -113,6 +113,7 @@ static dispatch_once_t onceToken;
             [textField resignFirstResponder];
         }
     }
+    [tap.view endEditing:YES];
 }
 
 #pragma mark -
