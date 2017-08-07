@@ -23,11 +23,11 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "CCViewProtocol.h"
-#import "CCViewModelProtocol.h"
-#import "CCViewMangerProtocol.h"
 #import "CCMediator.h"
+#import "CCViewMangerProtocol.h"
+#import "CCViewModelProtocol.h"
+#import "CCViewProtocol.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,11 +38,11 @@ typedef _Nonnull id (^ViewModelBlock)();
 /**
  *  ViewMangerInfosBlock
  */
-typedef void (^ViewMangerInfosBlock)(NSString *info, NSDictionary *eventDic);
+typedef void (^ViewMangerInfosBlock)(NSString *info, NSDictionary *params);
 /**
  *  ViewModelInfosBlock
  */
-typedef void (^ViewModelInfosBlock)();
+typedef void (^ViewModelInfosBlock)(NSString *info, NSDictionary *params);
 
 
 @interface NSObject (CCProperties)
@@ -50,7 +50,7 @@ typedef void (^ViewModelInfosBlock)();
 /**
  *  viewModelBlock
  */
-@property(nonatomic, copy, nonnull) ViewModelBlock viewModelBlock;
+@property (nonatomic, copy, nonnull) ViewModelBlock viewModelBlock;
 
 /**
  *  获取一个对象的所有属性
@@ -60,37 +60,41 @@ typedef void (^ViewModelInfosBlock)();
 /**
  *  viewMangerDelegate
  */
-@property(nullable, nonatomic, weak) id<CCViewMangerProtocol> viewMangerDelegate;
+@property (nullable, nonatomic, weak) id<CCViewMangerProtocol> viewMangerDelegate;
 
 /**
  *  ViewMangerInfosBlock
  */
-@property(nonatomic, copy) ViewMangerInfosBlock viewMangerInfosBlock;
+@property (nonatomic, copy) ViewMangerInfosBlock viewMangerInfosBlock;
 
 /**
  *  viewModelDelegate
  */
-@property(nullable, nonatomic, weak) id<CCViewModelProtocol> viewModelDelegate;
+@property (nullable, nonatomic, weak) id<CCViewModelProtocol> viewModelDelegate;
 
 /**
  *  ViewModelInfosBlock
  */
-@property(nonatomic, copy) ViewModelInfosBlock viewModelInfosBlock;
+@property (nonatomic, copy) ViewModelInfosBlock viewModelInfosBlock;
 
 /**
  *  mediator
  */
-@property(nonatomic, strong) CCMediator *cc_mediator;
+@property (nonatomic, strong) CCMediator *cc_mediator;
 
 /**
  *  cc_viewMangerInfos
  */
-@property(nonatomic, copy) NSDictionary *cc_viewMangerInfos;
+@property (nonatomic, copy) NSDictionary *cc_viewMangerInfos;
 
 /**
  *  cc_viewModelInfos
  */
-@property(nonatomic, copy) NSDictionary *cc_viewModelInfos;
+@property (nonatomic, copy) NSDictionary *cc_viewModelInfos;
+
+- (void)didViewMangerInfosBlock:(ViewMangerInfosBlock)block;
+- (void)didViewModelInfosBlock:(ViewModelInfosBlock)block;
+- (void)didViewModelBlock:(ViewModelBlock)block;
 
 @end
 

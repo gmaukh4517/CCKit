@@ -27,7 +27,8 @@
 #import <objc/runtime.h>
 
 @implementation NSObject (CCProperties)
-
+#pragma mark -
+#pragma mark :. Delegate
 - (id<CCViewModelProtocol>)viewModelDelegate
 {
     return objc_getAssociatedObject(self, _cmd);
@@ -48,6 +49,8 @@
     objc_setAssociatedObject(self, @selector(viewMangerDelegate), viewMangerDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
+#pragma mark -
+#pragma mark :. ViewManger
 - (ViewMangerInfosBlock)viewMangerInfosBlock
 {
     return objc_getAssociatedObject(self, @selector(viewMangerInfosBlock));
@@ -58,6 +61,13 @@
     objc_setAssociatedObject(self, @selector(viewMangerInfosBlock), viewMangerInfosBlock, OBJC_ASSOCIATION_COPY);
 }
 
+- (void)didViewMangerInfosBlock:(ViewMangerInfosBlock)block
+{
+    [self setViewMangerInfosBlock:block];
+}
+
+#pragma mark -
+#pragma mark :. ViewModel
 - (ViewModelInfosBlock)viewModelInfosBlock
 {
     return objc_getAssociatedObject(self, @selector(viewModelInfosBlock));
@@ -68,6 +78,13 @@
     objc_setAssociatedObject(self, @selector(viewModelInfosBlock), viewModelInfosBlock, OBJC_ASSOCIATION_COPY);
 }
 
+- (void)didViewModelInfosBlock:(ViewModelInfosBlock)block
+{
+    [self setViewModelInfosBlock:block];
+}
+
+#pragma mark -
+#pragma mark :. ViewBlock
 - (ViewModelBlock)viewModelBlock
 {
     return objc_getAssociatedObject(self, @selector(viewModelBlock));
@@ -76,6 +93,11 @@
 - (void)setViewModelBlock:(ViewModelBlock)viewModelBlock
 {
     objc_setAssociatedObject(self, @selector(viewModelBlock), viewModelBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (void)didViewModelBlock:(ViewModelBlock)block
+{
+    [self setViewModelBlock:block];
 }
 
 /**

@@ -30,14 +30,14 @@
  *
  *  @brief  将自己事件处理通过block方式交互ViewManger
  */
-typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *eventDic);
+typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *params);
 
 /**
  *  @author CC, 16-04-20
  *
  *  @brief 将自己的信息返回给ViewModel的block
  */
-typedef void (^ViewModelInfosBlock)();
+typedef void (^ViewModelInfosBlock)(NSString *info, NSDictionary *params);
 
 typedef void (^ViewEventHandle)(NSString *info, NSDictionary *eventDic);
 
