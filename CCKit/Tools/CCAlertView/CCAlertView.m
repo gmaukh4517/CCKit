@@ -25,9 +25,8 @@
 
 #import "CCAlertView.h"
 #import "CustomIOSAlertView.h"
-#import "NSString+CCAdd.h"
 #import "UIView+Frame.h"
-#import "config.h"
+#import "CCMacros.h"
 
 @implementation CCAlertButtonModel
 

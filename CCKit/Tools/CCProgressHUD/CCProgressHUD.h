@@ -24,8 +24,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface CCProgressHUD : NSObject
+
++ (void)showMessage:(NSString *)message toView:(UIView *)view;
++ (void)showMessage:(NSString *)message toView:(UIView *)superView belowView:(UIView *)view;
+
+
++ (void)show:(NSString *)detailsLabelText;
++ (void)showProgress:(NSString *)message view:(UIView *)view;
++ (void)setProgress:(float)progress view:(UIView *)view;
 
 /**
  *  @author CC, 16-03-21
@@ -45,7 +54,7 @@
  *  @param detailsLabelText 详细内容
  */
 + (void)showMessages:(NSString *)LabelText
-   DetailsLabelText:(NSString *)detailsLabelText;
+    DetailsLabelText:(NSString *)detailsLabelText;
 
 /**
  *  @author CC, 2016-12-29
@@ -123,7 +132,7 @@
  *  @param delay    时长
  */
 + (void)hideAnimated:(BOOL)animated
-  afterDelay:(NSTimeInterval)delay;
+          afterDelay:(NSTimeInterval)delay;
 
 
 @end
