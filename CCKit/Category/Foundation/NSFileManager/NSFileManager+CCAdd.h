@@ -83,4 +83,6 @@
  */
 + (double)availableDiskSpace;
 
++ (unsigned long long)sizeOfFolder:(NSString *)folderPath;
+
 @end

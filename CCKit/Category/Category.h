@@ -56,7 +56,6 @@
 #pragma mark UIKit
 #import <CCKit/UIActionSheet+CCAdd.h>
 #import <CCKit/UIAlertView+CCAdd.h>
-#import <CCKit/UIApplication+CCAdd.h>
 #import <CCKit/UIBarButtonItem+CCAdd.h>
 #import <CCKit/UIBarButtonItem+Badge.h>
 #import <CCKit/UIBezierPath+CCAdd.h>
@@ -70,7 +69,6 @@
 #import <CCKit/UIFont+CCAdd.h>
 #import <CCKit/UIGestureRecognizer+CCAdd.h>
 #import <CCKit/UIImage+CCAdd.h>
-//#import <CCKit/UIImage+WebP.h>
 #import <CCKit/UIImageView+CCAdd.h>
 #import <CCKit/UILabel+CCAdd.h>
 #import <CCKit/UINavigationBar+CCAdd.h>

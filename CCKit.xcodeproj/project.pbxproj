@@ -609,8 +609,6 @@
 		42FC734F1E70012800FBBE42 /* UIActionSheet+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC727C1E70012800FBBE42 /* UIActionSheet+CCAdd.m */; };
 		42FC73501E70012800FBBE42 /* UIAlertView+CCAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC727E1E70012800FBBE42 /* UIAlertView+CCAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC73511E70012800FBBE42 /* UIAlertView+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC727F1E70012800FBBE42 /* UIAlertView+CCAdd.m */; };
-		42FC73521E70012800FBBE42 /* UIApplication+CCAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72811E70012800FBBE42 /* UIApplication+CCAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		42FC73531E70012800FBBE42 /* UIApplication+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72821E70012800FBBE42 /* UIApplication+CCAdd.m */; };
 		42FC73541E70012800FBBE42 /* UIBarButtonItem+CCAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72841E70012800FBBE42 /* UIBarButtonItem+CCAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC73551E70012800FBBE42 /* UIBarButtonItem+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72851E70012800FBBE42 /* UIBarButtonItem+CCAdd.m */; };
 		42FC73561E70012800FBBE42 /* UIBarButtonItem+Badge.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72861E70012800FBBE42 /* UIBarButtonItem+Badge.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1299,8 +1297,6 @@
 		42FC727C1E70012800FBBE42 /* UIActionSheet+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+CCAdd.m"; sourceTree = "<group>"; };
 		42FC727E1E70012800FBBE42 /* UIAlertView+CCAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+CCAdd.h"; sourceTree = "<group>"; };
 		42FC727F1E70012800FBBE42 /* UIAlertView+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+CCAdd.m"; sourceTree = "<group>"; };
-		42FC72811E70012800FBBE42 /* UIApplication+CCAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+CCAdd.h"; sourceTree = "<group>"; };
-		42FC72821E70012800FBBE42 /* UIApplication+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+CCAdd.m"; sourceTree = "<group>"; };
 		42FC72841E70012800FBBE42 /* UIBarButtonItem+CCAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+CCAdd.h"; sourceTree = "<group>"; };
 		42FC72851E70012800FBBE42 /* UIBarButtonItem+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+CCAdd.m"; sourceTree = "<group>"; };
 		42FC72861E70012800FBBE42 /* UIBarButtonItem+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Badge.h"; sourceTree = "<group>"; };
@@ -3449,8 +3445,6 @@
 		42FC72801E70012800FBBE42 /* UIApplication */ = {
 			isa = PBXGroup;
 			children = (
-				42FC72811E70012800FBBE42 /* UIApplication+CCAdd.h */,
-				42FC72821E70012800FBBE42 /* UIApplication+CCAdd.m */,
 			);
 			path = UIApplication;
 			sourceTree = "<group>";
@@ -3940,7 +3934,6 @@
 				422ADD3D1ECBE4BA0031D9E0 /* lame.h in Headers */,
 				42FC72F91E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h in Headers */,
 				42FC71BA1E6FFC0000FBBE42 /* NSString+CCExtension.h in Headers */,
-				42FC73521E70012800FBBE42 /* UIApplication+CCAdd.h in Headers */,
 				429854C61EA6098200255C48 /* CCDrawerVisualState.h in Headers */,
 				423B4FA11F0B4A290066EBA4 /* FBAllocationTrackerHelpers.h in Headers */,
 				423B4C711E890C8C007139EC /* CCRefreshHeaderView.h in Headers */,
@@ -4422,7 +4415,6 @@
 				423B500A1F0B79260066EBA4 /* RetainCycleAnalysisCache.m in Sources */,
 				42657AFE1EC079D30025B2D2 /* ParentMaker.m in Sources */,
 				42FC713B1E6FDE0400FBBE42 /* NSPersistentStoreCoordinator+CCAdd.m in Sources */,
-				42FC73531E70012800FBBE42 /* UIApplication+CCAdd.m in Sources */,
 				42FC72FC1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m in Sources */,
 				42B013A81F1F487E006A752C /* CCAppFluecyMonitor.m in Sources */,
 				42954A831E712BE100F4CC4C /* FLAnimatedImage.m in Sources */,

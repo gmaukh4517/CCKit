@@ -26,7 +26,6 @@
 #import "CCImageCropViewController.h"
 #import "CCImageScrollView.h"
 #import "CCTouchView.h"
-#import "UIApplication+CCAdd.h"
 #import "UIImage+CCAdd.h"
 #import "CGGeometry+CCImageCropper.h"
 
@@ -45,7 +44,6 @@ static const CGFloat kK = 0;
 @property(assign, nonatomic) BOOL originalNavigationControllerNavigationBarHidden;
 @property(strong, nonatomic) UIImage *originalNavigationControllerNavigationBarShadowImage;
 @property(copy, nonatomic) UIColor *originalNavigationControllerViewBackgroundColor;
-@property(assign, nonatomic) BOOL originalStatusBarHidden;
 
 @property(strong, nonatomic) CCImageScrollView *imageScrollView;
 @property(strong, nonatomic) CCTouchView *overlayView;
@@ -156,12 +154,6 @@ static const CGFloat kK = 0;
 {
     [super viewWillAppear:animated];
 
-    UIApplication *application = [UIApplication cc_sharedApplication];
-    if (application) {
-        self.originalStatusBarHidden = application.statusBarHidden;
-        [application setStatusBarHidden:YES];
-    }
-
     self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 
@@ -180,11 +172,6 @@ static const CGFloat kK = 0;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
-    UIApplication *application = [UIApplication cc_sharedApplication];
-    if (application) {
-        [application setStatusBarHidden:self.originalStatusBarHidden];
-    }
 
     [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];
     self.navigationController.navigationBar.shadowImage = self.originalNavigationControllerNavigationBarShadowImage;

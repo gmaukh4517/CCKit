@@ -27,6 +27,7 @@
 #define CCMacros_h
 
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import <pthread.h>
 
 #pragma mark -
@@ -179,20 +180,70 @@ static inline void cc_view_singleFillet(UIView *view, UIRectCorner angle, CGFloa
 }
 
 #pragma mark -
-#pragma mark :. 其他
+#pragma mark :. 文件
 
-/** 越狱工具路径 **/
-const char *jailbreak_tool_pathes[] = {
-    "/Applications/Cydia.app",
-    "/Library/MobileSubstrate/MobileSubstrate.dylib",
-    "/bin/bash",
-    "/usr/sbin/sshd",
-    "/etc/apt",
-};
+/** 获取Documents目录 */
+static inline NSString* cc_documentsPath()
+{
+    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+}
+
+/** 获得Documents下指定文件名的文件路径 */
+static inline NSString* cc_documentsPathName(NSString *fileName)
+{
+    return [cc_documentsPath() stringByAppendingPathComponent:fileName];
+}
+
+/** 获取Library目录 */
+static inline NSString* cc_libraryPath()
+{
+    return [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
+}
+
+/** 获取Caches目录 */
+static inline NSString* cc_cachesPath()
+{
+    return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+}
+
+/**
+ 生成子文件夹(如果子文件夹不存在，则直接创建；如果已经存在，则直接返回)
+ 
+ @param path 文件路径
+ @param subFolder 子文件夹名
+ @return 返回文件夹路径
+ */
+static inline NSString* cc_createSubFolder(NSString *path, NSString *subFolder)
+{
+    NSString *subFolderPath = [NSString stringWithFormat:@"%@/%@", path, subFolder];
+    BOOL isDir = NO;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:subFolderPath isDirectory:&isDir];
+    if (!(isDir == YES && existed == YES)) {
+        [fileManager createDirectoryAtPath:subFolderPath
+               withIntermediateDirectories:YES
+                                attributes:nil
+                                     error:nil];
+    }
+    
+    return subFolderPath;
+}
+
+#pragma mark -
+#pragma mark :. 其他
 
 /** 判断设备是否越狱 **/
 static inline int cc_isJailbreak()
 {
+    /** 越狱工具路径 **/
+    const char *jailbreak_tool_pathes[] = {
+        "/Applications/Cydia.app",
+        "/Library/MobileSubstrate/MobileSubstrate.dylib",
+        "/bin/bash",
+        "/usr/sbin/sshd",
+        "/etc/apt",
+    };
+    
     int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[0]);
     for (int i = 0; i < appay_size; i++) {
         if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:jailbreak_tool_pathes[i]]]) {

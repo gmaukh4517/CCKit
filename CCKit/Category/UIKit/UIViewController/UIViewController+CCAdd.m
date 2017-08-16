@@ -26,7 +26,6 @@
 #import "CCProperty.h"
 #import "NSObject+CCAdd.h"
 #import "NSString+CCAdd.h"
-#import "UIApplication+CCAdd.h"
 #import "UITabBar+CCAdd.h"
 #import "UITableView+CCAdd.h"
 #import "UIView+Method.h"

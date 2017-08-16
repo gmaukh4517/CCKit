@@ -203,9 +203,7 @@
  */
 + (void)showAnimated:(BOOL)animated
 {
-    cc_dispatch_async_on_main_queue(^{
-        [[self initialization] showAnimated:animated];
-    });
+    [[self initialization] showAnimated:animated];
 }
 
 + (void)showNavigationBar:(BOOL)animated

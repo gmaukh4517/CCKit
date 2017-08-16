@@ -25,7 +25,7 @@
 
 #import "CCDebugFluencyHelper.h"
 
-const int maxCrashLogNum = 20;
+const int maxFluencyLogNum = 20;
 
 #define fluencyPlistName @"CCfluencyLog.plist"
 #define kFluencyLogPath [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:@"CCfluencyLog"]
@@ -88,7 +88,7 @@ const int maxCrashLogNum = 20;
     [_fluencyLogPlist insertObject:dateString atIndex:0];
     [_fluencyLogPlist writeToFile:[_fluencyLogPath stringByAppendingPathComponent:fluencyPlistName] atomically:YES];
     
-    if (_fluencyLogPlist.count > maxCrashLogNum) {
+    if (_fluencyLogPlist.count > maxFluencyLogNum) {
         [[NSFileManager defaultManager] removeItemAtPath:[_fluencyLogPath stringByAppendingPathComponent:[_fluencyLogPlist objectAtIndex:0]] error:nil];
         [_fluencyLogPlist writeToFile:[_fluencyLogPath stringByAppendingPathComponent:fluencyPlistName] atomically:YES];
     }
