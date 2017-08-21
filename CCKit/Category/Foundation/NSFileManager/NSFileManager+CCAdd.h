@@ -83,6 +83,37 @@
  */
 + (double)availableDiskSpace;
 
+/** 根据路径返回目录或文件的大小 */
 + (unsigned long long)sizeOfFolder:(NSString *)folderPath;
+
+/** 得到指定目录下的所有文件 */
++ (NSArray *)getAllFileNames:(NSString *)dirPath;
+
+/** 删除指定目录或文件 */
++ (BOOL)clearCachesWithFilePath:(NSString *)path;
+
+/** 清空指定目录下文件 */
++ (BOOL)clearCachesFromDirectoryPath:(NSString *)dirPath;
+
+/** 清理网页缓存 */
++ (BOOL)clearCachesWeb;
+
+/** 清理信息类缓存 */
++ (BOOL)clearCachesInfo;
+
+/** 清理所有缓存 */
++ (void)clearAllCaches;
+
+/** 获取缓存大小 */
++ (NSUInteger)getCachesSize;
+
+/** 获取缓存大小字符串 */
++ (NSString *)getCachesSizeString;
+
+/** 创建cache/User文件夹 */
++ (void)createUserCacheFile;
+
+/** 获取cache/User文件夹路径 */
++ (NSString *)getCacheUserPath;
 
 @end
