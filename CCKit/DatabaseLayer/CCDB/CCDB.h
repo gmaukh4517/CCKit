@@ -1,8 +1,8 @@
 //
-//  CCCoreData.h
+//  CCDB.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2017 CC ( https://github.com/gmaukh4517/CCKit )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,17 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_CCCoreData_h
-#define CCKit_CCCoreData_h
+#ifndef CCDB_h
+#define CCDB_h
 
-#import <CCKit/NSFetchRequest+CCAdd.h>
-#import <CCKit/NSManagedObject+CCAdd.h>
-#import <CCKit/NSManagedObjectContext+CCAdd.h>
-#import <CCKit/NSPersistentStoreCoordinator+CCAdd.h>
+#import <CCKit/CCDBManager.h>
+#import <CCKit/NSObject+CCDBAdd.h>
 
-#import <CCKit/BaseManagedObject+Facade.h>
-#import <CCKit/CCCollectionViewFetchResultController.h>
-#import <CCKit/CCTableViewFetchResultController.h>
+/** 自定义数据库名 **/
+extern void CCDBSqliteName(NSString *sqliteName);
+/** 删除数据库 **/
+extern BOOL CCDBDeleteSqlite(NSString *sqliteName);
+/** 是否输入日志 (默认不打开) **/
+extern void CCDBEnterLog(BOOL debug);
 
-#import <CCKit/CCDatabaseManager+Manager.h>
-#import <CCKit/CCDatabaseManager.h>
-
-#import <CCKit/CCDB.h>
-#import <CCKit/FMDB.h>
-
-#endif
+#endif /* CCDB_h */

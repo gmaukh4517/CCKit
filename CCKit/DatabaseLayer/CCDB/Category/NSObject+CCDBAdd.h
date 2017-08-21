@@ -1,8 +1,8 @@
 //
-//  CCCoreData.h
+//  NSObject+CCDBAdd.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2017 CC ( https://github.com/gmaukh4517/CCKit )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,20 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_CCCoreData_h
-#define CCKit_CCCoreData_h
+#import <Foundation/Foundation.h>
 
-#import <CCKit/NSFetchRequest+CCAdd.h>
-#import <CCKit/NSManagedObject+CCAdd.h>
-#import <CCKit/NSManagedObjectContext+CCAdd.h>
-#import <CCKit/NSPersistentStoreCoordinator+CCAdd.h>
+/** 数组中需要转换的模型类 */
+typedef NSDictionary * (^CCDBObjectClassInArray)();
 
-#import <CCKit/BaseManagedObject+Facade.h>
-#import <CCKit/CCCollectionViewFetchResultController.h>
-#import <CCKit/CCTableViewFetchResultController.h>
+@interface NSObject (CCDBAdd)
 
-#import <CCKit/CCDatabaseManager+Manager.h>
-#import <CCKit/CCDatabaseManager.h>
+/** 本库自带的自动增长主键. **/
+@property (nonatomic, strong) NSNumber *cc_identifier;
+/** 数据创建时间(即存入数据库的时间) **/
+@property (nonatomic, copy) NSString *cc_createTime;
+/** 数据最后那次更新的时间. **/
+@property (nonatomic, copy) NSString *cc_updateTime;
 
-#import <CCKit/CCDB.h>
-#import <CCKit/FMDB.h>
++(void)ccdb_setupObjectClassInArray:(CCDBObjectClassInArray)objectClassInArray;
 
-#endif
+@end

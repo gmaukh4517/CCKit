@@ -1,8 +1,8 @@
 //
-//  CCCoreData.h
+//  CCDBTool.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2017 CC ( https://github.com/gmaukh4517/CCKit )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,19 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_CCCoreData_h
-#define CCKit_CCCoreData_h
+#import <Foundation/Foundation.h>
 
-#import <CCKit/NSFetchRequest+CCAdd.h>
-#import <CCKit/NSManagedObject+CCAdd.h>
-#import <CCKit/NSManagedObjectContext+CCAdd.h>
-#import <CCKit/NSPersistentStoreCoordinator+CCAdd.h>
+@interface CCDBTool : NSObject
 
-#import <CCKit/BaseManagedObject+Facade.h>
-#import <CCKit/CCCollectionViewFetchResultController.h>
-#import <CCKit/CCTableViewFetchResultController.h>
++ (id)isRespondsToSelector:(SEL)selector class:(Class)classs;
 
-#import <CCKit/CCDatabaseManager+Manager.h>
-#import <CCKit/CCDatabaseManager.h>
 
-#import <CCKit/CCDB.h>
-#import <CCKit/FMDB.h>
+#pragma mark -
+#pragma mark :. CCDBProperty
+/** 获取对象属性与属性类型 **/
++ (NSDictionary *)objectProperties:(Class)classs;
 
-#endif
+/** 获取对象属性与值 **/
++ (NSDictionary *)objectSqlProperties:(Class)classs;
+
+@end
