@@ -148,7 +148,7 @@ static NSSet *foundationClasses_;
     NSMutableArray *propertySQLTypes = [NSMutableArray array];
     NSArray *filterColumns = [CCDBTool filterColumns:classs];
     
-    [propertyNames addObject:@"cc_identifier"];//主键
+    [propertyNames addObject:@"cc_identifier"]; //主键
     [propertyTypes addObject:@"i"];
     [propertySQLTypes addObject:SQLINTEGER];
     
@@ -221,7 +221,7 @@ static NSSet *foundationClasses_;
                                  id propertyValue = [object valueForKey:propertyName];
                                  if (propertyValue) {
                                      NSString *propertyType = [NSString stringWithUTF8String:ivar_getTypeEncoding(thisIvar)];
-                                     propertyValue = [CCDBTool valueAnalysisHandle:propertyValue valueType:propertyType encode:YES];
+                                     propertyValue = [CCDBTool valueAnalysisHandle:propertyValue level:0 valueType:propertyType encode:YES];
                                      [propertyM setObject:propertyValue forKey:propertyName];
                                  }
                              }
@@ -262,10 +262,12 @@ static NSSet *foundationClasses_;
  值分析处理
  
  @param value 值
+ @param level 级别 0 级 用于存储需要编码 大于0级都不是存储对象不要编码
  @param valueType 值类型
  @param isEncode 是否编解码
  */
 + (id)valueAnalysisHandle:(id)value
+                    level:(NSInteger)level
                 valueType:(NSString *)valueType
                    encode:(BOOL)isEncode
 {
@@ -301,37 +303,50 @@ static NSSet *foundationClasses_;
         }
     } else if ([valueType isEqualToString:@"@\"NSArray\""] || [valueType isEqualToString:@"@\"NSMutableArray\""] ||
                [valueType isEqualToString:@"@\"NSSet\""] || [valueType isEqualToString:@"@\"NSMutableSet\""]) {
-        if (isEncode) {
-            NSArray *arr = [self arrayToSqlObject:value];
-            return [[NSKeyedArchiver archivedDataWithRootObject:arr] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        if (level == 0) {
+            if (isEncode) {
+                NSArray *arr = [self arrayToSqlObject:value];
+                return [[NSKeyedArchiver archivedDataWithRootObject:arr] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
+            } else {
+                NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            }
         } else {
-            NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            return [self arrayToSqlObject:value];
         }
     } else if ([valueType isEqualToString:@"@\"NSDictionary\""] || [valueType isEqualToString:@"@\"NSMutableDictionary\""]) {
-        if (isEncode) {
-            NSArray *arr = [self arrayToSqlObject:value];
-            return [[NSKeyedArchiver archivedDataWithRootObject:arr] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
-        } else {
-            NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (level == 0) {
+            if (isEncode) {
+                NSDictionary *dic = [self dictionaryToSqlObject:value];
+                return [[NSKeyedArchiver archivedDataWithRootObject:dic] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
+            } else {
+                NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            }
         }
+        return [self dictionaryToSqlObject:value];
     } else if ([valueType isEqualToString:@"@\"NSHashTable\""]) {
-        if (isEncode) {
-            NSArray *arr = [self hashTableToSqlObject:value];
-            return [[NSKeyedArchiver archivedDataWithRootObject:arr] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
-        } else {
-            NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (level == 0) {
+            if (isEncode) {
+                NSArray *arr = [self hashTableToSqlObject:value];
+                return [[NSKeyedArchiver archivedDataWithRootObject:arr] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
+            } else {
+                NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            }
         }
+        return [self hashTableToSqlObject:value];
     } else if ([valueType isEqualToString:@"@\"NSMapTable\""]) {
-        if (isEncode) {
-            NSArray *arr = [self hashTableToSqlObject:value];
-            return [[NSKeyedArchiver archivedDataWithRootObject:arr] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
-        } else {
-            NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (level == 0) {
+            if (isEncode) {
+                NSDictionary *dic = [self mapTableToSqlObject:value];
+                return [[NSKeyedArchiver archivedDataWithRootObject:dic] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
+            } else {
+                NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            }
         }
+        return [self mapTableToSqlObject:value];
     } else if ([valueType containsString:@"NSRange"]) {
         if (isEncode) {
             return NSStringFromRange([value rangeValue]);
@@ -367,11 +382,21 @@ static NSSet *foundationClasses_;
                [valueType isEqualToString:@"d"] || [valueType isEqualToString:@"D"]) {
         return value;
     } else {
-        if (isEncode) {
-            return [self objectToSqlObject:value];
-        } else {
-            return [self jsonToObjectWithClassName:valueType keyValue:value];
+        if (level == 0) {
+            if (isEncode) {
+                NSDictionary *dic = [self objectToSqlObject:value];
+                return [[NSKeyedArchiver archivedDataWithRootObject:dic] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
+                ;
+            } else {
+                NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                value = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                
+                NSString *objeType = [valueType stringByReplacingOccurrencesOfString:@"@\"" withString:@""];
+                objeType = [objeType stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+                return [self jsonToObjectWithClassName:objeType keyValue:value level:level + 1];
+            }
         }
+        return [self objectToSqlObject:value];
     }
 }
 
@@ -412,6 +437,11 @@ static NSSet *foundationClasses_;
         return [self hashTableToSqlObject:value];
     } else if ([value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSData class]]) {
         return value;
+    } else if ([value isKindOfClass:[UIImage class]]) {
+        NSData *data = UIImageJPEGRepresentation(value, 1);
+        NSNumber *maxLength = MaxData;
+        NSAssert(data.length < maxLength.integerValue, @"最大存储限制为100M");
+        return data;
     } else {
         return [self objectToSqlObject:value];
     }
@@ -482,7 +512,7 @@ static NSSet *foundationClasses_;
         NSString *propertyType = [propertyTypeArr objectAtIndex:i];
         id propertyValue = [object valueForKey:propertyName];
         if (propertyValue) {
-            propertyValue = [self valueAnalysisHandle:propertyValue valueType:propertyType encode:YES];
+            propertyValue = [self valueAnalysisHandle:propertyValue level:1 valueType:propertyType encode:YES];
             [keyValueDict setObject:propertyValue forKey:propertyName];
         }
     }
@@ -492,11 +522,12 @@ static NSSet *foundationClasses_;
 /** 字典转化为对象 **/
 + (id)jsonToObjectWithClassName:(NSString *)className
                        keyValue:(NSDictionary *)keyValue
+                          level:(NSInteger)level
 {
     id object = [NSClassFromString(className) new];
     NSDictionary *objectClassInArray = [CCDBTool objectClassInArray:[object class]]; // 模型中嵌套模型解析
     
-    NSDictionary *propertys = [object properties];
+    NSDictionary *propertys = [CCDBTool objectProperties:[object class]];
     NSArray *propertyNames = [propertys objectForKey:@"propertyName"];
     NSArray *propertyTypes = [propertys objectForKey:@"propertyType"];
     
@@ -505,10 +536,10 @@ static NSSet *foundationClasses_;
         if (remoteValue) {
             if ([propertyNames containsObject:key]) {
                 NSInteger index = [propertyNames indexOfObject:key];
-                remoteValue = [self valueAnalysisHandle:remoteValue valueType:[propertyTypes objectAtIndex:index] encode:NO];
                 
+                remoteValue = [CCDBTool valueAnalysisHandle:remoteValue level:level valueType:[propertyTypes objectAtIndex:index] encode:NO];
                 if ([objectClassInArray.allKeys containsObject:key]) //解析嵌套模型
-                    remoteValue = [self jsonToObjectWithClassName:[objectClassInArray objectForKey:key] keyValue:remoteValue];
+                    remoteValue = [CCDBTool jsonToObjectWithClassName:[objectClassInArray objectForKey:key] keyValue:remoteValue level:level];
                 
                 [object setValue:remoteValue forKey:key];
             }
@@ -517,5 +548,9 @@ static NSSet *foundationClasses_;
     return object;
 }
 
++(id)sqlObjectToWithClass:(NSString *)className keyValue:(NSDictionary *)keyValue
+{
+    return [CCDBTool jsonToObjectWithClassName:className keyValue:keyValue level:0];
+}
 
 @end

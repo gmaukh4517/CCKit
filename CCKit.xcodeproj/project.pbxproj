@@ -147,7 +147,7 @@
 		423B500A1F0B79260066EBA4 /* RetainCycleAnalysisCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B50061F0B79260066EBA4 /* RetainCycleAnalysisCache.m */; };
 		423D58CF1EC2AA17001A02A8 /* NSArray+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 423D58CE1EC2AA17001A02A8 /* NSArray+CCAdd.m */; };
 		4244009F1F44452500C5F321 /* CCDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 4244009D1F44452500C5F321 /* CCDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		424400A81F4448AC00C5F321 /* NSObject+CCDBAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 424400A61F4448AC00C5F321 /* NSObject+CCDBAdd.h */; };
+		424400A81F4448AC00C5F321 /* NSObject+CCDBAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 424400A61F4448AC00C5F321 /* NSObject+CCDBAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		424400A91F4448AC00C5F321 /* NSObject+CCDBAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 424400A71F4448AC00C5F321 /* NSObject+CCDBAdd.m */; };
 		424CCD711EC16FD800C85E8C /* CCPerformanceStatusBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 424CCD6F1EC16FD800C85E8C /* CCPerformanceStatusBar.h */; };
 		424CCD721EC16FD800C85E8C /* CCPerformanceStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 424CCD701EC16FD800C85E8C /* CCPerformanceStatusBar.m */; };

@@ -23,6 +23,15 @@
 // THE SOFTWARE.
 //
 
+/*
+ 特定参数说明:
+ 
+ ::: keyPathValues  数组,形式@[@"user.student.name",bg_equal,@"小芳",@"user.student.conten",bg_contains,@"书"] 即查询user.student.name=@"小芳" 和 user.student.content中包含@“书”这个字符串的对象的条数.
+ 
+ ::: where 语句条件 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即更新name=标哥,age=>25的数据. 可以为nil,nil时更新所有数据; 不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath更新接口).
+ */
+
+
 #ifndef CCDB_h
 #define CCDB_h
 

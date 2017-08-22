@@ -40,7 +40,7 @@ static NSString *const kPRIMARYKEY = @"cc_identifier";
 static NSString *const kCREATETIMEKEY = @"cc_createTime";
 static NSString *const kUPDSTETIMEKEY = @"cc_updateTime";
 
-static NSString *const kSQLITENAME = @"CCSqlite";
+static NSString *const kSQLITENAME = @"CCDBSqlite";
 
 /** keyPath查询用的关系 **/
 static NSString *const kSQLEQUAL = @"Relation_Equal";       //等于的关系；
@@ -102,7 +102,7 @@ static CCDatabase *database = nil;
 
 + (NSString *)createDirInDocument:(NSString *)pathName
 {
-    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
     if (!pathName || pathName.length == 0)
         documentPath = [documentPath stringByAppendingPathComponent:@"CCDataBases"];
     else
@@ -504,8 +504,8 @@ static CCDatabase *database = nil;
         @autoreleasepool { //由于查询出来的数据量可能巨大,所以加入自动释放池.
             NSString *param = [NSString stringWithFormat:@"limit %@,%@", @(i), @(MaxQueryPageNum)];
             [self selectTableParamWhereObject:tableName
-                                        param:param
                                         where:nil
+                                        param:param
                                      complete:^(NSArray *array) {
                                          for (NSDictionary *oldDict in array) {
                                              NSMutableDictionary *newDict = [NSMutableDictionary dictionary];
@@ -833,7 +833,7 @@ static CCDatabase *database = nil;
                               Count = ++sqlCount;
                           }
                          handle:^{
-                             NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:[CCDBTool objectSqlProperties:cls]];
+                             NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:[CCDBTool objectSqlProperties:object]];
                              [dicM setObject:@(Count) forKey:kPRIMARYKEY];
                              [WeakSelf insertTableObject:tableName
                                                   object:dicM
@@ -1568,8 +1568,8 @@ static CCDatabase *database = nil;
  查询表键值语句
  
  @param tableName 表名
- @param keys 键值
- @param where 语句
+ @param keys 条件
+ @param where 查询条件
  @param complete 完成回调
  */
 - (void)selectTableKeyValuesWithWhereObject:(NSString *)tableName
@@ -1623,6 +1623,26 @@ static CCDatabase *database = nil;
 }
 
 /**
+ 队列查询表键值语句
+
+ @param tableName 表名
+ @param keys 条件
+ @param where 查询条件
+ @param complete 完成回调
+ */
+- (void)selectQueueTableKeyValuesWithWhereObject:(NSString *)tableName
+                                            keys:(NSArray *)keys
+                                           where:(NSArray *)where
+                                        complete:(void (^)(NSArray *array))complete
+{
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    @autoreleasepool {
+        [self selectTableKeyValuesWithWhereObject:tableName keys:keys where:where complete:complete];
+    }
+    dispatch_semaphore_signal(self.semaphore);
+}
+
+/**
  查询表跟随语句
  
  @param tableName 表名
@@ -1631,8 +1651,8 @@ static CCDatabase *database = nil;
  @param complete 完成回调函数
  */
 - (void)selectTableParamWhereObject:(NSString *)tableName
-                              param:(NSString *)param
                               where:(NSArray *)where
+                              param:(NSString *)param
                            complete:(void (^)(NSArray *array))complete
 {
     NSAssert(tableName, @"表名不能为空!");
@@ -1671,10 +1691,30 @@ static CCDatabase *database = nil;
 }
 
 /**
+ 同步队列查询表
+ 
+ @param tableName 表名
+ @param param 跟随条件
+ @param where 查询条件
+ @param complete 完成回调
+ */
+- (void)selectQueueTableParamWhereObject:(NSString *)tableName
+                                   where:(NSArray *)where
+                                   param:(NSString *)param
+                                complete:(void (^)(NSArray *array))complete
+{
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    @autoreleasepool {
+        [self selectTableParamWhereObject:tableName where:where param:param complete:complete];
+    }
+    dispatch_semaphore_signal(self.semaphore);
+}
+
+/**
  查询表like
  
  @param tableName 表名
- @param keyPathValues 键值
+ @param keyPathValues 条件
  @param complete 完成回调
  */
 - (void)selectTableKeyValuesObject:(NSString *)tableName
@@ -1705,6 +1745,25 @@ static CCDatabase *database = nil;
     
     !complete ?: complete(arrM);
 }
+
+/**
+ 同步查询表like
+ 
+ @param tableName 表名
+ @param keyPathValues 条件
+ @param complete 完成回调
+ */
+-(void)selectQueueTableKeyValuesObject:(NSString *)tableName
+                   forKeyPathAndValues:(NSArray *)keyPathValues
+                              complete:(void (^)(NSArray *array))complete
+{
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    @autoreleasepool {
+        [self selectTableKeyValuesObject:tableName forKeyPathAndValues:keyPathValues complete:complete];
+    }
+    dispatch_semaphore_signal(self.semaphore);
+}
+
 
 #pragma mark -
 #pragma mark :. monitorHandel

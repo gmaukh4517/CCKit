@@ -29,7 +29,6 @@
 
 + (id)isRespondsToSelector:(SEL)selector class:(Class)classs;
 
-
 #pragma mark -
 #pragma mark :. CCDBProperty
 /** 获取对象属性与属性类型 **/
@@ -37,5 +36,12 @@
 
 /** 获取对象属性与值 **/
 + (NSDictionary *)objectSqlProperties:(Class)classs;
+
+#pragma mark -
+#pragma mark :. CCDB Object Conversion
+
++(id)sqlObjectToWithClass:(NSString *)className
+                 keyValue:(NSDictionary *)keyValue;
+
 
 @end

@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 //
 
-#import "CCDB.h"
 #import <Foundation/Foundation.h>
 
 @interface CCDBManager : NSObject
@@ -50,7 +49,6 @@
  删除表
  
  @param tableName 表名
- @param complete 完成回调
  */
 + (BOOL)ccdb_deleteTable:(NSString *)tableName;
 
@@ -278,9 +276,8 @@
  @param conditions sql语句
  @param complete 完成回调
  */
-+ (void)ccdb_selectTableObject:(NSString *)tableName
-                    conditions:(NSString *)conditions
-                      complete:(void (^)(NSArray *array))complete;
++ (NSArray *)ccdb_selectTableObject:(NSString *)tableName
+                         conditions:(NSString *)conditions;
 
 /**
  查询表键值语句
@@ -290,10 +287,9 @@
  @param where 语句
  @param complete 完成回调
  */
-+ (void)ccdb_selectTableKeyValuesWithWhereObject:(NSString *)tableName
-                                            keys:(NSArray *)keys
-                                           where:(NSArray *)where
-                                        complete:(void (^)(NSArray *array))complete;
++ (NSArray *)ccdb_selectTableKeyValuesWithWhereObject:(NSString *)tableName
+                                                 keys:(NSArray *)keys
+                                                where:(NSArray *)where;
 
 /**
  查询表跟随语句
@@ -303,10 +299,9 @@
  @param where 查询条件
  @param complete 完成回调函数
  */
-+ (void)ccdb_selectTableParamWhereObject:(NSString *)tableName
-                                   param:(NSString *)param
-                                   where:(NSArray *)where
-                                complete:(void (^)(NSArray *array))complete;
++ (NSArray *)ccdb_selectTableParamWhereObject:(NSString *)tableName
+                                        where:(NSArray *)where
+                                        param:(NSString *)param;
 
 /**
  查询表like
@@ -315,9 +310,78 @@
  @param keyPathValues 键值
  @param complete 完成回调
  */
-+ (void)ccdb_selectTableKeyValuesObject:(NSString *)tableName
-                    forKeyPathAndValues:(NSArray *)keyPathValues
-                               complete:(void (^)(NSArray *array))complete;
++ (NSArray *)ccdb_selectTableKeyValuesObject:(NSString *)tableName
+                         forKeyPathAndValues:(NSArray *)keyPathValues;
+
+/**
+ 查询表所有数据
+ 
+ @param tableName 表名
+ */
++ (NSArray *)ccdb_selectTableAll:(NSString *)tableName;
+
+/**
+ 条件查询表数据
+ 
+ @param tableName 表名
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTableWhere:(NSString *)tableName
+                             where:(NSArray *)where;
+
+/**
+ 分段排序查询数据
+ 
+ @param tableName 表名
+ @param limit 每次查询限制的条数,0则无限制.
+ @param orderBy 排序字段
+ @param desc  YES:降序，NO:升序.
+ */
++ (NSArray *)ccdb_selectTableAllWithLimit:(NSString *)tableName
+                                    limit:(NSInteger)limit
+                                  orderBy:(NSString *)orderBy
+                                     desc:(BOOL)desc;
+
+/**
+ 分页查询
+ 
+ @param tableName 表名
+ @param limit 查询范围 开始位置
+ @param offset 查询范围 条数
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTablePage:(NSString *)tableName
+                            limit:(int)limit
+                           offset:(int)offset
+                            where:(NSArray *)where;
+
+/**
+ 分页排序查询数据
+ 
+ @param tableName 表名
+ @param limit 查询范围 开始位置
+ @param offset 查询范围 条数
+ @param orderBy 排序字段
+ @param desc YES:降序，NO:升序.
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTablePage:(NSString *)tableName
+                            limit:(int)limit
+                           offset:(int)offset
+                          orderBy:(NSString *)orderBy
+                             desc:(BOOL)desc
+                            where:(NSArray *)where;
+
+/**
+ 分组查询数据
+ 
+ @param tableName 表名
+ @param groupBy 分组字段
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTableGroup:(NSString *)tableName
+                           groupBy:(NSString *)groupBy
+                             where:(NSArray *)where;
 
 #pragma mark -
 #pragma mark :. monitorHandel
@@ -331,10 +395,10 @@
  *            删除数据 = 2
  *            删表数据 = 3
  */
-- (BOOL)registerChangeWithName:(NSString *)tableName
++ (BOOL)registerChangeWithName:(NSString *)tableName
                    changeBlock:(void (^)(NSInteger result))block;
 
 /** 移除数据变化监听 **/
-- (BOOL)removeChangeWithName:(NSString *)tableName;
++ (BOOL)removeChangeWithName:(NSString *)tableName;
 
 @end

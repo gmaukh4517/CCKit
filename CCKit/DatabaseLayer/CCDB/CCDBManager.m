@@ -56,6 +56,52 @@ void CCDBEnterLog(BOOL debug)
         [CCDatabase shareManager].debug = debug;
 }
 
+#pragma mark :. SQL Handle
+/** 去除空格 **/
++ (NSString *)trimmedString:(NSString *)sql
+{
+    return [sql stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+/** 判断字符串 **/
++ (BOOL)isNotEmpty:(NSString *)sql
+{
+    return sql && ![[CCDBManager trimmedString:sql] isEqualToString:@""];
+}
+
+/**
+ Sql跟随语句拼接
+ 
+ @param groupBy 分组字段
+ @param orderBy 排序字段
+ @param desc YES:降序，NO:升序.
+ @param limit 查询范围
+ @param offset 查询条数
+ */
++ (NSString *)ccdb_FetchRequest:(NSString *)groupBy
+                        orderBy:(NSString *)orderBy
+                           desc:(BOOL)desc
+                          limit:(int)limit
+                         offset:(int)offset
+{
+    NSMutableString *query = [NSMutableString string];
+    if ([CCDBManager isNotEmpty:groupBy]) {
+        [query appendFormat:@" group by %@", groupBy];
+    }
+    
+    if ([CCDBManager isNotEmpty:orderBy]) {
+        [query appendFormat:@" order by %@ %@", orderBy, desc ? @"DESC" : @"ASC"];
+    }
+    
+    if (limit > 0) {
+        [query appendFormat:@" limit %d offset %d", limit, offset];
+    } else if (offset > 0) {
+        [query appendFormat:@" limit %d offset %d", INT_MAX, offset];
+    }
+    
+    return query;
+}
+
 #pragma mark :. tableHandle
 
 
@@ -462,7 +508,7 @@ void CCDBEnterLog(BOOL debug)
  @param where 查询语句(sql)
  */
 + (NSInteger)ccdb_selectTableMethodCount:(NSString *)tableName
-                                    type:(CCDBSqliteMethodType)methodType
+                                    type:(NSInteger)methodType
                                      key:(NSString *)key
                                    where:(NSString *)where
 {
@@ -494,16 +540,17 @@ void CCDBEnterLog(BOOL debug)
  @param conditions sql语句
  @param complete 完成回调
  */
-+ (void)ccdb_selectTableObject:(NSString *)tableName
-                    conditions:(NSString *)conditions
-                      complete:(void (^)(NSArray *array))complete
++ (NSArray *)ccdb_selectTableObject:(NSString *)tableName
+                         conditions:(NSString *)conditions
 {
-    [[CCDatabase shareManager] selectTableObject:tableName
-                                      conditions:conditions
-                                        complete:^(NSArray *array) {
-                                            [[CCDatabase shareManager] closeDB];
-                                            !complete ?: complete(array);
-                                        }];
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableObjec:tableName
+                                          conditions:conditions
+                                            complete:^(NSArray *array) {
+                                                results = array;
+                                            }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
 }
 
 /**
@@ -514,18 +561,19 @@ void CCDBEnterLog(BOOL debug)
  @param where 语句
  @param complete 完成回调
  */
-+ (void)ccdb_selectTableKeyValuesWithWhereObject:(NSString *)tableName
-                                            keys:(NSArray *)keys
-                                           where:(NSArray *)where
-                                        complete:(void (^)(NSArray *array))complete
++ (NSArray *)ccdb_selectTableKeyValuesWithWhereObject:(NSString *)tableName
+                                                 keys:(NSArray *)keys
+                                                where:(NSArray *)where
 {
-    [[CCDatabase shareManager] selectTableKeyValuesWithWhereObject:tableName
-                                                              keys:keys
-                                                             where:where
-                                                          complete:^(NSArray *array) {
-                                                              [[CCDatabase shareManager] closeDB];
-                                                              !complete ?: complete(array);
-                                                          }];
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableKeyValuesWithWhereObject:tableName
+                                                                   keys:keys
+                                                                  where:where
+                                                               complete:^(NSArray *array) {
+                                                                   results = array;
+                                                               }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
 }
 
 /**
@@ -536,19 +584,19 @@ void CCDBEnterLog(BOOL debug)
  @param where 查询条件
  @param complete 完成回调函数
  */
-+ (void)ccdb_selectTableParamWhereObject:(NSString *)tableName
-                                   param:(NSString *)param
-                                   where:(NSArray *)where
-                                complete:(void (^)(NSArray *array))complete
++ (NSArray *)ccdb_selectTableParamWhereObject:(NSString *)tableName
+                                        where:(NSArray *)where
+                                        param:(NSString *)param
 {
-    [[CCDatabase shareManager] selectTableParamWhereObject:tableName
-                                                     param:param
-                                                     where:where
-                                                  complete:^(NSArray *array) {
-                                                      [[CCDatabase shareManager] closeDB];
-                                                      !complete ?: complete(array);
-                                                      
-                                                  }];
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
+                                                          where:where
+                                                          param:param
+                                                       complete:^(NSArray *array) {
+                                                           results = array;
+                                                       }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
 }
 
 /**
@@ -558,15 +606,189 @@ void CCDBEnterLog(BOOL debug)
  @param keyPathValues 键值
  @param complete 完成回调
  */
-+ (void)ccdb_selectTableKeyValuesObject:(NSString *)tableName
-                    forKeyPathAndValues:(NSArray *)keyPathValues
-                               complete:(void (^)(NSArray *array))complete
++ (NSArray *)ccdb_selectTableKeyValuesObject:(NSString *)tableName
+                         forKeyPathAndValues:(NSArray *)keyPathValues
 {
-    [[CCDatabase shareManager] selectTableKeyValuesObject:tableName
-                                      forKeyPathAndValues:keyPathValues complete:^(NSArray *array) {
-                                          [[CCDatabase shareManager] closeDB];
-                                          !complete ?: complete(array);
-                                      }];
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableKeyValuesObject:tableName
+                                           forKeyPathAndValues:keyPathValues
+                                                      complete:^(NSArray *_Nullable array) {
+                                                          results = array;
+                                                      }];
+    //关闭数据库
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
+}
+
+/**
+ 查询表所有数据
+ 
+ @param tableName 表名
+ */
++ (NSArray *)ccdb_selectTableAll:(NSString *)tableName
+{
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
+                                                          where:nil
+                                                          param:nil
+                                                       complete:^(NSArray *array) {
+                                                           results = array;
+                                                       }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
+}
+
+/**
+ 条件查询表数据
+ 
+ @param tableName 表名
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTableWhere:(NSString *)tableName
+                             where:(NSArray *)where
+{
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
+                                                          where:where
+                                                          param:nil
+                                                       complete:^(NSArray *array) {
+                                                           results = array;
+                                                       }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
+}
+
+/**
+ 分段排序查询数据
+ 
+ @param tableName 表名
+ @param limit 每次查询限制的条数,0则无限制.
+ @param orderBy 排序字段
+ @param desc  YES:降序，NO:升序.
+ */
++ (NSArray *)ccdb_selectTableAllWithLimit:(NSString *)tableName
+                                    limit:(NSInteger)limit
+                                  orderBy:(NSString *)orderBy
+                                     desc:(BOOL)desc
+{
+    NSMutableString *param = [NSMutableString string];
+    !(orderBy && desc) ?: [param appendFormat:@"order by %@ desc", orderBy];
+    !param.length ?: [param appendString:@" "];
+    !limit ?: [param appendFormat:@"limit %@", @(limit)];
+    param = param.length ? param : nil;
+    
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
+                                                          where:nil
+                                                          param:param
+                                                       complete:^(NSArray *array) {
+                                                           results = array;
+                                                       }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
+}
+
+/**
+ 分页查询
+ 
+ @param tableName 表名
+ @param limit 查询范围 开始位置
+ @param offset 查询范围 条数
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTablePage:(NSString *)tableName
+                            limit:(int)limit
+                           offset:(int)offset
+                            where:(NSArray *)where
+{
+    return [CCDBManager ccdb_selectTablePage:tableName
+                                       limit:limit
+                                      offset:offset
+                                     orderBy:nil
+                                        desc:NO
+                                       where:where];
+}
+
+/**
+ 分页排序查询数据
+ 
+ @param tableName 表名
+ @param limit 查询范围 开始位置
+ @param offset 查询范围 条数
+ @param orderBy 排序字段
+ @param desc YES:降序，NO:升序.
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTablePage:(NSString *)tableName
+                            limit:(int)limit
+                           offset:(int)offset
+                          orderBy:(NSString *)orderBy
+                             desc:(BOOL)desc
+                            where:(NSArray *)where
+{
+    NSString *param = [CCDBManager ccdb_FetchRequest:nil
+                                             orderBy:orderBy
+                                                desc:desc
+                                               limit:limit
+                                              offset:offset];
+    
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
+                                                          where:where
+                                                          param:param
+                                                       complete:^(NSArray *array) {
+                                                           results = array;
+                                                       }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
+}
+
+/**
+ 分组查询数据
+ 
+ @param tableName 表名
+ @param groupBy 分组字段
+ @param where 查询条件
+ */
++ (NSArray *)ccdb_selectTableGroup:(NSString *)tableName
+                           groupBy:(NSString *)groupBy
+                             where:(NSArray *)where
+{
+    NSString *param = [CCDBManager ccdb_FetchRequest:groupBy
+                                             orderBy:nil
+                                                desc:NO
+                                               limit:0
+                                              offset:0];
+    
+    __block NSArray *results;
+    [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
+                                                          where:where
+                                                          param:param
+                                                       complete:^(NSArray *array) {
+                                                           results = array;
+                                                       }];
+    [[CCDatabase shareManager] closeDB];
+    return [CCDBManager sqlToObject:tableName arr:results];
+    
+}
+
+#pragma mark -
+#pragma mark :. object Handle
+
+/**
+ 对象转化
+ 
+ @param tableName 表名对应对象
+ @param arr 集合
+ */
++(NSArray *)sqlToObject:(NSString *)tableName
+                    arr:(NSArray *)arr
+{
+    NSMutableArray *array = [NSMutableArray array];
+    for (id value in arr) {
+        [array addObject: [CCDBTool sqlObjectToWithClass:tableName keyValue:value]];
+    }
+    return array;
 }
 
 #pragma mark -
@@ -581,14 +803,14 @@ void CCDBEnterLog(BOOL debug)
  *            删除数据 = 2
  *            删表数据 = 3
  */
-- (BOOL)registerChangeWithName:(NSString *)tableName
++ (BOOL)registerChangeWithName:(NSString *)tableName
                    changeBlock:(void (^)(NSInteger result))block
 {
     return [[CCDatabase shareManager] registerChangeWithName:tableName changeBlock:block];
 }
 
 /** 移除数据变化监听 **/
-- (BOOL)removeChangeWithName:(NSString *)tableName
++ (BOOL)removeChangeWithName:(NSString *)tableName
 {
     return [[CCDatabase shareManager] removeChangeWithName:tableName];
 }

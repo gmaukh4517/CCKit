@@ -448,6 +448,19 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
                                    complete:(void (^)(NSArray *array))complete;
 
 /**
+ 队列查询表键值语句
+ 
+ @param tableName 表名
+ @param keys 条件
+ @param where 查询条件
+ @param complete 完成回调
+ */
+- (void)selectQueueTableKeyValuesWithWhereObject:(NSString *)tableName
+                                            keys:(NSArray *)keys
+                                           where:(NSArray *)where
+                                        complete:(void (^)(NSArray *array))complete;
+
+/**
  查询表跟随语句
  
  @param tableName 表名
@@ -456,9 +469,22 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
  @param complete 完成回调函数
  */
 - (void)selectTableParamWhereObject:(NSString *)tableName
-                              param:(NSString *)param
                               where:(NSArray *)where
+                              param:(NSString *)param
                            complete:(void (^)(NSArray *array))complete;
+
+/**
+ 同步队列查询表
+ 
+ @param tableName 表名
+ @param param 跟随条件
+ @param where 查询条件
+ @param complete 完成回调
+ */
+- (void)selectQueueTableParamWhereObject:(NSString *)tableName
+                                   where:(NSArray *)where
+                                   param:(NSString *)param
+                                complete:(void (^)(NSArray *array))complete;
 
 /**
  查询表like
@@ -470,6 +496,17 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 - (void)selectTableKeyValuesObject:(NSString *)tableName
                forKeyPathAndValues:(NSArray *)keyPathValues
                           complete:(void (^)(NSArray *array))complete;
+
+/**
+ 同步查询表like
+ 
+ @param tableName 表名
+ @param keyPathValues 条件
+ @param complete 完成回调
+ */
+-(void)selectQueueTableKeyValuesObject:(NSString *)tableName
+                   forKeyPathAndValues:(NSArray *)keyPathValues
+                              complete:(void (^)(NSArray *array))complete;
 
 #pragma mark -
 #pragma mark :. monitorHandel
