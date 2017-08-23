@@ -35,7 +35,6 @@
 
 @end
 
-
 @protocol CustomIOSAlertViewDelegate
 
 - (void)customIOS7dialogButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
@@ -51,6 +50,8 @@
 @property (nonatomic, assign) id<CustomIOSAlertViewDelegate> delegate;
 @property (nonatomic, retain) NSArray *buttonTitles;
 @property (nonatomic, assign) BOOL useMotionEffects;
+@property (nonatomic, assign) BOOL closeOnTouchUpOutside;       // Closes the AlertView when finger is lifted outside the bounds.
+
 @property (nonatomic, assign) BOOL IsExternal;
 
 @property(nonatomic, assign) BOOL isPackage;
@@ -74,5 +75,3 @@
 - (void)dealloc;
 
 @end
-
-
