@@ -26,12 +26,19 @@
 #import "CCUncaughtExceptionHandler.h"
 #import "AvoidCrash.h"
 #import "CCDebugCrashHelper.h"
+#import "CCMacros.h"
+#import "UIDevice+CCAdd.h"
 #import <UIKit/UIKit.h>
 #include <execinfo.h>
 #include <libkern/OSAtomic.h>
 #include <sys/signal.h>
-//#import "CCMacros.h"
-#import "UIDevice+CCAdd.h"
+
+@interface CCUncaughtExceptionHandler () {
+    BOOL dismissed;
+}
+
+@end
+
 
 NSString *const UncaughtExceptionHandlerSignalExceptionName = @"UncaughtExceptionHandlerSignalExceptionName";
 NSString *const UncaughtExceptionHandlerSignalKey = @"UncaughtExceptionHandlerSignalKey";
@@ -40,8 +47,12 @@ NSString *const UncaughtExceptionHandlerAddressesKey = @"UncaughtExceptionHandle
 volatile int32_t UncaughtExceptionCount = 0;
 const int32_t UncaughtExceptionMaximum = 10;
 
-const NSInteger UncaughtExceptionHandlerSkipAddressCount = 4;
-const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
+const NSInteger skipAddressCount = 4;
+const NSInteger reportAddressCount = 5;
+
+static NSUncaughtExceptionHandler *previousUncaughtExceptionHandler;
+typedef void (*SignalHandler)(int signo, siginfo_t *info, void *context);
+static SignalHandler previousSignalHandler = NULL;
 
 @implementation CCUncaughtExceptionHandler
 
@@ -52,7 +63,7 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     char **strs = backtrace_symbols(callstack, frames);
     
     NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
-    for (int i = UncaughtExceptionHandlerSkipAddressCount; i < UncaughtExceptionHandlerSkipAddressCount + UncaughtExceptionHandlerReportAddressCount; i++)
+    for (int i = skipAddressCount; i < skipAddressCount + reportAddressCount; i++)
         [backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
     free(strs);
     
@@ -73,25 +84,18 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
 }
 
 
-- (void)validateAndSaveCriticalApplicationData
+- (void)validateAndSaveCriticalApplicationData:(NSException *)exception
 {
-}
-
-- (void)handleException:(NSException *)exception
-{
-    [self validateAndSaveCriticalApplicationData];
-    dismissed = YES;
-    
     NSMutableString *errorStr = [NSMutableString string];
     [errorStr appendFormat:@"Name of the device owner: %@ \n", [[UIDevice currentDevice] name]];
     [errorStr appendFormat:@"Device Type：%@ \n", [[UIDevice currentDevice] model]];
-    [errorStr appendFormat:@"Hardware Model：%@ \n",[[UIDevice currentDevice] hardwareDescription]];
+    [errorStr appendFormat:@"Hardware Model：%@ \n", [[UIDevice currentDevice] hardwareDescription]];
     [errorStr appendFormat:@"Device operation system：%@ \n", [[UIDevice currentDevice] systemName]];
     [errorStr appendFormat:@"Version of the current system：%@ \n", [[UIDevice currentDevice] systemVersion]];
     [errorStr appendFormat:@"Device Identity：%@ \n", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
     [errorStr appendFormat:@"Application version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     [errorStr appendFormat:@"Application Build version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-//    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"YES" : @"NO"];
+    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"YES" : @"NO"];
     [errorStr appendFormat:@"Error Cause：%@\n", [exception reason]];
     [errorStr appendFormat:@"%@ \n", [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]];
     
@@ -104,6 +108,30 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     [carsDic setObject:@"6" forKey:@"ErrType"];
     
     [[CCDebugCrashHelper manager] saveCrashException:carsDic];
+    
+    if (!dismissed) {
+        NSString *message = [NSString stringWithFormat:NSLocalizedString(@"如果点击继续，程序有可能会出现其他的问题，建议您还是点击退出按钮并重新打开\n\n"
+                                                                         @"异常原因如下:\n%@\n%@",
+                                                                         nil),
+                             [exception reason], [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"抱歉，程序出现了异常", nil)
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"退出", nil)
+                                              otherButtonTitles:NSLocalizedString(@"继续", nil), nil];
+        [alert show];
+    }
+}
+
+/**
+ 统一错误处理
+ 
+ @param exception 错误信息
+ */
+- (void)unifyHandleException:(NSException *)exception
+{
+    dismissed = YES;
+    [self validateAndSaveCriticalApplicationData:exception];
     
     CFRunLoopRef runLoop = CFRunLoopGetCurrent();
     CFArrayRef allModes = CFRunLoopCopyAllModes(runLoop);
@@ -138,6 +166,7 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
 
 @end
 
+/** 处理奔溃错误事件 **/
 void HandleException(NSException *exception)
 {
     int32_t exceptionCount = OSAtomicIncrement32(&UncaughtExceptionCount);
@@ -148,39 +177,103 @@ void HandleException(NSException *exception)
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:[exception userInfo]];
     [userInfo setObject:callStack forKey:UncaughtExceptionHandlerAddressesKey];
     
-    [[[CCUncaughtExceptionHandler alloc] init] performSelectorOnMainThread:@selector(handleException:)
+    [[[CCUncaughtExceptionHandler alloc] init] performSelectorOnMainThread:@selector(unifyHandleException:)
                                                                 withObject:[NSException exceptionWithName:[exception name]
                                                                                                    reason:[exception reason]
                                                                                                  userInfo:userInfo]
                                                              waitUntilDone:YES];
+    //覆盖处理
+    if (previousUncaughtExceptionHandler) {
+        previousUncaughtExceptionHandler(exception);
+    }
 }
 
-void SignalHandler(int signal)
+/** 奔溃错误初始化 **/
+void CCExceptionRegister(void)
+{
+    previousUncaughtExceptionHandler = NSGetUncaughtExceptionHandler();
+    
+    [AvoidCrash becomeEffective];
+    NSSetUncaughtExceptionHandler(&HandleException);
+}
+
+/** 处理信号量事件 **/
+static void CCSignalHandler(int signal, siginfo_t *info, void *context)
 {
     int32_t exceptionCount = OSAtomicIncrement32(&UncaughtExceptionCount);
     if (exceptionCount > UncaughtExceptionMaximum)
         return;
+    
+    NSString *description = nil;
+    switch (signal) {
+        case SIGABRT:
+            description = [NSString stringWithFormat:@"Signal SIGABRT was raised!\n"];
+            break;
+        case SIGILL:
+            description = [NSString stringWithFormat:@"Signal SIGILL was raised!\n"];
+            break;
+        case SIGSEGV:
+            description = [NSString stringWithFormat:@"Signal SIGSEGV was raised!\n"];
+            break;
+        case SIGFPE:
+            description = [NSString stringWithFormat:@"Signal SIGFPE was raised!\n"];
+            break;
+        case SIGBUS:
+            description = [NSString stringWithFormat:@"Signal SIGBUS was raised!\n"];
+            break;
+        case SIGPIPE:
+            description = [NSString stringWithFormat:@"Signal SIGPIPE was raised!\n"];
+            break;
+        default:
+            description = [NSString stringWithFormat:@"Signal %d was raised!", signal];
+    }
+    
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:[NSNumber numberWithInt:signal] forKey:UncaughtExceptionHandlerSignalKey];
     
     NSArray *callStack = [CCUncaughtExceptionHandler backtrace];
     [userInfo setObject:callStack forKey:UncaughtExceptionHandlerAddressesKey];
     
-    [[[CCUncaughtExceptionHandler alloc] init] performSelectorOnMainThread:@selector(handleException:)
+    [[[CCUncaughtExceptionHandler alloc] init] performSelectorOnMainThread:@selector(unifyHandleException:)
                                                                 withObject:[NSException exceptionWithName:UncaughtExceptionHandlerSignalExceptionName
-                                                                                                   reason:[NSString stringWithFormat:NSLocalizedString(@"Signal %d was raised.", nil), signal]
+                                                                                                   reason:description
                                                                                                  userInfo:userInfo]
                                                              waitUntilDone:YES];
+    
+    
+    if (previousSignalHandler) // 传递 handler
+        previousSignalHandler(signal, info, context);
 }
 
-void InstallUncaughtExceptionHandler(void)
+/** 注册信号量处理事件 **/
+void CCSignalRegister(int signal)
 {
-    [AvoidCrash becomeEffective];
-    NSSetUncaughtExceptionHandler(&HandleException);
-    signal(SIGABRT, SignalHandler);
-    signal(SIGILL, SignalHandler);
-    signal(SIGSEGV, SignalHandler);
-    signal(SIGFPE, SignalHandler);
-    signal(SIGBUS, SignalHandler);
-    signal(SIGPIPE, SignalHandler);
+    struct sigaction action;
+    action.sa_sigaction = CCSignalHandler;
+    action.sa_flags = SA_NODEFER | SA_SIGINFO;
+    sigemptyset(&action.sa_mask);
+    sigaction(signal, &action, 0);
+}
+
+/** 信号量初始化 **/
+void CCSignalInstal(void)
+{
+    struct sigaction old_action;
+    sigaction(SIGABRT, NULL, &old_action);
+    if (old_action.sa_flags & SA_SIGINFO)
+        previousSignalHandler = old_action.sa_sigaction;
+    
+    signal(SIGABRT, CCSignalRegister);
+    signal(SIGILL, CCSignalRegister);
+    signal(SIGSEGV, CCSignalRegister);
+    signal(SIGFPE, CCSignalRegister);
+    signal(SIGBUS, CCSignalRegister);
+    signal(SIGPIPE, CCSignalRegister);
+}
+
+/** 初始化奔溃捕获 **/
+void InstalCrashHandler(void)
+{
+    CCExceptionRegister();
+    CCSignalInstal();
 }

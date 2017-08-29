@@ -23,8 +23,8 @@
 // THE SOFTWARE.
 //
 
-#import "UIView+Frame.h"
 #import "CCUtilities.h"
+#import "UIView+Frame.h"
 
 @implementation UIView (Frame)
 
@@ -100,13 +100,6 @@
     return self.frame.size.height;
 }
 
-- (void)setSize:(CGSize)size
-{
-    CGRect frame = self.frame;
-    frame.size = size;
-    self.frame = frame;
-}
-
 - (void)setLeft:(CGFloat)x
 {
     
@@ -149,9 +142,28 @@
     return self.frame.origin.x + self.frame.size.width;
 }
 
+- (CGPoint)origin
+{
+    return self.frame.origin;
+}
+
+- (void)setOrigin:(CGPoint)origin
+{
+    CGRect frame = self.frame;
+    frame.origin = origin;
+    self.frame = frame;
+}
+
 - (CGSize)size
 {
     return self.frame.size;
+}
+
+- (void)setSize:(CGSize)size
+{
+    CGRect frame = self.frame;
+    frame.size = size;
+    self.frame = frame;
 }
 
 - (void)setSharpCenter:(CGPoint)center

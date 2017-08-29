@@ -26,15 +26,12 @@
 #import "CCUserDefaults.h"
 #import <Foundation/Foundation.h>
 
-@interface CCUncaughtExceptionHandler : NSObject {
-    BOOL dismissed;
-}
+@interface CCUncaughtExceptionHandler : NSObject
 
+/** 错误日志集合 **/
 + (NSArray *)obtainCrashLogs;
 
 @end
 
-void HandleException(NSException *exception);
-void SignalHandler(int signal);
-
-void InstallUncaughtExceptionHandler(void);
+/** 初始化奔溃捕获 **/
+void InstalCrashHandler(void);

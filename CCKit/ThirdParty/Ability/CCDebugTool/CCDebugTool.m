@@ -111,7 +111,7 @@
 {
 #if DEBUG
     [NSURLProtocol registerClass:[CCDebugHttpProtocol class]];
-    InstallUncaughtExceptionHandler();
+    InstalCrashHandler();
     [[CCAppFluecyMonitor sharedMonitor] startMonitoring];
     [self enableProfiler];
     
