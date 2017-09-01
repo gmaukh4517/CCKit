@@ -250,7 +250,8 @@
     id curModel = [self currentModelAtIndexPath:indexPath];
     NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
     curCell = [collectionView dequeueReusableCellWithReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
-    CCAssert(curCell, @"cell is nil Identifier ⤭ %@ ⤪", curCellIdentifier);
+    if (!curCell)
+        NSLog(@"cell is nil Identifier ⤭ %@ ⤪",curCellIdentifier);
     
     if (self.cellForItemAtIndexPath) {
         self.cellForItemAtIndexPath(curCell, indexPath, curModel, YES);
@@ -787,7 +788,7 @@
     if (_cellIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_CollectionView.viewController.cc_identifier;
         if (curVCIdentifier) {
-            NSString *curCellIdentifier = cc_Format(@"CC%@Cell", curVCIdentifier);
+            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Cell",curVCIdentifier];
             _cellIdentifier = curCellIdentifier;
         }
     }
@@ -799,7 +800,7 @@
     if (_headerIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_CollectionView.viewController.cc_identifier;
         if (curVCIdentifier) {
-            NSString *curCellIdentifier = cc_Format(@"CC%@Header", curVCIdentifier);
+            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Header", curVCIdentifier];
             _headerIdentifier = curCellIdentifier;
         }
     }
@@ -811,7 +812,7 @@
     if (_footerIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_CollectionView.viewController.cc_identifier;
         if (curVCIdentifier) {
-            NSString *curCellIdentifier = cc_Format(@"CC%@Header", curVCIdentifier);
+            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Header", curVCIdentifier];
             _footerIdentifier = curCellIdentifier;
         }
     }

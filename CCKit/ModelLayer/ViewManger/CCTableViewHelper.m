@@ -106,7 +106,7 @@
     if (_cellIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_tableView.cc_vc.cc_identifier;
         if (curVCIdentifier) {
-            NSString *curCellIdentifier = cc_Format(@"CC%@Cell", curVCIdentifier);
+            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Cell", curVCIdentifier];
             _cellIdentifier = curCellIdentifier;
         }
     }
@@ -461,7 +461,8 @@
     id curModel = [self currentModelAtIndexPath:indexPath];
     NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
     UITableViewCell *curCell = [tableView dequeueReusableCellWithIdentifier:curCellIdentifier forIndexPath:indexPath];
-    CCAssert(curCell, @"cell is nil Identifier ⤭ %@ ⤪", curCellIdentifier);
+    if (!curCell)
+        NSLog(@"cell is nil Identifier ⤭ %@ ⤪",curCellIdentifier);
     
     if (self.cellDelegate)
         curCell.viewDelegate = self.cellDelegate;

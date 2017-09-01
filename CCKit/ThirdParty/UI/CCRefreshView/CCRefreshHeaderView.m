@@ -51,7 +51,10 @@
         UILabel *lastUpdateTimeLabel = [[UILabel alloc] init];
         lastUpdateTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         lastUpdateTimeLabel.font = [UIFont boldSystemFontOfSize:12];
-        lastUpdateTimeLabel.textColor = cc_ColorRGB(150, 150, 150);
+        lastUpdateTimeLabel.textColor = [UIColor colorWithRed:150 / 255.f
+                                                        green:150 / 255.f
+                                                         blue:150 / 255.f
+                                                        alpha:1];
         lastUpdateTimeLabel.backgroundColor = [UIColor clearColor];
         lastUpdateTimeLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_lastUpdateTimeLabel = lastUpdateTimeLabel];

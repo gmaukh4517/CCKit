@@ -431,7 +431,8 @@ static char NavBarIsLoadingKey;
     
     NSString *curClassName = NSStringFromClass([self class]);
     curIdentifier = [curClassName matchWithRegex:@"(?<=^CC)\\S+(?=VC$)" atIndex:0];
-    CCAssert(curIdentifier, @"className should prefix with 'CC' and suffix with 'VC'");
+    if (!curIdentifier)
+        NSLog(@"className should prefix with 'CC' and suffix with 'VC'");
     
     if (!cc_isNull_NilORNull(curClassName)) {
         [self copyAssociateValue:curClassName withKey:_cmd];

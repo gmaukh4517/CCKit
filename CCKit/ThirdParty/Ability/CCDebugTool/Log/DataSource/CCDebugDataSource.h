@@ -27,8 +27,9 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, CCDebugDataSourceType) {
-    CCDebugDataSourceTypeCrash,
-    CCDebugDataSourceTypeFluency,
+    CCDebugDataSourceTypeNone,
+    CCDebugDataSourceTypeCrash,   /// 奔溃日志
+    CCDebugDataSourceTypeFluency, /// 卡顿日志
 };
 
 @interface CCDebugDataSource : NSObject <UITableViewDataSource>

@@ -63,6 +63,7 @@
     self.navigationItem.titleView = segmentedControl;
     self.navigationItem.title = [_itemTitle objectAtIndex:0];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(dismissViewController)];
+    self.currentIndex = -1;
     [self reloadData:0];
 }
 

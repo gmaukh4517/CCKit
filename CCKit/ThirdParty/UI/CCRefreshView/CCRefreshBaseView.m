@@ -51,7 +51,10 @@
         UILabel *statusLabel = [[UILabel alloc] init];
         statusLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         statusLabel.font = [UIFont boldSystemFontOfSize:13];
-        statusLabel.textColor = cc_ColorRGB(150, 150, 150);
+        statusLabel.textColor = [UIColor colorWithRed:150 / 255.f
+                                                green:150 / 255.f
+                                                 blue:150 / 255.f
+                                                alpha:1];
         statusLabel.backgroundColor = [UIColor clearColor];
         statusLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_statusLabel = statusLabel];
@@ -97,7 +100,10 @@
     if (!_cc_activityView) {
         CCLoadLogoView *loadingView = [[CCLoadLogoView alloc] initWithLogo:@"arrow" Frame:CGRectMake(0, 0, 40, 40)];
 //        loadingView.hidden = YES;
-        [loadingView setLineColor:cc_ColorRGB(150, 150, 150)];
+        [loadingView setLineColor:[UIColor colorWithRed:150 / 255.f
+                                                  green:150 / 255.f
+                                                   blue:150 / 255.f
+                                                  alpha:1]];
         [self addSubview:_cc_activityView = loadingView];
     }
     return _cc_activityView;

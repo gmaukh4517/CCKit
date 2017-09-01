@@ -95,7 +95,7 @@ static SignalHandler previousSignalHandler = NULL;
     [errorStr appendFormat:@"Device Identity：%@ \n", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
     [errorStr appendFormat:@"Application version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     [errorStr appendFormat:@"Application Build version：%@ \n", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"YES" : @"NO"];
+    [errorStr appendFormat:@"Device is jailbreak：%@\n", cc_isJailbreak() ? @"NO" : @"YES"];
     [errorStr appendFormat:@"Error Cause：%@\n", [exception reason]];
     [errorStr appendFormat:@"%@ \n", [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]];
     

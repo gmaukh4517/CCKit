@@ -92,44 +92,6 @@
 #define kEndTime NSLog(@"Time: %f", -[startTime timeIntervalSinceNow])
 
 #pragma mark -
-#pragma mark :. 常用
-
-#define cc_Font(__fontSize) [UIFont systemFontOfSize:__fontSize]
-#define cc_BFont(__fontSize) [UIFont boldSystemFontOfSize:__fontSize]
-
-/** 设置颜色RGB */
-#define cc_ColorRGB(r, g, b) [UIColor colorWithRed:(r) / 255.f green:(g) / 255.f blue:(b) / 255.f alpha:1.f]
-#define cc_ColorRGBA(r, g, b, a) [UIColor colorWithRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:a]
-
-/** RGB颜色转换（16进制->10进制）*/
-#define cc_ColorFromRGB(rgbValue)                                        \
-[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16)) / 255.0 \
-green:((float)((rgbValue & 0xFF00) >> 8)) / 255.0    \
-blue:((float)(rgbValue & 0xFF)) / 255.0             \
-alpha:1.0]
-
-/** 字符串拼接 */
-#define cc_Format(__format, ...) [NSString stringWithFormat:__format, ##__VA_ARGS__]
-#define cc_FormatObj(__obj) [NSString stringWithFormat:@"%@", __obj]
-#define cc_FormatInteger(__integer) [NSString stringWithFormat:@"%zi", __integer]
-#define cc_FormatFloat(__float) [NSString stringWithFormat:@"%lf", __float]
-#define cc_Predicate(__format, ...) [NSPredicate predicateWithFormat:__format, ##__VA_ARGS__]
-
-/** 图片调整 */
-#define cc_Stretch_Image(image, edgeInsets) \
-(CURRENT_SYS_VERSION < 6.0 ? [image stretchableImageWithLeftCapWidth:edgeInsets.left topCapHeight:edgeInsets.top] : [image resizableImageWithCapInsets:edgeInsets resizingMode:UIImageResizingModeStretch])
-
-
-#define CCAssert(condition, format, ...)                                                       \
-do {                                                                                       \
-_Pragma("clang diagnostic push")                                                       \
-_Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
-NSLog(format, ##__VA_ARGS__);                                                  \
-_Pragma("clang diagnostic pop")                                                        \
-} while (0);
-
-
-#pragma mark -
 #pragma mark :. 注册事件
 /*************************  注册事件  *************************/
 /** 注册通知 */

@@ -1818,6 +1818,13 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		423DD31D1F59046C00305803 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
 		424400851F44264800C5F321 /* CCDB */ = {
 			isa = PBXGroup;
 			children = (
@@ -1937,6 +1944,7 @@
 		42657AAA1EC060080025B2D2 /* CCDebugTool */ = {
 			isa = PBXGroup;
 			children = (
+				423DD31D1F59046C00305803 /* Category */,
 				42B0139F1F1F487E006A752C /* CCAppFluecyMonitor */,
 				42970CB11F1DE8D600BDB937 /* CCExceptionCatching */,
 				423B4F4F1F0B4A290066EBA4 /* MemoryProfiler */,
