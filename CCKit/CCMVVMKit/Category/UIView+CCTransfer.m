@@ -48,10 +48,10 @@
     objc_setAssociatedObject(self, @selector(viewEventsBlock), viewEventsBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (void)cc_viewWithViewManager:(id<CCViewProtocol>)ViewManager
+- (void)cc_viewWithViewManager:(id<CCViewProtocol>)viewManager
 {
-    if (ViewManager) {
-        self.viewDelegate = ViewManager;
+    if (viewManager) {
+        self.viewDelegate = viewManager;
     }
 }
 

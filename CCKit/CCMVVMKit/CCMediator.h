@@ -37,14 +37,14 @@
 /**
  *  ViewManager
  */
-@property(nonatomic, strong) NSObject<CCViewManagerProtocol> *ViewManager;
+@property(nonatomic, strong) NSObject<CCViewManagerProtocol> *viewManager;
 
 /**
  *  初始化
  */
-- (instancetype)initWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)ViewManager;
+- (instancetype)initWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)viewManager;
 
-+ (instancetype)mediatorWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)ViewManager;
++ (instancetype)mediatorWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)viewManager;
 
 /**
  *  将infos通知viewModel

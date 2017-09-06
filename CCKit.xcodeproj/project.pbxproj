@@ -395,7 +395,7 @@
 		42B013AD1F1F48A0006A752C /* CCAppDelegateSOA.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
-		42C651FB1F5F8F3A00AA61E7 /* CCViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C651F91F5F8F3A00AA61E7 /* CCViewManager.h */; };
+		42C651FB1F5F8F3A00AA61E7 /* CCViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C651F91F5F8F3A00AA61E7 /* CCViewManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42C651FC1F5F8F3A00AA61E7 /* CCViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C651FA1F5F8F3A00AA61E7 /* CCViewManager.m */; };
 		42D616C31F46BE8900AAA901 /* CCDBManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D616C11F46BE8900AAA901 /* CCDBManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42D616C41F46BE8900AAA901 /* CCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D616C21F46BE8900AAA901 /* CCDBManager.m */; };

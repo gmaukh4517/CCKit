@@ -68,7 +68,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param superView superView 一般指subView所在控制器的view
  */
-- (void)cc_ViewManagerWithSuperView:(UIView *)superView;
+- (void)cc_viewManagerWithSuperView:(UIView *)superView;
 
 /**
  *  @author CC, 16-04-20
@@ -77,7 +77,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param subView 管理的subView
  */
-- (void)cc_ViewManagerWithSubView:(UIView *)subView;
+- (void)cc_viewManagerWithSubView:(UIView *)subView;
 
 /**
  *  @author CC, 16-04-21
@@ -86,7 +86,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param viewDic View集合
  */
-- (void)cc_ViewManagerWithView:(NSDictionary *)viewDic;
+- (void)cc_viewManagerWithView:(NSDictionary *)viewDic;
 
 /**
  *  @author CC, 16-04-20
@@ -96,7 +96,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *  @param subView 管理的subView
  *  @param info    附带信息，用于区分调用
  */
-- (void)cc_ViewManagerWithHandleOfSubView:(UIView *)subView
+- (void)cc_viewManagerWithHandleOfSubView:(UIView *)subView
                                     info:(NSString *)info;
 
 /**
@@ -106,7 +106,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @return ViewManager所管理的视图
  */
-- (__kindof UIView *)cc_ViewManagerOfSubView;
+- (__kindof UIView *)cc_viewManagerOfSubView;
 
 /**
  *  @author CC, 16-04-20
@@ -115,7 +115,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param viewInfos 其它的subViews
  */
-- (void)cc_ViewManagerWithOtherSubViews:(NSDictionary *)viewInfos;
+- (void)cc_viewManagerWithOtherSubViews:(NSDictionary *)viewInfos;
 
 /**
  *  @author CC, 16-04-20
@@ -124,29 +124,29 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param updateBlock 更新布局完成的block
  */
-- (void)cc_ViewManagerWithLayoutSubViews:(void (^)())updateBlock;
+- (void)cc_viewManagerWithLayoutSubViews:(void (^)())updateBlock;
 
 /**
  *  @author CC, 16-04-20
  *
  *  @brief  使子视图更新到最新的布局约束或者frame
  */
-- (void)cc_ViewManagerWithUpdateLayoutSubViews;
+- (void)cc_viewManagerWithUpdateLayoutSubViews;
 
 /**
  *  @author CC, 16-04-20
  *
  *  @brief 将model数据传递给ViewManager
  */
-- (void)cc_ViewManagerWithModel:(NSDictionary * (^)())dictBlock;
+- (void)cc_viewManagerWithModel:(NSDictionary * (^)())dictBlock;
 
 /**
  *  @author CC, 16-04-29
  *
  *  @brief ViewManager传递事件到ViewController
  */
-- (void)cc_ViewManagerWithEventHandle:(ViewEventHandle)eventHandle;
-- (void)cc_ViewManagerWithEventHandleBlock:(ViewEventHandleBlock)eventHandleBlock;
+- (void)cc_viewManagerWithEventHandle:(ViewEventHandle)eventHandle;
+- (void)cc_viewManagerWithEventHandleBlock:(ViewEventHandleBlock)eventHandleBlock;
 
 /**
  *  @author CC, 16-04-20
@@ -155,7 +155,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param infos 传递值
  */
-- (ViewEventsBlock)cc_ViewManagerWithViewEventBlockOfInfos:(NSDictionary *)infos;
+- (ViewEventsBlock)cc_viewManagerWithViewEventBlockOfInfos:(NSDictionary *)infos;
 
 /**
  *  @author CC, 16-04-20
@@ -164,7 +164,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param infos 传递值
  */
-- (ViewModelInfosBlock)cc_ViewManagerWithViewModelBlockOfInfos:(NSDictionary *)infos;
+- (ViewModelInfosBlock)cc_viewManagerWithViewModelBlockOfInfos:(NSDictionary *)infos;
 
 /**
  *  @author CC, 16-04-26
@@ -174,7 +174,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *  @param info           附带信息，用于区分调用
  *  @param successHandler 响应数据
  */
-- (void)cc_ViewManagerWithGetData:(NSString *)info
+- (void)cc_viewManagerWithGetData:(NSString *)info
                   SuccessHandler:(void (^)(NSDictionary *parameter))successHandler;
 
 /**
@@ -185,7 +185,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *  @param ViewManager ViewManager自己
  *  @param infos      描述信息
  */
-- (void)cc_ViewManager:(id)ViewManager
+- (void)cc_viewManager:(id)ViewManager
             withInfos:(NSDictionary *)infos;
 
 /**
@@ -196,7 +196,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *  @param info     描述信息
  *  @param eventDic 传递参数
  */
-- (void)cc_ViewManagerEvent:(NSString *)info
+- (void)cc_viewManagerEvent:(NSString *)info
                  withEvent:(NSDictionary *)eventDic;
 
 /**
@@ -208,7 +208,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *  @param eventDic 传递参数
  *  @param block    回调函数
  */
--(void)cc_ViewManagerEvent:(NSString *)info
+-(void)cc_viewManagerEvent:(NSString *)info
                 withEvent:(NSDictionary *)eventDic
             CallbackBlock:(void(^)(id response))block;
 
@@ -219,7 +219,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param block 传递值
  */
--(void)cc_ViewManagerWithModelBlcok:(void(^)(id model))block;
+-(void)cc_viewManagerWithModelBlcok:(void(^)(id model))block;
 
 /**
  *  @author CC, 16-07-25
@@ -228,7 +228,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param eventName 事件名
  */
--(void)cc_ViewManagerSendEvents:(NSString *)eventName;
+-(void)cc_viewManagerSendEvents:(NSString *)eventName;
 
 /**
  传递事件到Model处理Block回传结果

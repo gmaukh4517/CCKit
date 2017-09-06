@@ -47,7 +47,7 @@ typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *eventDic);
 /**
  *  将view中的事件交由ViewManager处理
  */
-- (void)cc_viewWithViewManager:(id<CCViewProtocol>)ViewManager;
+- (void)cc_viewWithViewManager:(id<CCViewProtocol>)viewManager;
 
 /**
  *  根据model配置UIView，设置UIView内容

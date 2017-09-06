@@ -28,22 +28,22 @@
 
 @implementation UIViewController (CCProperties)
 
-- (CCViewManager *)cc_ViewManager
+- (CCViewManager *)cc_viewManager
 {
-    CCViewManager *curVM = objc_getAssociatedObject(self, @selector(cc_ViewManager));
+    CCViewManager *curVM = objc_getAssociatedObject(self, @selector(cc_viewManager));
     if (curVM) return curVM;
     if (![self respondsToSelector:@selector(cc_classOfViewManager)]) {
         NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManager" reason:@"you forgot to add cc_classOfViewManager() in VivewController" userInfo:nil];
         [exp raise];
     }
     curVM = [[[self cc_classOfViewManager] alloc] init];
-    self.cc_ViewManager = curVM;
+    self.cc_viewManager = curVM;
     return curVM;
 }
 
-- (void)setCc_ViewManager:(__kindof NSObject *)cc_ViewManager
+- (void)setCc_viewManager:(__kindof NSObject *)cc_viewManager
 {
-    objc_setAssociatedObject(self, @selector(cc_ViewManager), cc_ViewManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(cc_viewManager), cc_viewManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CCViewModel *)cc_viewModel

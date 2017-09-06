@@ -30,7 +30,7 @@
 
 @interface UIViewController (CCProperties) <CCViewControllerProtocolDelegate>
 
-@property(nonatomic, strong) __kindof CCViewManager *cc_ViewManager;
+@property(nonatomic, strong) __kindof CCViewManager *cc_viewManager;
 @property(nonatomic, strong) __kindof CCViewModel *cc_viewModel;
 
 

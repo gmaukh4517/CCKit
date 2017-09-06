@@ -274,7 +274,6 @@
  
  @param tableName 表名
  @param conditions sql语句
- @param complete 完成回调
  */
 + (NSArray *)ccdb_selectTableObject:(NSString *)tableName
                          conditions:(NSString *)conditions;
@@ -285,7 +284,6 @@
  @param tableName 表名
  @param keys 键值
  @param where 语句
- @param complete 完成回调
  */
 + (NSArray *)ccdb_selectTableKeyValuesWithWhereObject:(NSString *)tableName
                                                  keys:(NSArray *)keys
@@ -297,7 +295,6 @@
  @param tableName 表名
  @param param 跟随局域
  @param where 查询条件
- @param complete 完成回调函数
  */
 + (NSArray *)ccdb_selectTableParamWhereObject:(NSString *)tableName
                                         where:(NSArray *)where
@@ -308,7 +305,6 @@
  
  @param tableName 表名
  @param keyPathValues 键值
- @param complete 完成回调
  */
 + (NSArray *)ccdb_selectTableKeyValuesObject:(NSString *)tableName
                          forKeyPathAndValues:(NSArray *)keyPathValues;

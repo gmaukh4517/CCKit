@@ -60,12 +60,12 @@ typedef void (^ViewModelInfosBlock)(NSString *info, NSDictionary *params);
 /**
  *  ViewManagerDelegate
  */
-@property (nullable, nonatomic, weak) id<CCViewManagerProtocol> ViewManagerDelegate;
+@property (nullable, nonatomic, weak) id<CCViewManagerProtocol> viewManagerDelegate;
 
 /**
  *  ViewManagerInfosBlock
  */
-@property (nonatomic, copy) ViewManagerInfosBlock ViewManagerInfosBlock;
+@property (nonatomic, copy) ViewManagerInfosBlock viewManagerInfosBlock;
 
 /**
  *  viewModelDelegate
@@ -85,7 +85,7 @@ typedef void (^ViewModelInfosBlock)(NSString *info, NSDictionary *params);
 /**
  *  cc_ViewManagerInfos
  */
-@property (nonatomic, copy) NSDictionary *cc_ViewManagerInfos;
+@property (nonatomic, copy) NSDictionary *cc_viewManagerInfos;
 
 /**
  *  cc_viewModelInfos
