@@ -39,31 +39,31 @@
     objc_setAssociatedObject(self, @selector(viewModelDelegate), viewModelDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (id<CCViewMangerProtocol>)viewMangerDelegate
+- (id<CCViewManagerProtocol>)ViewManagerDelegate
 {
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setViewMangerDelegate:(id<CCViewMangerProtocol>)viewMangerDelegate
+- (void)setViewManagerDelegate:(id<CCViewManagerProtocol>)ViewManagerDelegate
 {
-    objc_setAssociatedObject(self, @selector(viewMangerDelegate), viewMangerDelegate, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(ViewManagerDelegate), ViewManagerDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
 #pragma mark -
-#pragma mark :. ViewManger
-- (ViewMangerInfosBlock)viewMangerInfosBlock
+#pragma mark :. ViewManager
+- (ViewManagerInfosBlock)ViewManagerInfosBlock
 {
-    return objc_getAssociatedObject(self, @selector(viewMangerInfosBlock));
+    return objc_getAssociatedObject(self, @selector(ViewManagerInfosBlock));
 }
 
-- (void)setViewMangerInfosBlock:(ViewMangerInfosBlock)viewMangerInfosBlock
+- (void)setViewManagerInfosBlock:(ViewManagerInfosBlock)ViewManagerInfosBlock
 {
-    objc_setAssociatedObject(self, @selector(viewMangerInfosBlock), viewMangerInfosBlock, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, @selector(ViewManagerInfosBlock), ViewManagerInfosBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (void)didViewMangerInfosBlock:(ViewMangerInfosBlock)block
+- (void)didViewManagerInfosBlock:(ViewManagerInfosBlock)block
 {
-    [self setViewMangerInfosBlock:block];
+    [self setViewManagerInfosBlock:block];
 }
 
 #pragma mark -
@@ -114,15 +114,15 @@
 }
 
 /**
- *  cc_viewMangerInfos
+ *  cc_ViewManagerInfos
  */
-- (void)setCc_viewMangerInfos:(NSDictionary *)cc_viewMangerInfos
+- (void)setCc_ViewManagerInfos:(NSDictionary *)cc_ViewManagerInfos
 {
-    objc_setAssociatedObject(self, @selector(cc_viewMangerInfos), cc_viewMangerInfos, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, @selector(cc_ViewManagerInfos), cc_ViewManagerInfos, OBJC_ASSOCIATION_COPY);
 }
-- (NSDictionary *)cc_viewMangerInfos
+- (NSDictionary *)cc_ViewManagerInfos
 {
-    return objc_getAssociatedObject(self, @selector(cc_viewMangerInfos));
+    return objc_getAssociatedObject(self, @selector(cc_ViewManagerInfos));
 }
 
 /**

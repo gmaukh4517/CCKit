@@ -28,18 +28,18 @@
 
 @implementation CCMediator
 
-- (instancetype)initWithViewModel:(id<CCViewModelProtocol>)viewModel viewManger:(id<CCViewMangerProtocol>)viewManger
+- (instancetype)initWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)ViewManager
 {
     if (self = [super init]) {
         self.viewModel = (NSObject<CCViewModelProtocol> *)viewModel;
-        self.viewManger = (NSObject<CCViewMangerProtocol> *)viewManger;
+        self.ViewManager = (NSObject<CCViewManagerProtocol> *)ViewManager;
     }
     return self;
 }
 
-+ (instancetype)mediatorWithViewModel:(id<CCViewModelProtocol>)viewModel viewManger:(id<CCViewMangerProtocol>)viewManger
++ (instancetype)mediatorWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)ViewManager
 {
-    return [[self alloc] initWithViewModel:viewModel viewManger:viewManger];
+    return [[self alloc] initWithViewModel:viewModel ViewManager:ViewManager];
 }
 
 - (void)noticeViewModelWithInfos:(NSDictionary *)infos
@@ -47,9 +47,9 @@
     self.viewModel.cc_viewModelInfos = infos;
 }
 
-- (void)noticeViewMangerWithInfos:(NSDictionary *)infos
+- (void)noticeViewManagerWithInfos:(NSDictionary *)infos
 {
-    self.viewManger.cc_viewMangerInfos = infos;
+    self.ViewManager.cc_ViewManagerInfos = infos;
 }
 
 @end

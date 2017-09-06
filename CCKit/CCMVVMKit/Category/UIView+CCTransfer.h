@@ -25,7 +25,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CCViewProtocol.h"
-#import "CCViewMangerProtocol.h"
+#import "CCViewManagerProtocol.h"
 #import "CCViewModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -45,9 +45,9 @@ typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *eventDic);
 @property(nonatomic, copy) ViewEventsBlock viewEventsBlock;
 
 /**
- *  将view中的事件交由viewManger处理
+ *  将view中的事件交由ViewManager处理
  */
-- (void)cc_viewWithViewManger:(id<CCViewProtocol>)viewManger;
+- (void)cc_viewWithViewManager:(id<CCViewProtocol>)ViewManager;
 
 /**
  *  根据model配置UIView，设置UIView内容

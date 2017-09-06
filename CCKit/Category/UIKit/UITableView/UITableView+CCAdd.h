@@ -25,7 +25,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class CCTableViewManger;
+@class CCTableViewManager;
 @class CCTableViewHelper;
 
 #pragma mark -
@@ -66,7 +66,7 @@
 
 @property(nonatomic, weak) UIViewController *cc_vc;
 
-@property(nonatomic, strong) CCTableViewManger *tabelHander;
+@property(nonatomic, strong) CCTableViewManager *tabelHander;
 
 @property(nonatomic, strong) CCTableViewHelper *cc_tableViewHelper;
 

@@ -26,8 +26,8 @@
 #import <Foundation/Foundation.h>
 #import "CCHTTPRequest.h"
 #import "CCViewModelProtocol.h"
-#import "CCViewMangerProtocol.h"
+#import "CCViewManagerProtocol.h"
 
-@interface CCViewModel : NSObject<CCViewModelProtocol, CCViewMangerProtocol>
+@interface CCViewModel : NSObject<CCViewModelProtocol, CCViewManagerProtocol>
 
 @end

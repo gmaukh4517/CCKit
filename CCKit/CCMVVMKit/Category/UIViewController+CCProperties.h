@@ -24,13 +24,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CCViewManger.h"
+#import "CCViewManager.h"
 #import "CCViewModel.h"
 #import "CCViewControllerProtocolDelegate.h"
 
 @interface UIViewController (CCProperties) <CCViewControllerProtocolDelegate>
 
-@property(nonatomic, strong) __kindof CCViewManger *cc_viewManger;
+@property(nonatomic, strong) __kindof CCViewManager *cc_ViewManager;
 @property(nonatomic, strong) __kindof CCViewModel *cc_viewModel;
 
 

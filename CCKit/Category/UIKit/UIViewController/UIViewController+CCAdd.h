@@ -24,7 +24,7 @@
 //
 
 #import "CCViewControllerProtocolDelegate.h"
-#import "CCViewManger.h"
+#import "CCViewManager.h"
 #import "CCViewModel.h"
 #import <UIKit/UIKit.h>
 
@@ -47,7 +47,7 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 @property(nonatomic, assign) BOOL tabBarHidden;
 
 @property(nonatomic, strong) __kindof CCViewModel *cc_viewModel;
-@property(nonatomic, strong) __kindof CCViewManger *cc_viewManger;
+@property(nonatomic, strong) __kindof CCViewManager *cc_ViewManager;
 
 /**
  包含在导航中时，交互式弹出手势是否禁用

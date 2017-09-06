@@ -43,7 +43,7 @@
  *  
  *  @brief 所属类别视图管理器
  */
-- (Class)cc_classOfViewManger;
+- (Class)cc_classOfViewManager;
 
 @end
 

@@ -26,14 +26,14 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  将自己的信息返回给ViewManger的block
+ *  将自己的信息返回给ViewManager的block
  */
-typedef void (^ViewMangerInfosBlock)(NSString *info, NSDictionary *eventDic);
+typedef void (^ViewManagerInfosBlock)(NSString *info, NSDictionary *eventDic);
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief  将自己事件处理通过block方式交互ViewManger
+ *  @brief  将自己事件处理通过block方式交互ViewManager
  */
 typedef void (^ViewModelEventsBlock)(NSString *info, NSDictionary *eventDic);
 
@@ -79,16 +79,16 @@ typedef void (^ViewModelEventsBlock)(NSString *info, NSDictionary *eventDic);
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 处理ViewMangerInfosBlock
+ *  @brief 处理ViewManagerInfosBlock
  *
  *  @param infos 传递值
  */
-- (ViewMangerInfosBlock)cc_viewModelWithViewMangerBlockOfInfos:(NSDictionary *)infos;
+- (ViewManagerInfosBlock)cc_viewModelWithViewManagerBlockOfInfos:(NSDictionary *)infos;
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 将viewModel中的信息通过代理传递给ViewManger
+ *  @brief 将viewModel中的信息通过代理传递给ViewManager
  *
  *  @param viewModel viewModel自己
  *  @param infos     描述信息
@@ -98,7 +98,7 @@ typedef void (^ViewModelEventsBlock)(NSString *info, NSDictionary *eventDic);
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 将ViewModel事件传递到viewManger
+ *  @brief 将ViewModel事件传递到ViewManager
  *
  *  @param info     描述信息
  *  @param eventDic 传递参数

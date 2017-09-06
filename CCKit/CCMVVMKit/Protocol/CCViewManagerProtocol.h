@@ -1,5 +1,5 @@
 //
-//  CCViewMangerProtocol.h
+//  CCViewManagerProtocol.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -28,7 +28,7 @@
 /**
  *  @author CC, 16-04-20
  *
- *  @brief  将自己事件处理通过block方式交互ViewManger
+ *  @brief  将自己事件处理通过block方式交互ViewManager
  */
 typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *params);
 
@@ -44,7 +44,7 @@ typedef void (^ViewEventHandle)(NSString *info, NSDictionary *eventDic);
 typedef void (^ViewEventBlock)(id response);
 typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, ViewEventBlock block);
 
-@protocol CCViewMangerProtocol <NSObject>
+@protocol CCViewManagerProtocol <NSObject>
 
 @optional
 
@@ -68,7 +68,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param superView superView 一般指subView所在控制器的view
  */
-- (void)cc_viewMangerWithSuperView:(UIView *)superView;
+- (void)cc_ViewManagerWithSuperView:(UIView *)superView;
 
 /**
  *  @author CC, 16-04-20
@@ -77,16 +77,16 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param subView 管理的subView
  */
-- (void)cc_viewMangerWithSubView:(UIView *)subView;
+- (void)cc_ViewManagerWithSubView:(UIView *)subView;
 
 /**
  *  @author CC, 16-04-21
  *
- *  @brief View传递到ViewManger统一管理
+ *  @brief View传递到ViewManager统一管理
  *
  *  @param viewDic View集合
  */
-- (void)cc_viewMangerWithView:(NSDictionary *)viewDic;
+- (void)cc_ViewManagerWithView:(NSDictionary *)viewDic;
 
 /**
  *  @author CC, 16-04-20
@@ -96,26 +96,26 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *  @param subView 管理的subView
  *  @param info    附带信息，用于区分调用
  */
-- (void)cc_viewMangerWithHandleOfSubView:(UIView *)subView
+- (void)cc_ViewManagerWithHandleOfSubView:(UIView *)subView
                                     info:(NSString *)info;
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 返回viewManger所管理的视图
+ *  @brief 返回ViewManager所管理的视图
  *
- *  @return viewManger所管理的视图
+ *  @return ViewManager所管理的视图
  */
-- (__kindof UIView *)cc_viewMangerOfSubView;
+- (__kindof UIView *)cc_ViewManagerOfSubView;
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 得到其它viewManger所管理的subView，用于自己内部
+ *  @brief 得到其它ViewManager所管理的subView，用于自己内部
  *
  *  @param viewInfos 其它的subViews
  */
-- (void)cc_viewMangerWithOtherSubViews:(NSDictionary *)viewInfos;
+- (void)cc_ViewManagerWithOtherSubViews:(NSDictionary *)viewInfos;
 
 /**
  *  @author CC, 16-04-20
@@ -124,29 +124,29 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param updateBlock 更新布局完成的block
  */
-- (void)cc_viewMangerWithLayoutSubViews:(void (^)())updateBlock;
+- (void)cc_ViewManagerWithLayoutSubViews:(void (^)())updateBlock;
 
 /**
  *  @author CC, 16-04-20
  *
  *  @brief  使子视图更新到最新的布局约束或者frame
  */
-- (void)cc_viewMangerWithUpdateLayoutSubViews;
+- (void)cc_ViewManagerWithUpdateLayoutSubViews;
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 将model数据传递给viewManger
+ *  @brief 将model数据传递给ViewManager
  */
-- (void)cc_viewMangerWithModel:(NSDictionary * (^)())dictBlock;
+- (void)cc_ViewManagerWithModel:(NSDictionary * (^)())dictBlock;
 
 /**
  *  @author CC, 16-04-29
  *
- *  @brief ViewManger传递事件到ViewController
+ *  @brief ViewManager传递事件到ViewController
  */
-- (void)cc_viewMangerWithEventHandle:(ViewEventHandle)eventHandle;
-- (void)cc_viewMangerWithEventHandleBlock:(ViewEventHandleBlock)eventHandleBlock;
+- (void)cc_ViewManagerWithEventHandle:(ViewEventHandle)eventHandle;
+- (void)cc_ViewManagerWithEventHandleBlock:(ViewEventHandleBlock)eventHandleBlock;
 
 /**
  *  @author CC, 16-04-20
@@ -155,7 +155,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param infos 传递值
  */
-- (ViewEventsBlock)cc_viewMangerWithViewEventBlockOfInfos:(NSDictionary *)infos;
+- (ViewEventsBlock)cc_ViewManagerWithViewEventBlockOfInfos:(NSDictionary *)infos;
 
 /**
  *  @author CC, 16-04-20
@@ -164,62 +164,62 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param infos 传递值
  */
-- (ViewModelInfosBlock)cc_viewMangerWithViewModelBlockOfInfos:(NSDictionary *)infos;
+- (ViewModelInfosBlock)cc_ViewManagerWithViewModelBlockOfInfos:(NSDictionary *)infos;
 
 /**
  *  @author CC, 16-04-26
  *
- *  @brief 将（ViewManger的数据源）数据传递到ViewModel
+ *  @brief 将（ViewManager的数据源）数据传递到ViewModel
  *
  *  @param info           附带信息，用于区分调用
  *  @param successHandler 响应数据
  */
-- (void)cc_viewMangerWithGetData:(NSString *)info
+- (void)cc_ViewManagerWithGetData:(NSString *)info
                   SuccessHandler:(void (^)(NSDictionary *parameter))successHandler;
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief 将viewManger中的信息通过代理传递给ViewModel
+ *  @brief 将ViewManager中的信息通过代理传递给ViewModel
  *
- *  @param viewManger viewManger自己
+ *  @param ViewManager ViewManager自己
  *  @param infos      描述信息
  */
-- (void)cc_viewManger:(id)viewManger
+- (void)cc_ViewManager:(id)ViewManager
             withInfos:(NSDictionary *)infos;
 
 /**
  *  @author CC, 16-04-20
  *
- *  @brief ViewManger事件传递到ViewModel
+ *  @brief ViewManager事件传递到ViewModel
  *
  *  @param info     描述信息
  *  @param eventDic 传递参数
  */
-- (void)cc_viewMangerEvent:(NSString *)info
+- (void)cc_ViewManagerEvent:(NSString *)info
                  withEvent:(NSDictionary *)eventDic;
 
 /**
  *  @author CC, 16-04-26
  *
- *  @brief ViewManger事件传递到ViewModel 响应回调
+ *  @brief ViewManager事件传递到ViewModel 响应回调
  *
  *  @param info     描述信息
  *  @param eventDic 传递参数
  *  @param block    回调函数
  */
--(void)cc_viewMangerEvent:(NSString *)info
+-(void)cc_ViewManagerEvent:(NSString *)info
                 withEvent:(NSDictionary *)eventDic
             CallbackBlock:(void(^)(id response))block;
 
 /**
  *  @author CC, 16-07-25
  *
- *  @brief ViewManger响应传递到调用类
+ *  @brief ViewManager响应传递到调用类
  *
  *  @param block 传递值
  */
--(void)cc_viewMangerWithModelBlcok:(void(^)(id model))block;
+-(void)cc_ViewManagerWithModelBlcok:(void(^)(id model))block;
 
 /**
  *  @author CC, 16-07-25
@@ -228,7 +228,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  *
  *  @param eventName 事件名
  */
--(void)cc_viewMangerSendEvents:(NSString *)eventName;
+-(void)cc_ViewManagerSendEvents:(NSString *)eventName;
 
 /**
  传递事件到Model处理Block回传结果

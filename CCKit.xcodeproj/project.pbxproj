@@ -395,6 +395,8 @@
 		42B013AD1F1F48A0006A752C /* CCAppDelegateSOA.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
+		42C651FB1F5F8F3A00AA61E7 /* CCViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C651F91F5F8F3A00AA61E7 /* CCViewManager.h */; };
+		42C651FC1F5F8F3A00AA61E7 /* CCViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C651FA1F5F8F3A00AA61E7 /* CCViewManager.m */; };
 		42D616C31F46BE8900AAA901 /* CCDBManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D616C11F46BE8900AAA901 /* CCDBManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42D616C41F46BE8900AAA901 /* CCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D616C21F46BE8900AAA901 /* CCDBManager.m */; };
 		42F7D5BF1F146F7B004E4CDE /* CCDebugCrashHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 42F7D5BA1F146F7B004E4CDE /* CCDebugCrashHelper.h */; };
@@ -411,12 +413,10 @@
 		42FC70A71E6FDB7700FBBE42 /* CCMediator.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70931E6FDB7700FBBE42 /* CCMediator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70A81E6FDB7700FBBE42 /* CCMediator.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC70941E6FDB7700FBBE42 /* CCMediator.m */; };
 		42FC70A91E6FDB7700FBBE42 /* CCMVVM.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70951E6FDB7700FBBE42 /* CCMVVM.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		42FC70AA1E6FDB7700FBBE42 /* CCViewManger.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70971E6FDB7700FBBE42 /* CCViewManger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		42FC70AB1E6FDB7700FBBE42 /* CCViewManger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC70981E6FDB7700FBBE42 /* CCViewManger.m */; };
 		42FC70AC1E6FDB7700FBBE42 /* CCViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC709A1E6FDB7700FBBE42 /* CCViewModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70AD1E6FDB7700FBBE42 /* CCViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC709B1E6FDB7700FBBE42 /* CCViewModel.m */; };
 		42FC70AE1E6FDB7700FBBE42 /* CCViewControllerProtocolDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC709D1E6FDB7700FBBE42 /* CCViewControllerProtocolDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		42FC70AF1E6FDB7700FBBE42 /* CCViewMangerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC709E1E6FDB7700FBBE42 /* CCViewMangerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42FC70AF1E6FDB7700FBBE42 /* CCViewManagerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC709E1E6FDB7700FBBE42 /* CCViewManagerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70B01E6FDB7700FBBE42 /* CCViewModelProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC709F1E6FDB7700FBBE42 /* CCViewModelProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70B11E6FDB7700FBBE42 /* CCViewProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70A01E6FDB7700FBBE42 /* CCViewProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70C31E6FDC7F00FBBE42 /* CCKeyValueStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70B41E6FDC7F00FBBE42 /* CCKeyValueStore.h */; };
@@ -1089,6 +1089,8 @@
 		42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegateSOA.m; sourceTree = "<group>"; };
 		42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUserDefaults.h; sourceTree = "<group>"; };
 		42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUserDefaults.m; sourceTree = "<group>"; };
+		42C651F91F5F8F3A00AA61E7 /* CCViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewManager.h; sourceTree = "<group>"; };
+		42C651FA1F5F8F3A00AA61E7 /* CCViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCViewManager.m; sourceTree = "<group>"; };
 		42D616C11F46BE8900AAA901 /* CCDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDBManager.h; sourceTree = "<group>"; };
 		42D616C21F46BE8900AAA901 /* CCDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDBManager.m; sourceTree = "<group>"; };
 		42F7D5BA1F146F7B004E4CDE /* CCDebugCrashHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebugCrashHelper.h; sourceTree = "<group>"; };
@@ -1107,12 +1109,10 @@
 		42FC70931E6FDB7700FBBE42 /* CCMediator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMediator.h; sourceTree = "<group>"; };
 		42FC70941E6FDB7700FBBE42 /* CCMediator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMediator.m; sourceTree = "<group>"; };
 		42FC70951E6FDB7700FBBE42 /* CCMVVM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMVVM.h; sourceTree = "<group>"; };
-		42FC70971E6FDB7700FBBE42 /* CCViewManger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewManger.h; sourceTree = "<group>"; };
-		42FC70981E6FDB7700FBBE42 /* CCViewManger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCViewManger.m; sourceTree = "<group>"; };
 		42FC709A1E6FDB7700FBBE42 /* CCViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewModel.h; sourceTree = "<group>"; };
 		42FC709B1E6FDB7700FBBE42 /* CCViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCViewModel.m; sourceTree = "<group>"; };
 		42FC709D1E6FDB7700FBBE42 /* CCViewControllerProtocolDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewControllerProtocolDelegate.h; sourceTree = "<group>"; };
-		42FC709E1E6FDB7700FBBE42 /* CCViewMangerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewMangerProtocol.h; sourceTree = "<group>"; };
+		42FC709E1E6FDB7700FBBE42 /* CCViewManagerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewManagerProtocol.h; sourceTree = "<group>"; };
 		42FC709F1E6FDB7700FBBE42 /* CCViewModelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewModelProtocol.h; sourceTree = "<group>"; };
 		42FC70A01E6FDB7700FBBE42 /* CCViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCViewProtocol.h; sourceTree = "<group>"; };
 		42FC70B41E6FDC7F00FBBE42 /* CCKeyValueStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCKeyValueStore.h; sourceTree = "<group>"; };
@@ -2622,6 +2622,15 @@
 			path = CCUserDefaults;
 			sourceTree = "<group>";
 		};
+		42C651F81F5F8F3A00AA61E7 /* CCViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				42C651F91F5F8F3A00AA61E7 /* CCViewManager.h */,
+				42C651FA1F5F8F3A00AA61E7 /* CCViewManager.m */,
+			);
+			path = CCViewManager;
+			sourceTree = "<group>";
+		};
 		42F7D5B91F146F7B004E4CDE /* Crash */ = {
 			isa = PBXGroup;
 			children = (
@@ -2679,7 +2688,7 @@
 		42FC708B1E6FDB7700FBBE42 /* CCMVVMKit */ = {
 			isa = PBXGroup;
 			children = (
-				42FC70961E6FDB7700FBBE42 /* CCViewManger */,
+				42C651F81F5F8F3A00AA61E7 /* CCViewManager */,
 				42FC70991E6FDB7700FBBE42 /* CCViewModel */,
 				42FC709C1E6FDB7700FBBE42 /* Protocol */,
 				42FC708C1E6FDB7700FBBE42 /* Category */,
@@ -2703,15 +2712,6 @@
 			path = Category;
 			sourceTree = "<group>";
 		};
-		42FC70961E6FDB7700FBBE42 /* CCViewManger */ = {
-			isa = PBXGroup;
-			children = (
-				42FC70971E6FDB7700FBBE42 /* CCViewManger.h */,
-				42FC70981E6FDB7700FBBE42 /* CCViewManger.m */,
-			);
-			path = CCViewManger;
-			sourceTree = "<group>";
-		};
 		42FC70991E6FDB7700FBBE42 /* CCViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2725,7 +2725,7 @@
 			isa = PBXGroup;
 			children = (
 				42FC709D1E6FDB7700FBBE42 /* CCViewControllerProtocolDelegate.h */,
-				42FC709E1E6FDB7700FBBE42 /* CCViewMangerProtocol.h */,
+				42FC709E1E6FDB7700FBBE42 /* CCViewManagerProtocol.h */,
 				42FC709F1E6FDB7700FBBE42 /* CCViewModelProtocol.h */,
 				42FC70A01E6FDB7700FBBE42 /* CCViewProtocol.h */,
 			);
@@ -3927,6 +3927,7 @@
 				42FC73341E70012800FBBE42 /* NSAttributedString+Teletext.h in Headers */,
 				42657AD21EC060080025B2D2 /* NSURLRequest+Identify.h in Headers */,
 				42FC73801E70012800FBBE42 /* UISearchBar+CCAdd.h in Headers */,
+				42C651FB1F5F8F3A00AA61E7 /* CCViewManager.h in Headers */,
 				423B4FB91F0B4A290066EBA4 /* FBRetainCycleUtils.h in Headers */,
 				42FC72F11E70012800FBBE42 /* NSArray+AvoidCrash.h in Headers */,
 				42954A281E712B1A00F4CC4C /* MBProgressHUD.h in Headers */,
@@ -4046,7 +4047,6 @@
 				42954A841E712BE100F4CC4C /* FLAnimatedImageView.h in Headers */,
 				423B4FCC1F0B4A290066EBA4 /* FBBlockStrongRelationDetector.h in Headers */,
 				42954A381E712BDC00F4CC4C /* CCRingProgressView.h in Headers */,
-				42FC70AA1E6FDB7700FBBE42 /* CCViewManger.h in Headers */,
 				42FC734E1E70012800FBBE42 /* UIActionSheet+CCAdd.h in Headers */,
 				426B65841EA98E5B006706A2 /* TZPhotoPickerController.h in Headers */,
 				426B65741EA98E5B006706A2 /* CCCameraViewController.h in Headers */,
@@ -4107,7 +4107,7 @@
 				42FC739A1E70012800FBBE42 /* UIWebView+CCAdd.h in Headers */,
 				423B4FC61F0B4A290066EBA4 /* FBObjectiveCNSCFTimer.h in Headers */,
 				42FC73981E70012800FBBE42 /* UIViewController+CCAdd.h in Headers */,
-				42FC70AF1E6FDB7700FBBE42 /* CCViewMangerProtocol.h in Headers */,
+				42FC70AF1E6FDB7700FBBE42 /* CCViewManagerProtocol.h in Headers */,
 				42FC70AC1E6FDB7700FBBE42 /* CCViewModel.h in Headers */,
 				42657AE41EC060080025B2D2 /* CCDebugContentViewController.h in Headers */,
 				423B4FD81F0B4A290066EBA4 /* FBIvarReference.h in Headers */,
@@ -4503,7 +4503,6 @@
 				4270E1531EC9923300340239 /* CCAudioPlayerHelper.m in Sources */,
 				42954A771E712BE100F4CC4C /* UIImage+GIF.m in Sources */,
 				42FC735B1E70012800FBBE42 /* UIButton+CCAdd.m in Sources */,
-				42FC70AB1E6FDB7700FBBE42 /* CCViewManger.m in Sources */,
 				42FC737D1E70012800FBBE42 /* UIScreen+CCAdd.m in Sources */,
 				42FC73891E70012800FBBE42 /* UITableView+CCAdd.m in Sources */,
 				429854C71EA6098200255C48 /* CCDrawerVisualState.m in Sources */,
@@ -4605,6 +4604,7 @@
 				42FC73851E70012800FBBE42 /* UITabBar+CCAdd.m in Sources */,
 				42FC73001E70012800FBBE42 /* NSObject+AvoidCrash.m in Sources */,
 				4236AC991E9C83A200633FC6 /* CCKeyboardManager.m in Sources */,
+				42C651FC1F5F8F3A00AA61E7 /* CCViewManager.m in Sources */,
 				423B4FBC1F0B4A290066EBA4 /* FBStandardGraphEdgeFilters.mm in Sources */,
 				42FC739B1E70012800FBBE42 /* UIWebView+CCAdd.m in Sources */,
 				424CCD721EC16FD800C85E8C /* CCPerformanceStatusBar.m in Sources */,

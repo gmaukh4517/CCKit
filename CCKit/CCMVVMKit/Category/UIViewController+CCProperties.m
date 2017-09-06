@@ -28,22 +28,22 @@
 
 @implementation UIViewController (CCProperties)
 
-- (CCViewManger *)cc_viewManger
+- (CCViewManager *)cc_ViewManager
 {
-    CCViewManger *curVM = objc_getAssociatedObject(self, @selector(cc_viewManger));
+    CCViewManager *curVM = objc_getAssociatedObject(self, @selector(cc_ViewManager));
     if (curVM) return curVM;
-    if (![self respondsToSelector:@selector(cc_classOfViewManger)]) {
-        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManger" reason:@"you forgot to add cc_classOfViewManger() in VivewController" userInfo:nil];
+    if (![self respondsToSelector:@selector(cc_classOfViewManager)]) {
+        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManager" reason:@"you forgot to add cc_classOfViewManager() in VivewController" userInfo:nil];
         [exp raise];
     }
-    curVM = [[[self cc_classOfViewManger] alloc] init];
-    self.cc_viewManger = curVM;
+    curVM = [[[self cc_classOfViewManager] alloc] init];
+    self.cc_ViewManager = curVM;
     return curVM;
 }
 
-- (void)setCc_viewManger:(__kindof NSObject *)cc_viewManger
+- (void)setCc_ViewManager:(__kindof NSObject *)cc_ViewManager
 {
-    objc_setAssociatedObject(self, @selector(cc_viewManger), cc_viewManger, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(cc_ViewManager), cc_ViewManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CCViewModel *)cc_viewModel

@@ -27,14 +27,14 @@
 #define CCMVVM_h
 
 #import <CCKit/CCViewModel.h>
-#import <CCKit/CCViewManger.h>
+#import <CCKit/CCViewManager.h>
 
 #import <CCKit/NSObject+CCProperties.h>
 #import <CCKit/UIView+CCTransfer.h>
 #import <CCKit/UIViewController+CCProperties.h>
 
 #import <CCKit/CCViewControllerProtocolDelegate.h>
-#import <CCKit/CCViewMangerProtocol.h>
+#import <CCKit/CCViewManagerProtocol.h>
 #import <CCKit/CCViewModelProtocol.h>
 #import <CCKit/CCViewProtocol.h>
 

@@ -144,12 +144,12 @@ typedef NSMutableArray<NSMutableArray<NSNumber *> *> CCIndexPathHeightsBySection
 
 @implementation UITableView (CCAdd)
 
-- (CCTableViewManger *)tabelHander
+- (CCTableViewManager *)tabelHander
 {
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setTabelHander:(CCTableViewManger *)tabelHander
+- (void)setTabelHander:(CCTableViewManager *)tabelHander
 {
     //    if (tabelHander)
     //        [tabelHander handleTableViewDatasourceAndDelegate:self];

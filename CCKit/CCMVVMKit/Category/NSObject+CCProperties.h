@@ -24,7 +24,7 @@
 //
 
 #import "CCMediator.h"
-#import "CCViewMangerProtocol.h"
+#import "CCViewManagerProtocol.h"
 #import "CCViewModelProtocol.h"
 #import "CCViewProtocol.h"
 #import <Foundation/Foundation.h>
@@ -36,9 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef _Nonnull id (^ViewModelBlock)();
 /**
- *  ViewMangerInfosBlock
+ *  ViewManagerInfosBlock
  */
-typedef void (^ViewMangerInfosBlock)(NSString *info, NSDictionary *params);
+typedef void (^ViewManagerInfosBlock)(NSString *info, NSDictionary *params);
 /**
  *  ViewModelInfosBlock
  */
@@ -58,14 +58,14 @@ typedef void (^ViewModelInfosBlock)(NSString *info, NSDictionary *params);
 - (nullable NSDictionary *)cc_allProperties;
 
 /**
- *  viewMangerDelegate
+ *  ViewManagerDelegate
  */
-@property (nullable, nonatomic, weak) id<CCViewMangerProtocol> viewMangerDelegate;
+@property (nullable, nonatomic, weak) id<CCViewManagerProtocol> ViewManagerDelegate;
 
 /**
- *  ViewMangerInfosBlock
+ *  ViewManagerInfosBlock
  */
-@property (nonatomic, copy) ViewMangerInfosBlock viewMangerInfosBlock;
+@property (nonatomic, copy) ViewManagerInfosBlock ViewManagerInfosBlock;
 
 /**
  *  viewModelDelegate
@@ -83,16 +83,16 @@ typedef void (^ViewModelInfosBlock)(NSString *info, NSDictionary *params);
 @property (nonatomic, strong) CCMediator *cc_mediator;
 
 /**
- *  cc_viewMangerInfos
+ *  cc_ViewManagerInfos
  */
-@property (nonatomic, copy) NSDictionary *cc_viewMangerInfos;
+@property (nonatomic, copy) NSDictionary *cc_ViewManagerInfos;
 
 /**
  *  cc_viewModelInfos
  */
 @property (nonatomic, copy) NSDictionary *cc_viewModelInfos;
 
-- (void)didViewMangerInfosBlock:(ViewMangerInfosBlock)block;
+- (void)didViewManagerInfosBlock:(ViewManagerInfosBlock)block;
 - (void)didViewModelInfosBlock:(ViewModelInfosBlock)block;
 - (void)didViewModelBlock:(ViewModelBlock)block;
 

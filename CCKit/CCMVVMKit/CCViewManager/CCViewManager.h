@@ -1,5 +1,5 @@
 //
-//  CCMediator.h
+//  CCViewManager.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -24,36 +24,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CCViewModelProtocol.h"
 #import "CCViewManagerProtocol.h"
+#import "CCViewModelProtocol.h"
+#import "CCViewProtocol.h"
 
-@interface CCMediator : NSObject
-
-/**
- *  viewModel
- */
-@property(nonatomic, strong) NSObject<CCViewModelProtocol> *viewModel;
-
-/**
- *  ViewManager
- */
-@property(nonatomic, strong) NSObject<CCViewManagerProtocol> *ViewManager;
-
-/**
- *  初始化
- */
-- (instancetype)initWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)ViewManager;
-
-+ (instancetype)mediatorWithViewModel:(id<CCViewModelProtocol>)viewModel ViewManager:(id<CCViewManagerProtocol>)ViewManager;
-
-/**
- *  将infos通知viewModel
- */
-- (void)noticeViewModelWithInfos:(NSDictionary *)infos;
-
-/**
- *  将infos通知viewMnager
- */
-- (void)noticeViewManagerWithInfos:(NSDictionary *)infos;
+@interface CCViewManager : NSObject<CCViewManagerProtocol, CCViewModelProtocol, CCViewProtocol>
 
 @end

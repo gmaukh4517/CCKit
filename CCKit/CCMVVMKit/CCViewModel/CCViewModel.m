@@ -30,7 +30,7 @@
 
 - (void)cc_notice
 {
-    [self.cc_mediator noticeViewMangerWithInfos:self.cc_viewModelInfos];
+    [self.cc_mediator noticeViewManagerWithInfos:self.cc_viewModelInfos];
 }
 
 @end
