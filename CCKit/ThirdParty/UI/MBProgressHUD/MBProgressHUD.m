@@ -171,11 +171,6 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 - (void)hideAnimated:(BOOL)animated
 {
-    _animationType = MBProgressHUDAnimationFade;
-    _label.text = nil;
-    _detailsLabel.text = nil;
-    _offset = CGPointMake(0, 0);
-    
     MBMainThreadAssert();
     [self.graceTimer invalidate];
     self.useAnimation = animated;
@@ -328,6 +323,10 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 - (void)done
 {
+    _animationType = MBProgressHUDAnimationFade;
+    _label.text = nil;
+    _detailsLabel.text = nil;
+    _offset = CGPointMake(0, 0);
     // Cancel any scheduled hideDelayed: calls
     [self.hideDelayTimer invalidate];
     [self setNSProgressDisplayLinkEnabled:NO];

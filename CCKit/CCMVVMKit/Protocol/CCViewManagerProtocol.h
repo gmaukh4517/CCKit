@@ -89,6 +89,14 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
 - (void)cc_viewManagerWithView:(NSDictionary *)viewDic;
 
 /**
+ View传递事件到ViewManger
+ 
+ @param info 附带信息，用于区分调用
+ @param params 参数
+ */
+- (void)cc_viewMangerWithView:(NSString *)info EventParams:(NSDictionary *)params;
+
+/**
  *  @author CC, 16-04-20
  *
  *  @brief 设置添加subView的事件
