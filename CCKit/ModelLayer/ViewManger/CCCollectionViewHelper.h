@@ -32,51 +32,54 @@ typedef NSString * (^CCCollectionHelperFooterIdentifierBlock)(NSIndexPath *cInde
 
 typedef NSInteger (^CCCollectionHelperNumberOfItemsInSection)(UICollectionView *collectionView, NSInteger section, id cModel);
 
-typedef UICollectionReusableView * (^CCCollectionHelperHeaderView)(UICollectionView *collectionView, NSIndexPath *cindexPath, id cModel);
-typedef UICollectionReusableView * (^CCCollectionHelperFooterView)(UICollectionView *collectionView, NSIndexPath *cindexPath, id cModel);
+typedef UICollectionReusableView * (^CCCollectionHelperHeaderView)(UICollectionView *collectionView, NSString *kind, NSIndexPath *cindexPath, id cModel);
+typedef UICollectionReusableView * (^CCCollectionHelperFooterView)(UICollectionView *collectionView, NSString *kind, NSIndexPath *cindexPath, id cModel);
 
 typedef void (^CCCollectionHelperDidSelectItemAtIndexPath)(UICollectionView *collectionView, NSIndexPath *cIndexPath, id cModel);
 typedef void (^CCCollectionHelperCellForItemAtIndexPath)(UICollectionViewCell *Cell, NSIndexPath *cIndexPath, id cModel, BOOL IsCelldisplay);
 typedef void (^CCCollectionHelperHeaderForItemAtIndexPath)(UICollectionReusableView *header, NSIndexPath *cIndexPath, id cModel, BOOL IsCelldisplay);
 typedef void (^CCCollectionHelperFooterForItemAtIndexPath)(UICollectionReusableView *footer, NSIndexPath *cIndexPath, id cModel, BOOL IsCelldisplay);
 
-typedef UIEdgeInsets (^CCCollectionHelperCellItemMargin)(UICollectionView *collectionView,UICollectionViewLayout *layout, NSInteger *cSection, id cModel);
-typedef CGFloat (^CCCollectionHelperMinimumInteritemSpacingForSection)(UICollectionView *collectionView,UICollectionViewLayout *layout, NSInteger *cSection, id cModel);
+typedef CGSize (^CCCollectionHelperCellForItemSize)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSIndexPath *cIndexPath, id cModel);
+typedef CGSize (^CCCollectionHelperReferenceSize)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger section, id cModel);
+
+typedef UIEdgeInsets (^CCCollectionHelperCellItemMargin)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger *cSection, id cModel);
+typedef CGFloat (^CCCollectionHelperMinimumInteritemSpacingForSection)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger *cSection, id cModel);
 
 typedef id (^CCCollectionHelperCurrentModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 typedef id (^CCCollectionHelperCurrentHeaderModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 
-@interface CCCollectionViewHelper : NSObject<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface CCCollectionViewHelper : NSObject <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property(nonatomic, weak, readonly) NSMutableArray *dataSource;
-@property(nonatomic, weak, readonly) NSMutableArray *headerSource;
-@property(nonatomic, weak, readonly) NSMutableArray *footerSource;
+@property (nonatomic, weak, readonly) NSMutableArray *dataSource;
+@property (nonatomic, weak, readonly) NSMutableArray *headerSource;
+@property (nonatomic, weak, readonly) NSMutableArray *footerSource;
 
-@property(nonatomic, assign) CGSize titleHeaderSize;
-@property(nonatomic, assign) CGSize titleFooterSize;
+@property (nonatomic, assign) CGSize titleHeaderSize;
+@property (nonatomic, assign) CGSize titleFooterSize;
 
 /**
  Cell 是否加载XIB
  */
-@property(nonatomic, strong) NSArray *cc_CellXIB;
+@property (nonatomic, strong) NSArray *cc_CellXIB;
 
 /**
  Hader 是否加载XIB
  */
-@property(nonatomic, strong) NSArray *cc_CellHeaderXIB;
+@property (nonatomic, strong) NSArray *cc_CellHeaderXIB;
 /**
  Footer 是否加载XIB
  */
-@property(nonatomic, strong) NSArray *cc_CellFooterXIB;
-@property(nonatomic, weak) UICollectionView *cc_CollectionView;
-@property(nonatomic, strong) NSIndexPath *cc_indexPath;
+@property (nonatomic, strong) NSArray *cc_CellFooterXIB;
+@property (nonatomic, weak) UICollectionView *cc_CollectionView;
+@property (nonatomic, strong) NSIndexPath *cc_indexPath;
 
-@property(nonatomic, assign) BOOL cc_autoSizingCell;
+@property (nonatomic, assign) BOOL cc_autoSizingCell;
 
-@property(nonatomic, copy) NSString *cellIdentifier;
-@property(nonatomic, copy) NSString *headerIdentifier;
-@property(nonatomic, copy) NSString *footerIdentifier;
+@property (nonatomic, copy) NSString *cellIdentifier;
+@property (nonatomic, copy) NSString *headerIdentifier;
+@property (nonatomic, copy) NSString *footerIdentifier;
 
 - (void)registerNibs:(NSArray<NSString *> *)cellNibNames;
 
@@ -178,19 +181,23 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 
 - (void)currentModelIndexPath:(CCCollectionHelperCurrentModelAtIndexPath)block;
 
--(void)didNumberOfItemsInSection:(CCCollectionHelperNumberOfItemsInSection)block;
+- (void)didNumberOfItemsInSection:(CCCollectionHelperNumberOfItemsInSection)block;
 
--(void)didHeaderView:(CCCollectionHelperHeaderView)block;
--(void)didFooterView:(CCCollectionHelperFooterView)block;
+- (void)didHeaderView:(CCCollectionHelperHeaderView)block;
+- (void)didFooterView:(CCCollectionHelperFooterView)block;
 
--(void)didCellForItemAtIndexPath:(CCCollectionHelperCellForItemAtIndexPath)block;
--(void)didHeaderForItemAtIndexPah:(CCCollectionHelperHeaderForItemAtIndexPath)block;
--(void)didFooterForItemAtIndexPah:(CCCollectionHelperFooterForItemAtIndexPath)block;
+- (void)didCellForItemAtIndexPath:(CCCollectionHelperCellForItemAtIndexPath)block;
+- (void)didHeaderForItemAtIndexPah:(CCCollectionHelperHeaderForItemAtIndexPath)block;
+- (void)didFooterForItemAtIndexPah:(CCCollectionHelperFooterForItemAtIndexPath)block;
 
--(void)didSelectItemAtIndexPath:(CCCollectionHelperDidSelectItemAtIndexPath)block;
+- (void)didSizeForItemAtIndexPath:(CCCollectionHelperCellForItemSize)block;
+- (void)didReferenceSize:(CCCollectionHelperReferenceSize)block;
 
--(void)didCellItemMargin:(CCCollectionHelperCellItemMargin)block;
+- (void)didSelectItemAtIndexPath:(CCCollectionHelperDidSelectItemAtIndexPath)block;
 
--(void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok;
+- (void)didCellItemMargin:(CCCollectionHelperCellItemMargin)block;
+
+- (void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok;
 
 @end
+

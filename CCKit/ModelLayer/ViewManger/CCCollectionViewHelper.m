@@ -24,41 +24,52 @@
 //
 
 #import "CCCollectionViewHelper.h"
+#import "UICollectionReusableView+CCAdd.h"
+#import "UICollectionView+CCAdd.h"
+#import "UICollectionViewCell+CCAdd.h"
 #import "UIView+Method.h"
 #import "UIViewController+CCAdd.h"
-#import "Config.h"
-#import "UICollectionViewCell+CCAdd.h"
-#import "UICollectionView+CCAdd.h"
-#import "UICollectionReusableView+CCAdd.h"
+
+#define CCAssert(condition, format, ...)                                                       \
+do {                                                                                       \
+_Pragma("clang diagnostic push")                                                       \
+_Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
+NSLog(format, ##__VA_ARGS__);                                                  \
+_Pragma("clang diagnostic pop")                                                        \
+} while (0);
 
 @interface CCCollectionViewHelper ()
 
-@property(nonatomic, strong) NSMutableArray<NSMutableArray *> *dataArray;
-@property(nonatomic, strong) NSMutableArray<NSMutableArray *> *headerArray;
-@property(nonatomic, strong) NSMutableArray<NSMutableArray *> *footerArray;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *dataArray;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *headerArray;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *footerArray;
 
-@property(nonatomic, copy) CCCollectionHelperHeaderView headerView;
-@property(nonatomic, copy) CCCollectionHelperFooterView footerView;
+@property (nonatomic, copy) CCCollectionHelperHeaderView headerView;
+@property (nonatomic, copy) CCCollectionHelperFooterView footerView;
 
-@property(nonatomic, copy) CCCollectionHelperCellIdentifierBlock cellIdentifierBlock;
-@property(nonatomic, copy) CCCollectionHelperHeaderIdentifierBlock headerIdentifierBlock;
-@property(nonatomic, copy) CCCollectionHelperFooterIdentifierBlock footerIdentifierBlock;
+@property (nonatomic, copy) CCCollectionHelperCellIdentifierBlock cellIdentifierBlock;
+@property (nonatomic, copy) CCCollectionHelperHeaderIdentifierBlock headerIdentifierBlock;
+@property (nonatomic, copy) CCCollectionHelperFooterIdentifierBlock footerIdentifierBlock;
 
 
-@property(nonatomic, copy) CCCollectionHelperNumberOfItemsInSection numberOfItemsInSection;
+@property (nonatomic, copy) CCCollectionHelperNumberOfItemsInSection numberOfItemsInSection;
 
-@property(nonatomic, copy) CCCollectionHelperCellForItemAtIndexPath cellForItemAtIndexPath;
-@property(nonatomic, copy) CCCollectionHelperHeaderForItemAtIndexPath headerForItemAtIndexPath;
-@property(nonatomic, copy) CCCollectionHelperFooterForItemAtIndexPath footerForItemAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperCellForItemAtIndexPath cellForItemAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperHeaderForItemAtIndexPath headerForItemAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperFooterForItemAtIndexPath footerForItemAtIndexPath;
 
-@property(nonatomic, copy) CCCollectionHelperDidSelectItemAtIndexPath didSelectItemAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperCellForItemSize sizeForItemAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperReferenceSize referenceSize;
 
-@property(nonatomic, copy) CCCollectionHelperCurrentModelAtIndexPath currentModelAtIndexPath;
-@property(nonatomic, copy) CCCollectionHelperCurrentHeaderModelAtIndexPath currentHeaderModelAtIndexPath;
-@property(nonatomic, copy) CCCollectionHelperCurrentFooterModelAtIndexPath currentFooterModelAtIndexPath;
 
-@property(nonatomic, copy) CCCollectionHelperCellItemMargin cellItemMargin;
-@property(nonatomic, copy) CCCollectionHelperMinimumInteritemSpacingForSection minimumInteritemSpacingForSection;
+@property (nonatomic, copy) CCCollectionHelperDidSelectItemAtIndexPath didSelectItemAtIndexPath;
+
+@property (nonatomic, copy) CCCollectionHelperCurrentModelAtIndexPath currentModelAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperCurrentHeaderModelAtIndexPath currentHeaderModelAtIndexPath;
+@property (nonatomic, copy) CCCollectionHelperCurrentFooterModelAtIndexPath currentFooterModelAtIndexPath;
+
+@property (nonatomic, copy) CCCollectionHelperCellItemMargin cellItemMargin;
+@property (nonatomic, copy) CCCollectionHelperMinimumInteritemSpacingForSection minimumInteritemSpacingForSection;
 @end
 
 @implementation CCCollectionViewHelper
@@ -72,13 +83,13 @@
             else
                 [self.cc_CollectionView registerClass:NSClassFromString(obj) forCellWithReuseIdentifier:obj];
         }];
-        
+
         if (cellNibNames.count == 1)
             self.cellIdentifier = cellNibNames[0];
     }
 }
 
--(void)registerNibHeaders:(NSArray<NSString *> *)cellNibNames
+- (void)registerNibHeaders:(NSArray<NSString *> *)cellNibNames
 {
     if (cellNibNames) {
         [cellNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -87,14 +98,14 @@
             else
                 [self.cc_CollectionView registerClass:NSClassFromString(obj) forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:obj];
         }];
-        
+
         if (cellNibNames.count == 1) {
             self.headerIdentifier = cellNibNames[0];
         }
     }
 }
 
--(void)registerNibFooters:(NSArray<NSString *> *)cellNibNames
+- (void)registerNibFooters:(NSArray<NSString *> *)cellNibNames
 {
     if (cellNibNames) {
         [cellNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -103,7 +114,7 @@
             else
                 [self.cc_CollectionView registerClass:NSClassFromString(obj) forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:obj];
         }];
-        
+
         if (cellNibNames.count == 1)
             self.footerIdentifier = cellNibNames[0];
     }
@@ -116,56 +127,61 @@
         array = self.dataArray;
     else
         array = self.dataArray.firstObject;
-    
+
     return array;
 }
 
-#pragma mark --UICollectionViewDelegateFlowLayout
+#pragma mark--UICollectionViewDelegateFlowLayout
 #define SCREEN_WIDTH [[UIScreen mainScreen] bounds].size.width
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
     CGSize contentSize = self.titleHeaderSize;
-    if (self.headerView){
+    if (self.referenceSize) {
         id curModel = [self currentHeaderModelAtIndexPath:indexPath];
-        contentSize = self.headerView(collectionView,indexPath,curModel).LayoutSizeFittingSize;
-    }else if (CGSizeEqualToSize(contentSize, CGSizeMake(0, 0))) {
+        contentSize = self.referenceSize(collectionView, collectionViewLayout, section, curModel);
+    } else if (CGSizeEqualToSize(contentSize, CGSizeMake(0, 0))) {
         if (iOS9Later)
             contentSize = [collectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:indexPath].LayoutSizeFittingSize;
     }
     return contentSize;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section  
-{  
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
+{
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
     CGSize contentSize = self.titleFooterSize;
-    if (self.footerView) {
+    if (self.referenceSize) {
         id curModel = [self currentFooterModelAtIndexPath:indexPath];
-        contentSize = self.footerView(collectionView,indexPath,curModel).LayoutSizeFittingSize;
-    }else if (CGSizeEqualToSize(contentSize, CGSizeMake(0, 0))){
+        contentSize = self.referenceSize(collectionView, collectionViewLayout, section, curModel);
+    } else if (CGSizeEqualToSize(contentSize, CGSizeMake(0, 0))) {
         if (iOS9Later)
             contentSize = [collectionView supplementaryViewForElementKind:UICollectionElementKindSectionFooter atIndexPath:indexPath].LayoutSizeFittingSize;
     }
-    return contentSize;  
-}  
+    return contentSize;
+}
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGSize curSize = CGSizeMake(SCREEN_WIDTH, 0);
     if (self.cc_autoSizingCell) {
         id curModel = [self currentModelAtIndexPath:indexPath];
         NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
         @weakify(self);
-        curSize = [collectionView cc_SizeForCellWithIdentifier:curCellIdentifier cacheByIndexPath:indexPath configuration:^(id cell) {
-            @strongify(self);
-            if (self.cellForItemAtIndexPath) {
-                self.cellForItemAtIndexPath(cell, indexPath, curModel,NO);
-            } else if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
-                [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
-            }
-        }];
+        curSize = [collectionView cc_SizeForCellWithIdentifier:curCellIdentifier
+                                              cacheByIndexPath:indexPath
+                                                 configuration:^(id cell) {
+                                                     @strongify(self);
+                                                     if (self.cellForItemAtIndexPath) {
+                                                         self.cellForItemAtIndexPath(cell, indexPath, curModel, NO);
+                                                     } else if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+                                                         [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
+                                                     }
+                                                 }];
+    } else if (self.sizeForItemAtIndexPath) {
+        id curModel = [self currentModelAtIndexPath:indexPath];
+        curSize = self.sizeForItemAtIndexPath(collectionView, collectionViewLayout, indexPath, curModel);
     }
     return curSize;
 }
@@ -175,30 +191,33 @@
     UIEdgeInsets edgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     if (self.cellItemMargin) {
         id curModel = [self currentSectionModel:section];
-        self.cellItemMargin(collectionView,collectionViewLayout,&section,curModel);
+        self.cellItemMargin(collectionView, collectionViewLayout, &section, curModel);
     }
-    
+
     return edgeInsets;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
     CGFloat minimum = 0;
     if (self.minimumInteritemSpacingForSection) {
         id curModel = [self currentSectionModel:section];
-        minimum = self.minimumInteritemSpacingForSection(collectionView,collectionViewLayout,&section,curModel);
+        minimum = self.minimumInteritemSpacingForSection(collectionView, collectionViewLayout, &section, curModel);
     }
     return minimum;
 }
 
 
-#pragma mark --UICollectionViewDelegate && UICollectionViewDataSourse
+#pragma mark--UICollectionViewDelegate && UICollectionViewDataSourse
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
     NSInteger curNumOfSections = self.dataArray.count;
     return curNumOfSections;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     NSInteger curNumOfRows = 0;
     if (self.dataArray.count > section) {
         NSMutableArray *subDataAry = self.dataArray[section];
@@ -216,26 +235,28 @@
     if (kind == UICollectionElementKindSectionHeader) {
         id curModel = [self currentHeaderModelAtIndexPath:indexPath];
         if (self.headerView)
-            reusableView = self.headerView(collectionView,indexPath,curModel);
-        else{
+            reusableView = self.headerView(collectionView, kind, indexPath, curModel);
+
+        if (!reusableView) {
             NSString *curCellIdentifier = [self headerIdentifierForRowAtIndexPath:indexPath model:curModel];
             reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
         }
-        
+
         if (self.headerForItemAtIndexPath) {
             self.headerForItemAtIndexPath(reusableView, indexPath, curModel, YES);
         } else if ([reusableView respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
             [reusableView cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
         }
-    }else if (kind == UICollectionElementKindSectionFooter){
+    } else if (kind == UICollectionElementKindSectionFooter) {
         id curModel = [self currentFooterModelAtIndexPath:indexPath];
-        if (self.footerView) 
-            reusableView = self.footerView(collectionView,indexPath,curModel);
-        else{
+        if (self.footerView)
+            reusableView = self.footerView(collectionView, kind, indexPath, curModel);
+
+        if (!reusableView) {
             NSString *curCellIdentifier = [self footerIdentifierForRowAtIndexPath:indexPath model:curModel];
             reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
         }
-        
+
         if (self.footerForItemAtIndexPath) {
             self.footerForItemAtIndexPath(reusableView, indexPath, curModel, YES);
         } else if ([reusableView respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
@@ -245,24 +266,29 @@
     return reusableView;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
     UICollectionViewCell *curCell = nil;
     id curModel = [self currentModelAtIndexPath:indexPath];
     NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
     curCell = [collectionView dequeueReusableCellWithReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
-    if (!curCell)
-        NSLog(@"cell is nil Identifier ⤭ %@ ⤪",curCellIdentifier);
-    
-    if (self.cellForItemAtIndexPath) {
-        self.cellForItemAtIndexPath(curCell, indexPath, curModel, YES);
-    } else if ([curCell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
-        [curCell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
-    }
-    
+    CCAssert(curCell, @"cell is nil Identifier ⤭ %@ ⤪", curCellIdentifier);
+
     return curCell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    id curModel = [self currentModelAtIndexPath:indexPath];
+    if (self.cellForItemAtIndexPath) {
+        self.cellForItemAtIndexPath(cell, indexPath, curModel, YES);
+    } else if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+        [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     self.cc_indexPath = indexPath;
     if (self.didSelectItemAtIndexPath) {
         id curModel = [self currentModelAtIndexPath:indexPath];
@@ -290,7 +316,7 @@
     NSArray *arr = [self.dataArray objectAtIndex:section];
     if (arr.count)
         currentModel = [arr objectAtIndex:0];
-    
+
     return currentModel;
 }
 
@@ -319,7 +345,7 @@
     self.dataArray = nil;
     for (NSInteger i = 0; i < newDataAry.count; i++)
         [self cc_makeUpDataAryForSection:i];
-    
+
     for (int idx = 0; idx < self.dataArray.count; idx++) {
         NSMutableArray *subAry = self.dataArray[idx];
         if (subAry.count) [subAry removeAllObjects];
@@ -361,7 +387,7 @@
             [idxArray addObject:@(cSection + i)];
         }
     }
-    
+
     for (NSInteger i = 0; i < idxArray.count; i++) {
         NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
         NSMutableArray *subAry = self.dataArray[idx];
@@ -402,12 +428,12 @@
 - (void)cc_reloadDataAry:(NSArray *)newDataAry forSection:(NSInteger)cSection
 {
     if (newDataAry.count == 0) return;
-    
+
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cSection];
     NSMutableArray *subAry = self.dataArray[cSection];
     if (subAry.count) [subAry removeAllObjects];
     [subAry addObjectsFromArray:newDataAry];
-    
+
     if (curIndexSet) {
         [self.cc_CollectionView insertSections:curIndexSet];
     } else {
@@ -423,21 +449,21 @@
 - (void)cc_addDataAry:(NSArray *)newDataAry forSection:(NSInteger)cSection
 {
     if (newDataAry.count == 0) return;
-    
+
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cSection];
     NSMutableArray *subAry;
     if (cSection < 0) {
         subAry = self.dataArray[0];
     } else
         subAry = self.dataArray[cSection];
-    
+
     if (curIndexSet) {
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_CollectionView insertSections:curIndexSet];
     } else {
         __block NSMutableArray *curIndexPaths = [NSMutableArray arrayWithCapacity:newDataAry.count];
         [newDataAry enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            [curIndexPaths addObject:[NSIndexPath indexPathForRow:subAry.count+idx inSection:cSection]];
+            [curIndexPaths addObject:[NSIndexPath indexPathForRow:subAry.count + idx inSection:cSection]];
         }];
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_CollectionView insertItemsAtIndexPaths:curIndexPaths];
@@ -446,7 +472,7 @@
 
 - (void)cc_insertData:(id)cModel AtIndex:(NSIndexPath *)cIndexPath;
 {
-    
+
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cIndexPath.section];
     NSMutableArray *subAry = self.dataArray[cIndexPath.section];
     if (subAry.count < cIndexPath.row) return;
@@ -461,11 +487,11 @@
 
 - (void)cc_deleteDataAtIndex:(NSIndexPath *)cIndexPath
 {
-    
+
     if (self.dataArray.count <= cIndexPath.section) return;
     NSMutableArray *subAry = self.dataArray[cIndexPath.section];
     if (subAry.count <= cIndexPath.row) return;
-    
+
     [subAry removeObjectAtIndex:cIndexPath.row];
     [self.cc_CollectionView insertItemsAtIndexPaths:@[ cIndexPath ]];
 }
@@ -519,7 +545,7 @@
     self.headerArray = nil;
     for (NSInteger i = 0; i < newDataAry.count; i++)
         [self cc_makeUpHeaderArrForSection:i];
-    
+
     for (int idx = 0; idx < self.headerArray.count; idx++) {
         NSMutableArray *subAry = self.headerArray[idx];
         if (subAry.count) [subAry removeAllObjects];
@@ -561,7 +587,7 @@
             [idxArray addObject:@(cSection + i)];
         }
     }
-    
+
     for (NSInteger i = 0; i < idxArray.count; i++) {
         NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
         NSMutableArray *subAry = self.headerArray[idx];
@@ -592,13 +618,13 @@
     [self.cc_CollectionView reloadData];
 }
 
--(NSString *)headerIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
+- (NSString *)headerIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
 {
     NSString *curCellIdentifier = nil;
     if (self.headerIdentifierBlock) {
         curCellIdentifier = self.headerIdentifierBlock(cIndexPath, cModel);
     } else {
-        curCellIdentifier = self.cellIdentifier;
+        curCellIdentifier = self.headerIdentifier;
     }
     return curCellIdentifier;
 }
@@ -637,7 +663,7 @@
     return curIndexSet;
 }
 
--(NSMutableArray<NSMutableArray *> *)headerArray
+- (NSMutableArray<NSMutableArray *> *)headerArray
 {
     if (!_headerArray) {
         _headerArray = [NSMutableArray new];
@@ -653,7 +679,7 @@
     self.footerArray = nil;
     for (NSInteger i = 0; i < newDataAry.count; i++)
         [self cc_makeUpFooterArrForSection:i];
-    
+
     for (int idx = 0; idx < self.footerArray.count; idx++) {
         NSMutableArray *subAry = self.footerArray[idx];
         if (subAry.count) [subAry removeAllObjects];
@@ -695,7 +721,7 @@
             [idxArray addObject:@(cSection + i)];
         }
     }
-    
+
     for (NSInteger i = 0; i < idxArray.count; i++) {
         NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
         NSMutableArray *subAry = self.footerArray[idx];
@@ -726,13 +752,13 @@
     [self.cc_CollectionView reloadData];
 }
 
--(NSString *)footerIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
+- (NSString *)footerIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
 {
     NSString *curCellIdentifier = nil;
     if (self.footerIdentifierBlock) {
         curCellIdentifier = self.footerIdentifierBlock(cIndexPath, cModel);
     } else {
-        curCellIdentifier = self.cellIdentifier;
+        curCellIdentifier = self.footerIdentifier;
     }
     return curCellIdentifier;
 }
@@ -772,7 +798,7 @@
 }
 
 
--(NSMutableArray<NSMutableArray *> *)footerArray
+- (NSMutableArray<NSMutableArray *> *)footerArray
 {
     if (!_footerArray) {
         _footerArray = [NSMutableArray new];
@@ -788,14 +814,14 @@
     if (_cellIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_CollectionView.viewController.cc_identifier;
         if (curVCIdentifier) {
-            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Cell",curVCIdentifier];
+            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Cell", curVCIdentifier];
             _cellIdentifier = curCellIdentifier;
         }
     }
     return _cellIdentifier;
 }
 
--(NSString *)headerIdentifier
+- (NSString *)headerIdentifier
 {
     if (_headerIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_CollectionView.viewController.cc_identifier;
@@ -807,7 +833,7 @@
     return _headerIdentifier;
 }
 
--(NSString *)footerIdentifier
+- (NSString *)footerIdentifier
 {
     if (_footerIdentifier == nil) {
         NSString *curVCIdentifier = self.cc_CollectionView.viewController.cc_identifier;
@@ -824,64 +850,75 @@
     self.cellIdentifierBlock = block;
 }
 
--(void)headerMultipleIdentifier:(CCCollectionHelperHeaderIdentifierBlock)block
+- (void)headerMultipleIdentifier:(CCCollectionHelperHeaderIdentifierBlock)block
 {
     self.headerIdentifierBlock = block;
 }
 
--(void)footerMultipleIdentifier:(CCCollectionHelperFooterIdentifierBlock)block
+- (void)footerMultipleIdentifier:(CCCollectionHelperFooterIdentifierBlock)block
 {
     self.footerIdentifierBlock = block;
 }
 
--(void)currentModelIndexPath:(CCCollectionHelperCurrentModelAtIndexPath)block
+- (void)currentModelIndexPath:(CCCollectionHelperCurrentModelAtIndexPath)block
 {
     self.currentModelAtIndexPath = block;
 }
 
--(void)didNumberOfItemsInSection:(CCCollectionHelperNumberOfItemsInSection)block
+- (void)didNumberOfItemsInSection:(CCCollectionHelperNumberOfItemsInSection)block
 {
     self.numberOfItemsInSection = block;
 }
 
--(void)didHeaderView:(CCCollectionHelperHeaderView)block
+- (void)didHeaderView:(CCCollectionHelperHeaderView)block
 {
     self.headerView = block;
 }
 
--(void)didFooterView:(CCCollectionHelperFooterView)block
+- (void)didFooterView:(CCCollectionHelperFooterView)block
 {
     self.footerView = block;
 }
 
--(void)didCellForItemAtIndexPath:(CCCollectionHelperCellForItemAtIndexPath)block
+- (void)didCellForItemAtIndexPath:(CCCollectionHelperCellForItemAtIndexPath)block
 {
     self.cellForItemAtIndexPath = block;
 }
 
--(void)didHeaderForItemAtIndexPah:(CCCollectionHelperHeaderForItemAtIndexPath)block
+- (void)didHeaderForItemAtIndexPah:(CCCollectionHelperHeaderForItemAtIndexPath)block
 {
     self.headerForItemAtIndexPath = block;
 }
 
--(void)didFooterForItemAtIndexPah:(CCCollectionHelperFooterForItemAtIndexPath)block
+- (void)didFooterForItemAtIndexPah:(CCCollectionHelperFooterForItemAtIndexPath)block
 {
     self.footerForItemAtIndexPath = block;
 }
 
--(void)didSelectItemAtIndexPath:(CCCollectionHelperDidSelectItemAtIndexPath)block
+- (void)didSizeForItemAtIndexPath:(CCCollectionHelperCellForItemSize)block
+{
+    self.sizeForItemAtIndexPath = block;
+}
+
+- (void)didReferenceSize:(CCCollectionHelperReferenceSize)block
+{
+    self.referenceSize = block;
+}
+
+- (void)didSelectItemAtIndexPath:(CCCollectionHelperDidSelectItemAtIndexPath)block
 {
     self.didSelectItemAtIndexPath = block;
 }
 
--(void)didCellItemMargin:(CCCollectionHelperCellItemMargin)block
+- (void)didCellItemMargin:(CCCollectionHelperCellItemMargin)block
 {
     self.cellItemMargin = block;
 }
 
--(void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok
+- (void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok
 {
     self.minimumInteritemSpacingForSection = blcok;
 }
 
 @end
+
