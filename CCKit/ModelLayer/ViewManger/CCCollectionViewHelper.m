@@ -24,9 +24,11 @@
 //
 
 #import "CCCollectionViewHelper.h"
+#import "Config.h"
 #import "UICollectionReusableView+CCAdd.h"
 #import "UICollectionView+CCAdd.h"
 #import "UICollectionViewCell+CCAdd.h"
+#import "UIView+CCTransfer.h"
 #import "UIView+Method.h"
 #import "UIViewController+CCAdd.h"
 
@@ -78,14 +80,14 @@ _Pragma("clang diagnostic pop")                                                 
 {
     if (cellNibNames.count > 0) {
         [cellNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            if ([[self.cc_CellXIB objectAtIndex:idx] boolValue])
+            if (!self.cc_CellXIB && [[self.cc_CellXIB objectAtIndex:idx] boolValue])
                 [self.cc_CollectionView registerNib:[UINib nibWithNibName:obj bundle:nil] forCellWithReuseIdentifier:obj];
             else
                 [self.cc_CollectionView registerClass:NSClassFromString(obj) forCellWithReuseIdentifier:obj];
         }];
 
         if (cellNibNames.count == 1)
-            self.cellIdentifier = cellNibNames[0];
+            self.cellIdentifier = cellNibNames[ 0 ];
     }
 }
 
@@ -93,14 +95,14 @@ _Pragma("clang diagnostic pop")                                                 
 {
     if (cellNibNames) {
         [cellNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            if ([[self.cc_CellHeaderXIB objectAtIndex:idx] boolValue])
+            if (self.cc_CellHeaderXIB && [[self.cc_CellHeaderXIB objectAtIndex:idx] boolValue])
                 [self.cc_CollectionView registerNib:[UINib nibWithNibName:obj bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:obj];
             else
                 [self.cc_CollectionView registerClass:NSClassFromString(obj) forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:obj];
         }];
 
         if (cellNibNames.count == 1) {
-            self.headerIdentifier = cellNibNames[0];
+            self.headerIdentifier = cellNibNames[ 0 ];
         }
     }
 }
@@ -116,7 +118,7 @@ _Pragma("clang diagnostic pop")                                                 
         }];
 
         if (cellNibNames.count == 1)
-            self.footerIdentifier = cellNibNames[0];
+            self.footerIdentifier = cellNibNames[ 0 ];
     }
 }
 
@@ -220,7 +222,7 @@ _Pragma("clang diagnostic pop")                                                 
 {
     NSInteger curNumOfRows = 0;
     if (self.dataArray.count > section) {
-        NSMutableArray *subDataAry = self.dataArray[section];
+        NSMutableArray *subDataAry = self.dataArray[ section ];
         if (self.numberOfItemsInSection)
             curNumOfRows = self.numberOfItemsInSection(collectionView, section, subDataAry);
         else
@@ -242,6 +244,9 @@ _Pragma("clang diagnostic pop")                                                 
             reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
         }
 
+        if (self.reusableDelegate && !reusableView.viewDelegate)
+            reusableView.viewDelegate = self.reusableDelegate;
+
         if (self.headerForItemAtIndexPath) {
             self.headerForItemAtIndexPath(reusableView, indexPath, curModel, YES);
         } else if ([reusableView respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
@@ -256,6 +261,9 @@ _Pragma("clang diagnostic pop")                                                 
             NSString *curCellIdentifier = [self footerIdentifierForRowAtIndexPath:indexPath model:curModel];
             reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
         }
+
+        if (self.reusableDelegate && !reusableView.viewDelegate)
+            reusableView.viewDelegate = self.reusableDelegate;
 
         if (self.footerForItemAtIndexPath) {
             self.footerForItemAtIndexPath(reusableView, indexPath, curModel, YES);
@@ -273,6 +281,8 @@ _Pragma("clang diagnostic pop")                                                 
     NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
     curCell = [collectionView dequeueReusableCellWithReuseIdentifier:curCellIdentifier forIndexPath:indexPath];
     CCAssert(curCell, @"cell is nil Identifier ⤭ %@ ⤪", curCellIdentifier);
+    if (self.cellDelegate)
+        curCell.viewDelegate = self.cellDelegate;
 
     return curCell;
 }
@@ -330,9 +340,9 @@ _Pragma("clang diagnostic pop")                                                 
     if (self.currentModelAtIndexPath) {
         return self.currentModelAtIndexPath(self.dataArray, cIndexPath);
     } else if (self.dataArray.count > cIndexPath.section) {
-        NSMutableArray *subDataAry = self.dataArray[cIndexPath.section];
+        NSMutableArray *subDataAry = self.dataArray[ cIndexPath.section ];
         if (subDataAry.count > cIndexPath.row) {
-            id curModel = subDataAry[cIndexPath.row];
+            id curModel = subDataAry[ cIndexPath.row ];
             return curModel;
         }
     }
@@ -347,7 +357,7 @@ _Pragma("clang diagnostic pop")                                                 
         [self cc_makeUpDataAryForSection:i];
 
     for (int idx = 0; idx < self.dataArray.count; idx++) {
-        NSMutableArray *subAry = self.dataArray[idx];
+        NSMutableArray *subAry = self.dataArray[ idx ];
         if (subAry.count) [subAry removeAllObjects];
         id data = [newDataAry objectAtIndex:idx];
         if ([data isKindOfClass:[NSArray class]]) {
@@ -390,7 +400,7 @@ _Pragma("clang diagnostic pop")                                                 
 
     for (NSInteger i = 0; i < idxArray.count; i++) {
         NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
-        NSMutableArray *subAry = self.dataArray[idx];
+        NSMutableArray *subAry = self.dataArray[ idx ];
         if (subAry.count) [subAry removeAllObjects];
         id data = [newDataAry objectAtIndex:i];
         if ([data isKindOfClass:[NSArray class]]) {
@@ -412,7 +422,7 @@ _Pragma("clang diagnostic pop")                                                 
 - (void)cc_resetDataAry:(NSArray *)newDataAry forSection:(NSInteger)cSection
 {
     [self cc_makeUpDataAryForSection:cSection];
-    NSMutableArray *subAry = self.dataArray[cSection];
+    NSMutableArray *subAry = self.dataArray[ cSection ];
     if (subAry.count) [subAry removeAllObjects];
     if (newDataAry.count) {
         [subAry addObjectsFromArray:newDataAry];
@@ -430,7 +440,7 @@ _Pragma("clang diagnostic pop")                                                 
     if (newDataAry.count == 0) return;
 
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cSection];
-    NSMutableArray *subAry = self.dataArray[cSection];
+    NSMutableArray *subAry = self.dataArray[ cSection ];
     if (subAry.count) [subAry removeAllObjects];
     [subAry addObjectsFromArray:newDataAry];
 
@@ -453,9 +463,9 @@ _Pragma("clang diagnostic pop")                                                 
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cSection];
     NSMutableArray *subAry;
     if (cSection < 0) {
-        subAry = self.dataArray[0];
+        subAry = self.dataArray[ 0 ];
     } else
-        subAry = self.dataArray[cSection];
+        subAry = self.dataArray[ cSection ];
 
     if (curIndexSet) {
         [subAry addObjectsFromArray:newDataAry];
@@ -472,9 +482,8 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)cc_insertData:(id)cModel AtIndex:(NSIndexPath *)cIndexPath;
 {
-
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cIndexPath.section];
-    NSMutableArray *subAry = self.dataArray[cIndexPath.section];
+    NSMutableArray *subAry = self.dataArray[ cIndexPath.section ];
     if (subAry.count < cIndexPath.row) return;
     [subAry insertObject:cModel atIndex:cIndexPath.row];
     if (curIndexSet) {
@@ -487,9 +496,8 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)cc_deleteDataAtIndex:(NSIndexPath *)cIndexPath
 {
-
     if (self.dataArray.count <= cIndexPath.section) return;
-    NSMutableArray *subAry = self.dataArray[cIndexPath.section];
+    NSMutableArray *subAry = self.dataArray[ cIndexPath.section ];
     if (subAry.count <= cIndexPath.row) return;
 
     [subAry removeObjectAtIndex:cIndexPath.row];
@@ -500,7 +508,7 @@ _Pragma("clang diagnostic pop")                                                 
                     IndexPath:(NSIndexPath *)cIndexPath
 {
     if (self.dataArray.count > cIndexPath.section) {
-        NSMutableArray *subDataAry = self.dataArray[cIndexPath.section];
+        NSMutableArray *subDataAry = self.dataArray[ cIndexPath.section ];
         if (subDataAry.count > cIndexPath.row) {
             [subDataAry replaceObjectAtIndex:cIndexPath.row withObject:model];
             [self.cc_CollectionView reloadData];
@@ -540,82 +548,29 @@ _Pragma("clang diagnostic pop")                                                 
 #pragma mark -
 #pragma mark :. Header
 
-- (void)cc_reloadGroupHeaderArr:(NSArray *)newDataAry
+- (void)cc_reloadHeaderArr:(NSArray *)newDataAry
 {
-    self.headerArray = nil;
-    for (NSInteger i = 0; i < newDataAry.count; i++)
-        [self cc_makeUpHeaderArrForSection:i];
-
-    for (int idx = 0; idx < self.headerArray.count; idx++) {
-        NSMutableArray *subAry = self.headerArray[idx];
-        if (subAry.count) [subAry removeAllObjects];
-        id data = [newDataAry objectAtIndex:idx];
-        if ([data isKindOfClass:[NSArray class]]) {
-            [subAry addObjectsFromArray:data];
-        } else {
-            [subAry addObject:data];
-        }
-    }
-    [self.cc_CollectionView reloadData];
+    self.headerArray = [NSMutableArray arrayWithArray:newDataAry];
 }
 
-- (void)cc_addGroupHeaderArr:(NSArray *)newDataAry
+- (void)cc_addHeaderArr:(NSArray *)newDataAry
 {
-    [self.headerArray addObject:[NSMutableArray arrayWithArray:newDataAry]];
-    [self.cc_CollectionView reloadData];
+    [self.headerArray addObjectsFromArray:newDataAry];
 }
 
-- (void)cc_insertGroupHeaderArr:(NSArray *)newDataAry
+- (void)cc_insertHeaderArr:(NSArray *)newDataAry
                      forSection:(NSInteger)cSection
 {
-    [self.headerArray insertObject:[NSMutableArray arrayWithArray:newDataAry] atIndex:cSection == -1 ? 0 : cSection];
-    [self.cc_CollectionView reloadData];
+    NSMutableIndexSet *set = [NSMutableIndexSet indexSet];
+    for (NSInteger i = 0; i < newDataAry.count; i++)
+        [set addIndex:cSection + i];
+
+    [self.headerArray insertObjects:newDataAry atIndexes:set];
 }
 
-- (void)cc_insertMultiplGroupHeaderArr:(NSArray *)newDataAry
-                            forSection:(NSInteger)cSection
+- (void)cc_removerHeaderData:(NSInteger)cSection
 {
-    NSMutableArray *idxArray = [NSMutableArray array];
-    if (cSection < 0) {
-        for (NSInteger i = 0; i < newDataAry.count; i++) {
-            [self.headerArray insertObject:[NSMutableArray array] atIndex:0];
-            [idxArray addObject:@(i)];
-        }
-    } else {
-        for (NSInteger i = 0; i < newDataAry.count; i++) {
-            [self.headerArray insertObject:[NSMutableArray array] atIndex:cSection + i];
-            [idxArray addObject:@(cSection + i)];
-        }
-    }
-
-    for (NSInteger i = 0; i < idxArray.count; i++) {
-        NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
-        NSMutableArray *subAry = self.headerArray[idx];
-        if (subAry.count) [subAry removeAllObjects];
-        id data = [newDataAry objectAtIndex:i];
-        if ([data isKindOfClass:[NSArray class]]) {
-            [subAry addObjectsFromArray:data];
-        } else {
-            [subAry addObject:data];
-        }
-    }
-    [self.cc_CollectionView reloadData];
-}
-
-- (void)cc_resetHeaderArr:(NSArray *)newDataAry
-{
-    [self cc_resetHeaderArr:newDataAry forSection:0];
-}
-
-- (void)cc_resetHeaderArr:(NSArray *)newDataAry forSection:(NSInteger)cSection
-{
-    [self cc_makeUpHeaderArrForSection:cSection];
-    NSMutableArray *subAry = self.headerArray[cSection];
-    if (subAry.count) [subAry removeAllObjects];
-    if (newDataAry.count) {
-        [subAry addObjectsFromArray:newDataAry];
-    }
-    [self.cc_CollectionView reloadData];
+    [self.headerArray removeObjectAtIndex:cSection];
 }
 
 - (NSString *)headerIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
@@ -634,33 +589,10 @@ _Pragma("clang diagnostic pop")                                                 
     if (self.currentHeaderModelAtIndexPath) {
         return self.currentHeaderModelAtIndexPath(self.headerArray, cIndexPath);
     } else if (self.headerArray.count > cIndexPath.section) {
-        NSMutableArray *subDataAry = self.headerArray[cIndexPath.section];
-        if (subDataAry.count > cIndexPath.row) {
-            id curModel = subDataAry[cIndexPath.row];
-            return curModel;
-        }
+        id curModel = self.headerArray[ cIndexPath.section ];
+        return curModel;
     }
     return nil;
-}
-
-- (NSIndexSet *)cc_makeUpHeaderArrForSection:(NSInteger)cSection
-{
-    NSMutableIndexSet *curIndexSet = nil;
-    if (self.headerArray.count <= cSection) {
-        curIndexSet = [NSMutableIndexSet indexSet];
-        for (NSInteger idx = 0; idx < (cSection - self.headerArray.count + 1); idx++) {
-            NSMutableArray *subAry = [NSMutableArray array];
-            if (cSection < 0) {
-                [self.headerArray insertObject:subAry atIndex:0];
-                [curIndexSet addIndex:0];
-                break;
-            } else {
-                [self.headerArray addObject:subAry];
-                [curIndexSet addIndex:cSection - idx];
-            }
-        }
-    }
-    return curIndexSet;
 }
 
 - (NSMutableArray<NSMutableArray *> *)headerArray
@@ -674,82 +606,29 @@ _Pragma("clang diagnostic pop")                                                 
 #pragma mark -
 #pragma mark :. Footer
 
-- (void)cc_reloadGroupFooterArr:(NSArray *)newDataAry
+- (void)cc_reloadFooterArr:(NSArray *)newDataAry
 {
-    self.footerArray = nil;
-    for (NSInteger i = 0; i < newDataAry.count; i++)
-        [self cc_makeUpFooterArrForSection:i];
-
-    for (int idx = 0; idx < self.footerArray.count; idx++) {
-        NSMutableArray *subAry = self.footerArray[idx];
-        if (subAry.count) [subAry removeAllObjects];
-        id data = [newDataAry objectAtIndex:idx];
-        if ([data isKindOfClass:[NSArray class]]) {
-            [subAry addObjectsFromArray:data];
-        } else {
-            [subAry addObject:data];
-        }
-    }
-    [self.cc_CollectionView reloadData];
+    self.footerArray = [NSMutableArray arrayWithArray:newDataAry];
 }
 
-- (void)cc_addGroupFooterArr:(NSArray *)newDataAry
+- (void)cc_addFooterArr:(NSArray *)newDataAry
 {
-    [self.footerArray addObject:[NSMutableArray arrayWithArray:newDataAry]];
-    [self.cc_CollectionView reloadData];
+    [self.footerArray addObjectsFromArray:newDataAry];
 }
 
-- (void)cc_insertGroupFooterArr:(NSArray *)newDataAry
+- (void)cc_insertFooterArr:(NSArray *)newDataAry
                      forSection:(NSInteger)cSection
 {
-    [self.footerArray insertObject:[NSMutableArray arrayWithArray:newDataAry] atIndex:cSection == -1 ? 0 : cSection];
-    [self.cc_CollectionView reloadData];
+    NSMutableIndexSet *set = [NSMutableIndexSet indexSet];
+    for (NSInteger i = 0; i < newDataAry.count; i++)
+        [set addIndex:cSection + i];
+
+    [self.footerArray insertObjects:newDataAry atIndexes:set];
 }
 
-- (void)cc_insertMultiplGroupFooterArr:(NSArray *)newDataAry
-                            forSection:(NSInteger)cSection
+- (void)cc_removerFooterData:(NSInteger)cSection
 {
-    NSMutableArray *idxArray = [NSMutableArray array];
-    if (cSection < 0) {
-        for (NSInteger i = 0; i < newDataAry.count; i++) {
-            [self.footerArray insertObject:[NSMutableArray array] atIndex:0];
-            [idxArray addObject:@(i)];
-        }
-    } else {
-        for (NSInteger i = 0; i < newDataAry.count; i++) {
-            [self.footerArray insertObject:[NSMutableArray array] atIndex:cSection + i];
-            [idxArray addObject:@(cSection + i)];
-        }
-    }
-
-    for (NSInteger i = 0; i < idxArray.count; i++) {
-        NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
-        NSMutableArray *subAry = self.footerArray[idx];
-        if (subAry.count) [subAry removeAllObjects];
-        id data = [newDataAry objectAtIndex:i];
-        if ([data isKindOfClass:[NSArray class]]) {
-            [subAry addObjectsFromArray:data];
-        } else {
-            [subAry addObject:data];
-        }
-    }
-    [self.cc_CollectionView reloadData];
-}
-
-- (void)cc_resetFooterArr:(NSArray *)newDataAry
-{
-    [self cc_resetFooterArr:newDataAry forSection:0];
-}
-
-- (void)cc_resetFooterArr:(NSArray *)newDataAry forSection:(NSInteger)cSection
-{
-    [self cc_makeUpFooterArrForSection:cSection];
-    NSMutableArray *subAry = self.footerArray[cSection];
-    if (subAry.count) [subAry removeAllObjects];
-    if (newDataAry.count) {
-        [subAry addObjectsFromArray:newDataAry];
-    }
-    [self.cc_CollectionView reloadData];
+    [self.footerArray removeObjectAtIndex:cSection];
 }
 
 - (NSString *)footerIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
@@ -768,11 +647,8 @@ _Pragma("clang diagnostic pop")                                                 
     if (self.currentFooterModelAtIndexPath) {
         return self.currentFooterModelAtIndexPath(self.footerArray, cIndexPath);
     } else if (self.footerArray.count > cIndexPath.section) {
-        NSMutableArray *subDataAry = self.footerArray[cIndexPath.section];
-        if (subDataAry.count > cIndexPath.row) {
-            id curModel = subDataAry[cIndexPath.row];
-            return curModel;
-        }
+        id curModel = self.footerArray[ cIndexPath.section ];
+        return curModel;
     }
     return nil;
 }
@@ -875,9 +751,19 @@ _Pragma("clang diagnostic pop")                                                 
     self.headerView = block;
 }
 
+- (void)didCurrentHeaderModel:(CCCollectionHelperCurrentHeaderModelAtIndexPath)block
+{
+    self.currentHeaderModelAtIndexPath = block;
+}
+
 - (void)didFooterView:(CCCollectionHelperFooterView)block
 {
     self.footerView = block;
+}
+
+- (void)didCurrentFooterModel:(CCCollectionHelperCurrentFooterModelAtIndexPath)block
+{
+    self.currentFooterModelAtIndexPath = block;
 }
 
 - (void)didCellForItemAtIndexPath:(CCCollectionHelperCellForItemAtIndexPath)block
@@ -921,4 +807,3 @@ _Pragma("clang diagnostic pop")                                                 
 }
 
 @end
-

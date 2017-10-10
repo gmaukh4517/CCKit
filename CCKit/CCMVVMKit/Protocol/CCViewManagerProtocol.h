@@ -94,7 +94,7 @@ typedef void (^ViewEventHandleBlock)(NSString *info, NSDictionary *eventDic, Vie
  @param info 附带信息，用于区分调用
  @param params 参数
  */
-- (void)cc_viewMangerWithView:(NSString *)info EventParams:(NSDictionary *)params;
+- (void)cc_viewManagerWithView:(NSString *)info EventParams:(NSDictionary *)params;
 
 /**
  *  @author CC, 16-04-20

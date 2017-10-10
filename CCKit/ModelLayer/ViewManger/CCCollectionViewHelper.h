@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 //
 
+#import "CCViewProtocol.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -58,6 +59,9 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 
 @property (nonatomic, assign) CGSize titleHeaderSize;
 @property (nonatomic, assign) CGSize titleFooterSize;
+
+@property (nonatomic, weak) id<CCViewProtocol> cellDelegate;
+@property (nonatomic, weak) id<CCViewProtocol> reusableDelegate;
 
 /**
  Cell 是否加载XIB
@@ -137,38 +141,28 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 #pragma mark -
 #pragma mark :. Header
 
-- (void)cc_reloadGroupHeaderArr:(NSArray *)newDataAry;
+- (void)cc_reloadHeaderArr:(NSArray *)newDataAry;
 
-- (void)cc_addGroupHeaderArr:(NSArray *)newDataAry;
+- (void)cc_addHeaderArr:(NSArray *)newDataAry;
 
-- (void)cc_insertGroupHeaderArr:(NSArray *)newDataAry
+- (void)cc_insertHeaderArr:(NSArray *)newDataAry
                      forSection:(NSInteger)cSection;
 
-- (void)cc_insertMultiplGroupHeaderArr:(NSArray *)newDataAry
-                            forSection:(NSInteger)cSection;
-
-- (void)cc_resetHeaderArr:(NSArray *)newDataAry;
-
-- (void)cc_resetHeaderArr:(NSArray *)newDataAry forSection:(NSInteger)cSection;
+- (void)cc_removerHeaderData:(NSInteger)cSection;
 
 - (id)currentHeaderModelAtIndexPath:(NSIndexPath *)cIndexPath;
 
 #pragma mark -
 #pragma mark :. Footer
 
-- (void)cc_reloadGroupFooterArr:(NSArray *)newDataAry;
+- (void)cc_reloadFooterArr:(NSArray *)newDataAry;
 
-- (void)cc_addGroupFooterArr:(NSArray *)newDataAry;
+- (void)cc_addFooterArr:(NSArray *)newDataAry;
 
-- (void)cc_insertGroupFooterArr:(NSArray *)newDataAry
+- (void)cc_insertFooterArr:(NSArray *)newDataAry
                      forSection:(NSInteger)cSection;
 
-- (void)cc_insertMultiplGroupFooterArr:(NSArray *)newDataAry
-                            forSection:(NSInteger)cSection;
-
-- (void)cc_resetFooterArr:(NSArray *)newDataAry;
-
-- (void)cc_resetFooterArr:(NSArray *)newDataAry forSection:(NSInteger)cSection;
+- (void)cc_removerFooterData:(NSInteger)cSection;
 
 - (id)currentFooterModelAtIndexPath:(NSIndexPath *)cIndexPath;
 
@@ -184,7 +178,9 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 - (void)didNumberOfItemsInSection:(CCCollectionHelperNumberOfItemsInSection)block;
 
 - (void)didHeaderView:(CCCollectionHelperHeaderView)block;
+- (void)didCurrentHeaderModel:(CCCollectionHelperCurrentHeaderModelAtIndexPath)block;
 - (void)didFooterView:(CCCollectionHelperFooterView)block;
+- (void)didCurrentFooterModel:(CCCollectionHelperCurrentFooterModelAtIndexPath)block;
 
 - (void)didCellForItemAtIndexPath:(CCCollectionHelperCellForItemAtIndexPath)block;
 - (void)didHeaderForItemAtIndexPah:(CCCollectionHelperHeaderForItemAtIndexPath)block;
@@ -200,4 +196,3 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 - (void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok;
 
 @end
-

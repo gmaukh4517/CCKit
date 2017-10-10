@@ -529,7 +529,7 @@
     }
 }
 
-- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
     for (id<CCSOADelegate> soa in self.allServices) {
         if ([soa respondsToSelector:_cmd])

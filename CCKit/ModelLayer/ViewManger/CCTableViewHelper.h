@@ -54,7 +54,8 @@ typedef UIView *__nonnull (^CCTableHelperFooterBlock)(UITableView *tableView, NS
 typedef NSString *__nonnull (^CCTableHelperTitleHeaderBlock)(UITableView *tableView, NSInteger section);
 typedef NSString *__nonnull (^CCTableHelperTitleFooterBlock)(UITableView *tableView, NSInteger section);
 
-typedef NSInteger (^CCTableHelperNumberRows)(UITableView *tableView, NSInteger section, id cModel);
+typedef NSInteger (^CCTableHelperNumberOfSections)(UITableView *tableView, NSInteger count);
+typedef NSInteger (^CCTableHelperNumberRows)(UITableView *tableView, NSInteger section, NSArray *cModels);
 typedef id __nonnull (^CCTableHelperCurrentModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 
 typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView);
@@ -106,6 +107,14 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
  是否防快速点击 (默认：NO 不防止)
  */
 @property (nonatomic, assign) BOOL isAntiHurry;
+
+/**  **/
+
+/**
+ * @brief section HeaderView 是否悬停 (默认悬停) YES: 不悬停
+ *  UITableViewStylePlain 模式下
+ */
+@property (nonatomic, assign) BOOL isHover;
 
 /**
  *  When using the storyboard and a single cell, set the property inspector same identifier
@@ -204,6 +213,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 - (void)footerView:(CCTableHelperFooterBlock)cb;
 - (void)footerTitle:(CCTableHelperTitleFooterBlock)cb;
 
+-(void)numberOfSections:(CCTableHelperNumberOfSections)cb;
 /**
  *  @author CC, 16-05-23
  *

@@ -32,6 +32,14 @@
 #import "UIView+Method.h"
 #import "UIViewController+CCAdd.h"
 
+#define CCAssert(condition, format, ...)                                                       \
+do {                                                                                       \
+_Pragma("clang diagnostic push")                                                       \
+_Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
+NSLog(format, ##__VA_ARGS__);                                                  \
+_Pragma("clang diagnostic pop")                                                        \
+} while (0);
+
 #define defaultInterval .5 //默认时间间隔
 
 @interface CCTableViewHelper ()
@@ -75,6 +83,7 @@
 @property (nonatomic, copy) CCTableHelperFooterBlock footerBlock;
 @property (nonatomic, copy) CCTableHelperTitleFooterBlock footerTitleBlock;
 
+@property (nonatomic, copy) CCTableHelperNumberOfSections numberOfSections;
 @property (nonatomic, copy) CCTableHelperNumberRows numberRow;
 
 @property (nonatomic, copy) CCTableHelperCellBlock cellViewEventsBlock;
@@ -117,7 +126,7 @@
 {
     if (cellNibNames.count > 0) {
         [cellNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            if ([[self.cc_CellXIB objectAtIndex:idx] boolValue])
+            if (self.cc_CellXIB && [[self.cc_CellXIB objectAtIndex:idx] boolValue])
                 [self.cc_tableView registerNib:[UINib nibWithNibName:obj bundle:nil] forCellReuseIdentifier:obj];
             else
                 [self.cc_tableView registerClass:NSClassFromString(obj) forCellReuseIdentifier:obj];
@@ -238,6 +247,11 @@
     self.footerTitleBlock = cb;
 }
 
+-(void)numberOfSections:(CCTableHelperNumberOfSections)cb
+{
+    self.numberOfSections = cb;
+}
+
 - (void)numberOfRowsInSection:(CCTableHelperNumberRows)cb
 {
     self.numberRow = cb;
@@ -270,6 +284,9 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     NSInteger curNumOfSections = self.dataArray.count;
+    if (self.numberOfSections)
+        curNumOfSections = self.numberOfSections(tableView,curNumOfSections);
+
     return curNumOfSections;
 }
 
@@ -293,7 +310,7 @@
     if (self.headerBlock) {
         
         UIView *headerView = self.headerBlock(tableView, section, [self currentSectionModel:section]);
-        if (headerView){
+        if (headerView) {
             if (headerView.LayoutSizeFittingSize.height > height)
                 height = headerView.LayoutSizeFittingSize.height;
         }
@@ -324,7 +341,7 @@
     CGFloat height = self.titleFooterHeight;
     if (self.footerBlock) {
         UIView *footerView = self.footerBlock(tableView, section, [self currentSectionModel:section]);
-        if (footerView){
+        if (footerView) {
             if (footerView.LayoutSizeFittingSize.height > height)
                 height = footerView.LayoutSizeFittingSize.height;
         }
@@ -389,7 +406,7 @@
     UITableViewCellEditingStyle style = UITableViewCellEditingStyleNone;
     if (self.didEditingStyle)
         style = self.didEditingStyle(tableView, indexPath, [self currentModelAtIndexPath:indexPath]);
-    else if (self.didEditActionsBlock)
+    else if (self.didEditActionsBlock && !tableView.allowsMultipleSelectionDuringEditing)
         style = UITableViewCellEditingStyleDelete;
     
     return style;
@@ -461,8 +478,7 @@
     id curModel = [self currentModelAtIndexPath:indexPath];
     NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
     UITableViewCell *curCell = [tableView dequeueReusableCellWithIdentifier:curCellIdentifier forIndexPath:indexPath];
-    if (!curCell)
-        NSLog(@"cell is nil Identifier ⤭ %@ ⤪",curCellIdentifier);
+    CCAssert(curCell, @"cell is nil Identifier ⤭ %@ ⤪", curCellIdentifier);
     
     if (self.cellDelegate)
         curCell.viewDelegate = self.cellDelegate;
@@ -540,6 +556,15 @@
     if (self.scrollViewddBlock)
         self.scrollViewddBlock(scrollView);
     
+    if (self.isHover) {
+        CGFloat sectionHeaderHeight = 40;
+        if (scrollView.contentOffset.y <= sectionHeaderHeight && scrollView.contentOffset.y >= 0) {
+            scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+        } else if (scrollView.contentOffset.y >= sectionHeaderHeight) {
+            scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
+        }
+    }
+    
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scrollViewDidEndScrollingAnimation:) object:scrollView];
     [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:scrollView afterDelay:0.5];
 }
@@ -557,7 +582,11 @@
 - (UIView *)tableViewSectionView:(UITableView *)tableView section:(NSInteger)section
 {
     UIView *customHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.cc_tableView.bounds), self.titleHeaderHeight)];
-    customHeaderView.backgroundColor = [UIColor colorWithRed:0.926 green:0.920 blue:0.956 alpha:1.000];
+    UIColor *color = tableView.backgroundColor;
+    if (!color) {
+        color = [UIColor colorWithRed:0.926 green:0.920 blue:0.956 alpha:1.000];
+    }
+    customHeaderView.backgroundColor = color;
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 0, CGRectGetWidth(customHeaderView.bounds) - 15.0f, self.titleHeaderHeight)];
     headerLabel.backgroundColor = [UIColor clearColor];
