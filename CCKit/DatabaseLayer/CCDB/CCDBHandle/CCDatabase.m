@@ -913,10 +913,11 @@ static CCDatabase *database = nil;
         // 对象归类 用于区分数组中不同对象
         NSMutableDictionary *classifyM = [NSMutableDictionary dictionary];
         for (id obj in arr) {
-            NSString *className = NSStringFromClass(obj);
+            Class cls = [obj class];
+            NSString *className = NSStringFromClass(cls);
             
             NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
-            [array addObject:[CCDBTool objectSqlProperties:[obj class]]];
+            [array addObject:[CCDBTool objectSqlProperties:cls]];
             
             [classifyM setObject:array forKey:className];
         }
@@ -1279,10 +1280,11 @@ static CCDatabase *database = nil;
     // 对象归类 用于区分数组中不同对象
     NSMutableDictionary *classifyM = [NSMutableDictionary dictionary];
     for (id obj in objects) {
-        NSString *className = NSStringFromClass(obj);
+        Class cls = [obj class];
+        NSString *className = NSStringFromClass(cls);
         
         NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
-        [array addObject:[CCDBTool objectSqlProperties:[obj class]]];
+        [array addObject:[CCDBTool objectSqlProperties:cls]];
         
         [classifyM setObject:array forKey:className];
     }
@@ -1624,7 +1626,7 @@ static CCDatabase *database = nil;
 
 /**
  队列查询表键值语句
-
+ 
  @param tableName 表名
  @param keys 条件
  @param where 查询条件

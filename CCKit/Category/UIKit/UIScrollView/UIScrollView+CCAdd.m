@@ -207,7 +207,8 @@ static NSString *const kCCLogoView = @"kCCLogoView";
 }
 - (CGPoint)rightContentOffset
 {
-    return CGPointMake(self.contentSize.width + self.contentInset.right - self.bounds.size.width, 0.0f);
+    CGFloat x = self.contentSize.width + self.contentInset.right - self.bounds.size.width;
+    return CGPointMake(x < 0 ? 0 : x, 0.0f);
 }
 - (ScrollDirection)ScrollDirection
 {
