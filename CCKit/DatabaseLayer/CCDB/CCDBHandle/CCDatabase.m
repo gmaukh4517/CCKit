@@ -706,8 +706,7 @@ static CCDatabase *database = nil;
  @param complete 完成回调
  */
 - (void)insertTableHandle:(NSString *)tableName
-                    begin:(void (^)(NSInteger sqlCount))begin
-                   handle:(void (^)())handle
+                   handle:(void (^)(NSInteger sqlCount))handle
                  complete:(void (^)())complete
 {
     @autoreleasepool {
@@ -723,7 +722,6 @@ static CCDatabase *database = nil;
                           }];
         
         NSInteger sqlCount = [self selectTableHasCount:tableName where:nil];
-        !begin ?: begin(sqlCount);
         [self inTransaction:^BOOL {
             !handle ?: handle(sqlCount);
             return YES;
@@ -744,16 +742,14 @@ static CCDatabase *database = nil;
                       complete:(void (^)(BOOL isSuccess))complete
 {
     NSAssert(objeects && objeects.count, @"数组不能为空!");
-    __block NSInteger sqlCount = 0, num = 0;
+    __block NSInteger num = 0;
     __weak typeof(self) WeakSelf = self;
     [self insertTableHandle:tableName
-                      begin:^(NSInteger sqlCount) {
-                          sqlCount = sqlCount;
-                      }
-                     handle:^{
+                     handle:^(NSInteger sqlCount){
                          for (id obj in objeects) {
+                             sqlCount++;
                              NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:obj];
-                             [dicM setObject:@(sqlCount++) forKey:kPRIMARYKEY];
+                             [dicM setObject:@(sqlCount) forKey:kPRIMARYKEY];
                              [WeakSelf insertTableObject:tableName
                                                   object:dicM
                                                 complete:^(BOOL isSuccess) {
@@ -826,15 +822,12 @@ static CCDatabase *database = nil;
         [self ifNotExistWillCreateTableWithObject:object];
         Class cls = [object class];
         NSString *tableName = NSStringFromClass(cls);
-        __block NSInteger Count = 0, num = 0;
+        __block NSInteger num = 0;
         __weak typeof(self) WeakSelf = self;
         [self insertTableHandle:tableName
-                          begin:^(NSInteger sqlCount) {
-                              Count = ++sqlCount;
-                          }
-                         handle:^{
+                         handle:^(NSInteger sqlCount) {
                              NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:[CCDBTool objectSqlProperties:object]];
-                             [dicM setObject:@(Count) forKey:kPRIMARYKEY];
+                             [dicM setObject:@(sqlCount) forKey:kPRIMARYKEY];
                              [WeakSelf insertTableObject:tableName
                                                   object:dicM
                                                 complete:^(BOOL isSuccess) {
@@ -917,7 +910,7 @@ static CCDatabase *database = nil;
             NSString *className = NSStringFromClass(cls);
             
             NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
-            [array addObject:[CCDBTool objectSqlProperties:cls]];
+            [array addObject:[CCDBTool objectSqlProperties:obj]];
             
             [classifyM setObject:array forKey:className];
         }
@@ -1040,7 +1033,7 @@ static CCDatabase *database = nil;
                       }];
     
     if (result) {
-        NSDictionary *sqlDic = [CCDBTool objectSqlProperties:[object class]];
+        NSDictionary *sqlDic = [CCDBTool objectSqlProperties:object];
         [self ifIvarChangeForClass:object];
         [self updateTableObject:tableName
                        KeyValue:sqlDic
@@ -1284,7 +1277,7 @@ static CCDatabase *database = nil;
         NSString *className = NSStringFromClass(cls);
         
         NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
-        [array addObject:[CCDBTool objectSqlProperties:cls]];
+        [array addObject:[CCDBTool objectSqlProperties:obj]];
         
         [classifyM setObject:array forKey:className];
     }
