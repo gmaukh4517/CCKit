@@ -40,7 +40,15 @@ static NSString *const CCNotificationLanguageChanged = @"CCNotificationLanguageC
 /** 当前语言 **/
 @property (assign, nonatomic) NSString *currentLanguage;
 
-+ (id)sharedInstance;
++ (instancetype)shareManager;
+
+/**
+ 启动语言设置
+ 
+ 默认 首选英语
+ 读取当前支持的所有语言列表
+ */
+- (void)startLanguage;
 
 /**
  获取语言对应值

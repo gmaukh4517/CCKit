@@ -35,18 +35,16 @@ static NSString *const CCSaveLanguageDefaultKey = @"CCSaveLanguageDefaultKey";
 
 @end
 
-static CCLanguage *_sharedlnstance = nil;
+static CCLanguage *sharedlnstance = nil;
 @implementation CCLanguage
 
-+ (id)sharedInstance
++ (instancetype)shareManager
 {
-    @synchronized(self)
-    {
-        if (_sharedlnstance == nil) {
-            _sharedlnstance = [[self alloc] init];
-        }
-    }
-    return _sharedlnstance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedlnstance = [[CCLanguage alloc] init];
+    });
+    return sharedlnstance;
 }
 
 - (id)init
@@ -54,8 +52,7 @@ static CCLanguage *_sharedlnstance = nil;
     self = [super init];
     if (self) {
         _defaults = [NSUserDefaults standardUserDefaults];
-        _languagesArray = @[ @"zh-Hans", @"English" ];
-        self.currentLanguage = @"zh-Hans";
+        
         NSString *languageSaved = [_defaults objectForKey:CCSaveLanguageDefaultKey];
         if (languageSaved != nil && ![languageSaved isEqualToString:@"zh-Hans"]) {
             [self loadDictionaryForLanguage:languageSaved];
@@ -78,6 +75,29 @@ static CCLanguage *_sharedlnstance = nil;
 - (BOOL)saveInUserDefaults
 {
     return ([_defaults objectForKey:CCSaveLanguageDefaultKey] != nil);
+}
+
+- (void)startLanguage
+{
+    NSMutableArray *languagesArray = [NSMutableArray array];
+    NSArray *urls = [[NSBundle bundleForClass:[self class]] URLsForResourcesWithExtension:@"lproj" subdirectory:nil];
+    for (NSURL *urlPath in urls) {
+        NSString *exestr = [[urlPath lastPathComponent] stringByDeletingPathExtension];
+        [languagesArray addObject:exestr];
+    }
+    _languagesArray = languagesArray;
+    
+    NSString *languageSaved = [_defaults objectForKey:CCSaveLanguageDefaultKey];
+    if (!languageSaved) {
+        NSString *preferredLang = [[_defaults objectForKey:@"AppleLanguages"] firstObject];
+        NSString *language = [languagesArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF = %@", preferredLang]].lastObject;
+        if (!language)
+            [self setSaveLanguage:@"en"];
+        else
+            [self setSaveLanguage:language];
+    } else {
+        [self loadDictionaryForLanguage:languageSaved];
+    }
 }
 
 #pragma mark -
