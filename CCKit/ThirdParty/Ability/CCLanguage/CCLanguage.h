@@ -25,7 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define kCCLanguage [CCLanguage sharedInstance]
+#define kCCLanguage [CCLanguage shareManager]
 #define CCLocalization(text) [kCCLanguage loalizedStringForKey:(text)]
 
 /** 切换语言通知 **/
