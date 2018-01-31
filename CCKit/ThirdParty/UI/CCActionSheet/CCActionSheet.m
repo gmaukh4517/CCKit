@@ -25,7 +25,6 @@
 
 #import "CCActionSheet.h"
 #import "UIImage+CCAdd.h"
-#import "UIWindow+CCAdd.h"
 #import "CCActionSheetViewController.h"
 
 static const NSTimeInterval kDefaultAnimationDuration = 0.5f;
@@ -403,7 +402,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     }
     
     self.previousKeyWindow = [UIApplication sharedApplication].keyWindow;
-    UIImage *previousKeyWindowSnapshot = [self.previousKeyWindow snapshot];
+    UIImage *previousKeyWindowSnapshot = [self snapshot];
     
     [self setUpNewWindow];
     [self setUpBlurredBackgroundWithSnapshot:previousKeyWindowSnapshot];
@@ -464,6 +463,57 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             delayedAnimations();
         }];
     }
+}
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+- (UIImage *)snapshot
+{
+    UIWindow *window =  [UIApplication sharedApplication].keyWindow;
+    
+    // UIWindow doesn't have to be rotated on iOS 8+.
+    BOOL ignoreOrientation = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0");
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    CGSize imageSize = CGSizeZero;
+    if (UIInterfaceOrientationIsPortrait(orientation) || ignoreOrientation) {
+        imageSize = [UIScreen mainScreen].bounds.size;
+    } else {
+        imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGContextTranslateCTM(context, window.center.x, window.center.y);
+    CGContextConcatCTM(context, window.transform);
+    CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
+    
+    // correct for the screen orientation
+    if (!ignoreOrientation) {
+        if (orientation == UIInterfaceOrientationLandscapeLeft) {
+            CGContextRotateCTM(context, (CGFloat)M_PI_2);
+            CGContextTranslateCTM(context, 0, -imageSize.width);
+        } else if (orientation == UIInterfaceOrientationLandscapeRight) {
+            CGContextRotateCTM(context, (CGFloat)-M_PI_2);
+            CGContextTranslateCTM(context, -imageSize.height, 0);
+        } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            CGContextRotateCTM(context, (CGFloat)M_PI);
+            CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
+        }
+    }
+    
+    if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+        [window drawViewHierarchyInRect:self.bounds afterScreenUpdates:NO];
+    } else {
+        [window.layer renderInContext:UIGraphicsGetCurrentContext()];
+    }
+    
+    CGContextRestoreGState(context);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 - (void)dismissAnimated:(BOOL)animated

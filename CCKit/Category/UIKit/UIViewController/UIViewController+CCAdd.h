@@ -24,13 +24,11 @@
 //
 
 #import "CCViewControllerProtocolDelegate.h"
-#import "CCViewManager.h"
-#import "CCViewModel.h"
 #import <UIKit/UIKit.h>
 
 typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewController, BOOL animated);
 
-@interface UIViewController (CCAdd) <CCViewControllerProtocolDelegate>
+@interface UIViewController (CCAdd)
 
 @property(readonly) UIView *navigationBarView;
 
@@ -45,9 +43,6 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
  *  @brief 是否隐藏底部TabBar
  */
 @property(nonatomic, assign) BOOL tabBarHidden;
-
-@property(nonatomic, strong) __kindof CCViewModel *cc_viewModel;
-@property(nonatomic, strong) __kindof CCViewManager *cc_ViewManager;
 
 /**
  包含在导航中时，交互式弹出手势是否禁用
@@ -205,7 +200,6 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 - (void)presentViewController:(UIViewController *)newViewController;
 
 - (void)presentViewController:(UIViewController *)newViewController Animated:(BOOL)animated;
-;
 
 #pragma mark -
 #pragma mark :. PopupViewController

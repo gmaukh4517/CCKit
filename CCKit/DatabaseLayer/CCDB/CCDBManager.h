@@ -29,6 +29,9 @@
 
 #pragma mark :. tableHandle
 
++ (void)disableCloseDB:(BOOL)disable;
++ (void)closeDB;
+
 /**
  清空表数据
  

@@ -57,6 +57,17 @@ void CCDBEnterLog(BOOL debug)
 }
 
 #pragma mark :. SQL Handle
+/** 设置操作过程中不可关闭数据库(即closeDB函数无效). **/
++ (void)disableCloseDB:(BOOL)disable
+{
+    [CCDatabase shareManager].disableCloseDB = disable;
+}
+
++ (void)closeDB
+{
+    [[CCDatabase shareManager] closeDB];
+}
+
 /** 去除空格 **/
 + (NSString *)trimmedString:(NSString *)sql
 {

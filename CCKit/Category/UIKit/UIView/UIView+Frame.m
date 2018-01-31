@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 //
 
-#import "CCUtilities.h"
 #import "UIView+Frame.h"
 
 @implementation UIView (Frame)
@@ -164,21 +163,6 @@
     CGRect frame = self.frame;
     frame.size = size;
     self.frame = frame;
-}
-
-- (void)setSharpCenter:(CGPoint)center
-{
-    CGRect frame = self.frame;
-    
-    frame.origin = CCSubtractPoints(center, CGPointMake(CGRectGetWidth(frame) / 2, CGRectGetHeight(frame) / 2));
-    frame.origin = CCRoundPoint(frame.origin);
-    
-    self.center = CCCenterOfRect(frame);
-}
-
-- (CGPoint)sharpCenter
-{
-    return self.center;
 }
 
 - (UIImage *)imageForViewWithScale:(float)scale

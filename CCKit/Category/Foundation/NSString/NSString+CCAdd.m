@@ -25,7 +25,6 @@
 
 #import "NSData+CCAdd.h"
 #import "NSString+CCAdd.h"
-#import "QRCodeGenerator.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -432,36 +431,6 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 {
     NSData *datas = [[NSData alloc] initWithBase64Encoding:self];
     return [UIImage imageWithData:datas];
-}
-
-/**
- *  @author CC, 2015-10-09
- *
- *  @brief  生成二维码图像
- *
- *  @param width  图像宽
- *  @param height 图像高
- *
- *  @return 二维码图片
- */
-- (UIImage *)becomeQRCodeWithQRstring:(float)size
-{
-    return [QRCodeGenerator qrImageForString:self
-                                   imageSize:size];
-}
-
-/**
- 生成二维码中间带头像
- 
- @param size 生成大小
- @param avatar 头像
- */
-- (UIImage *)becomeQRCodeWithQRstring:(float)size
-                          AvatarImage:(UIImage *)avatar
-{
-    return [QRCodeGenerator qrImageForString:self
-                                   imageSize:size
-                                      Topimg:avatar];
 }
 
 /**

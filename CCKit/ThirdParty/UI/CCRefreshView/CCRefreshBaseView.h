@@ -66,7 +66,7 @@ typedef enum {
 @property(nonatomic, weak, readonly) UILabel *statusLabel;
 @property(nonatomic, weak, readonly) UIImageView *arrowImage;
 @property(nonatomic, weak, readonly) UIActivityIndicatorView *activityView;
-@property(nonatomic, weak, readonly) CCLoadLogoView *cc_activityView;
+@property(nonatomic, weak, readonly) UIView *cc_activityView;
 
 #pragma mark - 回调
 /**

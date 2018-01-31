@@ -5,7 +5,7 @@
 //
 
 #import "MBProgressHUD.h"
-#import "CCLoadLogoView.h"
+//#import "CCLoadLogoView.h"
 #import "CCLoadingView.h"
 #import "UIImage+CCAdd.h"
 #import <tgmath.h>
@@ -429,12 +429,12 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         loadingView.clockwise = true;
         loadingView.segmentColor = [UIColor whiteColor];
         [loadingView startAnimation:CCCircleAnimationFullCircle];
-        
+
         indicator = loadingView;
         [self.bezelView addSubview:indicator];
     } else if (mode == MBProgressHUDModeIndeterminateLogo) {
         [indicator removeFromSuperview];
-        indicator = [[CCLoadLogoView alloc] initWithLogo:self.IndeterminateLogo Frame:CGRectMake(0, 0, 40, 40)];
+//        indicator = [[CCLoadLogoView alloc] initWithLogo:self.IndeterminateLogo Frame:CGRectMake(0, 0, 40, 40)];
         [self.bezelView addSubview:indicator];
     } else if (mode == MBProgressHUDModeGIF) {
         [indicator removeFromSuperview];

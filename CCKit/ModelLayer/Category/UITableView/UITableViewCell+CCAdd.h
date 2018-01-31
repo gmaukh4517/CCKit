@@ -1,5 +1,5 @@
 //
-//  Tools.h
+//  UITableViewCell+CCAdd.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,11 +23,17 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_Tools_h
-#define CCKit_Tools_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCAlertView.h>
-#import <CCKit/CCProgressHUD.h>
+@interface UITableViewCell (CCAdd)
 
+/** 当前Cell数据源 **/
+@property(nonatomic, strong) id cc_dataSources;
 
-#endif
+/** Cell 获取下标 **/
+@property(nonatomic, strong) NSIndexPath *cc_indexPath;
+
+- (void)cc_cellWillDisplayWithModel:(id)cModel
+                          indexPath:(NSIndexPath *)cIndexPath;
+
+@end

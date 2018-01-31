@@ -54,15 +54,8 @@
 #import <CCKit/NSUserDefaults+CCAdd.h>
 
 #pragma mark UIKit
-#import <CCKit/UIActionSheet+CCAdd.h>
-#import <CCKit/UIAlertView+CCAdd.h>
-#import <CCKit/UIBarButtonItem+CCAdd.h>
-#import <CCKit/UIBarButtonItem+Badge.h>
-#import <CCKit/UIBezierPath+CCAdd.h>
+
 #import <CCKit/UIButton+CCAdd.h>
-#import <CCKit/UICollectionReusableView+CCAdd.h>
-#import <CCKit/UICollectionView+CCAdd.h>
-#import <CCKit/UICollectionViewCell+CCAdd.h>
 #import <CCKit/UIColor+CCAdd.h>
 #import <CCKit/UIControl+CCAdd.h>
 #import <CCKit/UIDevice+CCAdd.h>
@@ -74,42 +67,16 @@
 #import <CCKit/UINavigationBar+CCAdd.h>
 #import <CCKit/UINavigationController+CCAdd.h>
 #import <CCKit/UINavigationItem+CCAdd.h>
-#import <CCKit/UIPopoverController+CCAdd.h>
-#import <CCKit/UIResponder+CCAdd.h>
-#import <CCKit/UIScreen+CCAdd.h>
 #import <CCKit/UIScrollView+CCAdd.h>
 #import <CCKit/UISearchBar+CCAdd.h>
-#import <CCKit/UISplitViewController+CCAdd.h>
 #import <CCKit/UITabBar+CCAdd.h>
 #import <CCKit/UITabBarController+CCAdd.h>
-#import <CCKit/UITableView+CCAdd.h>
-#import <CCKit/UITableViewCell+CCAdd.h>
-#import <CCKit/UITableViewHeaderFooterView+CCAdd.h>
-#import <CCKit/UITableViewRowAction+CCAdd.h>
 #import <CCKit/UITextField+CCAdd.h>
 #import <CCKit/UITextView+CCAdd.h>
 #import <CCKit/UIView+Animation.h>
 #import <CCKit/UIView+Frame.h>
 #import <CCKit/UIView+Method.h>
 #import <CCKit/UIViewController+CCAdd.h>
-#import <CCKit/UIWebView+CCAdd.h>
-#import <CCKit/UIWindow+CCAdd.h>
 
-#pragma mark QuartzCore
-#import <CCKit/CAAnimation+CCAdd.h>
-#import <CCKit/CALayer+CCAdd.h>
-#import <CCKit/CAMediaTimingFunction+CCAdd.h>
-#import <CCKit/CAShapeLayer+CCAdd.h>
-#import <CCKit/CATransaction+CCAdd.h>
-
-#pragma mark CoreLocation
-#import <CCKit/CLLocation+CH1903.h>
-#import <CCKit/CLLocationManager+CCAdd.h>
-
-#pragma mark MapKit
-#import <CCKit/MKMapView+CCAdd.h>
-
-#pragma mark Grammar
-#import <CCKit/ChainGrammar.h>
 
 #endif

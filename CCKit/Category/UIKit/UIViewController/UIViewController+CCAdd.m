@@ -31,6 +31,7 @@
 #import "UIView+Method.h"
 #import "UIViewController+CCAdd.h"
 #import <objc/runtime.h>
+#import "Config.h"
 
 @import StoreKit;
 
@@ -384,43 +385,6 @@ static char NavBarIsLoadingKey;
     }
 }
 
-#pragma mark :. 操作对象
-- (CCViewModel *)cc_viewModel
-{
-    CCViewModel *curVM = objc_getAssociatedObject(self, @selector(cc_viewModel));
-    if (curVM) return curVM;
-    if (![self respondsToSelector:@selector(cc_classOfViewModel)]) {
-        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewModel" reason:@"you forgot to add cc_classOfViewModel() in VivewController" userInfo:nil];
-        [exp raise];
-    }
-    curVM = [[[self cc_classOfViewModel] alloc] init];
-    self.cc_viewModel = curVM;
-    return curVM;
-}
-
-- (void)setCc_viewModel:(__kindof NSObject *)cc_viewModel
-{
-    objc_setAssociatedObject(self, @selector(cc_viewModel), cc_viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CCViewManager *)cc_ViewManager
-{
-    CCViewManager *curVM = objc_getAssociatedObject(self, @selector(cc_ViewManager));
-    if (curVM) return curVM;
-    if (![self respondsToSelector:@selector(cc_classOfViewManager)]) {
-        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManager" reason:@"you forgot to add cc_classOfViewManager() in VivewController" userInfo:nil];
-        [exp raise];
-    }
-    curVM = [[[self cc_classOfViewManager] alloc] init];
-    self.cc_ViewManager = curVM;
-    return curVM;
-}
-
-- (void)setCc_ViewManager:(__kindof NSObject *)cc_ViewManager
-{
-    objc_setAssociatedObject(self, @selector(cc_ViewManager), cc_ViewManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 #pragma mark -
 #pragma mark :. Relationship
 
@@ -454,6 +418,7 @@ static char NavBarIsLoadingKey;
     if (curTableView) self.cc_tableView = curTableView;
     return curTableView;
 }
+
 - (void)setCc_tableView:(UITableView *)cc_tableView
 {
     cc_tableView.cc_vc = self;

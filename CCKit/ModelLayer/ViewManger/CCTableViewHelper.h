@@ -213,7 +213,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 - (void)footerView:(CCTableHelperFooterBlock)cb;
 - (void)footerTitle:(CCTableHelperTitleFooterBlock)cb;
 
--(void)numberOfSections:(CCTableHelperNumberOfSections)cb;
+- (void)numberOfSections:(CCTableHelperNumberOfSections)cb;
 /**
  *  @author CC, 16-05-23
  *
@@ -380,6 +380,10 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 - (void)cc_replaceDataAtIndex:(id)model
                     IndexPath:(NSIndexPath *)cIndexPath;
 
+- (void)cc_replaceDataAtIndex:(id)model
+                    IndexPath:(NSIndexPath *)cIndexPath
+             withRowAnimation:(UITableViewRowAnimation)animated;
+
 /**
  *  @author CC, 16-05-18
  *
@@ -397,3 +401,4 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 @end
 
 NS_ASSUME_NONNULL_END
+

@@ -128,6 +128,15 @@
 /** 设备是否为iPhone 6 Plus 分辨率414x736，像素1242x2208，@3x */
 #define iPhone6P ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) : NO)
 
+/** 设备是否为iPhone 7 分辨率375x667，像素750x1334，@2x */
+#define device_iPhone7 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
+
+/** 设备是否为iPhone 7 Plus 分辨率414x736，像素1242x2208，@3x */
+#define device_iPhone7P ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) : NO)
+
+/** 设备是否为iPhone X 分辨率375x812，像素1125x2436，@3x */
+#define device_iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+
 #pragma mark -
 #pragma mark :. 本地文档相关
 /*************************  本地文档相关  *************************/

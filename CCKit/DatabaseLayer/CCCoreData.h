@@ -26,19 +26,6 @@
 #ifndef CCKit_CCCoreData_h
 #define CCKit_CCCoreData_h
 
-#import <CCKit/NSFetchRequest+CCAdd.h>
-#import <CCKit/NSManagedObject+CCAdd.h>
-#import <CCKit/NSManagedObjectContext+CCAdd.h>
-#import <CCKit/NSPersistentStoreCoordinator+CCAdd.h>
-
-#import <CCKit/BaseManagedObject+Facade.h>
-#import <CCKit/CCCollectionViewFetchResultController.h>
-#import <CCKit/CCTableViewFetchResultController.h>
-
-#import <CCKit/CCDatabaseManager+Manager.h>
-#import <CCKit/CCDatabaseManager.h>
-
 #import <CCKit/CCDB.h>
-#import <CCKit/FMDB.h>
 
 #endif

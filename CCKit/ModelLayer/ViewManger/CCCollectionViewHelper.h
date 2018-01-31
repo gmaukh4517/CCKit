@@ -51,6 +51,8 @@ typedef id (^CCCollectionHelperCurrentModelAtIndexPath)(id dataAry, NSIndexPath 
 typedef id (^CCCollectionHelperCurrentHeaderModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 
+typedef void (^CCScrollViewDidScroll)(UIScrollView *scrollView);
+
 @interface CCCollectionViewHelper : NSObject <UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, weak, readonly) NSMutableArray *dataSource;
@@ -146,7 +148,7 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 - (void)cc_addHeaderArr:(NSArray *)newDataAry;
 
 - (void)cc_insertHeaderArr:(NSArray *)newDataAry
-                     forSection:(NSInteger)cSection;
+                forSection:(NSInteger)cSection;
 
 - (void)cc_removerHeaderData:(NSInteger)cSection;
 
@@ -160,7 +162,7 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 - (void)cc_addFooterArr:(NSArray *)newDataAry;
 
 - (void)cc_insertFooterArr:(NSArray *)newDataAry
-                     forSection:(NSInteger)cSection;
+                forSection:(NSInteger)cSection;
 
 - (void)cc_removerFooterData:(NSInteger)cSection;
 
@@ -195,4 +197,7 @@ typedef id (^CCCollectionHelperCurrentFooterModelAtIndexPath)(id dataAry, NSInde
 
 - (void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok;
 
+- (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block;
+
 @end
+

@@ -26,7 +26,6 @@
 
 #import "CCActionSheetViewController.h"
 #import "CCActionSheet.h"
-#import "UIWindow+CCAdd.h"
 
 @interface CCActionSheetViewController ()
 
@@ -64,24 +63,6 @@
 {
     // doesn't allow autorotation after the view did appear (rotation messes up a blurred background)
     return !self.viewAlreadyAppear;
-}
-
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    UIWindow *window = self.actionSheet.previousKeyWindow;
-    if (!window) {
-        window = [[UIApplication sharedApplication].windows firstObject];
-    }
-    return [[window viewControllerForStatusBarStyle] preferredStatusBarStyle];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    UIWindow *window = self.actionSheet.previousKeyWindow;
-    if (!window) {
-        window = [[UIApplication sharedApplication].windows firstObject];
-    }
-    return [[window viewControllerForStatusBarHidden] prefersStatusBarHidden];
 }
 
 

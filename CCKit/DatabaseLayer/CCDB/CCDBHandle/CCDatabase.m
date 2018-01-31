@@ -721,7 +721,7 @@ static CCDatabase *database = nil;
                               }
                           }];
         
-        NSInteger sqlCount = [self selectTableHasCount:tableName where:nil];
+        NSInteger sqlCount = [self selectTableMaxID:tableName];
         [self inTransaction:^BOOL {
             !handle ?: handle(sqlCount);
             return YES;
@@ -1291,6 +1291,25 @@ static CCDatabase *database = nil;
 }
 
 #pragma mark :.... select
+
+- (NSInteger)selectTableMaxID:(NSString *)tableName
+{
+    NSAssert(tableName, @"表名不能为空!");
+    __block NSUInteger count = 0;
+    [self executeDB:^(FMDatabase *db) {
+        NSString *SQL = [NSString stringWithFormat:@"select max(ccdb_identifier) from %@", tableName];
+        CCDBEnterLog(SQL);
+        [db executeStatements:SQL
+              withResultBlock:^int(NSDictionary *resultsDictionary) {
+                  count = 0;
+                  if (![resultsDictionary.allValues.lastObject isKindOfClass:[NSNull class]]) {
+                      count = [[resultsDictionary.allValues lastObject] integerValue];
+                  }
+                  return 0;
+              }];
+    }];
+    return count;
+}
 
 /**
  查询表中有多少条数据

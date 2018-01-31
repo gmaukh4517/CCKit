@@ -33,6 +33,25 @@
 #pragma mark -
 #pragma mark :. GCD 线程处理
 
+/** 阻塞等待执行函数 **/
+static inline void cc_dispatch_semaphore(void(^block)(dispatch_semaphore_t semaphore))
+{
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    !block?:block(semaphore);
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+/** 异步等待执行函数 **/
+static inline void cc_dispatch_async_global_semaphore(void(^block)(dispatch_semaphore_t semaphore))
+{
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        !block?:block(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
 /** 快速迭代方法 **/
 static inline void cc_dispatch_apply(int count, void (^block)(size_t index))
 {

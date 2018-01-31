@@ -72,6 +72,9 @@ _Pragma("clang diagnostic pop")                                                 
 
 @property (nonatomic, copy) CCCollectionHelperCellItemMargin cellItemMargin;
 @property (nonatomic, copy) CCCollectionHelperMinimumInteritemSpacingForSection minimumInteritemSpacingForSection;
+
+@property (nonatomic, copy) CCScrollViewDidScroll scrollViewDidScroll;
+
 @end
 
 @implementation CCCollectionViewHelper
@@ -193,7 +196,7 @@ _Pragma("clang diagnostic pop")                                                 
     UIEdgeInsets edgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     if (self.cellItemMargin) {
         id curModel = [self currentSectionModel:section];
-        self.cellItemMargin(collectionView, collectionViewLayout, &section, curModel);
+        edgeInsets = self.cellItemMargin(collectionView, collectionViewLayout, &section, curModel);
     }
 
     return edgeInsets;
@@ -303,6 +306,13 @@ _Pragma("clang diagnostic pop")                                                 
     if (self.didSelectItemAtIndexPath) {
         id curModel = [self currentModelAtIndexPath:indexPath];
         self.didSelectItemAtIndexPath(collectionView, indexPath, curModel);
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.scrollViewDidScroll) {
+        self.scrollViewDidScroll(scrollView);
     }
 }
 
@@ -416,6 +426,7 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)cc_resetDataAry:(NSArray *)newDataAry
 {
+    self.dataArray = nil;
     [self cc_resetDataAry:newDataAry forSection:0];
 }
 
@@ -559,7 +570,7 @@ _Pragma("clang diagnostic pop")                                                 
 }
 
 - (void)cc_insertHeaderArr:(NSArray *)newDataAry
-                     forSection:(NSInteger)cSection
+                forSection:(NSInteger)cSection
 {
     NSMutableIndexSet *set = [NSMutableIndexSet indexSet];
     for (NSInteger i = 0; i < newDataAry.count; i++)
@@ -617,7 +628,7 @@ _Pragma("clang diagnostic pop")                                                 
 }
 
 - (void)cc_insertFooterArr:(NSArray *)newDataAry
-                     forSection:(NSInteger)cSection
+                forSection:(NSInteger)cSection
 {
     NSMutableIndexSet *set = [NSMutableIndexSet indexSet];
     for (NSInteger i = 0; i < newDataAry.count; i++)
@@ -804,6 +815,11 @@ _Pragma("clang diagnostic pop")                                                 
 - (void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok
 {
     self.minimumInteritemSpacingForSection = blcok;
+}
+
+- (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block
+{
+    self.scrollViewDidScroll = block;
 }
 
 @end

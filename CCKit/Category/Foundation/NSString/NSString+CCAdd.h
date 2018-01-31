@@ -153,24 +153,6 @@
 - (UIImage *)decodedImage;
 
 /**
- *  @author CC, 2015-10-09
- *
- *  @brief  生成二维码图像
- *
- *  @param size  图像大小
- */
-- (UIImage *)becomeQRCodeWithQRstring:(float)size;
-
-/**
- 生成二维码中间带头像
- 
- @param size 生成大小
- @param avatar 头像
- */
-- (UIImage *)becomeQRCodeWithQRstring:(float)size
-                          AvatarImage:(UIImage *)avatar;
-
-/**
  *  @author CC, 15-09-02
  *
  *  @brief  转换Data

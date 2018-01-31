@@ -28,7 +28,8 @@
 #import "UIView+Frame.h"
 #import "config.h"
 #import <objc/message.h>
-#import "CCLoadLogoView.h"
+
+//#import "CCLoadLogoView.h"
 
 @interface CCRefreshBaseView ()
 
@@ -36,7 +37,7 @@
 @property(nonatomic, weak) UIImageView *arrowImage;
 @property(nonatomic, weak) UIActivityIndicatorView *activityView;
 
-@property(nonatomic, weak) CCLoadLogoView *cc_activityView;
+@property(nonatomic, weak) UIView *cc_activityView;
 
 @end
 
@@ -95,16 +96,16 @@
  *
  *  @brief  load图标
  */
-- (CCLoadLogoView *)cc_activityView
+- (UIView *)cc_activityView
 {
     if (!_cc_activityView) {
-        CCLoadLogoView *loadingView = [[CCLoadLogoView alloc] initWithLogo:@"arrow" Frame:CGRectMake(0, 0, 40, 40)];
-//        loadingView.hidden = YES;
-        [loadingView setLineColor:[UIColor colorWithRed:150 / 255.f
-                                                  green:150 / 255.f
-                                                   blue:150 / 255.f
-                                                  alpha:1]];
-        [self addSubview:_cc_activityView = loadingView];
+//        CCLoadLogoView *loadingView = [[CCLoadLogoView alloc] initWithLogo:@"arrow" Frame:CGRectMake(0, 0, 40, 40)];
+////        loadingView.hidden = YES;
+//        [loadingView setLineColor:[UIColor colorWithRed:150 / 255.f
+//                                                  green:150 / 255.f
+//                                                   blue:150 / 255.f
+//                                                  alpha:1]];
+//        [self addSubview:_cc_activityView = loadingView];
     }
     return _cc_activityView;
 }
@@ -305,7 +306,7 @@
                         [self.activityView stopAnimating];
                         self.activityView.alpha = 1.0;
                     }else if (self.style == CCRefreshViewStyleDefault){ // 恢复alpha
-                        [self.cc_activityView stopAnimation];
+//                        [self.cc_activityView stopAnimation];
                         self.cc_activityView.alpha = 1.0;
                     }
 
@@ -318,7 +319,7 @@
                     }else if (self.style == CCRefreshViewStyleDefault){
                         // 显示箭头
                         _arrowImage.hidden = NO;
-                        [self.cc_activityView stopAnimation];
+//                        [self.cc_activityView stopAnimation];
                     }
 
                     // 设置文字
@@ -331,7 +332,7 @@
                 if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
                     [self.activityView stopAnimating];
                 } else if (self.style == CCRefreshViewStyleDefault) {
-                    [self.cc_activityView stopAnimation];
+//                    [self.cc_activityView stopAnimation];
                     // 显示箭头
                     _arrowImage.hidden = NO;
                 }
@@ -343,7 +344,7 @@
             if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
                 [self.activityView startAnimating];
             } else if (self.style == CCRefreshViewStyleDefault)
-                [self.cc_activityView startAnimation];
+//                [self.cc_activityView startAnimation];
             break;
 
         case CCRefreshStateRefreshing: {

@@ -1,5 +1,3 @@
-//
-//  Tools.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,11 +21,35 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_Tools_h
-#define CCKit_Tools_h
+#import "UICollectionViewCell+CCAdd.h"
+#import <objc/runtime.h>
 
-#import <CCKit/CCAlertView.h>
-#import <CCKit/CCProgressHUD.h>
+@implementation UICollectionViewCell (CCAdd)
 
+- (void)cc_cellWillDisplayWithModel:(id)cModel
+                          indexPath:(NSIndexPath *)cIndexPath
+{
+    // Rewrite this func in SubClass !
+}
 
-#endif
+- (void)setCc_dataSources:(id)cc_dataSources
+{
+    objc_setAssociatedObject(self, @selector(cc_dataSources), cc_dataSources, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (id)cc_dataSources
+{
+    return objc_getAssociatedObject(self, @selector(cc_dataSources));
+}
+
+- (void)setCc_indexPath:(NSIndexPath *)cc_indexPath
+{
+    objc_setAssociatedObject(self, @selector(cc_indexPath), cc_indexPath, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSIndexPath *)cc_indexPath
+{
+    return objc_getAssociatedObject(self, @selector(cc_indexPath));
+}
+
+@end
