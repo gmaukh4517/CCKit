@@ -2,7 +2,7 @@
 //  HTTPRequestManager.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC 
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,21 +25,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-#import "Config.h"
 #import "CCResponseObject.h"
-
-typedef NS_ENUM(NSUInteger, CCHTTPRequestCachePolicy) {
-    /** 不作任何处理，只请求数据 */
-    CCHTTPReturnDefault = 0,
-    /** 有缓存就先返回缓存，同步请求数据 */
-    CCHTTPReturnCacheDataThenLoad,
-    /** 忽略缓存，重新请求 */
-    CCHTTPReloadIgnoringLocalCacheData,
-    /** 有缓存就用缓存，没有缓存就重新请求(用于数据不变时) */
-    CCHTTPReturnCacheDataElseLoad,
-    /** 有缓存就用缓存，没有缓存就不发请求，当做请求出错处理（用于离线模式）*/
-    CCHTTPReturnCacheDataDontLoad
-};
 
 /**
  *  @author CC, 16-03-10
@@ -91,28 +77,28 @@ typedef void (^requestDownloadsuccess)(id response, NSError *error);
  *
  *  @brief   用户信息字典接收机
  */
-@property(nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, strong) NSDictionary *userInfo;
 
 /**
  *  @author CC, 2015-11-25
  *
  *  @brief  超时时间间隔，以秒为单位创建的请求。默认的超时时间间隔为30秒。
  */
-@property(nonatomic, assign) NSTimeInterval timeoutInterval;
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
 /**
  *  @author CC, 16-09-01
  *
  *  @brief 设置请求是否使用GZIP
  */
-@property(nonatomic, assign) BOOL isRequestGZIP;
+@property (nonatomic, assign) BOOL isRequestGZIP;
 
 /**
  *  @author CC, 16-01-28
  *
  *  @brief 设置请求ContentType
  */
-@property(nonatomic, copy) NSSet *acceptableContentTypes;
+@property (nonatomic, copy) NSSet *acceptableContentTypes;
 
 /**
  *  @author CC, 2015-07-23
@@ -138,12 +124,18 @@ typedef void (^requestDownloadsuccess)(id response, NSError *error);
 + (void)setUserInfo:(NSDictionary *)userInfo;
 
 /**
+ 设置请求Header字段
+
+ @param headerField 包头参数
+ */
++ (void)setHTTPheaderField:(NSDictionary *)headerField;
+
+/**
  *  @author CC, 16-01-28
  *
  *  @brief 初始化请求对象
  */
--
-(id)requestOperationManager;
+- (id)requestOperationManager;
 
 /**
  *  @author CC, 2015-07-23
@@ -178,22 +170,6 @@ typedef void (^requestDownloadsuccess)(id response, NSError *error);
  *  @author CC, 16-03-10
  *
  *  @brief GET请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)GET:(NSString *)requestURLString
- parameters:(id)parameter
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief GET请求
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
@@ -202,26 +178,10 @@ typedef void (^requestDownloadsuccess)(id response, NSError *error);
  *  @param failure          故障处理回调
  */
 + (void)GET:(NSString *)requestURLString
- parameters:(id)parameter
-cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief POST请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)POST:(NSString *)requestURLString
-  parameters:(id)parameter
-     success:(requestSuccessBlock)success
-     failure:(requestFailureBlock)failure;
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -235,26 +195,10 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)POST:(NSString *)requestURLString
-  parameters:(id)parameter
- cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-     success:(requestSuccessBlock)success
-     failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief DELETE请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)DELETE:(NSString *)requestURLString
-    parameters:(id)parameter
-       success:(requestSuccessBlock)success
-       failure:(requestFailureBlock)failure;
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -268,10 +212,10 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)DELETE:(NSString *)requestURLString
-    parameters:(id)parameter
-   cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       success:(requestSuccessBlock)success
-       failure:(requestFailureBlock)failure;
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -285,26 +229,10 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)HEAD:(NSString *)requestURLString
-  parameters:(id)parameter
- cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-     success:(requestSuccessBlock)success
-     failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief PUT请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)PUT:(NSString *)requestURLString
- parameters:(id)parameter
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure;
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -318,10 +246,10 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)PUT:(NSString *)requestURLString
- parameters:(id)parameter
-cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure;
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -335,10 +263,10 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)PATCH:(NSString *)requestURLString
-   parameters:(id)parameter
-  cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-      success:(requestSuccessBlock)success
-      failure:(requestFailureBlock)failure;
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure;
 
 #pragma mark :. 请求同步
 
@@ -346,22 +274,6 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief GET请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)syncGET:(NSString *)requestURLString
-     parameters:(id)parameter
-        success:(requestSuccessBlock)success
-        failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief GET请求
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
@@ -371,25 +283,9 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  */
 + (void)syncGET:(NSString *)requestURLString
      parameters:(id)parameter
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+    cachePolicy:(NSInteger)cachePolicy
         success:(requestSuccessBlock)success
         failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief POST请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)syncPOST:(NSString *)requestURLString
-      parameters:(id)parameter
-         success:(requestSuccessBlock)success
-         failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -404,25 +300,9 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  */
 + (void)syncPOST:(NSString *)requestURLString
       parameters:(id)parameter
-     cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+     cachePolicy:(NSInteger)cachePolicy
          success:(requestSuccessBlock)success
          failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief DELETE请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)syncDELETE:(NSString *)requestURLString
-        parameters:(id)parameter
-           success:(requestSuccessBlock)success
-           failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -437,7 +317,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  */
 + (void)syncDELETE:(NSString *)requestURLString
         parameters:(id)parameter
-       cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       cachePolicy:(NSInteger)cachePolicy
            success:(requestSuccessBlock)success
            failure:(requestFailureBlock)failure;
 
@@ -454,25 +334,9 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  */
 + (void)syncHEAD:(NSString *)requestURLString
       parameters:(id)parameter
-     cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+     cachePolicy:(NSInteger)cachePolicy
          success:(requestSuccessBlock)success
          failure:(requestFailureBlock)failure;
-
-/**
- *  @author CC, 16-03-10
- *
- *  @brief PUT请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
- *
- *  @param requestURLString 请求地址
- *  @param parameter        请求参数
- *  @param success          成功处理回调
- *  @param failure          故障处理回调
- */
-+ (void)syncPUT:(NSString *)requestURLString
-     parameters:(id)parameter
-        success:(requestSuccessBlock)success
-        failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -487,7 +351,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  */
 + (void)syncPUT:(NSString *)requestURLString
      parameters:(id)parameter
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+    cachePolicy:(NSInteger)cachePolicy
         success:(requestSuccessBlock)success
         failure:(requestFailureBlock)failure;
 
@@ -504,7 +368,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  */
 + (void)syncPATCH:(NSString *)requestURLString
        parameters:(id)parameter
-      cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+      cachePolicy:(NSInteger)cachePolicy
           success:(requestSuccessBlock)success
           failure:(requestFailureBlock)failure;
 

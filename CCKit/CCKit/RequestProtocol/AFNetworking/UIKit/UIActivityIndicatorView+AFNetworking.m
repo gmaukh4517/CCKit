@@ -87,7 +87,7 @@
         if (task.state != NSURLSessionTaskStateCompleted) {
             
 #pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wreceiver-is-weak"
+#pragma clang diagnostic ignored "-Wreceiver-is-weak"
 #pragma clang diagnostic ignored "-Warc-repeated-use-of-weak"
             if (task.state == NSURLSessionTaskStateRunning) {
                 [self.activityIndicatorView startAnimating];

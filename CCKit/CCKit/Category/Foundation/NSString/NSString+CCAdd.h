@@ -226,30 +226,6 @@
  */
 + (NSString *)reverseString:(NSString *)strSrc;
 
-#pragma mark--- 文件
-/**
- *  @author CC, 15-08-21
- *
- *  @brief  document根文件夹
- */
-+ (NSString *)documentFolder;
-
-/**
- *  @author CC, 15-08-21
- *
- *  @brief  caches根文件夹
- */
-+ (NSString *)cachesFolder;
-
-/**
- *  @author CC, 15-08-21
- *
- *  @brief  生成子文件夹(如果子文件夹不存在，则直接创建；如果已经存在，则直接返回)
- *
- *  @param subFolder 子文件夹名
- */
-- (NSString *)createSubFolder:(NSString *)subFolder;
-
 #pragma mark -
 #pragma mark :. 处理
 

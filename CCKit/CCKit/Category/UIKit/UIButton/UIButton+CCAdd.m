@@ -607,7 +607,7 @@
        waitTittle:(NSString *)waitTittle
 {
     UIColor *color = self.titleLabel.textColor;
-    
+
     __block NSInteger timeOut = timeout; //倒计时时间
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
@@ -618,6 +618,8 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self setTitleColor:color forState:UIControlStateNormal];
                 [self setTitle:title forState:UIControlStateNormal];
+                if (self.layer.masksToBounds)
+                    [self.layer setBorderColor:[color CGColor]];
                 self.userInteractionEnabled = YES;
             });
         } else {
@@ -625,6 +627,10 @@
             NSString *strTime = [NSString stringWithFormat:@"%.2d", seconds];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+
+                if (self.layer.masksToBounds)
+                    [self.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
+
                 [self setTitle:[NSString stringWithFormat:@"%@%@", strTime, waitTittle] forState:UIControlStateNormal];
                 self.userInteractionEnabled = NO;
             });

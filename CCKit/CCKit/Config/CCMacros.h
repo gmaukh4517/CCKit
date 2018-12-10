@@ -29,25 +29,27 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <pthread.h>
+#include <sys/param.h>
+#include <sys/mount.h>
 
 #pragma mark -
 #pragma mark :. GCD 线程处理
 
 /** 阻塞等待执行函数 **/
-static inline void cc_dispatch_semaphore(void(^block)(dispatch_semaphore_t semaphore))
+static inline void cc_dispatch_semaphore(void (^block)(dispatch_semaphore_t semaphore))
 {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    !block?:block(semaphore);
+    !block ?: block(semaphore);
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
 /** 异步等待执行函数 **/
-static inline void cc_dispatch_async_global_semaphore(void(^block)(dispatch_semaphore_t semaphore))
+static inline void cc_dispatch_async_global_semaphore(void (^block)(dispatch_semaphore_t semaphore))
 {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        !block?:block(semaphore);
+        !block ?: block(semaphore);
     });
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
@@ -154,6 +156,15 @@ static inline bool cc_verification_Has(NSString *string, NSString *key)
 
 #pragma mark -
 #pragma mark :. View
+/** 设置投影 **/
+static inline void cc_view_shadow(UIView *view, UIColor *color, CGSize offset, CGFloat opacity, CGFloat radius)
+{
+    view.layer.shadowColor = color.CGColor;
+    view.layer.shadowOffset = offset;
+    view.layer.shadowOpacity = opacity;
+    view.layer.shadowRadius = radius;
+}
+
 /** view 圆角 */
 static inline void cc_view_radius(UIView *view, CGFloat radius)
 {
@@ -177,7 +188,7 @@ static inline void cc_view_border_radius(UIView *view, CGFloat radius, CGFloat w
 
 /**
  view 单个圆角
- 
+
  @param view 试图
  @param angle 某个圆角
  * UIRectCornerTopLeft
@@ -202,37 +213,37 @@ static inline void cc_view_singleFillet(UIView *view, UIRectCorner angle, CGFloa
 #pragma mark :. 文件
 
 /** 获取Documents目录 */
-static inline NSString* cc_documentsPath()
+static inline NSString *cc_documentsPath()
 {
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
 /** 获得Documents下指定文件名的文件路径 */
-static inline NSString* cc_documentsPathName(NSString *fileName)
+static inline NSString *cc_documentsPathName(NSString *fileName)
 {
     return [cc_documentsPath() stringByAppendingPathComponent:fileName];
 }
 
 /** 获取Library目录 */
-static inline NSString* cc_libraryPath()
+static inline NSString *cc_libraryPath()
 {
     return [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
 }
 
 /** 获取Caches目录 */
-static inline NSString* cc_cachesPath()
+static inline NSString *cc_cachesPath()
 {
     return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
 }
 
 /**
  生成子文件夹(如果子文件夹不存在，则直接创建；如果已经存在，则直接返回)
- 
+
  @param path 文件路径
  @param subFolder 子文件夹名
  @return 返回文件夹路径
  */
-static inline NSString* cc_createSubFolder(NSString *path, NSString *subFolder)
+static inline NSString *cc_createSubFolder(NSString *path, NSString *subFolder)
 {
     NSString *subFolderPath = [NSString stringWithFormat:@"%@/%@", path, subFolder];
     BOOL isDir = NO;
@@ -244,7 +255,7 @@ static inline NSString* cc_createSubFolder(NSString *path, NSString *subFolder)
                                 attributes:nil
                                      error:nil];
     }
-    
+
     return subFolderPath;
 }
 
@@ -262,14 +273,25 @@ static inline int cc_isJailbreak()
         "/usr/sbin/sshd",
         "/etc/apt",
     };
-    
-    int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[0]);
+
+    int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[ 0 ]);
     for (int i = 0; i < appay_size; i++) {
         if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:jailbreak_tool_pathes[i]]]) {
             return YES;
         }
     }
     return NO;
+}
+
+/** 手机剩余存储空间 **/
+static inline double cc_freeDiskSpace()
+{
+    struct statfs buf;
+    unsigned long long freeSpace = -1;
+    if (statfs("/var", &buf) >= 0) {
+        freeSpace = (unsigned long long)(buf.f_bsize * buf.f_bavail);
+    }
+    return freeSpace;
 }
 
 #endif /* CCMacros_h */

@@ -131,6 +131,7 @@
 
     if (self.style == CCRefreshViewStyleIndicatorView) {
         self.activityView.center = CGPointMake(self.width / 2, self.height * 0.4);
+         self.activityView.center = self.arrowImage.center;
     } else if (self.style == CCRefreshViewStyleDefault) {
         // 1.箭头
         CGFloat arrowX = self.width * 0.5 - 100;
@@ -163,6 +164,11 @@
         // 记录UIScrollView最开始的contentInset
         _scrollViewOriginalInset = _scrollView.contentInset;
     }
+}
+
+- (void)adjustmentInset
+{
+    _scrollViewOriginalInset = _scrollView.contentInset;
 }
 
 #pragma mark - 显示到屏幕上
@@ -342,17 +348,21 @@
 
         case CCRefreshStatePulling:
             if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
-                [self.activityView startAnimating];
+                self.activityView.alpha = 0.0;
             } else if (self.style == CCRefreshViewStyleDefault)
-//                [self.cc_activityView startAnimation];
+                self.cc_activityView.alpha = 0.0;
             break;
 
         case CCRefreshStateRefreshing: {
-
-//            if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
-//                [self.activityView startAnimating];
-//            } else if (self.style == CCRefreshViewStyleDefault)
-//                [self.cc_activityView startAnimation];
+            if (self.style == CCRefreshViewStyleIndicatorView || self.style == CCRefreshViewStyleIndicator) {
+                [self.activityView startAnimating];
+                self.activityView.alpha = 1.0;
+            } else if (self.style == CCRefreshViewStyleDefault) {
+                //                [self.cc_activityView startAnimation];
+                //                self.cc_activityView.alpha = 1.0;
+                [self.activityView startAnimating];
+                self.activityView.alpha = 1.0;
+            }
 
             // 隐藏箭头
             _arrowImage.hidden = YES;

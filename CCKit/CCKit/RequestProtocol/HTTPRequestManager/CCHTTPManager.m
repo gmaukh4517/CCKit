@@ -2,7 +2,7 @@
 //  HTTPRequestManager.m
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC 
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@
 #import "UIKit+AFNetworking.h"
 #import "CCKeyValueStore.h"
 #import "CCExtension.h"
-//#import "CCNSLog.h"
 #import "CCHTTPUpDownLoad.h"
 
 typedef NS_ENUM(NSUInteger, CCHTTPRequestStyle) {
@@ -49,9 +48,11 @@ typedef NS_ENUM(NSInteger, CCHTTPRequestType) {
 
 @interface CCHTTPManager ()
 
-@property(nonatomic, strong) AFHTTPRequestOperationManager *manager;
+@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
 
-@property(nonatomic, strong) CCKeyValueStore *store;
+@property (nonatomic, strong) CCKeyValueStore *store;
+
+@property (nonatomic, strong) NSDictionary *headerField;
 
 @end
 
@@ -99,12 +100,12 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 - (void)initialization
 {
     self.manager = [AFHTTPRequestOperationManager manager];
-    self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    //    self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
     //使用AFNetworking，默认HTTPMethodsEncodingParametersInURI里面包含的只有`GET`, `HEAD`, 和 `DELETE` 将参数放入URL链接中
     // self.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", @"DELETE", nil];
-    self.manager.requestSerializer.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", nil];
-    self.manager.requestSerializer.timeoutInterval = 30;
-    self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
+    //self.manager.requestSerializer.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", nil];
+    self.manager.requestSerializer.timeoutInterval = 15;
+    self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", @"application/x-www-form-urlencoded", nil];
     self.isRequestGZIP = YES;
 }
 
@@ -138,6 +139,16 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 }
 
 /**
+ 全局设置请求HTTP Header头
+
+ @return 返回设置结构
+ */
++ (NSDictionary *)appendingServerHTTPHeaderField
+{
+    return nil;
+}
+
+/**
  *  @author CC, 16-03-11
  *
  *  @brief 设置传输字典
@@ -147,6 +158,23 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 + (void)setUserInfo:(NSDictionary *)userInfo
 {
     [CCHTTPManager defaultHttp].userInfo = userInfo;
+}
+
+
+/**
+ 设置请求Header字段
+
+ @param headerField 包头参数
+ */
++ (void)setHTTPheaderField:(NSDictionary *)headerField
+{
+    [CCHTTPManager defaultHttp].headerField = headerField;
+    for (NSString *key in headerField.allKeys) {
+        NSString *headerValue = [headerField objectForKey:key];
+        [[CCHTTPManager defaultHttp].manager.requestSerializer setValue:headerValue forHTTPHeaderField:key];
+        if ([headerValue isEqualToString:@"application/json"])
+            [CCHTTPManager defaultHttp].manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    }
 }
 
 /**
@@ -168,13 +196,13 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
+
     if (self.timeoutInterval > 0)
         [manager.requestSerializer setTimeoutInterval:self.timeoutInterval];
-    
+
     if (self.acceptableContentTypes)
         manager.responseSerializer.acceptableContentTypes = self.acceptableContentTypes;
-    
+
     return manager;
 }
 
@@ -206,13 +234,13 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 + (BOOL)netWorkReachabilityWithURLString:(NSString *)strUrl
 {
     __block BOOL netState = NO;
-    
+
     NSURL *baseURL = [NSURL URLWithString:strUrl];
-    
+
     AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseURL];
-    
+
     NSOperationQueue *operationQueue = manager.operationQueue;
-    
+
     [manager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         switch (status) {
             case AFNetworkReachabilityStatusReachableViaWWAN:
@@ -227,9 +255,9 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 break;
         }
     }];
-    
+
     [manager.reachabilityManager startMonitoring];
-    
+
     return netState;
 }
 
@@ -243,7 +271,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 + (void)netWorkReachability:(void (^)(NSInteger status))success
 {
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
-    
+
     [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (success)
             success(status);
@@ -262,10 +290,10 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
     zeroAddress.sa_len = sizeof(zeroAddress);
     zeroAddress.sa_family = AF_INET;
     SCNetworkReachabilityRef defaultRouteReachability =
-    SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
+        SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
     SCNetworkReachabilityFlags flags;
     BOOL didRetrieveFlags =
-    SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
+        SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
     CFRelease(defaultRouteReachability);
     if (!didRetrieveFlags) {
         printf("Error. Count not recover network reachability flags\n");
@@ -275,7 +303,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
     BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
     BOOL isNetworkEnable = (isReachable && !needsConnection) ? YES : NO;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = isNetworkEnable;/*  网络指示器的状态： 有网络 ： 开  没有网络： 关  */
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = isNetworkEnable; /*  网络指示器的状态： 有网络 ： 开  没有网络： 关  */
     });
     return isNetworkEnable;
 }
@@ -294,24 +322,10 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
  *  @param failure          故障处理回调
  */
 + (void)GET:(NSString *)requestURLString
- parameters:(id)parameter
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStyleGET
-                      requestType:CCHTTPRequestTypeAsynchronous
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)GET:(NSString *)requestURLString
- parameters:(id)parameter
-cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager requestHandler:CCHTTPRequestStyleGET
                       requestType:CCHTTPRequestTypeAsynchronous
@@ -326,32 +340,18 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief POST请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)POST:(NSString *)requestURLString
-  parameters:(id)parameter
-     success:(requestSuccessBlock)success
-     failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStylePOST
-                      requestType:CCHTTPRequestTypeAsynchronous
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)POST:(NSString *)requestURLString
-  parameters:(id)parameter
- cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-     success:(requestSuccessBlock)success
-     failure:(requestFailureBlock)failure
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager requestHandler:CCHTTPRequestStylePOST
                       requestType:CCHTTPRequestTypeAsynchronous
@@ -366,32 +366,18 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief DELETE请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)DELETE:(NSString *)requestURLString
-    parameters:(id)parameter
-       success:(requestSuccessBlock)success
-       failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStyleDELETE
-                      requestType:CCHTTPRequestTypeAsynchronous
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)DELETE:(NSString *)requestURLString
-    parameters:(id)parameter
-   cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       success:(requestSuccessBlock)success
-       failure:(requestFailureBlock)failure
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager requestHandler:CCHTTPRequestStyleDELETE
                       requestType:CCHTTPRequestTypeAsynchronous
@@ -402,11 +388,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                           failure:failure];
 }
 
+/**
+ *  @author CC, 16-03-10
+ *
+ *  @brief HEAD请求
+ *
+ *  @param requestURLString 请求地址
+ *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
+ *  @param success          成功处理回调
+ *  @param failure          故障处理回调
+ */
 + (void)HEAD:(NSString *)requestURLString
-  parameters:(id)parameter
- cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-     success:(requestSuccessBlock)success
-     failure:(requestFailureBlock)failure
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager requestHandler:CCHTTPRequestStyleHEAD
                       requestType:CCHTTPRequestTypeAsynchronous
@@ -421,32 +418,18 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief PUT请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)PUT:(NSString *)requestURLString
- parameters:(id)parameter
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStylePUT
-                      requestType:CCHTTPRequestTypeAsynchronous
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)PUT:(NSString *)requestURLString
- parameters:(id)parameter
-cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-    success:(requestSuccessBlock)success
-    failure:(requestFailureBlock)failure
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager requestHandler:CCHTTPRequestStylePUT
                       requestType:CCHTTPRequestTypeAsynchronous
@@ -457,11 +440,22 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                           failure:failure];
 }
 
+/**
+ *  @author CC, 16-03-10
+ *
+ *  @brief PATCH请求
+ *
+ *  @param requestURLString 请求地址
+ *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
+ *  @param success          成功处理回调
+ *  @param failure          故障处理回调
+ */
 + (void)PATCH:(NSString *)requestURLString
-   parameters:(id)parameter
-  cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-      success:(requestSuccessBlock)success
-      failure:(requestFailureBlock)failure
+     parameters:(id)parameter
+    cachePolicy:(NSInteger)cachePolicy
+        success:(requestSuccessBlock)success
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager requestHandler:CCHTTPRequestStylePATCH
                       requestType:CCHTTPRequestTypeAsynchronous
@@ -473,34 +467,21 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
 }
 
 #pragma mark :. 请求Synchronize
+
 /**
  *  @author CC, 16-03-10
  *
  *  @brief GET请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)syncGET:(NSString *)requestURLString
      parameters:(id)parameter
-        success:(requestSuccessBlock)success
-        failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStyleGET
-                      requestType:CCHTTPRequestTypeSynchronize
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)syncGET:(NSString *)requestURLString
-     parameters:(id)parameter
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+    cachePolicy:(NSInteger)cachePolicy
         success:(requestSuccessBlock)success
         failure:(requestFailureBlock)failure
 {
@@ -517,30 +498,16 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief POST请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)syncPOST:(NSString *)requestURLString
       parameters:(id)parameter
-         success:(requestSuccessBlock)success
-         failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStylePOST
-                      requestType:CCHTTPRequestTypeSynchronize
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)syncPOST:(NSString *)requestURLString
-      parameters:(id)parameter
-     cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+     cachePolicy:(NSInteger)cachePolicy
          success:(requestSuccessBlock)success
          failure:(requestFailureBlock)failure
 {
@@ -557,30 +524,16 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief DELETE请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)syncDELETE:(NSString *)requestURLString
         parameters:(id)parameter
-           success:(requestSuccessBlock)success
-           failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStyleDELETE
-                      requestType:CCHTTPRequestTypeSynchronize
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)syncDELETE:(NSString *)requestURLString
-        parameters:(id)parameter
-       cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       cachePolicy:(NSInteger)cachePolicy
            success:(requestSuccessBlock)success
            failure:(requestFailureBlock)failure
 {
@@ -593,9 +546,20 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                           failure:failure];
 }
 
+/**
+ *  @author CC, 16-03-10
+ *
+ *  @brief HEAD请求
+ *
+ *  @param requestURLString 请求地址
+ *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
+ *  @param success          成功处理回调
+ *  @param failure          故障处理回调
+ */
 + (void)syncHEAD:(NSString *)requestURLString
       parameters:(id)parameter
-     cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+     cachePolicy:(NSInteger)cachePolicy
          success:(requestSuccessBlock)success
          failure:(requestFailureBlock)failure
 {
@@ -612,30 +576,16 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @author CC, 16-03-10
  *
  *  @brief PUT请求
- *         默认 CCHTTPReloadIgnoringLocalCacheData的缓存方式
  *
  *  @param requestURLString 请求地址
  *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
  *  @param success          成功处理回调
  *  @param failure          故障处理回调
  */
 + (void)syncPUT:(NSString *)requestURLString
      parameters:(id)parameter
-        success:(requestSuccessBlock)success
-        failure:(requestFailureBlock)failure
-{
-    [CCHTTPManager requestHandler:CCHTTPRequestStylePUT
-                      requestType:CCHTTPRequestTypeSynchronize
-                 RequestURLString:requestURLString
-                    WithParameter:parameter
-                      cachePolicy:CCHTTPReloadIgnoringLocalCacheData
-                          success:success
-                          failure:failure];
-}
-
-+ (void)syncPUT:(NSString *)requestURLString
-     parameters:(id)parameter
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+    cachePolicy:(NSInteger)cachePolicy
         success:(requestSuccessBlock)success
         failure:(requestFailureBlock)failure
 {
@@ -648,9 +598,20 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                           failure:failure];
 }
 
+/**
+ *  @author CC, 16-03-10
+ *
+ *  @brief PATCH请求
+ *
+ *  @param requestURLString 请求地址
+ *  @param parameter        请求参数
+ *  @param cachePolicy      缓存类型
+ *  @param success          成功处理回调
+ *  @param failure          故障处理回调
+ */
 + (void)syncPATCH:(NSString *)requestURLString
        parameters:(id)parameter
-      cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+      cachePolicy:(NSInteger)cachePolicy
           success:(requestSuccessBlock)success
           failure:(requestFailureBlock)failure
 {
@@ -682,13 +643,18 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        success:(requestSuccessBlock)success
        failure:(requestFailureBlock)failure
 {
-    [CCHTTPUpDownLoad Upload:requestURLString parameters:parameter manager:[CCHTTPManager defaultHttp].manager fileConfig:fileConfig success:^(CCResponseObject *responseObject) {
-        if (success)
-            success(nil);
-    } failure:^(id response, NSError *error) {
-        if (failure)
-            failure(response,[self failureError:error]);
-    }];
+    [CCHTTPUpDownLoad Upload:requestURLString
+        parameters:parameter
+        manager:[CCHTTPManager defaultHttp].manager
+        fileConfig:fileConfig
+        success:^(CCResponseObject *responseObject) {
+            if (success)
+                success(nil);
+        }
+        failure:^(id response, NSError *error) {
+            if (failure)
+                failure(response, [self failureError:error requestURL:requestURLString]);
+        }];
 }
 
 /**
@@ -708,12 +674,16 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        success:(requestSuccessBlock)success
        failure:(requestFailureBlock)failure
 {
-    [CCHTTPUpDownLoad Upload:requestURLString filePath:filePath progress:progress success:^(CCResponseObject *responseObject) {
-        success([self requestResultsHandler:nil UserInfo:nil RequestURL:requestURLString]);
-    } failure:^(id response, NSError *error) {
-        if (failure)
-            failure(response,[self failureError:error]);
-    }];
+    [CCHTTPUpDownLoad Upload:requestURLString
+        filePath:filePath
+        progress:progress
+        success:^(CCResponseObject *responseObject) {
+            success([self requestResultsHandler:nil UserInfo:nil RequestURL:requestURLString]);
+        }
+        failure:^(id response, NSError *error) {
+            if (failure)
+                failure(response, [self failureError:error requestURL:requestURLString]);
+        }];
 }
 
 /**
@@ -728,17 +698,21 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure               故障回调
  */
 + (void)Download:(NSString *)requestURLString
-        fileName:(NSString *)fileName
-downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead))downloadProgressBlock
-         success:(requestDownloadBacktrack)success
-         failure:(requestFailureBlock)failure
+                 fileName:(NSString *)fileName
+    downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead))downloadProgressBlock
+                  success:(requestDownloadBacktrack)success
+                  failure:(requestFailureBlock)failure
 {
-    [CCHTTPUpDownLoad Download:requestURLString fileName:fileName downloadProgressBlock:downloadProgressBlock success:^(NSData *data, NSError *error) {
-        success(data,nil);
-    } failure:^(id response, NSError *error) {
-        if (failure)
-            failure(response,[self failureError:error]);
-    }];
+    [CCHTTPUpDownLoad Download:requestURLString
+        fileName:fileName
+        downloadProgressBlock:downloadProgressBlock
+        success:^(NSData *data, NSError *error) {
+            success(data, nil);
+        }
+        failure:^(id response, NSError *error) {
+            if (failure)
+                failure(response, [self failureError:error requestURL:requestURLString]);
+        }];
 }
 
 /**
@@ -761,12 +735,12 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
            requestType:(CCHTTPRequestType)requestType
       RequestURLString:(NSString *)requestURLString
          WithParameter:(id)parameter
-           cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+           cachePolicy:(NSInteger)cachePolicy
                success:(requestSuccessBlock)successHandler
                failure:(requestFailureBlock)failureHandler
 {
     //默认直接请求
-    if (cachePolicy == CCHTTPReturnDefault) {
+    if (cachePolicy == 0) {
         if (requestType == CCHTTPRequestTypeAsynchronous) {
             [CCHTTPManager requestMethod:requestStyle
                         RequestURLString:requestURLString
@@ -784,7 +758,7 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
         }
         return;
     }
-    
+
     NSString *cacheKey = requestURLString;
     if (parameter) {
         if (![NSJSONSerialization isValidJSONObject:parameter]) return;
@@ -793,53 +767,50 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
             NSString *paramStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             cacheKey = [requestURLString stringByAppendingString:paramStr];
         } @catch (NSException *exception) {
-            
         } @finally {
         }
     }
-    
+
     CCKeyValueItem *item = [[CCHTTPManager defaultHttp].store getCCKeyValueItemById:cacheKey fromTable:CCCacheTableName];
     id object = item.itemObject;
-    
+
     switch (cachePolicy) {
-        case CCHTTPReturnCacheDataThenLoad: { // 先返回缓存，同时请求
+        case 1: { // 先返回缓存，同时请求
             if (object)
                 successHandler(object);
             break;
         }
-        case CCHTTPReloadIgnoringLocalCacheData: // 忽略本地缓存直接请求
+        case 2: // 忽略本地缓存直接请求
             // 不做处理，直接请求
             break;
-        case CCHTTPReturnCacheDataElseLoad: { // 有缓存就返回缓存，没有就请求
-            if (object) {			  // 有缓存
+        case 3: {         // 有缓存就返回缓存，没有就请求
+            if (object) { // 有缓存
                 successHandler(object);
                 return;
             }
             break;
         }
-        case CCHTTPReturnCacheDataDontLoad: { // 有缓存就返回缓存,从不请求（用于没有网络）
-            if (object)			  // 有缓存
+        case 4: {       // 有缓存就返回缓存,从不请求（用于没有网络）
+            if (object) // 有缓存
                 successHandler(object);
             return; // 退出从不请求
             break;
         }
-            
+
         default: {
             break;
         }
     }
-    
+
     if (requestType == CCHTTPRequestTypeAsynchronous) {
-        
         [CCHTTPManager requestMethod:requestStyle
                     RequestURLString:requestURLString
                        WithParameter:parameter
                          cachePolicy:cachePolicy
                              success:successHandler
                              failure:failureHandler];
-			     
+
     } else if (requestType == CCHTTPRequestTypeSynchronize) {
-        
         [CCHTTPManager syncRequestMethod:requestStyle
                         RequestURLString:requestURLString
                            WithParameter:parameter
@@ -865,156 +836,174 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
 + (void)requestMethod:(CCHTTPRequestStyle)requestStyle
      RequestURLString:(NSString *)requestURLString
         WithParameter:(id)parameter
-          cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+          cachePolicy:(NSInteger)cachePolicy
               success:(requestSuccessBlock)successHandler
               failure:(requestFailureBlock)failureHandler
 {
     if (![self requestBeforeCheckNetWork]) {
-        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil]]);
+        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil] requestURL:requestURLString]);
         return;
     }
-    
+
     AFHTTPRequestOperation *requestOperation;
     switch (requestStyle) {
         case CCHTTPRequestStyleGET: {
-            requestOperation = [[CCHTTPManager defaultHttp].manager GET:requestURLString parameters:parameter success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
-                if (successHandler){
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                        if (cachePolicy != CCHTTPReturnDefault)
-                            [self requestCache:requestURLString CacheData:responseObject];
-                        CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            successHandler(entity);
+            requestOperation = [[CCHTTPManager defaultHttp].manager GET:requestURLString
+                parameters:parameter
+                success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
+                    if (successHandler) {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            if (cachePolicy != 0)
+                                [self requestCache:requestURLString CacheData:responseObject];
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                successHandler(entity);
+                            });
                         });
-                    });
+                    }
                 }
-            } failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
-                if (failureHandler)
-                    failureHandler(operation.userInfo,[self failureError:error]);
-            }];
-            
+                failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
+                    if (failureHandler)
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                }];
+
             if ([CCHTTPManager defaultHttp].userInfo)
                 requestOperation.userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-            
+
             break;
         }
         case CCHTTPRequestStylePOST: {
-            requestOperation = [[CCHTTPManager defaultHttp].manager POST:requestURLString parameters:parameter success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
-                if (successHandler){
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                        if (cachePolicy != CCHTTPReturnDefault)
-                            [self requestCache:requestURLString CacheData:responseObject];
-                        
-                        CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            successHandler(entity);
+            requestOperation = [[CCHTTPManager defaultHttp].manager POST:requestURLString
+                parameters:parameter
+                success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
+                    if (successHandler) {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            if (cachePolicy != 0)
+                                [self requestCache:requestURLString CacheData:responseObject];
+
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                successHandler(entity);
+                            });
                         });
-                    });
+                    }
                 }
-            } failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
-                if (failureHandler)
-                    failureHandler(operation.userInfo,[self failureError:error]);
-            }];
-            
+                failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
+                    if (failureHandler)
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                }];
+
             if ([CCHTTPManager defaultHttp].userInfo)
                 requestOperation.userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-            
+
             break;
         }
         case CCHTTPRequestStyleDELETE: {
-            requestOperation = [[CCHTTPManager defaultHttp].manager DELETE:requestURLString parameters:parameter success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
-                if (successHandler){
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                        if (cachePolicy != CCHTTPReturnDefault)
-                            [self requestCache:requestURLString CacheData:responseObject];
-                        
-                        CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            successHandler(entity);
+            requestOperation = [[CCHTTPManager defaultHttp].manager DELETE:requestURLString
+                parameters:parameter
+                success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
+                    if (successHandler) {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            if (cachePolicy != 0)
+                                [self requestCache:requestURLString CacheData:responseObject];
+
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                successHandler(entity);
+                            });
                         });
-                    });
+                    }
                 }
-            } failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
-                if (failureHandler)
-                    failureHandler(operation.userInfo,[self failureError:error]);
-            }];
-            
+                failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
+                    if (failureHandler)
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                }];
+
             if ([CCHTTPManager defaultHttp].userInfo)
                 requestOperation.userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-            
+
             break;
         }
         case CCHTTPRequestStyleHEAD: {
-            requestOperation = [[CCHTTPManager defaultHttp].manager HEAD:requestURLString parameters:parameter success:^(AFHTTPRequestOperation *_Nonnull operation) {
-                if (successHandler){
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                        CCResponseObject *entity= [[CCResponseObject alloc] init];
-                        entity.userInfo = operation.userInfo;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            successHandler(entity);
+            requestOperation = [[CCHTTPManager defaultHttp].manager HEAD:requestURLString
+                parameters:parameter
+                success:^(AFHTTPRequestOperation *_Nonnull operation) {
+                    if (successHandler) {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            CCResponseObject *entity = [[CCResponseObject alloc] init];
+                            entity.userInfo = operation.userInfo;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                successHandler(entity);
+                            });
                         });
-                    });
+                    }
                 }
-            } failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
-                if (failureHandler)
-                    failureHandler(operation.userInfo,[self failureError:error]);
-            }];
-            
+                failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
+                    if (failureHandler)
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                }];
+
             if ([CCHTTPManager defaultHttp].userInfo)
                 requestOperation.userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-            
+
             break;
         }
         case CCHTTPRequestStylePUT: {
-            requestOperation = [[CCHTTPManager defaultHttp].manager PUT:requestURLString parameters:parameter success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
-                if (successHandler){
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                        if (cachePolicy != CCHTTPReturnDefault)
-                            [self requestCache:requestURLString CacheData:responseObject];
-                        
-                        CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            successHandler(entity);
+            requestOperation = [[CCHTTPManager defaultHttp].manager PUT:requestURLString
+                parameters:parameter
+                success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
+                    if (successHandler) {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            if (cachePolicy != 0)
+                                [self requestCache:requestURLString CacheData:responseObject];
+
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                successHandler(entity);
+                            });
                         });
-                    });
+                    }
+
                 }
-                
-            } failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
-                if (failureHandler)
-                    failureHandler(operation.userInfo,[self failureError:error]);
-            }];
-            
+                failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
+                    if (failureHandler)
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                }];
+
             if ([CCHTTPManager defaultHttp].userInfo)
                 requestOperation.userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-            
-            
+
+
             break;
         }
         case CCHTTPRequestStylePATCH: {
-            requestOperation = [[CCHTTPManager defaultHttp].manager PATCH:requestURLString parameters:parameter success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
-                if (successHandler){
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                        if (cachePolicy != CCHTTPReturnDefault)
-                            [self requestCache:requestURLString CacheData:responseObject];
-                        
-                        CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            successHandler(entity);
+            requestOperation = [[CCHTTPManager defaultHttp].manager PATCH:requestURLString
+                parameters:parameter
+                success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {
+                    if (successHandler) {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            if (cachePolicy != 0)
+                                [self requestCache:requestURLString CacheData:responseObject];
+
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                successHandler(entity);
+                            });
                         });
-                    });             
+                    }
                 }
-            } failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
-                if (failureHandler)
-                    failureHandler(operation.userInfo,[self failureError:error]);
-            }];
-            
+                failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
+                    if (failureHandler)
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                }];
+
             if ([CCHTTPManager defaultHttp].userInfo)
                 requestOperation.userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-            
+
             break;
         }
     }
-    
+
     [requestOperation start];
 }
 
@@ -1022,18 +1011,17 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
 + (void)syncRequestMethod:(CCHTTPRequestStyle)requestStyle
          RequestURLString:(NSString *)requestURLString
             WithParameter:(id)parameter
-              cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+              cachePolicy:(NSInteger)cachePolicy
                   success:(requestSuccessBlock)successHandler
                   failure:(requestFailureBlock)failureHandler
 {
-    
     if (![self requestBeforeCheckNetWork]) {
-        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil]]);
+        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil] requestURL:requestURLString]);
         return;
     }
-    
+
     NSDictionary *userInfo = [[CCHTTPManager defaultHttp].userInfo copy];
-    
+
     AFHTTPRequestOperation *requestOperation;
     NSError *error = nil;
     switch (requestStyle) {
@@ -1056,18 +1044,18 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
             requestOperation = [[CCHTTPManager defaultHttp].manager syncPATCH:requestURLString parameters:parameter operation:nil error:&error];
             break;
     }
-    
-    
+
+
     if (!error) {
         if (successHandler) {
-            if (cachePolicy != CCHTTPReturnDefault)
+            if (cachePolicy != 0)
                 [self requestCache:requestURLString CacheData:requestOperation.responseObject];
-            
+
             successHandler([self requestResultsHandler:requestOperation.responseObject UserInfo:userInfo RequestURL:requestURLString]);
         }
     } else {
         if (failureHandler)
-            failureHandler(userInfo, [self failureError:error]);
+            failureHandler(userInfo, [self failureError:error requestURL:requestURLString]);
     }
 }
 
@@ -1086,11 +1074,17 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
                                  RequestURL:(NSString *)requestURL
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;// 关闭网络指示器
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // 关闭网络指示器
     });
-    
+
     [CCHTTPManager defaultHttp].userInfo = nil;
-    
+    for (NSString *key in [CCHTTPManager defaultHttp].headerField.allKeys){
+         NSString *headerValue = [[CCHTTPManager defaultHttp].headerField objectForKey:key];
+        [[CCHTTPManager defaultHttp].manager.requestSerializer removeHTTpHeadefield:key];
+        if ([headerValue isEqualToString:@"application/json"])
+            [CCHTTPManager defaultHttp].manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    }
+
     CCResponseObject *entity = nil;
     if (results) {
         entity = [CCResponseObject cc_objectWithKeyValues:results];
@@ -1103,7 +1097,7 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
         if (userInfo)
             entity.userInfo = userInfo;
     }
-    
+
     return entity;
 }
 
@@ -1115,12 +1109,13 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
  *  @param error 异常信息
  */
 + (NSError *)failureError:(NSError *)error
+               requestURL:(NSString *)requestURL
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;// 关闭网络指示器
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // 关闭网络指示器
     });
-    
-    return [self httpErrorAnalysis:error];
+
+    return [self httpErrorAnalysis:error requestURL:requestURL];
 }
 
 /**
@@ -1150,9 +1145,10 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
  *  @param code 错误代码
  */
 + (NSError *)httpErrorAnalysis:(NSError *)error
+                    requestURL:(NSString *)requestURL
 {
     NSString *errorContent = @"请求服务器失败";
-    
+
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     //错误模块
     [errorInfo setObject:@"HTTP 认证类型不支持" forKey:@(kCFErrorHTTPAuthenticationTypeUnsupported)];
@@ -1167,7 +1163,7 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
     [errorInfo setObject:@"PAC 文件验证错误" forKey:@(kCFErrorPACFileAuth)];
     [errorInfo setObject:@"HTTPS 代理连接失败" forKey:@(kCFErrorHTTPSProxyConnectionFailure)];
     [errorInfo setObject:@"流错误 HTTPS 代理失败意外响应连接方法" forKey:@(kCFStreamErrorHTTPSProxyFailureUnexpectedResponseToCONNECTMethod)];
-    
+
     //故障模块
     [errorInfo setObject:@"请求故障! 会话由另一个进程使用" forKey:@(kCFURLErrorBackgroundSessionInUseByAnotherProcess)];
     [errorInfo setObject:@"请求故障! 会话被中断" forKey:@(kCFURLErrorBackgroundSessionWasDisconnected)];
@@ -1200,11 +1196,14 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
     [errorInfo setObject:@"请求故障! FileIs目录" forKey:@(kCFURLErrorFileIsDirectory)];
     [errorInfo setObject:@"请求故障! 没有权限读取文件" forKey:@(kCFURLErrorNoPermissionsToReadFile)];
     [errorInfo setObject:@"请求故障! 数据长度超过最大值" forKey:@(kCFURLErrorDataLengthExceedsMaximum)];
-    
+
     if ([errorInfo.allKeys containsObject:@(error.code)])
         errorContent = [errorInfo objectForKey:@(error.code)];
-    
-    return [NSError errorWithDomain:errorContent code:error.code userInfo:error.userInfo];
+
+    NSError *handleError = [NSError errorWithDomain:errorContent code:error.code userInfo:error.userInfo];
+    NSLog(@"\r\n%@\r\n%@", requestURL, handleError);
+
+    return handleError;
 }
 
 

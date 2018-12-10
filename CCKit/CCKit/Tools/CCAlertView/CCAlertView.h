@@ -28,6 +28,7 @@
 
 @interface CCAlertButtonModel : NSObject
 
+@property (nonatomic, copy) UIFont *buttonFont;
 @property (nonatomic, copy) NSString *buttonTitle;
 @property (nonatomic, copy) UIColor *buttonColor;
 
@@ -37,8 +38,15 @@
 @interface CCAlertView : NSObject
 
 /**
+ 自定义显示
+
+ @param containerView 自定义视图
+ */
++ (void)showWithContainerView:(UIView *)containerView;
+
+/**
  弹出提示输入框
- 
+
  @param title 标题
  @param placeholder 输入框提示语
  @param buttonTitles 按钮
@@ -51,7 +59,7 @@
 
 /**
  弹出提示输入框
- 
+
  @param title 标题
  @param text  文本框内容
  @param placeholder 输入框提示语
@@ -106,7 +114,7 @@
 
 /**
  弹出框
- 
+
  @param containerView 自定义试图
  @param isPackage 是否显示背景
  @param isExternal 是否点击外部关闭
@@ -130,7 +138,7 @@
 
 /**
  弹出窗
- 
+
  @param containerView 自定义对象试图
  @param buttonTitles 按钮名称
  @param handleClose 是否处理关闭窗口
@@ -140,6 +148,7 @@
          withButtonTitleArray:(NSArray *)buttonTitles
                   handleClose:(BOOL)handleClose
         OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside;
+
 
 /**
  隐藏弹窗

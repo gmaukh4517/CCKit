@@ -39,6 +39,11 @@
  */
 @property (nonatomic, assign) BOOL cc_viewControllerBasedNavigationBarAppearanceEnabled;
 
+/**
+ 当前手势是否正在滑动转场中
+ */
+@property (nonatomic, assign, getter=cc_isGrTransitioning) BOOL cc_grTransitioning;
+
 - (void)pushViewController:(UIViewController *)controller withTransition:(UIViewAnimationTransition)transition;
 - (UIViewController *)popViewControllerWithTransition:(UIViewAnimationTransition)transition;
 

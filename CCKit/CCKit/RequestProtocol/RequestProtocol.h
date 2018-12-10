@@ -2,7 +2,7 @@
 //  RequestProtocol.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC 
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@
 #ifndef CCKit_RequestProtocol_h
 #define CCKit_RequestProtocol_h
 
-#import <CCKit/CCHTTPManager.h>
 #import <CCKit/CCHTTPRequest.h>
 #import <CCKit/CCResponseObject.h>
 #import <CCKit/HttpFileConfig.h>

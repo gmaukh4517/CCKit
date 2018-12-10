@@ -42,7 +42,7 @@
  */
 + (CustomIOSAlertView *)alertView
 {
-    CustomIOSAlertView *alertView = (CustomIOSAlertView *)[[[[UIApplication sharedApplication] windows] firstObject] viewWithTag:66666];
+    CustomIOSAlertView *alertView = (CustomIOSAlertView *)[[UIApplication sharedApplication].keyWindow viewWithTag:666666];
     if (!alertView) {
         alertView = [[CustomIOSAlertView alloc] init];
         alertView.containerView.backgroundColor = [UIColor whiteColor];
@@ -50,15 +50,16 @@
         alertView.dialogView.backgroundColor = [UIColor whiteColor];
         [alertView setButtonTitles:@[]];
         [alertView setUseMotionEffects:YES];
+        alertView.tag = 666666;
     }
-    
+
     return alertView;
 }
 
 
 /**
  弹出提示输入框
- 
+
  @param title 标题
  @param placeholder 输入框提示语
  @param buttonTitles 按钮
@@ -78,7 +79,7 @@
 
 /**
  弹出提示输入框
- 
+
  @param title 标题
  @param text  文本框内容
  @param placeholder 输入框提示语
@@ -92,31 +93,32 @@
     OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside
 {
     CGFloat heigth = 20;
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 0)];
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 0)];
     if (title && ![title isEqualToString:@""]) {
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, containerView.width - 20, 20)];
         titleLabel.textAlignment = NSTextAlignmentCenter;
-        titleLabel.font = [UIFont systemFontOfSize:18];
+        titleLabel.font = [UIFont systemFontOfSize:17];
         titleLabel.text = title;
         [containerView addSubview:titleLabel];
         heigth = titleLabel.bottom + 15;
     }
-    
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10, heigth, containerView.width - 20, 30)];
-    view.layer.borderWidth = 0.5;
-    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
+
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10, heigth, containerView.width - 20, 40)];
+    view.backgroundColor = [UIColor colorWithRed:243 / 255.0 green:245 / 255.0 blue:247 / 255.0 alpha:1];
+    view.layer.masksToBounds = YES;
+    view.layer.cornerRadius = 5;
     [containerView addSubview:view];
-    
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(5, 0, view.width - 5, 30)];
+
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(5, 0, view.width - 5, view.height)];
     if (placeholder)
         textField.placeholder = placeholder;
     if (text)
         textField.text = text;
     textField.tag = 1;
     [view addSubview:textField];
-    
+
     containerView.height = view.bottom + 15;
-    
+
     [self showWithContainerView:containerView
            withButtonTitleArray:buttonTitles
                     handleClose:NO
@@ -140,14 +142,14 @@
     for (id button in buttonTitles) {
         if ([button isKindOfClass:[NSString class]]) {
             CCAlertModel *alertModel = [[CCAlertModel alloc] init];
-            alertModel.Title = button;
-            alertModel.TitleColor = [UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f];
+            alertModel.title = button;
+            alertModel.titleColor = [UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f];
             [buttons addObject:alertModel];
         } else {
             [buttons addObject:button];
         }
     }
-    
+
     [self showWithMessage:nil
               withMessage:message
      withButtonTitleArray:buttons
@@ -170,8 +172,8 @@
   OnButtonTouchUpInside:(void (^)(NSInteger buttonIndex))onButtonTouchUpInside
 {
     CGFloat heigth = 20;
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 0)];
-    
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, 0)];
+
     if (title && ![title isEqualToString:@""]) {
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, containerView.width - 20, 20)];
         titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -180,7 +182,7 @@
         [containerView addSubview:titleLabel];
         heigth = titleLabel.bottom + 15;
     }
-    
+
     if (message && ![message isEqualToString:@""]) {
         UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, heigth, containerView.width - 50, 0)];
         messageLabel.numberOfLines = 0;
@@ -191,24 +193,24 @@
         [containerView addSubview:messageLabel];
         [messageLabel sizeToFit];
         messageLabel.centerX = containerView.centerX;
-        
+
         heigth = messageLabel.bottom + 20;
     }
     containerView.height = heigth;
-    
+
     NSMutableArray *buttons = [NSMutableArray array];
     for (id button in buttonTitles) {
         if ([button isKindOfClass:[NSString class]]) {
             CCAlertModel *alertModel = [[CCAlertModel alloc] init];
-            alertModel.Title = button;
-            alertModel.TitleColor = [UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f];
+            alertModel.title = button;
+            alertModel.titleColor = [UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f];
             [buttons addObject:alertModel];
         } else {
             [buttons addObject:button];
         }
     }
-    
-    
+
+
     [self showWithContainerView:containerView
            withButtonTitleArray:buttons
           OnButtonTouchUpInside:^(UIView *containerView, NSInteger buttonIndex) {
@@ -221,7 +223,7 @@
                withIsExternal:(BOOL)isExternal
 {
     cc_view_singleFillet(containerView, UIRectCornerTopLeft | UIRectCornerTopRight, 5);
-    
+
     CustomIOSAlertView *alertView = [self alertView];
     alertView.containerView = containerView;
     alertView.IsExternal = isExternal;
@@ -271,25 +273,26 @@
 {
     CustomIOSAlertView *alertView = [self alertView];
     [alertView setContainerView:containerView];
-    
+
     NSMutableArray *buttons = [NSMutableArray array];
     for (id button in buttonTitles) {
         if ([button isKindOfClass:[NSString class]]) {
             CCAlertModel *alertModel = [[CCAlertModel alloc] init];
-            alertModel.Title = button;
-            alertModel.TitleColor = [UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f];
+            alertModel.title = button;
+            alertModel.titleColor = [UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f];
             [buttons addObject:alertModel];
         } else if ([button isKindOfClass:[CCAlertButtonModel class]]) {
             CCAlertButtonModel *model = button;
             CCAlertModel *alertModel = [[CCAlertModel alloc] init];
-            alertModel.Title = model.buttonTitle;
-            alertModel.TitleColor = model.buttonColor;
+            alertModel.title = model.buttonTitle;
+            alertModel.titleColor = model.buttonColor;
+            alertModel.tilteFont = model.buttonFont;
             [buttons addObject:alertModel];
         } else {
             [buttons addObject:button];
         }
     }
-    
+
     [alertView setButtonTitles:buttons];
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         if (handleClose)
@@ -300,9 +303,23 @@
     [alertView show];
 }
 
+
+/**
+ 自定义显示
+
+ @param containerView 自定义视图
+ */
++ (void)showWithContainerView:(UIView *)containerView
+{
+    CustomIOSAlertView *alertView = [self alertView];
+    alertView.containerView = containerView;
+    alertView.IsExternal = NO;
+    [alertView show];
+}
+
 /**
  隐藏弹窗
- 
+
  @param animated 动画
  */
 + (void)close
@@ -312,7 +329,7 @@
 
 /**
  隐藏弹窗
- 
+
  @param animated 动画
  @param delay 时长
  */

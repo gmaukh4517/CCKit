@@ -2,7 +2,7 @@
 //  CCHTTPRequest.m
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC 
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,23 @@
 //
 
 #import "CCHTTPRequest.h"
-#import "CCResponseObject.h"
+#import "CCHTTPManager.h"
 
 @implementation CCHTTPRequest
 
 
 #pragma mark - 参数设置
+
+
+/**
+ 全局设置请求HTTP Header头
+
+ @param headerField 参数
+ */
++ (void)setAppendingServerHTTPHeaderField:(NSDictionary *)headerField
+{
+    return [CCHTTPManager setHTTPheaderField:headerField];
+}
 
 /**
  *  @author CC, 2016-3-10
@@ -104,7 +115,7 @@
     NSMutableString *urlStr = [NSMutableString stringWithFormat:@"%@?", url];
     for (NSString *key in parameter.allKeys)
         [urlStr appendFormat:@"%@=%@&", key, [parameter objectForKey:key]];
-    
+
     return [urlStr substringToIndex:urlStr.length - 1];
 }
 
@@ -112,6 +123,29 @@
 #pragma mark :. 网络请求并解析 异步
 
 static id dataObj;
+
+
+/**
+ *  @author CC, 16-04-06
+ *
+ *  @brief GET请求处理
+ *
+ *  @param api           API地址
+ *  @param parameter     发送参数
+ *  @param response      请求响应结果
+ *  @param failure       故障处理回调
+ */
++ (void)GET:(NSString *)api
+    parameters:(NSDictionary *)parameter
+      response:(requestSuccessBlock)response
+       failure:(requestFailureBlock)failure
+{
+    [CCHTTPManager GET:api
+            parameters:parameter
+           cachePolicy:2
+               success:response
+               failure:failure];
+}
 
 /**
  *  @author CC, 16-03-10
@@ -126,20 +160,20 @@ static id dataObj;
  *  @param failure          故障处理回调
  */
 + (void)GET:(NSString *)requestURLString
- parameters:(NSDictionary *)parameter
- modelClass:(Class)modelClass
-cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-   response:(responseBlock)response
-    failure:(requestFailureBlock)failure
+     parameters:(NSDictionary *)parameter
+     modelClass:(Class)modelClass
+    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       response:(responseBlock)response
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager GET:requestURLString
             parameters:parameter
            cachePolicy:cachePolicy
                success:^(CCResponseObject *responseObject) {
-                   
+
                    dataObj = [self modelTransformationWithResponseObj:responseObject
                                                            modelClass:modelClass];
-                   
+
                    if ([dataObj isKindOfClass:modelClass]) {
                        if (response)
                            response(dataObj, nil);
@@ -149,6 +183,28 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                    }
                }
                failure:failure];
+}
+
+/**
+ *  @author CC, 16-04-06
+ *
+ *  @brief POST请求处理
+ *
+ *  @param api           API地址
+ *  @param parameter     发送参数
+ *  @param response      请求响应结果
+ *  @param failure       故障处理回调
+ */
++ (void)POST:(NSString *)api
+    parameters:(NSDictionary *)parameter
+      response:(requestSuccessBlock)response
+       failure:(requestFailureBlock)failure
+{
+    [CCHTTPManager POST:api
+             parameters:parameter
+            cachePolicy:2
+                success:response
+                failure:failure];
 }
 
 /**
@@ -164,11 +220,11 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)POST:(NSString *)requestURLString
-  parameters:(NSDictionary *)parameter
-  modelClass:(Class)modelClass
- cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-    response:(responseBlock)response
-     failure:(requestFailureBlock)failure
+     parameters:(NSDictionary *)parameter
+     modelClass:(Class)modelClass
+    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       response:(responseBlock)response
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager POST:requestURLString
              parameters:parameter
@@ -176,7 +232,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                 success:^(CCResponseObject *responseObject) {
                     dataObj = [self modelTransformationWithResponseObj:responseObject
                                                             modelClass:modelClass];
-                    
+
                     if ([dataObj isKindOfClass:modelClass]) {
                         if (response)
                             response(dataObj, nil);
@@ -186,6 +242,28 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                     }
                 }
                 failure:failure];
+}
+
+/**
+ *  @author CC, 16-04-06
+ *
+ *  @brief ELETE请求处理
+ *
+ *  @param api           API地址
+ *  @param parameter     发送参数
+ *  @param response      请求响应结果
+ *  @param failure       故障处理回调
+ */
++ (void)DELETE:(NSString *)api
+    parameters:(NSDictionary *)parameter
+      response:(requestSuccessBlock)response
+       failure:(requestFailureBlock)failure
+{
+    [CCHTTPManager DELETE:api
+               parameters:parameter
+              cachePolicy:2
+                  success:response
+                  failure:failure];
 }
 
 /**
@@ -201,11 +279,11 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)DELETE:(NSString *)requestURLString
-    parameters:(NSDictionary *)parameter
-    modelClass:(Class)modelClass
-   cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-      response:(responseBlock)response
-       failure:(requestFailureBlock)failure
+     parameters:(NSDictionary *)parameter
+     modelClass:(Class)modelClass
+    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       response:(responseBlock)response
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager DELETE:requestURLString
                parameters:parameter
@@ -213,7 +291,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                   success:^(CCResponseObject *responseObject) {
                       dataObj = [self modelTransformationWithResponseObj:responseObject
                                                               modelClass:modelClass];
-                      
+
                       if ([dataObj isKindOfClass:modelClass]) {
                           if (response)
                               response(dataObj, nil);
@@ -223,6 +301,28 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                       }
                   }
                   failure:failure];
+}
+
+/**
+ *  @author CC, 16-04-06
+ *
+ *  @brief HEAD请求处理
+ *
+ *  @param api           API地址
+ *  @param parameter     发送参数
+ *  @param response      请求响应结果
+ *  @param failure       故障处理回调
+ */
++ (void)HEAD:(NSString *)api
+    parameters:(NSDictionary *)parameter
+      response:(requestSuccessBlock)response
+       failure:(requestFailureBlock)failure
+{
+    [CCHTTPManager HEAD:api
+             parameters:parameter
+            cachePolicy:2
+                success:response
+                failure:failure];
 }
 
 /**
@@ -238,11 +338,11 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)HEAD:(NSString *)requestURLString
-  parameters:(NSDictionary *)parameter
-  modelClass:(Class)modelClass
- cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-    response:(responseBlock)response
-     failure:(requestFailureBlock)failure
+     parameters:(NSDictionary *)parameter
+     modelClass:(Class)modelClass
+    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       response:(responseBlock)response
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager HEAD:requestURLString
              parameters:parameter
@@ -252,6 +352,28 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                         response(responseObject, nil);
                 }
                 failure:failure];
+}
+
+/**
+ *  @author CC, 16-04-06
+ *
+ *  @brief PUT请求处理
+ *
+ *  @param api           API地址
+ *  @param parameter     发送参数
+ *  @param response      请求响应结果
+ *  @param failure       故障处理回调
+ */
++ (void)PUT:(NSString *)api
+    parameters:(NSDictionary *)parameter
+      response:(requestSuccessBlock)response
+       failure:(requestFailureBlock)failure
+{
+    [CCHTTPManager PUT:api
+            parameters:parameter
+           cachePolicy:2
+               success:response
+               failure:failure];
 }
 
 /**
@@ -267,20 +389,19 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)PUT:(NSString *)requestURLString
- parameters:(NSDictionary *)parameter
- modelClass:(Class)modelClass
-cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-   response:(responseBlock)response
-    failure:(requestFailureBlock)failure
+     parameters:(NSDictionary *)parameter
+     modelClass:(Class)modelClass
+    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       response:(responseBlock)response
+        failure:(requestFailureBlock)failure
 {
-    
     [CCHTTPManager PUT:requestURLString
             parameters:parameter
            cachePolicy:cachePolicy
                success:^(CCResponseObject *responseObject) {
                    dataObj = [self modelTransformationWithResponseObj:responseObject
                                                            modelClass:modelClass];
-                   
+
                    if ([dataObj isKindOfClass:modelClass]) {
                        if (response)
                            response(dataObj, nil);
@@ -290,6 +411,28 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                    }
                }
                failure:failure];
+}
+
+/**
+ *  @author CC, 16-04-06
+ *
+ *  @brief PATCH请求处理
+ *
+ *  @param api           API地址
+ *  @param parameter     发送参数
+ *  @param response      请求响应结果
+ *  @param failure       故障处理回调
+ */
++ (void)PATCH:(NSString *)api
+    parameters:(NSDictionary *)parameter
+      response:(requestSuccessBlock)response
+       failure:(requestFailureBlock)failure
+{
+    [CCHTTPManager PATCH:api
+              parameters:parameter
+             cachePolicy:2
+                 success:response
+                 failure:failure];
 }
 
 /**
@@ -305,11 +448,11 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
  *  @param failure          故障处理回调
  */
 + (void)PATCH:(NSString *)requestURLString
-   parameters:(NSDictionary *)parameter
-   modelClass:(Class)modelClass
-  cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-     response:(responseBlock)response
-      failure:(requestFailureBlock)failure
+     parameters:(NSDictionary *)parameter
+     modelClass:(Class)modelClass
+    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+       response:(responseBlock)response
+        failure:(requestFailureBlock)failure
 {
     [CCHTTPManager PATCH:requestURLString
               parameters:parameter
@@ -317,7 +460,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                  success:^(CCResponseObject *responseObject) {
                      dataObj = [self modelTransformationWithResponseObj:responseObject
                                                              modelClass:modelClass];
-                     
+
                      if ([dataObj isKindOfClass:modelClass]) {
                          if (response)
                              response(dataObj, nil);
@@ -354,10 +497,10 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                 parameters:parameter
                cachePolicy:cachePolicy
                    success:^(CCResponseObject *responseObject) {
-                       
+
                        dataObj = [self modelTransformationWithResponseObj:responseObject
                                                                modelClass:modelClass];
-                       
+
                        if ([dataObj isKindOfClass:modelClass]) {
                            if (response)
                                response(dataObj, nil);
@@ -394,7 +537,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                     success:^(CCResponseObject *responseObject) {
                         dataObj = [self modelTransformationWithResponseObj:responseObject
                                                                 modelClass:modelClass];
-                        
+
                         if ([dataObj isKindOfClass:modelClass]) {
                             if (response)
                                 response(dataObj, nil);
@@ -431,7 +574,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                       success:^(CCResponseObject *responseObject) {
                           dataObj = [self modelTransformationWithResponseObj:responseObject
                                                                   modelClass:modelClass];
-                          
+
                           if ([dataObj isKindOfClass:modelClass]) {
                               if (response)
                                   response(dataObj, nil);
@@ -491,14 +634,13 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        response:(responseBlock)response
         failure:(requestFailureBlock)failure
 {
-    
     [CCHTTPManager syncPUT:requestURLString
                 parameters:parameter
                cachePolicy:cachePolicy
                    success:^(CCResponseObject *responseObject) {
                        dataObj = [self modelTransformationWithResponseObj:responseObject
                                                                modelClass:modelClass];
-                       
+
                        if ([dataObj isKindOfClass:modelClass]) {
                            if (response)
                                response(dataObj, nil);
@@ -535,7 +677,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
                      success:^(CCResponseObject *responseObject) {
                          dataObj = [self modelTransformationWithResponseObj:responseObject
                                                                  modelClass:modelClass];
-                         
+
                          if ([dataObj isKindOfClass:modelClass]) {
                              if (response)
                                  response(dataObj, nil);
@@ -616,7 +758,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
         parameters:(NSDictionary *)parameter
      responseBlock:(CCRequestBacktrack)responseBlock
 {
-    
+
 }
 
 /**
@@ -632,7 +774,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
        parameters:(NSDictionary *)parameter
     responseBlock:(CCRequestBacktrack)responseBlock
 {
-    
+
 }
 
 /**
@@ -648,7 +790,7 @@ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
          parameters:(NSDictionary *)parameter
       responseBlock:(CCRequestBacktrack)responseBlock
 {
-    
+
 }
 
 @end

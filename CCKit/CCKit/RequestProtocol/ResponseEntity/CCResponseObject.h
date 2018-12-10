@@ -2,7 +2,7 @@
 //  ResponseEntity.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC 
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,13 @@
 /** 传递键值 */
 @property (nonatomic, copy) NSDictionary *userInfo;
 /** 响应消息 */
-@property (nonatomic, copy) NSString *Msg;
+@property (nonatomic, copy) NSString *msg;
+/** 响应消息ID */
+@property (nonatomic, copy) NSString *messageId;
+@property (nonatomic, copy) NSString *traceId;
 /** 响应数据 */
-@property (nonatomic, copy) id Data;
+@property (nonatomic, copy) id data;
 
-@property (nonatomic, assign) NSInteger Code;
+@property (nonatomic, copy) NSString *status;
 
 @end

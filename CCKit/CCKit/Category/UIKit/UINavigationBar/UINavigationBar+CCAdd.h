@@ -72,17 +72,35 @@
 
 
 /**
- *  @author CC, 2016-12-30
- *  
- *  @brief  设置背景颜色
- *
- *  @param backgroundColor 颜色
- */
-- (void)setBackgroundColor:(UIColor *)backgroundColor;
+*  @author CC, 2016-12-30
+*
+*  @brief  设置背景颜色
+*
+*  @param backgroundColor 颜色
+*/
+- (void)setbarbackgroundView:(UIColor *)backgroundColor;
 
 /**
  *  @author CC, 2016-12-30
- *  
+ *
+ *  @brief  设置导航栏背景透明度
+ *
+ *  @param alpha 透明度
+ */
+- (void)setNeedsNavigationBackground:(CGFloat)alpha;
+
+/**
+ *  @author CC, 2016-12-30
+ *
+ *  @brief  侧滑设置背景透明度
+ *
+ *  @param alpha 透明度
+ */
+- (void)setSlideNavigationBackground:(CGFloat)alpha;
+
+/**
+ *  @author CC, 2016-12-30
+ *
  *  @brief  设置要素透明度
  *
  *  @param alpha 透明度
@@ -91,26 +109,12 @@
 
 /**
  *  @author CC, 2016-12-30
- *  
+ *
  *  @brief  动画
  *
  *  @param translationY 动画值
  */
 - (void)setTranslationY:(CGFloat)translationY;
-
-/**
- *  @author CC, 2016-12-30
- *  
- *  @brief  重置
- */
-- (void)reset;
-
-/**
- *  @brief  自定义UINavigationBar高度
- *
- *  @param height NavigationBar高度
- */
-- (void)setHeight:(CGFloat)height;
 
 
 @end

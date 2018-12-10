@@ -2,7 +2,7 @@
 //  CCKeyValueStore.m
 //  CCKit
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC 
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -397,7 +397,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return nil;
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ LIMIT %lu, %zd", tableName, (unsigned long)range.location, range.length];
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ LIMIT %lu, %lu", tableName, (unsigned long)range.location, (unsigned long)range.length];
     __block NSMutableArray *result = [NSMutableArray array];
     [_dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:sql];

@@ -36,7 +36,7 @@
         failure(nil,[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil]);
         return;
     }
-    
+
     AFHTTPRequestOperation *requestOperation = [manager POST:requestURLString parameters:parameter constructingBodyWithBlock:^(id<AFMultipartFormData> _Nonnull formData) {
         [formData appendPartWithFileData:fileConfig.fileData name:fileConfig.name fileName:fileConfig.fileName mimeType:fileConfig.mimeType];
     } success:^(AFHTTPRequestOperation *_Nonnull operation, id _Nonnull responseObject) {

@@ -70,6 +70,8 @@
  */
 - (void)endTransform;
 
+- (void)adjustmentRefreshHeader;
+
 #pragma mark - 下拉刷新
 /**
  *  添加一个下拉刷新头部控件

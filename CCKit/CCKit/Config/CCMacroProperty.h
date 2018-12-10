@@ -37,12 +37,15 @@
 /** 资源图片 */
 #define CCResourceImage(name) (cc_Resource(@"CCKit", @"bundle") ? [UIImage imageWithContentsOfFile:[[cc_Resource(@"CCKit", @"bundle") resourcePath] stringByAppendingPathComponent:name]] : [UIImage new])
 
+
 /** 版本号 */
 #define kVersonNumber [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+/** Build ID **/
+#define kBuildIdentifier [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"]
+/** Build 版本号 **/
 #define kBuildNumber [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]
 /** 应用名称 */
 #define AppName [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey]
-
 /** 设备编号 */
 #define deviceUID [[[UIDevice currentDevice] identifierForVendor] UUIDString]
 
@@ -52,6 +55,7 @@
 #define iOS8Later (CURRENT_SYS_VERSION >= 8.0f)
 #define iOS9Later (CURRENT_SYS_VERSION >= 9.0f)
 #define iOS10Later (CURRENT_SYS_VERSION >= 10.0f)
+#define iOS11Later (CURRENT_SYS_VERSION >= 11.0f)
 
 /** 设备版本号 */
 #define CURRENT_SYS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]

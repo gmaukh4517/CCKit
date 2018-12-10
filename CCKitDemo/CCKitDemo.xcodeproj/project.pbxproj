@@ -101,8 +101,8 @@
 		4258226A2079E4F3005D3178 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				4258227C2079F1F5005D3178 /* Home */,
 				425822732079E55B005D3178 /* MainTabBar */,
+				4258227C2079F1F5005D3178 /* Home */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

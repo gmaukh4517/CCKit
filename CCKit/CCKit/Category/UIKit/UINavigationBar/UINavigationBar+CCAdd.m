@@ -25,22 +25,43 @@
 
 #import "UINavigationBar+CCAdd.h"
 #import <objc/runtime.h>
+#import "CCMacroProperty.h"
 
 @implementation UINavigationBar (CCAdd)
+
+static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSelector, SEL swizzledSelector)
+{
+    Method originalMethod = class_getInstanceMethod(class, originalSelector);
+    Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+    if (class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))) {
+        class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+    } else {
+        method_exchangeImplementations(originalMethod, swizzledMethod);
+    }
+}
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        AutomaticWritingSwizzleSelector([self class], @selector(layoutSubviews), @selector(cc_layoutSubviews));
+    });
+}
 
 #pragma mark -
 #pragma mark :. Awesome
 
-static char overlayKey;
-
-- (UIView *)overlay
+- (void)cc_layoutSubviews
 {
-    return objc_getAssociatedObject(self, &overlayKey);
-}
-
-- (void)setOverlay:(UIView *)overlay
-{
-    objc_setAssociatedObject(self, &overlayKey, overlay, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self cc_layoutSubviews];
+    if (iOS11Later) {
+        self.layoutMargins = UIEdgeInsetsZero;
+        for (UIView *view in self.subviews) {
+            if ([NSStringFromClass(view.classForCoder) containsString:@"ContentView"]) {
+                view.layoutMargins = UIEdgeInsetsMake(0, 10, 0, 10);
+            }
+        }
+    }
 }
 
 /**
@@ -50,31 +71,79 @@ static char overlayKey;
  *
  *  @param backgroundColor 颜色
  */
-- (void)setBackgroundColor:(UIColor *)backgroundColor
+- (void)setbarbackgroundView:(UIColor *)backgroundColor
 {
-    if (!self.overlay) {
-        [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-        [self setShadowImage:[UIImage new]];
-        
-        self.overlay = [[UIView alloc] initWithFrame:CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, CGRectGetHeight(self.bounds) + 20)];
-        self.overlay.userInteractionEnabled = NO;
-        self.overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self insertSubview:self.overlay atIndex:0];
-    }
-    [self sendSubviewToBack:self.overlay];
-    self.overlay.backgroundColor = backgroundColor;
-    const CGFloat *components = CGColorGetComponents(backgroundColor.CGColor);
-    [self navigationItemView:components[3]];
+    [self setNavigationBackground:0
+                  backgroundColor:backgroundColor
+                          isAlpha:YES];
 }
 
-- (void)navigationItemView:(CGFloat)alpha
+/**
+ *  @author CC, 2016-12-30
+ *
+ *  @brief  设置背景透明度
+ *
+ *  @param alpha 透明度
+ */
+- (void)setNeedsNavigationBackground:(CGFloat)alpha
 {
-    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")] || [obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
-            obj.alpha = alpha;
-        }
-    }];
+    [self setNavigationBackground:alpha
+                  backgroundColor:nil
+                          isAlpha:YES];
 }
+
+/**
+ *  @author CC, 2016-12-30
+ *
+ *  @brief  侧滑设置背景透明度
+ *
+ *  @param alpha 透明度
+ */
+- (void)setSlideNavigationBackground:(CGFloat)alpha
+{
+    [self setNavigationBackground:alpha
+                  backgroundColor:nil
+                          isAlpha:NO];
+}
+
+/**
+ *  @author CC, 2016-12-30
+ *
+ *  @brief  动态设置背景
+ *
+ *  @param alpha 透明度
+ *  @param backgroundColor 颜色
+ */
+- (void)setNavigationBackground:(CGFloat)alpha backgroundColor:(UIColor *)backgroundColor isAlpha:(BOOL)isAlpha
+{
+    //将导航栏的子控件添加到数组当中,取首个子控件设置透明度(防止导航栏上存在非导航栏自带的控件)
+    NSMutableArray *barSubviews = [NSMutableArray array];
+    for (UIView *view in self.subviews) {
+        if (![view isMemberOfClass:[UIView class]])
+            [barSubviews addObject:view];
+    }
+
+    if (alpha == 0 && backgroundColor) {
+        const CGFloat *components = CGColorGetComponents(backgroundColor.CGColor);
+        alpha = MAX(1, components[ 3 ] ?: 1);
+    }
+
+    Ivar backgroundOpacityVar = class_getInstanceVariable([UINavigationBar class], "__backgroundOpacity");
+    if (backgroundOpacityVar)
+        [self setValue:@(alpha) forKey:@"__backgroundOpacity"];
+
+    UIView *barBackgroundView = [barSubviews firstObject];
+    barBackgroundView.alpha = alpha;
+    if (backgroundColor)
+        barBackgroundView.backgroundColor = backgroundColor;
+
+    if (isAlpha) {
+        UINavigationController *superNav = (UINavigationController *)[self viewController];
+        if (superNav && superNav.topViewController)
+            objc_setAssociatedObject(superNav.topViewController, @"navigationBarAlpha", @(alpha), OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+}
+
 
 - (void)setTranslationY:(CGFloat)translationY
 {
@@ -93,11 +162,11 @@ static char overlayKey;
     [[self valueForKey:@"_leftViews"] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) {
         view.alpha = alpha;
     }];
-    
+
     [[self valueForKey:@"_rightViews"] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) {
         view.alpha = alpha;
     }];
-    
+
     UIView *titleView = [self valueForKey:@"_titleView"];
     titleView.alpha = alpha;
     //    when viewController first load, the titleView maybe nil
@@ -116,38 +185,19 @@ static char overlayKey;
  */
 - (void)reset
 {
-    [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")] || [obj isKindOfClass:NSClassFromString(@"_UIBarBackground")])
-            obj.alpha = 1;
-    }];
-    [self.overlay removeFromSuperview];
-    self.overlay = nil;
+    [self setNeedsNavigationBackground:1];
 }
 
-static char const *const heightKey = "Height";
-
-- (void)setHeight:(CGFloat)height
+- (UIViewController *)viewController
 {
-    objc_setAssociatedObject(self, heightKey, @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSNumber *)height
-{
-    return objc_getAssociatedObject(self, heightKey);
-}
-
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    CGSize newSize;
-    
-    if (self.height) {
-        newSize = CGSizeMake(self.superview.bounds.size.width, [self.height floatValue]);
-    } else {
-        newSize = [super sizeThatFits:size];
-    }
-    
-    return newSize;
+    UIResponder *responder = self.nextResponder;
+    do {
+        if ([responder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)responder;
+        }
+        responder = responder.nextResponder;
+    } while (responder);
+    return nil;
 }
 
 

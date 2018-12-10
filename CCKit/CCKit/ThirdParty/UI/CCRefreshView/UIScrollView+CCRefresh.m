@@ -113,6 +113,15 @@ static char CCTransformRefreshKey;
     [self.transformHeader endTransformRefreshing];
 }
 
+- (void)adjustmentRefreshHeader
+{
+    CGRect frame = self.header.frame;
+    frame.origin.y = -(self.contentInset.top + frame.size.height);
+    self.header.frame = frame;
+    [self.header adjustmentInset];
+}
+
+
 
 #pragma mark - 下拉刷新
 /**

@@ -101,6 +101,8 @@ typedef enum {
 
 @property (nonatomic, assign) CCRefreshViewStyle style;
 
+- (void)adjustmentInset;
+
 /**
  *  文字
  */

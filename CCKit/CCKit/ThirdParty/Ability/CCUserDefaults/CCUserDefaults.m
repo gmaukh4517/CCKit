@@ -71,7 +71,8 @@ enum TypeEncodings {
 - (NSString *)defaultsKeyForPropertyNamed:(char const *)propertyName
 {
     NSString *key = [NSString stringWithFormat:@"%s", propertyName];
-    return [self _transformKey:key];
+    key =  [self _transformKey:key];
+    return [NSString stringWithFormat:@"%@_%@",NSStringFromClass(self.class),key];
 }
 
 - (NSString *)defaultsKeyForSelector:(SEL)selector

@@ -27,10 +27,11 @@
 
 @interface CCAlertModel : NSObject
 
-@property(nonatomic, copy) NSString *Title;
-@property(nonatomic, copy) UIColor *TitleColor;
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, copy) UIColor *titleColor;
+@property(nonatomic, copy) UIFont *tilteFont;
 
--(instancetype)initWithTitle:(NSString *)title 
+-(instancetype)initWithTitle:(NSString *)title
                   TitleColor:(UIColor *)color;
 
 @end

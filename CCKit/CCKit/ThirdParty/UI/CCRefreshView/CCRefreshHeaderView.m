@@ -130,6 +130,19 @@
     self.y = -self.height;
 }
 
+- (void)adjustmentInset
+{
+    [super adjustmentInset];
+    // 设置自己的位置和尺寸
+    self.y = -(self.scrollViewOriginalInset.top + self.height);
+
+    if (self.state == CCRefreshStateRefreshing) {
+        CGFloat top = self.scrollViewOriginalInset.top + self.height;
+        self.scrollView.contentInsetTop = top;
+        self.scrollView.contentOffsetY = - top;
+    }
+}
+
 #pragma mark - 设置图片
 - (void)setActivityImage:(UIImage *)image
 {
