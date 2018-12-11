@@ -37,4 +37,7 @@
 
 #import <CCKit/CCLanguage.h>
 
+#import <CCKit/CCEventNoticeCenter.h>
+#import <CCKit/CCNetworkMonitor.h>
+
 #endif

@@ -131,6 +131,22 @@
 		42954A991E712BE100F4CC4C /* UIView+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A6C1E712BE100F4CC4C /* UIView+WebCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42954A9A1E712BE100F4CC4C /* UIView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 42954A6D1E712BE100F4CC4C /* UIView+WebCache.m */; };
 		42954A9C1E712C1000F4CC4C /* Tools.h in Headers */ = {isa = PBXBuildFile; fileRef = 42954A9B1E712C1000F4CC4C /* Tools.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		429A48E121BF545400A3AC1C /* CCNetworkMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48CC21BF545400A3AC1C /* CCNetworkMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		429A48E221BF545400A3AC1C /* CCNetworkMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48CD21BF545400A3AC1C /* CCNetworkMonitor.m */; };
+		429A48E321BF545400A3AC1C /* CCEventNoticeCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48CF21BF545400A3AC1C /* CCEventNoticeCenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		429A48E421BF545400A3AC1C /* CCEventNoticeCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48D021BF545400A3AC1C /* CCEventNoticeCenter.m */; };
+		429A48E521BF545400A3AC1C /* CCEventSubscribEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48D221BF545400A3AC1C /* CCEventSubscribEntity.m */; };
+		429A48E621BF545400A3AC1C /* CCEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48D321BF545400A3AC1C /* CCEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		429A48E721BF545400A3AC1C /* CCEventSubscribEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48D421BF545400A3AC1C /* CCEventSubscribEntity.h */; };
+		429A48E821BF545400A3AC1C /* CCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48D521BF545400A3AC1C /* CCEvent.m */; };
+		429A48E921BF545400A3AC1C /* CCEventCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48D721BF545400A3AC1C /* CCEventCenter.h */; };
+		429A48EA21BF545400A3AC1C /* CCEventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48D821BF545400A3AC1C /* CCEventObject.m */; };
+		429A48EB21BF545400A3AC1C /* CCEventObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48D921BF545400A3AC1C /* CCEventObject.h */; };
+		429A48EC21BF545400A3AC1C /* CCEventCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48DA21BF545400A3AC1C /* CCEventCenter.m */; };
+		429A48ED21BF545400A3AC1C /* UIView+CCHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48DD21BF545400A3AC1C /* UIView+CCHierarchy.m */; };
+		429A48EE21BF545400A3AC1C /* UIView+CCHierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48DE21BF545400A3AC1C /* UIView+CCHierarchy.h */; };
+		429A48EF21BF545400A3AC1C /* CCKeyboardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48DF21BF545400A3AC1C /* CCKeyboardManager.h */; };
+		429A48F021BF545400A3AC1C /* CCKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48E021BF545400A3AC1C /* CCKeyboardManager.m */; };
 		42B013AC1F1F48A0006A752C /* CCAppDelegateSOA.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B013AD1F1F48A0006A752C /* CCAppDelegateSOA.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */; };
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -463,6 +479,22 @@
 		42954A6C1E712BE100F4CC4C /* UIView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebCache.h"; sourceTree = "<group>"; };
 		42954A6D1E712BE100F4CC4C /* UIView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCache.m"; sourceTree = "<group>"; };
 		42954A9B1E712C1000F4CC4C /* Tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tools.h; sourceTree = "<group>"; };
+		429A48CC21BF545400A3AC1C /* CCNetworkMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCNetworkMonitor.h; sourceTree = "<group>"; };
+		429A48CD21BF545400A3AC1C /* CCNetworkMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCNetworkMonitor.m; sourceTree = "<group>"; };
+		429A48CF21BF545400A3AC1C /* CCEventNoticeCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEventNoticeCenter.h; sourceTree = "<group>"; };
+		429A48D021BF545400A3AC1C /* CCEventNoticeCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEventNoticeCenter.m; sourceTree = "<group>"; };
+		429A48D221BF545400A3AC1C /* CCEventSubscribEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEventSubscribEntity.m; sourceTree = "<group>"; };
+		429A48D321BF545400A3AC1C /* CCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEvent.h; sourceTree = "<group>"; };
+		429A48D421BF545400A3AC1C /* CCEventSubscribEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEventSubscribEntity.h; sourceTree = "<group>"; };
+		429A48D521BF545400A3AC1C /* CCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEvent.m; sourceTree = "<group>"; };
+		429A48D721BF545400A3AC1C /* CCEventCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEventCenter.h; sourceTree = "<group>"; };
+		429A48D821BF545400A3AC1C /* CCEventObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEventObject.m; sourceTree = "<group>"; };
+		429A48D921BF545400A3AC1C /* CCEventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEventObject.h; sourceTree = "<group>"; };
+		429A48DA21BF545400A3AC1C /* CCEventCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEventCenter.m; sourceTree = "<group>"; };
+		429A48DD21BF545400A3AC1C /* UIView+CCHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CCHierarchy.m"; sourceTree = "<group>"; };
+		429A48DE21BF545400A3AC1C /* UIView+CCHierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CCHierarchy.h"; sourceTree = "<group>"; };
+		429A48DF21BF545400A3AC1C /* CCKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCKeyboardManager.h; sourceTree = "<group>"; };
+		429A48E021BF545400A3AC1C /* CCKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCKeyboardManager.m; sourceTree = "<group>"; };
 		42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppDelegateSOA.h; sourceTree = "<group>"; };
 		42B013AB1F1F48A0006A752C /* CCAppDelegateSOA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegateSOA.m; sourceTree = "<group>"; };
 		42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUserDefaults.h; sourceTree = "<group>"; };
@@ -1032,6 +1064,67 @@
 				42954A6D1E712BE100F4CC4C /* UIView+WebCache.m */,
 			);
 			path = WebCacheCategories;
+			sourceTree = "<group>";
+		};
+		429A48CB21BF545400A3AC1C /* CCNetworkMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				429A48CC21BF545400A3AC1C /* CCNetworkMonitor.h */,
+				429A48CD21BF545400A3AC1C /* CCNetworkMonitor.m */,
+			);
+			path = CCNetworkMonitor;
+			sourceTree = "<group>";
+		};
+		429A48CE21BF545400A3AC1C /* CCEventNoticeCenter */ = {
+			isa = PBXGroup;
+			children = (
+				429A48CF21BF545400A3AC1C /* CCEventNoticeCenter.h */,
+				429A48D021BF545400A3AC1C /* CCEventNoticeCenter.m */,
+				429A48D121BF545400A3AC1C /* Model */,
+				429A48D621BF545400A3AC1C /* Event */,
+			);
+			path = CCEventNoticeCenter;
+			sourceTree = "<group>";
+		};
+		429A48D121BF545400A3AC1C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				429A48D321BF545400A3AC1C /* CCEvent.h */,
+				429A48D521BF545400A3AC1C /* CCEvent.m */,
+				429A48D421BF545400A3AC1C /* CCEventSubscribEntity.h */,
+				429A48D221BF545400A3AC1C /* CCEventSubscribEntity.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		429A48D621BF545400A3AC1C /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				429A48D721BF545400A3AC1C /* CCEventCenter.h */,
+				429A48DA21BF545400A3AC1C /* CCEventCenter.m */,
+				429A48D921BF545400A3AC1C /* CCEventObject.h */,
+				429A48D821BF545400A3AC1C /* CCEventObject.m */,
+			);
+			path = Event;
+			sourceTree = "<group>";
+		};
+		429A48DB21BF545400A3AC1C /* CCKeyboardManager */ = {
+			isa = PBXGroup;
+			children = (
+				429A48DC21BF545400A3AC1C /* Category */,
+				429A48DF21BF545400A3AC1C /* CCKeyboardManager.h */,
+				429A48E021BF545400A3AC1C /* CCKeyboardManager.m */,
+			);
+			path = CCKeyboardManager;
+			sourceTree = "<group>";
+		};
+		429A48DC21BF545400A3AC1C /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				429A48DD21BF545400A3AC1C /* UIView+CCHierarchy.m */,
+				429A48DE21BF545400A3AC1C /* UIView+CCHierarchy.h */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 		42B013A91F1F48A0006A752C /* CCAppDelegateSOA */ = {
@@ -1843,6 +1936,9 @@
 		42FC740A1E700B4C00FBBE42 /* Ability */ = {
 			isa = PBXGroup;
 			children = (
+				429A48CE21BF545400A3AC1C /* CCEventNoticeCenter */,
+				429A48DB21BF545400A3AC1C /* CCKeyboardManager */,
+				429A48CB21BF545400A3AC1C /* CCNetworkMonitor */,
 				42B013A91F1F48A0006A752C /* CCAppDelegateSOA */,
 				426B74CB1EEF7BB800042EA0 /* CCLanguage */,
 				42954A091E71226F00F4CC4C /* Ability.h */,
@@ -1866,6 +1962,7 @@
 				42954A781E712BE100F4CC4C /* UIImage+MultiFormat.h in Headers */,
 				42FC736C1E70012800FBBE42 /* UIImage+CCAdd.h in Headers */,
 				42FC72F51E70012800FBBE42 /* NSDictionary+AvoidCrash.h in Headers */,
+				429A48E121BF545400A3AC1C /* CCNetworkMonitor.h in Headers */,
 				42FC73381E70012800FBBE42 /* NSTimer+CCAdd.h in Headers */,
 				42FC70A51E6FDB7700FBBE42 /* UIViewController+CCProperties.h in Headers */,
 				42954A741E712BE100F4CC4C /* NSData+ImageContentType.h in Headers */,
@@ -1874,8 +1971,11 @@
 				42FC73341E70012800FBBE42 /* NSAttributedString+Teletext.h in Headers */,
 				42FC73801E70012800FBBE42 /* UISearchBar+CCAdd.h in Headers */,
 				42C651FB1F5F8F3A00AA61E7 /* CCViewManager.h in Headers */,
+				429A48E321BF545400A3AC1C /* CCEventNoticeCenter.h in Headers */,
 				42FC72F11E70012800FBBE42 /* NSArray+AvoidCrash.h in Headers */,
 				42954A281E712B1A00F4CC4C /* MBProgressHUD.h in Headers */,
+				429A48E921BF545400A3AC1C /* CCEventCenter.h in Headers */,
+				429A48EE21BF545400A3AC1C /* UIView+CCHierarchy.h in Headers */,
 				423B4C6F1E890C8C007139EC /* CCRefreshFooterView.h in Headers */,
 				42954A991E712BE100F4CC4C /* UIView+WebCache.h in Headers */,
 				42FC717A1E6FDF1400FBBE42 /* AFNetworkActivityIndicatorManager.h in Headers */,
@@ -1933,10 +2033,12 @@
 				42FC73941E70012800FBBE42 /* UIView+Frame.h in Headers */,
 				42FC716C1E6FDF1400FBBE42 /* AFHTTPRequestOperation.h in Headers */,
 				42954A971E712BE100F4CC4C /* UIImageView+WebCache.h in Headers */,
+				429A48E621BF545400A3AC1C /* CCEvent.h in Headers */,
 				42FC736A1E70012800FBBE42 /* UIGestureRecognizer+CCAdd.h in Headers */,
 				42FC71A81E6FFC0000FBBE42 /* CCExtensionConst.h in Headers */,
 				42D616C31F46BE8900AAA901 /* CCDBManager.h in Headers */,
 				42FC738C1E70012800FBBE42 /* UITableViewHeaderFooterView+CCAdd.h in Headers */,
+				429A48EB21BF545400A3AC1C /* CCEventObject.h in Headers */,
 				4252A03D1E9F18680093AFF7 /* CCActionSheet.h in Headers */,
 				42FC716E1E6FDF1400FBBE42 /* AFHTTPRequestOperationManager.h in Headers */,
 				42FC73621E70012800FBBE42 /* UIColor+CCAdd.h in Headers */,
@@ -1950,10 +2052,12 @@
 				42FC73011E70012800FBBE42 /* NSString+AvoidCrash.h in Headers */,
 				4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */,
 				42FC73261E70012800FBBE42 /* NSInvocation+CCAdd.h in Headers */,
+				429A48E721BF545400A3AC1C /* CCEventSubscribEntity.h in Headers */,
 				42FC73641E70012800FBBE42 /* UIControl+CCAdd.h in Headers */,
 				42FC73921E70012800FBBE42 /* UIView+Animation.h in Headers */,
 				42FC73981E70012800FBBE42 /* UIViewController+CCAdd.h in Headers */,
 				42FC70AF1E6FDB7700FBBE42 /* CCViewManagerProtocol.h in Headers */,
+				429A48EF21BF545400A3AC1C /* CCKeyboardManager.h in Headers */,
 				42FC70AC1E6FDB7700FBBE42 /* CCViewModel.h in Headers */,
 				42FC73961E70012800FBBE42 /* UIView+Method.h in Headers */,
 				42FC73841E70012800FBBE42 /* UITabBar+CCAdd.h in Headers */,
@@ -2153,9 +2257,12 @@
 				42FC73291E70012800FBBE42 /* NSNotificationCenter+CCAdd.m in Sources */,
 				42954A901E712BE100F4CC4C /* MKAnnotationView+WebCache.m in Sources */,
 				423B4C6E1E890C8C007139EC /* CCRefreshConst.m in Sources */,
+				429A48ED21BF545400A3AC1C /* UIView+CCHierarchy.m in Sources */,
 				42920F541F4AE4B600A90924 /* CCDatabase.m in Sources */,
 				4278A9FF1E8A0BF500F4FA97 /* TableViewCellEntity.m in Sources */,
 				42954A8E1E712BE100F4CC4C /* SDWebImagePrefetcher.m in Sources */,
+				429A48E221BF545400A3AC1C /* CCNetworkMonitor.m in Sources */,
+				429A48E521BF545400A3AC1C /* CCEventSubscribEntity.m in Sources */,
 				4233C1FA1E83CCD80041A015 /* FMDatabase.m in Sources */,
 				42FC71771E6FDF1400FBBE42 /* AFURLRequestSerialization.m in Sources */,
 				42FC72F01E70012800FBBE42 /* AvoidCrash.m in Sources */,
@@ -2186,6 +2293,7 @@
 				42FC735B1E70012800FBBE42 /* UIButton+CCAdd.m in Sources */,
 				42FC73891E70012800FBBE42 /* UITableView+CCAdd.m in Sources */,
 				42954A751E712BE100F4CC4C /* NSData+ImageContentType.m in Sources */,
+				429A48F021BF545400A3AC1C /* CCKeyboardManager.m in Sources */,
 				42FC73751E70012800FBBE42 /* UINavigationController+CCAdd.m in Sources */,
 				423D58CF1EC2AA17001A02A8 /* NSArray+CCAdd.m in Sources */,
 				423B4C6C1E890C8C007139EC /* CCRefreshBaseView.m in Sources */,
@@ -2207,12 +2315,15 @@
 				42FC73211E70012800FBBE42 /* NSFileManager+CCAdd.m in Sources */,
 				42954A961E712BE100F4CC4C /* UIImageView+HighlightedWebCache.m in Sources */,
 				42FC71711E6FDF1400FBBE42 /* AFURLConnectionOperation.m in Sources */,
+				429A48EC21BF545400A3AC1C /* CCEventCenter.m in Sources */,
 				42FC71B31E6FFC0000FBBE42 /* NSObject+CCClass.m in Sources */,
 				42954A291E712B1A00F4CC4C /* MBProgressHUD.m in Sources */,
 				42954A7F1E712BE100F4CC4C /* SDWebImageDownloader.m in Sources */,
 				42954A181E712AC800F4CC4C /* CCAlertView.m in Sources */,
+				429A48E421BF545400A3AC1C /* CCEventNoticeCenter.m in Sources */,
 				42954A7B1E712BE100F4CC4C /* UIImage+WebP.m in Sources */,
 				42954A921E712BE100F4CC4C /* NSImage+WebCache.m in Sources */,
+				429A48EA21BF545400A3AC1C /* CCEventObject.m in Sources */,
 				42FC70CD1E6FDC7F00FBBE42 /* CCResponseObject.m in Sources */,
 				42FC716F1E6FDF1400FBBE42 /* AFHTTPRequestOperationManager.m in Sources */,
 				426CB20E2021941900E4394F /* CCTransformRefresh.m in Sources */,
@@ -2236,6 +2347,7 @@
 				42FC72F81E70012800FBBE42 /* NSMutableArray+AvoidCrash.m in Sources */,
 				42954A711E712BE100F4CC4C /* SDImageCacheConfig.m in Sources */,
 				42FC733F1E70012800FBBE42 /* NSURLRequest+CCAdd.m in Sources */,
+				429A48E821BF545400A3AC1C /* CCEvent.m in Sources */,
 				42FC71B11E6FFC0000FBBE42 /* CCPropertyType.m in Sources */,
 				42FC73711E70012800FBBE42 /* UILabel+CCAdd.m in Sources */,
 				42FC72F61E70012800FBBE42 /* NSDictionary+AvoidCrash.m in Sources */,

@@ -115,34 +115,3 @@ CONTEXT __typeof__(VAR) metamacro_concat(VAR, _weak_) = (VAR);
 
 #define cc_strongify_(INDEX, VAR) \
 __strong __typeof__(VAR) VAR = metamacro_concat(VAR, _weak_);
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - 全局变量与方法
-/**
- *  @author CC, 2015-08-13
- *
- *  @brief  弱引用对象
- *
- *  @param self 当前页面对象
- *
- *  @return 弱引用定义
- *
- *  @since 1.0
- */
-#define WEAKSELF typeof(self) __weak weakSelf = self
-
-/**
- *  @author CC, 2015-08-13
- *
- *  @brief  强类型弱引用
- *
- *  @param weakSelf 弱引用对象
- *
- *  @return 强类型引用定义
- *
- *  @since 1.0
- */
-#define STRONGSELF __strong __typeof(weakSelf) strongSelf = weakSelf
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
