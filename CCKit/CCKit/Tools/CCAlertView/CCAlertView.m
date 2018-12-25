@@ -272,6 +272,7 @@
         OnButtonTouchUpInside:(void (^)(UIView *containerView, NSInteger buttonIndex))onButtonTouchUpInside
 {
     CustomIOSAlertView *alertView = [self alertView];
+    alertView.isPackage = YES;
     [alertView setContainerView:containerView];
 
     NSMutableArray *buttons = [NSMutableArray array];
@@ -314,6 +315,7 @@
     CustomIOSAlertView *alertView = [self alertView];
     alertView.containerView = containerView;
     alertView.IsExternal = NO;
+    alertView.isPackage = NO;
     [alertView show];
 }
 

@@ -26,11 +26,13 @@
     return [HomeViewModel class];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self initControl];
     [self initLoadData];
+    [[CCKeyboardManager manager] registeredWithViewController:self];
 }
 
 - (void)initControl
@@ -45,7 +47,13 @@
     [self.cc_viewModel cc_viewModelWithGetDataSuccessHandler];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)dealloc
+{
+    [[CCKeyboardManager manager] freed];
+}
+
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

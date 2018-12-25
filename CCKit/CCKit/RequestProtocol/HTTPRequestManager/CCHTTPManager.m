@@ -2,7 +2,7 @@
 //  HTTPRequestManager.m
 //  CCKit
 //
-// Copyright (c) 2015 CC 
+// Copyright (c) 2015 CC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -761,13 +761,14 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
 
     NSString *cacheKey = requestURLString;
     if (parameter) {
-        if (![NSJSONSerialization isValidJSONObject:parameter]) return;
-        @try {
-            NSData *data = [NSJSONSerialization dataWithJSONObject:parameter options:NSJSONWritingPrettyPrinted error:nil];
-            NSString *paramStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            cacheKey = [requestURLString stringByAppendingString:paramStr];
-        } @catch (NSException *exception) {
-        } @finally {
+        if ([NSJSONSerialization isValidJSONObject:parameter]) {
+            @try {
+                NSData *data = [NSJSONSerialization dataWithJSONObject:parameter options:NSJSONWritingPrettyPrinted error:nil];
+                NSString *paramStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                cacheKey = [requestURLString stringByAppendingString:paramStr];
+            } @catch (NSException *exception) {
+            } @finally {
+            }
         }
     }
 
@@ -1078,8 +1079,8 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
     });
 
     [CCHTTPManager defaultHttp].userInfo = nil;
-    for (NSString *key in [CCHTTPManager defaultHttp].headerField.allKeys){
-         NSString *headerValue = [[CCHTTPManager defaultHttp].headerField objectForKey:key];
+    for (NSString *key in [CCHTTPManager defaultHttp].headerField.allKeys) {
+        NSString *headerValue = [[CCHTTPManager defaultHttp].headerField objectForKey:key];
         [[CCHTTPManager defaultHttp].manager.requestSerializer removeHTTpHeadefield:key];
         if ([headerValue isEqualToString:@"application/json"])
             [CCHTTPManager defaultHttp].manager.requestSerializer = [AFHTTPRequestSerializer serializer];

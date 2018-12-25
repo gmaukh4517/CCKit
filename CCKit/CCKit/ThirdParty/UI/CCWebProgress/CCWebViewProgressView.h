@@ -1,8 +1,8 @@
 //
-//  UI.h
-//  CCKit
+//  CCWebViewProgressView.h
+//  CCFramework
 //
-// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
+// Copyright (c) 2015 CC ( http://www.ccskill.com )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,17 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_UI_h
-#define CCKit_UI_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCActionSheet.h>
-#import <CCKit/CCTransformRefresh.h>
-#import <CCKit/UIScrollView+CCRefresh.h>
-#import <CCKit/CCWebViewController.h>
+@interface CCWebViewProgressView : UIView
 
-#endif
+@property (nonatomic) float progress;
+
+@property (nonatomic) UIView *progressBarView;
+@property (nonatomic) NSTimeInterval barAnimationDuration; // default 0.1
+@property (nonatomic) NSTimeInterval fadeAnimationDuration; // default 0.27
+@property (nonatomic) NSTimeInterval fadeOutDelay; // default 0.1
+
+- (void)setProgress:(float)progress animated:(BOOL)animated;
+
+@end

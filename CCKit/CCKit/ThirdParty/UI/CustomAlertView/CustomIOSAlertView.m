@@ -41,7 +41,7 @@
 @end
 
 const static CGFloat kCustomIOSAlertViewDefaultButtonHeight = 50;
-const static CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight = 1;
+const static CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight = 0.5;
 const static CGFloat kCustomIOSAlertViewCornerRadius = 8;
 const static CGFloat kCustomIOS7MotionEffectExtent = 10.0;
 
@@ -116,24 +116,7 @@ CGFloat buttonSpacerHeight = 0;
     } else {
         // On iOS7, calculate with orientation
         if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
-            UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-            switch (interfaceOrientation) {
-                case UIInterfaceOrientationLandscapeLeft:
-                    self.transform = CGAffineTransformMakeRotation(M_PI * 270.0 / 180.0);
-                    break;
-
-                case UIInterfaceOrientationLandscapeRight:
-                    self.transform = CGAffineTransformMakeRotation(M_PI * 90.0 / 180.0);
-                    break;
-
-                case UIInterfaceOrientationPortraitUpsideDown:
-                    self.transform = CGAffineTransformMakeRotation(M_PI * 180.0 / 180.0);
-                    break;
-
-                default:
-                    break;
-            }
-
+            self.transform = [self changeOrientation:0];
             [self setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 
             // On iOS8, just place the dialog in the middle
@@ -194,19 +177,19 @@ CGFloat buttonSpacerHeight = 0;
     dialogView.layer.opacity = 1.0f;
 
     [UIView animateWithDuration:0.2f
-                          delay:0.0
-                        options:UIViewAnimationOptionTransitionNone
-                     animations:^{
-                         self.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
-                         self.dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));
-                         self.dialogView.layer.opacity = 0.0f;
-                     }
-                     completion:^(BOOL finished) {
-                         for (UIView *v in [self subviews]) {
-                             [v removeFromSuperview];
-                         }
-                         [self removeFromSuperview];
-                     }];
+        delay:0.0
+        options:UIViewAnimationOptionTransitionNone
+        animations:^{
+            self.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
+            self.dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));
+            self.dialogView.layer.opacity = 0.0f;
+        }
+        completion:^(BOOL finished) {
+            for (UIView *v in [self subviews]) {
+                [v removeFromSuperview];
+            }
+            [self removeFromSuperview];
+        }];
 }
 
 - (void)setSubView:(UIView *)subView
@@ -234,13 +217,13 @@ CGFloat buttonSpacerHeight = 0;
         CAGradientLayer *gradient = [CAGradientLayer layer];
         gradient.frame = dialogContainer.bounds;
         gradient.colors = [NSArray arrayWithObjects:
-                           //                       (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
-                           //                       (id)[[UIColor colorWithRed:233.0/255.0 green:233.0/255.0 blue:233.0/255.0 alpha:1.0f] CGColor],
-                           //                       (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
-                           (id)[ [UIColor whiteColor] CGColor ],
-                           (id)[ [UIColor whiteColor] CGColor ],
-                           (id)[ [UIColor whiteColor] CGColor ],
-                           nil];
+                                       //                       (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
+                                       //                       (id)[[UIColor colorWithRed:233.0/255.0 green:233.0/255.0 blue:233.0/255.0 alpha:1.0f] CGColor],
+                                       //                       (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
+                                       (id)[ [UIColor whiteColor] CGColor ],
+                                       (id)[ [UIColor whiteColor] CGColor ],
+                                       (id)[ [UIColor whiteColor] CGColor ],
+                                       nil];
 
         CGFloat cornerRadius = kCustomIOSAlertViewCornerRadius;
         gradient.cornerRadius = cornerRadius;
@@ -302,7 +285,7 @@ CGFloat buttonSpacerHeight = 0;
         [container addSubview:closeButton];
 
         if (i < [buttonTitles count] - 1) {
-            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width, closeButton.frame.origin.y + 10, 1, buttonHeight - 20)];
+            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width, closeButton.frame.origin.y + 10, kCustomIOSAlertViewDefaultButtonSpacerHeight, buttonHeight - 20)];
             line.backgroundColor = [UIColor groupTableViewBackgroundColor];
             [container addSubview:line];
         }
@@ -379,12 +362,9 @@ CGFloat buttonSpacerHeight = 0;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
-// Rotation changed, on iOS7
-- (void)changeOrientationForIOS7
+- (CGAffineTransform)changeOrientation:(CGFloat)startRotation
 {
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-
-    CGFloat startRotation = [[self valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
     CGAffineTransform rotation;
 
     switch (interfaceOrientation) {
@@ -404,7 +384,13 @@ CGFloat buttonSpacerHeight = 0;
             rotation = CGAffineTransformMakeRotation(-startRotation + 0.0);
             break;
     }
+    return rotation;
+}
 
+// Rotation changed, on iOS7
+- (void)changeOrientationForIOS7
+{
+    CGAffineTransform rotation = [self changeOrientation:[[self valueForKeyPath:@"layer.transform.rotation.z"] floatValue]];
     [UIView animateWithDuration:0.2f
                           delay:0.0
                         options:UIViewAnimationOptionTransitionNone
@@ -426,12 +412,12 @@ CGFloat buttonSpacerHeight = 0;
                         options:UIViewAnimationOptionTransitionNone
                      animations:^{
                          id rect = [[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey];
-                         if (rect) {
-                             CGSize dialogSize = [self countDialogSize];
-                             CGSize keyboardSize = [rect CGRectValue].size;
-                             self.frame = CGRectMake(0, 0, screenWidth, screenHeight);
-                             self.dialogView.frame = CGRectMake((screenWidth - dialogSize.width) / 2, (screenHeight - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
-                         }
+                         CGSize keyboardSize;
+                         if (rect)
+                             keyboardSize = [rect CGRectValue].size;
+                         CGSize dialogSize = [self countDialogSize];
+                         self.frame = CGRectMake(0, 0, screenWidth, screenHeight);
+                         self.dialogView.frame = CGRectMake((screenWidth - dialogSize.width) / 2, (screenHeight - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
                      }
                      completion:nil];
 }
@@ -440,9 +426,8 @@ CGFloat buttonSpacerHeight = 0;
 - (void)deviceOrientationDidChange:(NSNotification *)notification
 {
     // If dialog is attached to the parent view, it probably wants to handle the orientation change itself
-    if (parentView != NULL) {
+    if (parentView != NULL)
         return;
-    }
 
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
         [self changeOrientationForIOS7];
@@ -450,6 +435,9 @@ CGFloat buttonSpacerHeight = 0;
         [self changeOrientationForIOS8:notification];
     }
 }
+
+#pragma mark -
+#pragma mark :. 键盘处理
 
 // Handle keyboard show/hide changes
 - (void)keyboardWillShow:(NSNotification *)notification
