@@ -31,7 +31,8 @@
 #import "UIView+CCTransfer.h"
 #import "UIView+Method.h"
 #import "UIViewController+CCAdd.h"
-
+#import "NSObject+CCAdd.h"
+#import "NSString+CCAdd.h"
 #define CCAssert(condition, format, ...)                                                       \
 do {                                                                                       \
 _Pragma("clang diagnostic push")                                                       \
@@ -113,7 +114,7 @@ _Pragma("clang diagnostic pop")                                                 
 - (NSString *)cellIdentifier
 {
     if (_cellIdentifier == nil) {
-        NSString *curVCIdentifier = self.cc_tableView.viewController.cc_identifier;
+        NSString *curVCIdentifier = [self cc_tableView_identifier];
         if (curVCIdentifier) {
             NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Cell", curVCIdentifier];
             _cellIdentifier = curCellIdentifier;
@@ -173,6 +174,22 @@ _Pragma("clang diagnostic pop")                                                 
         _theCollation = [UILocalizedIndexedCollation currentCollation];
     }
     return _theCollation;
+}
+
+-(NSString *)cc_tableView_identifier
+{
+    NSString *curIdentifier = [self associatedValueForKey:_cmd];
+    if (curIdentifier) return curIdentifier;
+
+    NSString *curClassName = NSStringFromClass([self.cc_tableView.viewController class]);
+    curIdentifier = [curClassName matchWithRegex:@"(?<=^CC)\\S+(?=VC$)" atIndex:0];
+    if (!curIdentifier)
+        NSLog(@"className should prefix with 'CC' and suffix with 'VC'");
+
+    if (!cc_isNull_NilORNull(curClassName)) {
+        [self copyAssociateValue:curClassName withKey:_cmd];
+    }
+    return curIdentifier;
 }
 
 #pragma mark -

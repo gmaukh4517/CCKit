@@ -88,14 +88,6 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 - (void)stopLoading;
 
 #pragma mark -
-#pragma mark :. Relationship
-
-@property(readonly, copy) NSString *cc_identifier;
-@property(nonatomic, strong) __kindof UITableView *cc_tableView;
-@property(nonatomic, weak) __kindof UIViewController *cc_sourceVC;
-
-
-#pragma mark -
 #pragma mark :. pushViewController
 
 /**

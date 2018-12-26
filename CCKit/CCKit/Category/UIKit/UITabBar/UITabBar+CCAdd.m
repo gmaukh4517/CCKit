@@ -25,6 +25,8 @@
 
 #import "UITabBar+CCAdd.h"
 
+static const NSTimeInterval kBadgeRadius = 5;
+
 @implementation UITabBar (CCAdd)
 
 /**
@@ -42,7 +44,7 @@
     //新建小红点
     UIView *badgeView = [UIView new];
     badgeView.tag = 888 + index;
-    badgeView.layer.cornerRadius = 5.0;		 //圆形
+    badgeView.layer.cornerRadius = kBadgeRadius;		 //圆形
     badgeView.backgroundColor = [UIColor redColor]; //颜色：红色
     CGRect tabFrame = self.frame;
 

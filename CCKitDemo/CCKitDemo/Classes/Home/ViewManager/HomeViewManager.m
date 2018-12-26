@@ -45,6 +45,12 @@
     alerButton.backgroundColor = [UIColor RandomColor];
     [alerButton addTarget:self action:@selector(alertButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [superView addSubview:alerButton];
+
+    UIButton *sheetButton = [[UIButton alloc] initWithFrame:CGRectMake(alerButton.right + 20, alerButton.y, 100, 30)];
+    [sheetButton setTitle:@"Sheet弹窗"];
+    sheetButton.backgroundColor = [UIColor RandomColor];
+    [sheetButton addTarget:self action:@selector(sheetButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [superView addSubview:sheetButton];
 }
 
 - (void)networkMonitorService
@@ -106,6 +112,25 @@
                if (buttonIndex == 1) {
                }
            }];
+}
+
+- (void)sheetButtonClick:(UIButton *)sender
+{
+    CCActionSheet *actionSheet = [[CCActionSheet alloc] initWithWhiteExample];
+    [actionSheet addButtonWithTitle:@"相册"
+                              image:nil
+                               type:CCActionSheetButtonTypeTextAlignmentCenter
+                            handler:^(CCActionSheet *actionSheet){
+
+                            }];
+
+    [actionSheet addButtonWithTitle:@"拍照"
+                              image:nil
+                               type:CCActionSheetButtonTypeTextAlignmentCenter
+                            handler:^(CCActionSheet *actionSheet){
+
+                            }];
+    [actionSheet show];
 }
 
 @end
