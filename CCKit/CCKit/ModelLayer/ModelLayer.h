@@ -28,16 +28,15 @@
 
 #import <CCKit/CCCollectionViewHelper.h>
 #import <CCKit/CCExtension.h>
-#import <CCKit/CCTableViewHelper.h>
-#import <CCKit/TableViewCellEntity.h>
-
 
 #import <CCKit/UICollectionReusableView+CCAdd.h>
 #import <CCKit/UICollectionView+CCAdd.h>
 #import <CCKit/UICollectionViewCell+CCAdd.h>
 
+#import <CCKit/UITableView+CCAdd.h>
 #import <CCKit/UITableViewCell+CCAdd.h>
 #import <CCKit/CCTableViewHelper.h>
 #import <CCKit/UITableViewHeaderFooterView+CCAdd.h>
+#import <CCKit/TableViewCellEntity.h>
 
 #endif

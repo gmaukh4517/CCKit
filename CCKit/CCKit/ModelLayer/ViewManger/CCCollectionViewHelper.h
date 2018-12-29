@@ -33,8 +33,8 @@ typedef NSString * (^CCCollectionHelperFooterIdentifierBlock)(NSIndexPath *cInde
 
 typedef NSInteger (^CCCollectionHelperNumberOfItemsInSection)(UICollectionView *collectionView, NSInteger section, id cModel);
 
-typedef UICollectionReusableView * (^CCCollectionHelperHeaderView)(UICollectionView *collectionView, NSString *kind, NSIndexPath *cindexPath, id cModel);
-typedef UICollectionReusableView * (^CCCollectionHelperFooterView)(UICollectionView *collectionView, NSString *kind, NSIndexPath *cindexPath, id cModel);
+typedef UICollectionReusableView * (^CCCollectionHelperHeaderView)(UICollectionView *collectionView, NSString *kind, NSString *curCellIdentifier, NSIndexPath *cindexPath, id cModel);
+typedef UICollectionReusableView * (^CCCollectionHelperFooterView)(UICollectionView *collectionView, NSString *kind, NSString *curCellIdentifier, NSIndexPath *cindexPath, id cModel);
 
 typedef void (^CCCollectionHelperDidSelectItemAtIndexPath)(UICollectionView *collectionView, NSIndexPath *cIndexPath, id cModel);
 typedef void (^CCCollectionHelperCellForItemAtIndexPath)(UICollectionViewCell *Cell, NSIndexPath *cIndexPath, id cModel, BOOL IsCelldisplay);
@@ -42,10 +42,11 @@ typedef void (^CCCollectionHelperHeaderForItemAtIndexPath)(UICollectionReusableV
 typedef void (^CCCollectionHelperFooterForItemAtIndexPath)(UICollectionReusableView *footer, NSIndexPath *cIndexPath, id cModel, BOOL IsCelldisplay);
 
 typedef CGSize (^CCCollectionHelperCellForItemSize)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSIndexPath *cIndexPath, id cModel);
-typedef CGSize (^CCCollectionHelperReferenceSize)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger section, id cModel);
+typedef CGSize (^CCCollectionHelperReferenceHeaderSize)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger section, id cModel);
+typedef CGSize (^CCCollectionHelperReferenceFooterSize)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger section, id cModel);
 
-typedef UIEdgeInsets (^CCCollectionHelperCellItemMargin)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger *cSection, id cModel);
-typedef CGFloat (^CCCollectionHelperMinimumInteritemSpacingForSection)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger *cSection, id cModel);
+typedef UIEdgeInsets (^CCCollectionHelperCellItemMargin)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger cSection, id cModel);
+typedef CGFloat (^CCCollectionHelperMinimumInteritemSpacingForSection)(UICollectionView *collectionView, UICollectionViewLayout *layout, NSInteger cSection, id cModel);
 
 typedef id (^CCCollectionHelperCurrentModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
 typedef id (^CCCollectionHelperCurrentHeaderModelAtIndexPath)(id dataAry, NSIndexPath *cIndexPath);
@@ -148,7 +149,7 @@ typedef void (^CCScrollViewDidScroll)(UIScrollView *scrollView);
 - (void)cc_addHeaderArr:(NSArray *)newDataAry;
 
 - (void)cc_insertHeaderArr:(NSArray *)newDataAry
-                     forSection:(NSInteger)cSection;
+                forSection:(NSInteger)cSection;
 
 - (void)cc_removerHeaderData:(NSInteger)cSection;
 
@@ -162,7 +163,7 @@ typedef void (^CCScrollViewDidScroll)(UIScrollView *scrollView);
 - (void)cc_addFooterArr:(NSArray *)newDataAry;
 
 - (void)cc_insertFooterArr:(NSArray *)newDataAry
-                     forSection:(NSInteger)cSection;
+                forSection:(NSInteger)cSection;
 
 - (void)cc_removerFooterData:(NSInteger)cSection;
 
@@ -189,7 +190,8 @@ typedef void (^CCScrollViewDidScroll)(UIScrollView *scrollView);
 - (void)didFooterForItemAtIndexPah:(CCCollectionHelperFooterForItemAtIndexPath)block;
 
 - (void)didSizeForItemAtIndexPath:(CCCollectionHelperCellForItemSize)block;
-- (void)didReferenceSize:(CCCollectionHelperReferenceSize)block;
+- (void)didReferenceHeaderSize:(CCCollectionHelperReferenceHeaderSize)block;
+- (void)didReferenceFooterSize:(CCCollectionHelperReferenceFooterSize)block;
 
 - (void)didSelectItemAtIndexPath:(CCCollectionHelperDidSelectItemAtIndexPath)block;
 
@@ -198,5 +200,13 @@ typedef void (^CCScrollViewDidScroll)(UIScrollView *scrollView);
 - (void)didMinimumInteritemSpacingForSection:(CCCollectionHelperMinimumInteritemSpacingForSection)blcok;
 
 - (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block;
+
+@end
+
+/** 漂浮 **/
+@interface CCCollectionViewFlowLayout : UICollectionViewFlowLayout
+
+//默认为64.0, default is 64.0
+@property (nonatomic, assign) CGFloat naviHeight;
 
 @end

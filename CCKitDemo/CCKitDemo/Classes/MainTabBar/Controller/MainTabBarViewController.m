@@ -8,6 +8,7 @@
 
 #import "MainTabBarViewController.h"
 #import "HomeViewController.h"
+#import "TestHandleViewController.h"
 
 @interface MainTabBarViewController ()
 
@@ -15,21 +16,23 @@
 
 @implementation MainTabBarViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-     [self initTabBar];
+    [self initTabBar];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 - (void)initTabBar
 {
-    [self addChildViewController:[HomeViewController new] title:@"首页" imageNamed:@"tabbar_home_no" selectedImage:@"tabbar_home_yes"];
-    [self addChildViewController:[UIViewController new] title:@"我的" imageNamed:@"tabbar_me_no" selectedImage:@"tabbar_me_yes"];
+    [self addChildViewController:[HomeViewController new] title:@"MVVM" imageNamed:@"tabbar_MVVM_no" selectedImage:@"tabbar_MVVM_yes"];
+    [self addChildViewController:[TestHandleViewController new] title:@"Test" imageNamed:@"tabbar_test_no" selectedImage:@"tabbar_test_yes"];
 
     [[UITabBarItem appearance] setTitleTextAttributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:20],
                                                          NSForegroundColorAttributeName : appThemeColor }

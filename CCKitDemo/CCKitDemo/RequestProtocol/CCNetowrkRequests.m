@@ -10,9 +10,17 @@
 
 @implementation CCNetowrkRequests
 
-+ (NSMutableDictionary *)fixedParameters:(NSDictionary *)postData
++ (NSMutableDictionary *)appendingServerHTTPHeaderField
 {
-    NSMutableDictionary *parameter = [NSMutableDictionary dictionaryWithDictionary:postData];
+    NSMutableDictionary *headerField = [NSMutableDictionary dictionary];
+
+    return headerField;
+}
+
+
++ (NSMutableDictionary *)appendingServerParameters:(NSDictionary *)postParams
+{
+    NSMutableDictionary *parameter = [NSMutableDictionary dictionaryWithDictionary:postParams];
 
     return parameter;
 }
@@ -28,15 +36,18 @@
      responseBlock:(CCRequestBacktrack)responseBlock
 {
     NSString *urlString = [CCNetowrkRequests appendingServerURLWithString:api];
-    [super POST:urlString parameters:[CCNetowrkRequests fixedParameters:parameter] response:^(CCResponseObject *responseObject) {
-       if ([responseObject.status isEqualToString:@"0"]) {
-            responseBlock(responseObject.data, nil);
-        } else {
-            responseBlock(responseObject ? responseObject.data : nil, [CCNetowrkRequests httpErrorAnalysis:responseObject.status errorContent:responseObject.msg]);
+    [super POST:urlString
+        parameters:[CCNetowrkRequests appendingServerParameters:parameter]
+        response:^(CCResponseObject *responseObject) {
+            if ([responseObject.status isEqualToString:@"0"]) {
+                responseBlock(responseObject.data, nil);
+            } else {
+                responseBlock(responseObject ? responseObject.data : nil, [CCNetowrkRequests httpErrorAnalysis:responseObject.status errorContent:responseObject.msg]);
+            }
         }
-    } failure:^(id response, NSError *error) {
-          responseBlock(nil, error);
-    }];
+        failure:^(id response, NSError *error) {
+            responseBlock(nil, error);
+        }];
 }
 
 + (void)handleGET:(NSString *)api
@@ -44,15 +55,18 @@
     responseBlock:(CCRequestBacktrack)responseBlock
 {
     NSString *urlString = [CCNetowrkRequests appendingServerURLWithString:api];
-    [super GET:urlString parameters:parameter response:^(CCResponseObject *responseObject) {
-         if ([responseObject.status isEqualToString:@"0"]) {
-            responseBlock(responseObject.data, nil);
-        } else {
-            responseBlock(responseObject ? responseObject.data : nil, [CCNetowrkRequests httpErrorAnalysis:responseObject.status errorContent:responseObject.msg]);
+    [super GET:urlString
+        parameters:parameter
+        response:^(CCResponseObject *responseObject) {
+            if ([responseObject.status isEqualToString:@"0"]) {
+                responseBlock(responseObject.data, nil);
+            } else {
+                responseBlock(responseObject ? responseObject.data : nil, [CCNetowrkRequests httpErrorAnalysis:responseObject.status errorContent:responseObject.msg]);
+            }
         }
-    } failure:^(id response, NSError *error) {
-         responseBlock(nil, error);
-    }];
+        failure:^(id response, NSError *error) {
+            responseBlock(nil, error);
+        }];
 }
 
 + (NSError *)httpErrorAnalysis:(NSString *)code

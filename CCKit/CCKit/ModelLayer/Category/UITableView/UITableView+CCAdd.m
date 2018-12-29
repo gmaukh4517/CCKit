@@ -23,10 +23,9 @@
 // THE SOFTWARE.
 //
 
+#import "UITableView+CCAdd.h"
 #import "CCTableViewHelper.h"
 #import "NSObject+CCAdd.h"
-#import "NSObject+CCAdd.h"
-#import "UITableView+CCAdd.h"
 #import "UIView+Method.h"
 #import <objc/runtime.h>
 

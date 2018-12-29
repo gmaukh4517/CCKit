@@ -13,20 +13,30 @@
 
 - (void)cc_viewModelWithGetDataSuccessHandler
 {
-    [CCNetowrkRequests handleGET:API_DEMO
-        parameters:@{ @"id" : @"2081" }
-        responseBlock:^(id responseObject, NSError *error) {
-            NSString *message = error.domain;
-            if (!error) {
-                message = @"";
-            }
+    NSArray *arr = @[ @[ @{ @"title" : @"ViewManager Block",
+                            @"type" : @1 } ],
+                      @[ @{ @"title" : @"UICollectionView Demo",
+                            @"type" : @2 } ],
+                      @[ @{ @"title" : @"Event Handle",
+                            @"push" : @"ViewDemoViewController" } ] ];
+    NSMutableArray *groupArray = [NSMutableArray array];
+    for (NSArray *itemArr in arr) {
+        NSMutableArray *array = [NSMutableArray array];
+        for (NSDictionary *item in itemArr) {
+            TableViewCellEntity *entity = [[TableViewCellEntity alloc] init];
+            entity.cellText = [item objectForKey:@"title"];
+            entity.cellType = [[item objectForKey:@"type"] integerValue];
+            entity.cellData = [item objectForKey:@"push"];
+            [array addObject:entity];
+        }
+        [groupArray addObject:array];
+    }
 
-            if ([self.viewModelDelegate respondsToSelector:@selector(cc_viewModel:withInfos:)]) {
-                [self.viewModelDelegate cc_viewModel:self
-                                           withInfos:@{ @"model" : @"",
-                                                        @"message" : message }];
-            }
-        }];
+    if ([self.viewModelDelegate respondsToSelector:@selector(cc_viewModel:withInfos:)]) {
+        [self.viewModelDelegate cc_viewModel:self
+                                   withInfos:@{ @"model" : groupArray,
+                                                @"message" : @"" }];
+    }
 }
 
 @end

@@ -14,7 +14,7 @@
 
 #define ServiceAddress  @"https://api.cc.com/"
 
-#define appThemeColor [UIColor colorFromHexCode:@"3881f4"] /// app主题颜色
+#define appThemeColor [UIColor colorFromHexCode:@"1C86EE"] /// app主题颜色
 
 #endif /* PrefixHeader_pch */
 

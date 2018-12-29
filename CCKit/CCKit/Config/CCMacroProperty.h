@@ -156,6 +156,16 @@
 /** 设备是否为iPhone X MAx 分辨率424x896，像素1242x2688，@3x */
 #define device_iPhoneXMax ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2688), [[UIScreen mainScreen] currentMode].size) : NO)
 
+/** 设备是否为iPhone 是否是X及以上设备 */
+#define device_iPhoneXAbove ({                                                                                            \
+    BOOL isBool = NO;                                                                                                     \
+    if (@available(iOS 11.0, *)) {                                                                                        \
+        if (!UIEdgeInsetsEqualToEdgeInsets([UIApplication sharedApplication].keyWindow.safeAreaInsets, UIEdgeInsetsZero)) \
+            isBool = YES;                                                                                                 \
+    }                                                                                                                     \
+    isBool;                                                                                                               \
+})
+
 #pragma mark -
 #pragma mark :. 本地文档相关
 /*************************  本地文档相关  *************************/
