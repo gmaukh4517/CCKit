@@ -2,7 +2,7 @@
 //  CCWebViewController.m
 //  CCKit
 //
-// Copyright (c) 2015 CC ( http://www.ccskill.com )
+// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,13 @@
 #import <WebKit/WebKit.h>
 #import "CCWebViewProgress.h"
 #import "CCWebViewProgressView.h"
-#import "config.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "UIViewController+CCAdd.h"
 #import "CCProgressHUD.h"
+
+NSString *const kEstimatedProgress = @"estimatedProgress";
+NSString *const kTitle = @"title";
+NSString *const kCanGoBack = @"canGoBack";
 
 typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
@@ -54,8 +57,10 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
 @property (nonatomic, copy) ResponseBlock responseBlock;
 
+// HTML字符串加载模式
 @property (nonatomic, copy) NSString *htmlString;
 
+// URL加载模式
 @property (nonatomic, copy) NSString *urlString;
 
 @end
@@ -106,6 +111,14 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     else
         view = self.webView;
 
+    CGRect frame = self.view.frame;
+    if (@available(iOS 11.0, *)) {
+        if (!UIEdgeInsetsEqualToEdgeInsets([UIApplication sharedApplication].keyWindow.safeAreaInsets, UIEdgeInsetsZero)) {
+            frame.size.height -= 88;
+        }
+    }
+    view.frame = frame;
+
     if (self.urlString)
         [self loadRequest];
     else if (self.htmlString)
@@ -115,22 +128,8 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
     typeof(self) __weak weakSelf = self;
     [self backButtonTouched:^(UIViewController *vc) {
-        if (NSClassFromString(@"WKWebView")) {
-            if (weakSelf.webWKView.backForwardList.backList.count > 0) {
-                [weakSelf.webWKView goBack];
-            } else {
-                [vc.navigationController popViewControllerAnimated:YES];
-            }
-        } else {
-            if (weakSelf.webView.canGoBack) {
-                [weakSelf.webView goBack];
-            } else {
-                [vc.navigationController popViewControllerAnimated:YES];
-            }
-        }
+        [weakSelf backButtonTouchedHandel:vc];
     }];
-
-    [CCProgressHUD showWithTitle:@"加载中..."];
 }
 
 - (void)loadRequest
@@ -148,7 +147,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
 - (void)loadHTMLString
 {
-    self.originLable.text = [NSString stringWithFormat:@"网页由 %@ 提供", AppName];
+    self.originLable.text = [NSString stringWithFormat:@"网页由 %@ 提供", [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey]];
     if (NSClassFromString(@"WKWebView"))
         [self.webWKView loadHTMLString:self.htmlString baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
     else
@@ -230,7 +229,141 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
                          completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                              completionHandler ? completionHandler(response, error) : nil;
                          }];
+    } else {
+        [self.webViewJSContext evaluateScript:javaScriptString];
     }
+}
+
+#pragma mark -
+#pragma mark :. EventHandle
+
+- (void)backButtonTouchedHandel:(UIViewController *)vc
+{
+    if (NSClassFromString(@"WKWebView")) {
+        if (self.webWKView.backForwardList.backList.count > 0) {
+            [self.webWKView goBack];
+        } else {
+            [(vc ?: self).navigationController popViewControllerAnimated:YES];
+        }
+    } else {
+        if (self.webView.canGoBack) {
+            [self.webView goBack];
+        } else {
+            [(vc ?: self).navigationController popViewControllerAnimated:YES];
+        }
+    }
+}
+
+/**
+ *  @author CC, 2015-10-13
+ *
+ *  @brief  加载页面
+ *
+ *  @param baseURL 网页地址
+ */
+- (void)loadRequest:(NSString *)baseURL
+{
+    if ([baseURL rangeOfString:@"http://"].location != NSNotFound || [baseURL rangeOfString:@"https://"].location != NSNotFound)
+        baseURL = baseURL;
+    else if ([baseURL rangeOfString:@"http://"].location == NSNotFound)
+        baseURL = [NSString stringWithFormat:@"http://%@", baseURL];
+    else if ([baseURL rangeOfString:@"https://"].location == NSNotFound)
+        baseURL = [NSString stringWithFormat:@"https://%@", baseURL];
+
+    if (!_urlString) {
+        _urlString = baseURL;
+        [self loadRequest];
+    }
+}
+
+/**
+ 加载本地文件
+
+ @param fileName 文件名
+ @param expansionName 文件扩展名
+ */
+- (void)loadLocalFiles:(NSString *)fileName
+             expansion:(NSString *)expansionName
+{
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:expansionName];
+    NSString *appHtml = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    NSURL *baseURL = [NSURL fileURLWithPath:filePath];
+    if (NSClassFromString(@"WKWebView")) {
+        [self.webWKView loadHTMLString:appHtml baseURL:baseURL];
+    } else {
+        [self.webView loadHTMLString:appHtml baseURL:baseURL];
+    }
+}
+
+/**
+ *  @author CC, 2016-01-25
+ *
+ *  @brief 加载HTML页面
+ *
+ *  @param string HTML文件或者字符串
+ */
+- (void)loadHTMLString:(NSString *)string
+{
+    _htmlString = string;
+}
+
+
+- (void)jumpPage:(NSString *)baseURL
+{
+    if ([baseURL rangeOfString:@"http://"].location == NSNotFound)
+        baseURL = [NSString stringWithFormat:@"http://%@", baseURL];
+
+    NSURL *url = [NSURL URLWithString:[baseURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    self.originLable.text = [NSString stringWithFormat:@"网页由 %@ 提供", url.host];
+
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    if (NSClassFromString(@"WKWebView"))
+        [self.webWKView loadRequest:request];
+    else
+        [self.webView loadRequest:request];
+}
+
+// 页面处理是否关闭返回
+- (void)handleBackClose
+{
+    self.navigationItem.leftBarButtonItems = nil;
+    if ([self isGoBack]) {
+        UIBarButtonItem *backButtonItem;
+
+        UIImage *backIndicatorImage = [UINavigationBar appearance].backIndicatorImage;
+        if (!backIndicatorImage)
+            backIndicatorImage = [UINavigationBar appearance].backIndicatorTransitionMaskImage;
+
+        if (backIndicatorImage) {
+            UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [backButton setImage:backIndicatorImage forState:UIControlStateNormal];
+            [backButton setImage:backIndicatorImage forState:UIControlStateHighlighted];
+            [backButton setTitle:@" 返回" forState:UIControlStateNormal];
+            [backButton setTitle:@" 返回" forState:UIControlStateHighlighted];
+            backButton.titleLabel.font = [[UINavigationBar appearance].titleTextAttributes objectForKey:NSFontAttributeName];
+            [backButton sizeToFit];
+            [backButton addTarget:self action:@selector(backBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
+            backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+        } else {
+            backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backBarButtonClick)];
+        }
+
+        UIBarButtonItem *closeButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(closeBarButtonClick:)];
+        self.navigationItem.leftBarButtonItems = @[ backButtonItem, closeButtonItem ];
+    }
+}
+
+//返回事件处理
+- (void)backBarButtonClick
+{
+    [self backButtonTouchedHandel:nil];
+}
+
+//关闭页面事件处理
+- (void)closeBarButtonClick:(UIBarButtonItem *)sender
+{
+    [self popViewControllerAnimated];
 }
 
 #pragma mark -
@@ -256,7 +389,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         _originLable.textAlignment = NSTextAlignmentCenter;
         _originLable.textColor = [UIColor lightGrayColor];
         _originLable.font = [UIFont systemFontOfSize:12];
-        _originLable.text = @"网页由 www.ccskill.com 提供";
+        _originLable.text = @"网页由 www.cc.com 提供";
     }
     return _originLable;
 }
@@ -265,6 +398,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 {
     if (!_backgroundView) {
         _backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
+        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [_backgroundView addSubview:self.originLable];
     }
     return _backgroundView;
@@ -287,16 +421,18 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (WKWebView *)webWKView
 {
     if (!_webWKView) {
-        _webWKView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:self.configuration];
+        _webWKView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:self.configuration];
         _webWKView.backgroundColor = [UIColor whiteColor];
-        _webWKView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _webWKView.UIDelegate = self;
         _webWKView.navigationDelegate = self;
         _webWKView.allowsBackForwardNavigationGestures = YES;
+        if (@available(iOS 11.0, *))
+            [_webWKView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
 
         [_webWKView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [_webWKView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
-        [_webWKView addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:nil];
+        [_webWKView addObserver:self forKeyPath:kEstimatedProgress options:NSKeyValueObservingOptionNew context:nil];
+        [_webWKView addObserver:self forKeyPath:kTitle options:NSKeyValueObservingOptionNew context:nil];
+        [_webWKView addObserver:self forKeyPath:kCanGoBack options:NSKeyValueObservingOptionNew context:nil];
     }
     return _webWKView;
 }
@@ -311,15 +447,16 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (UIWebView *)webView
 {
     if (!_webView) {
-        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        _webView = [[UIWebView alloc] initWithFrame:self.view.frame];
         _webView.backgroundColor = [UIColor whiteColor];
-        _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _webViewProgress = [[CCWebViewProgress alloc] init];
         _webView.delegate = _webViewProgress;
         _webViewProgress.webViewProxyDelegate = self;
         _webViewProgress.progressDelegate = self;
+        if (@available(iOS 11.0, *))
+            [_webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
 
-        [_webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
+        [_webView addObserver:self forKeyPath:kEstimatedProgress options:NSKeyValueObservingOptionNew context:nil];
         self.webViewJSContext = [_webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     }
     return _webView;
@@ -345,56 +482,8 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     return _progressView;
 }
 
-/**
- *  @author CC, 2015-10-13
- *
- *  @brief  加载页面
- *
- *  @param baseURL 网页地址
- */
-- (void)loadRequest:(NSString *)baseURL
-{
-    if ([baseURL rangeOfString:@"http://"].location != NSNotFound || [baseURL rangeOfString:@"https://"].location != NSNotFound)
-        _urlString = baseURL;
-    else if ([baseURL rangeOfString:@"http://"].location == NSNotFound)
-        _urlString = [NSString stringWithFormat:@"http://%@", baseURL];
-    else if ([baseURL rangeOfString:@"https://"].location == NSNotFound)
-        _urlString = [NSString stringWithFormat:@"https://%@", baseURL];
-}
-
-/**
- *  @author CC, 2016-01-25
- *
- *  @brief 加载HTML页面
- *
- *  @param string HTML文件或者字符串
- */
-- (void)loadHTMLString:(NSString *)string
-{
-    _htmlString = string;
-}
-
 #pragma mark -
-#pragma mark :.
-
-- (void)jumpPage:(NSString *)baseURL
-{
-    if ([baseURL rangeOfString:@"http://"].location == NSNotFound)
-        baseURL = [NSString stringWithFormat:@"http://%@", baseURL];
-
-    NSURL *url = [NSURL URLWithString:[baseURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
-    self.originLable.text = [NSString stringWithFormat:@"网页由 %@ 提供", url.host];
-
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    if (NSClassFromString(@"WKWebView"))
-        [self.webWKView loadRequest:request];
-    else
-        [self.webView loadRequest:request];
-}
-
-#pragma mark -
-#pragma mark :. UIWebViewDelegate
+#pragma mark :. 监听
 
 /**
  *  @author CC, 2015-10-13
@@ -403,22 +492,26 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
  */
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"estimatedProgress"]) {
+    if ([keyPath isEqualToString:kEstimatedProgress]) {
         [self progressChanged:[change objectForKey:NSKeyValueChangeNewKey]];
-    } else if ([keyPath isEqualToString:@"title"]) {
+    } else if ([keyPath isEqualToString:kTitle]) {
         _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
 
         if (self.isTitleFollowChange) {
             NSString *changeTitle = change[ NSKeyValueChangeNewKey ];
             if (![self.title isEqualToString:changeTitle]) {
                 self.title = changeTitle;
-                [self observeTitle:self.title];
             }
         }
+    } else if ([keyPath isEqualToString:kCanGoBack]) {
+        BOOL isCanGoBack = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+        self.navigationController.interactivePopGestureRecognizer.enabled = !isCanGoBack;
+        self.cc_interactivePopDisabled = isCanGoBack;
+        [self handleBackClose];
     }
 }
 
-#pragma mark - CCWebViewProgressDelegate
+#pragma mark :. CCWebViewProgressDelegate
 - (void)webViewProgress:(CCWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
     [_progressView setProgress:progress animated:YES];
@@ -427,7 +520,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         NSString *changeTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
         if (![self.title isEqualToString:changeTitle]) {
             self.title = changeTitle;
-            [self observeTitle:self.title];
         }
     }
 }
@@ -458,27 +550,35 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     }
 }
 
-- (void)observeTitle:(NSString *)title
-{
-}
-
 - (void)delaySetColor
 {
-    [CCProgressHUD hideAnimated:YES];
-
     if (NSClassFromString(@"WKWebView")) {
         self.webWKView.opaque = NO;
-//        self.webWKView.backgroundColor = [UIColor clearCol
-//        self.webWKView.scrollView.backgroundColor = [UIColor clearColor];
+        self.webWKView.backgroundColor = [UIColor clearColor];
+        self.webWKView.scrollView.backgroundColor = [UIColor clearColor];
     } else {
         self.webView.opaque = NO;
-        for (UIView *subview in [_webView.scrollView subviews]) {
+        for (UIView *subview in [self.webView.scrollView subviews]) {
             if ([subview isKindOfClass:[UIImageView class]]) {
                 ((UIImageView *)subview).image = nil;
                 subview.backgroundColor = [UIColor clearColor];
             }
         }
     }
+}
+#pragma mark -
+#pragma mark :. UIWebViewDelegate
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
 }
 
 #pragma mark -
@@ -508,7 +608,10 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 }
 
 // webview关闭时回调
-- (void)webViewDidClose:(WKWebView *)webView {}
+- (void)webViewDidClose:(WKWebView *)webView
+{
+}
+
 // 调用JS的alert()方法
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
 {
@@ -516,7 +619,10 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 }
 
 // 调用JS的confirm()方法
-- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler {}
+- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
+{
+}
+
 // 调用JS的prompt()方法
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *__nullable result))completionHandler
 {
@@ -532,11 +638,12 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     if (NSClassFromString(@"WKWebView")) {
         _webWKView.UIDelegate = nil;
         _webWKView.navigationDelegate = nil;
-        [_webWKView removeObserver:self forKeyPath:@"estimatedProgress"];
-        [_webWKView removeObserver:self forKeyPath:@"title"];
+        [_webWKView removeObserver:self forKeyPath:kEstimatedProgress];
+        [_webWKView removeObserver:self forKeyPath:kTitle];
+        [_webWKView removeObserver:self forKeyPath:kCanGoBack];
     } else {
-        [_webView removeObserver:self forKeyPath:@"estimatedProgress"];
-        [_webView removeObserver:self forKeyPath:@"title"];
+        [_webView removeObserver:self forKeyPath:kEstimatedProgress];
+        [_webView removeObserver:self forKeyPath:kTitle];
     }
     [_progressView removeFromSuperview];
 }

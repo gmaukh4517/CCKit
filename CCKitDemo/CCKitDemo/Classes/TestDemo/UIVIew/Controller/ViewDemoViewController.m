@@ -40,6 +40,7 @@
 
 - (void)initControl
 {
+    self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.viewDemo];
 
     [self.cc_viewManager cc_viewManagerWithSuperView:self.view];

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" charset="UTF-8">
+    <title>App与WebView交互</title>
+    <style>
+        html { font-family:Helvetica; color:#222; }
+        body{background-color: white;}
+        h1 { color:steelblue; font-size:24px; margin-top:24px; }
+        button { margin:0 3px 10px; font-size:12px; }
+        .logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
+    </style>
+</head>
+<body>
+    <h1>Web Javascript Demo</h1>
+    <button onclick="testObjcCallback()">test Objc Callback</button>
+    <button id='clearButton' onclick="jsClear()">Clear Log</button>
+    <div id='buttons'></div> <div id='log'></div>
+</body>
+<script>
+    //按钮点击事件
+    function testObjcCallback() {
+        const params = {"id":"666", "message":"传递参数"}
+        showLog('JS calling handler "testObjcCallback"',params)
+        WebInteractionHandle('testObjcCallback',params)
+    }
+    
+    //Object调用JS
+    function testJavascriptHandler(data){
+        showLog('Object-c calling handler "testJavascriptHandler"', data)
+    }
+
+    //JS调用函数处理
+    function WebInteractionHandle(method,params){
+        //传递参数JSON序列化字符串
+        const jsonStr = JSON.stringify(params)
+        //使用下方方法,会报错,为使界面执行逻辑通畅,因此使用try-catch
+        try {
+            window.webkit.messageHandlers[method].postMessage(jsonStr)
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
+    // 输出日志函数
+    var uniqueId = 1
+    function showLog(message,data){
+        var log = document.getElementById('log')
+        var el = document.createElement('div')
+        el.className = 'logLine'
+        el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+        if (log.children.length) { 
+            log.insertBefore(el, log.children[0]) 
+        }else {
+             log.appendChild(el) 
+        }
+    }
+
+    //延迟清理显示消息
+    var clearCount = 0;
+    function jsClear(){
+        //记录清理次数
+        clearCount++
+        const clearButton = document.getElementById('clearButton')
+        clearButton.textContent =  'Clear Log(' + clearCount + ')'
+
+        //传递消息
+        const params = {"clear":"你要被清理干净了！！！ 哈哈哈"}
+        showLog('clear',params)
+        WebInteractionHandle('clearObjcCallback',params)
+
+        //延迟清理
+        setTimeout(function() {
+            uniqueId = 1
+            document.getElementById('log').innerHTML = ""
+        },1500)
+    }
+
+    // 系统错误消息
+    window.onerror = function(err) {
+		log('window.onerror: ' + err)
+	}
+</script>
+</html>

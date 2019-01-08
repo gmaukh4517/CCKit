@@ -38,7 +38,7 @@
     MBProgressHUD *hud = (MBProgressHUD *)[windowView viewWithTag:999999];
     if (!hud)
         hud = [self initHUD:windowView];
-    
+
     return hud;
 }
 
@@ -62,6 +62,12 @@
         hud = [self initHUD:view];
     } else
         hud = [self initialization];
+
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = nil;
+    hud.detailsLabel.text = message;
+    [hud showAnimated:YES];
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 + (void)showMessage:(NSString *)message toView:(UIView *)superView belowView:(UIView *)view
@@ -72,6 +78,10 @@
     } else
         hud = [self initialization];
     hud.mode = MBProgressHUDModeText;
+    hud.label.text = nil;
+    hud.detailsLabel.text = message;
+    [hud showAnimated:YES];
+    [hud hideAnimated:YES afterDelay:2];
     [superView bringSubviewToFront:view];
 }
 
@@ -112,7 +122,7 @@
 
 /**
  提示消息
- 
+
  @param icon 提示图标
  @param message 提示消息
  */
@@ -151,7 +161,7 @@
         hud = [self initHUD:view];
     } else
         hud = [self initialization];
-    
+
     hud.mode = MBProgressHUDModeAnnularDeterminate;
     hud.label.text = message;
 }
@@ -165,7 +175,7 @@
         UIWindow *windowView = [UIApplication sharedApplication].keyWindow;
         hud = (MBProgressHUD *)[windowView viewWithTag:999999];
     }
-    
+
     hud.progress = progress;
 }
 
@@ -215,7 +225,7 @@
 
 /**
  显示弹窗
- 
+
  @param title 提示消息
  */
 + (void)showWithTitle:(NSString *)title

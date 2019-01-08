@@ -18,7 +18,11 @@
                       @[ @{ @"title" : @"UICollectionView Demo",
                             @"type" : @2 } ],
                       @[ @{ @"title" : @"Event Handle",
-                            @"push" : @"ViewDemoViewController" } ] ];
+                            @"push" : @"ViewDemoViewController" },
+                         @{ @"title" : @"DataBase",
+                            @"push" : @"DataBaseViewController" },
+                         @{ @"title" : @"Web Interaction",
+                            @"push" : @"WebViewController" } ] ];
     NSMutableArray *groupArray = [NSMutableArray array];
     for (NSArray *itemArr in arr) {
         NSMutableArray *array = [NSMutableArray array];

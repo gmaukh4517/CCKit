@@ -148,7 +148,7 @@ static NSSet *foundationClasses_;
     NSMutableArray *propertySQLTypes = [NSMutableArray array];
     NSArray *filterColumns = [CCDBTool filterColumns:classs];
     
-    [propertyNames addObject:@"cc_identifier"]; //主键
+    [propertyNames addObject:@"ccdb_identifier"]; //主键
     [propertyTypes addObject:@"i"];
     [propertySQLTypes addObject:SQLINTEGER];
     
@@ -554,3 +554,4 @@ static NSSet *foundationClasses_;
 }
 
 @end
+

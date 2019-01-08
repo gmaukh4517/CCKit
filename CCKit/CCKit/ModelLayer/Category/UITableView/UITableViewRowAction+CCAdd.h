@@ -1,5 +1,5 @@
 //
-//  NSMutableAttributedString+AvoidCrash.h
+//  UITableViewRowAction+CCAdd.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,18 +23,32 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NSMutableAttributedString (AvoidCrash)
+NS_ASSUME_NONNULL_BEGIN
 
-+ (void)avoidCrashExchangeMethod;
+@interface UITableViewRowAction (CCAdd)
+
+@property (nonatomic, strong, nullable) UIImage *image;
+@property (nonatomic, strong, nullable) UIImage *backgroundImage;
+
+@property (nonatomic, copy) UIColor *titleColor;
+
+@property (nonatomic, assign) BOOL enabled;
+
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                             title:(NSString *)title
+                             image:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *_Nonnull, NSIndexPath *_Nonnull))handler;
+
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                             image:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *action, NSIndexPath *indexPath))handler;
+
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
+                   backgroundImage:(UIImage *)image
+                           handler:(void (^)(UITableViewRowAction *action, NSIndexPath *indexPath))handler;
 
 @end
 
-
-/**
- *  Can avoid crash method
- *
- *  1.- (instancetype)initWithString:(NSString *)str
- *  2.- (instancetype)initWithString:(NSString *)str attributes:(NSDictionary<NSString *,id> *)attrs
- */
+NS_ASSUME_NONNULL_END

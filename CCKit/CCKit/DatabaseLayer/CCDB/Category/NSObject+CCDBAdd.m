@@ -48,29 +48,29 @@ static NSMutableDictionary *objectClassInArrayDict_;
 
 #pragma mark -
 #pragma mark :. getter/setter
-- (NSNumber *)cc_identifier
+- (NSNumber *)ccdb_identifier
 {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setCc_identifier:(NSNumber *)cc_identifier
+- (void)setCcdb_identifier:(NSNumber *)ccdb_identifier
 {
-    objc_setAssociatedObject(self, @selector(cc_identifier), cc_identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(ccdb_identifier), ccdb_identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-- (NSString *)cc_createTime
+- (NSString *)ccdb_createTime
 {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setCc_createTime:(NSString *)cc_createTime
+- (void)setCcdb_createTime:(NSString *)ccdb_createTime
 {
-    objc_setAssociatedObject(self, @selector(cc_createTime), cc_createTime, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(ccdb_createTime), ccdb_createTime, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
-- (NSString *)cc_updateTime
+- (NSString *)ccdb_updateTime
 {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setCc_updateTime:(NSString *)cc_updateTime
+- (void)setCcdb_updateTime:(NSString *)ccdb_updateTime
 {
-    objc_setAssociatedObject(self, @selector(cc_updateTime), cc_updateTime, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(ccdb_updateTime), ccdb_updateTime, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 #pragma mark - block和方法处理:存储block的返回值

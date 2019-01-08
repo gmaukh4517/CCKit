@@ -144,7 +144,7 @@
 		42B5CDDC1E70E1C2002D302E /* CCUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B5CDDA1E70E1C2002D302E /* CCUserDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
 		42BC9E4621B4C09A002235FE /* CCUnicode.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BC9E4421B4C09A002235FE /* CCUnicode.m */; };
-		42BC9E4721B4C09A002235FE /* CCUnicode.h in Headers */ = {isa = PBXBuildFile; fileRef = 42BC9E4521B4C09A002235FE /* CCUnicode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42BC9E4721B4C09A002235FE /* CCUnicode.h in Headers */ = {isa = PBXBuildFile; fileRef = 42BC9E4521B4C09A002235FE /* CCUnicode.h */; };
 		42C43A8821D1CB0A0071D8D6 /* UIView+CCHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C43A8421D1CB0A0071D8D6 /* UIView+CCHierarchy.m */; };
 		42C43A8921D1CB0A0071D8D6 /* UIView+CCHierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C43A8521D1CB0A0071D8D6 /* UIView+CCHierarchy.h */; };
 		42C43A8A21D1CB0A0071D8D6 /* CCKeyboardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C43A8621D1CB0A0071D8D6 /* CCKeyboardManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,6 +157,8 @@
 		42C91D8521C0FC3100E89B77 /* CCWebViewProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C91D7F21C0FC3100E89B77 /* CCWebViewProgressView.m */; };
 		42C91D8621C0FC3100E89B77 /* CCWebViewProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C91D8021C0FC3100E89B77 /* CCWebViewProgressView.h */; };
 		42C91D8721C0FC3100E89B77 /* CCWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C91D8121C0FC3100E89B77 /* CCWebViewProgress.m */; };
+		42D3020721D7669D005871E2 /* UITableViewRowAction+CCAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D3020521D7669D005871E2 /* UITableViewRowAction+CCAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42D3020821D7669D005871E2 /* UITableViewRowAction+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3020621D7669D005871E2 /* UITableViewRowAction+CCAdd.m */; };
 		42D616C31F46BE8900AAA901 /* CCDBManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D616C11F46BE8900AAA901 /* CCDBManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42D616C41F46BE8900AAA901 /* CCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D616C21F46BE8900AAA901 /* CCDBManager.m */; };
 		42FC704B1E6FB2B700FBBE42 /* CCKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC704A1E6FB2B700FBBE42 /* CCKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -254,26 +256,6 @@
 		42FC71BD1E6FFC0000FBBE42 /* CCCollectionViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71A41E6FFC0000FBBE42 /* CCCollectionViewHelper.m */; };
 		42FC71BE1E6FFC0000FBBE42 /* CCTableViewHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71A51E6FFC0000FBBE42 /* CCTableViewHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC71BF1E6FFC0000FBBE42 /* CCTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71A61E6FFC0000FBBE42 /* CCTableViewHelper.m */; };
-		42FC72EF1E70012800FBBE42 /* AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71F31E70012800FBBE42 /* AvoidCrash.h */; };
-		42FC72F01E70012800FBBE42 /* AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71F41E70012800FBBE42 /* AvoidCrash.m */; };
-		42FC72F11E70012800FBBE42 /* NSArray+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71F51E70012800FBBE42 /* NSArray+AvoidCrash.h */; };
-		42FC72F21E70012800FBBE42 /* NSArray+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71F61E70012800FBBE42 /* NSArray+AvoidCrash.m */; };
-		42FC72F31E70012800FBBE42 /* NSAttributedString+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71F71E70012800FBBE42 /* NSAttributedString+AvoidCrash.h */; };
-		42FC72F41E70012800FBBE42 /* NSAttributedString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71F81E70012800FBBE42 /* NSAttributedString+AvoidCrash.m */; };
-		42FC72F51E70012800FBBE42 /* NSDictionary+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71F91E70012800FBBE42 /* NSDictionary+AvoidCrash.h */; };
-		42FC72F61E70012800FBBE42 /* NSDictionary+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71FA1E70012800FBBE42 /* NSDictionary+AvoidCrash.m */; };
-		42FC72F71E70012800FBBE42 /* NSMutableArray+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71FB1E70012800FBBE42 /* NSMutableArray+AvoidCrash.h */; };
-		42FC72F81E70012800FBBE42 /* NSMutableArray+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71FC1E70012800FBBE42 /* NSMutableArray+AvoidCrash.m */; };
-		42FC72F91E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71FD1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h */; };
-		42FC72FA1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC71FE1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.m */; };
-		42FC72FB1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC71FF1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h */; };
-		42FC72FC1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72001E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m */; };
-		42FC72FD1E70012800FBBE42 /* NSMutableString+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72011E70012800FBBE42 /* NSMutableString+AvoidCrash.h */; };
-		42FC72FE1E70012800FBBE42 /* NSMutableString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72021E70012800FBBE42 /* NSMutableString+AvoidCrash.m */; };
-		42FC72FF1E70012800FBBE42 /* NSObject+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72031E70012800FBBE42 /* NSObject+AvoidCrash.h */; };
-		42FC73001E70012800FBBE42 /* NSObject+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72041E70012800FBBE42 /* NSObject+AvoidCrash.m */; };
-		42FC73011E70012800FBBE42 /* NSString+AvoidCrash.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72051E70012800FBBE42 /* NSString+AvoidCrash.h */; };
-		42FC73021E70012800FBBE42 /* NSString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72061E70012800FBBE42 /* NSString+AvoidCrash.m */; };
 		42FC73031E70012800FBBE42 /* Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72071E70012800FBBE42 /* Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC73121E70012800FBBE42 /* NSBundle+AppIcon.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC72211E70012800FBBE42 /* NSBundle+AppIcon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC73131E70012800FBBE42 /* NSBundle+AppIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC72221E70012800FBBE42 /* NSBundle+AppIcon.m */; };
@@ -507,6 +489,8 @@
 		42C91D7F21C0FC3100E89B77 /* CCWebViewProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCWebViewProgressView.m; sourceTree = "<group>"; };
 		42C91D8021C0FC3100E89B77 /* CCWebViewProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCWebViewProgressView.h; sourceTree = "<group>"; };
 		42C91D8121C0FC3100E89B77 /* CCWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCWebViewProgress.m; sourceTree = "<group>"; };
+		42D3020521D7669D005871E2 /* UITableViewRowAction+CCAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewRowAction+CCAdd.h"; sourceTree = "<group>"; };
+		42D3020621D7669D005871E2 /* UITableViewRowAction+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewRowAction+CCAdd.m"; sourceTree = "<group>"; };
 		42D616C11F46BE8900AAA901 /* CCDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDBManager.h; sourceTree = "<group>"; };
 		42D616C21F46BE8900AAA901 /* CCDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDBManager.m; sourceTree = "<group>"; };
 		42FC70471E6FB2B700FBBE42 /* CCKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CCKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -606,26 +590,6 @@
 		42FC71A41E6FFC0000FBBE42 /* CCCollectionViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCCollectionViewHelper.m; sourceTree = "<group>"; };
 		42FC71A51E6FFC0000FBBE42 /* CCTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTableViewHelper.h; sourceTree = "<group>"; };
 		42FC71A61E6FFC0000FBBE42 /* CCTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTableViewHelper.m; sourceTree = "<group>"; };
-		42FC71F31E70012800FBBE42 /* AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrash.h; sourceTree = "<group>"; };
-		42FC71F41E70012800FBBE42 /* AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvoidCrash.m; sourceTree = "<group>"; };
-		42FC71F51E70012800FBBE42 /* NSArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC71F61E70012800FBBE42 /* NSArray+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC71F71E70012800FBBE42 /* NSAttributedString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC71F81E70012800FBBE42 /* NSAttributedString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC71F91E70012800FBBE42 /* NSDictionary+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC71FA1E70012800FBBE42 /* NSDictionary+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC71FB1E70012800FBBE42 /* NSMutableArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC71FC1E70012800FBBE42 /* NSMutableArray+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC71FD1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC71FE1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC71FF1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC72001E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC72011E70012800FBBE42 /* NSMutableString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC72021E70012800FBBE42 /* NSMutableString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC72031E70012800FBBE42 /* NSObject+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC72041E70012800FBBE42 /* NSObject+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AvoidCrash.m"; sourceTree = "<group>"; };
-		42FC72051E70012800FBBE42 /* NSString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+AvoidCrash.h"; sourceTree = "<group>"; };
-		42FC72061E70012800FBBE42 /* NSString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+AvoidCrash.m"; sourceTree = "<group>"; };
 		42FC72071E70012800FBBE42 /* Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
 		42FC721E1E70012800FBBE42 /* NSArray+CCAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+CCAdd.h"; sourceTree = "<group>"; };
 		42FC72211E70012800FBBE42 /* NSBundle+AppIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+AppIcon.h"; sourceTree = "<group>"; };
@@ -852,6 +816,8 @@
 		426CB21A202197BD00E4394F /* UITableView */ = {
 			isa = PBXGroup;
 			children = (
+				42D3020521D7669D005871E2 /* UITableViewRowAction+CCAdd.h */,
+				42D3020621D7669D005871E2 /* UITableViewRowAction+CCAdd.m */,
 				42FC72D71E70012800FBBE42 /* UITableViewHeaderFooterView+CCAdd.h */,
 				42FC72D81E70012800FBBE42 /* UITableViewHeaderFooterView+CCAdd.m */,
 				42FC72D11E70012800FBBE42 /* UITableView+CCAdd.h */,
@@ -1465,38 +1431,10 @@
 			children = (
 				42BC9E4321B4C09A002235FE /* CCUnicode */,
 				42FC72071E70012800FBBE42 /* Category.h */,
-				42FC71F21E70012800FBBE42 /* AvoidCrash */,
 				42FC721C1E70012800FBBE42 /* Foundation */,
 				42FC72791E70012800FBBE42 /* UIKit */,
 			);
 			path = Category;
-			sourceTree = "<group>";
-		};
-		42FC71F21E70012800FBBE42 /* AvoidCrash */ = {
-			isa = PBXGroup;
-			children = (
-				42FC71F31E70012800FBBE42 /* AvoidCrash.h */,
-				42FC71F41E70012800FBBE42 /* AvoidCrash.m */,
-				42FC71F51E70012800FBBE42 /* NSArray+AvoidCrash.h */,
-				42FC71F61E70012800FBBE42 /* NSArray+AvoidCrash.m */,
-				42FC71F71E70012800FBBE42 /* NSAttributedString+AvoidCrash.h */,
-				42FC71F81E70012800FBBE42 /* NSAttributedString+AvoidCrash.m */,
-				42FC71F91E70012800FBBE42 /* NSDictionary+AvoidCrash.h */,
-				42FC71FA1E70012800FBBE42 /* NSDictionary+AvoidCrash.m */,
-				42FC71FB1E70012800FBBE42 /* NSMutableArray+AvoidCrash.h */,
-				42FC71FC1E70012800FBBE42 /* NSMutableArray+AvoidCrash.m */,
-				42FC71FD1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h */,
-				42FC71FE1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.m */,
-				42FC71FF1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h */,
-				42FC72001E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m */,
-				42FC72011E70012800FBBE42 /* NSMutableString+AvoidCrash.h */,
-				42FC72021E70012800FBBE42 /* NSMutableString+AvoidCrash.m */,
-				42FC72031E70012800FBBE42 /* NSObject+AvoidCrash.h */,
-				42FC72041E70012800FBBE42 /* NSObject+AvoidCrash.m */,
-				42FC72051E70012800FBBE42 /* NSString+AvoidCrash.h */,
-				42FC72061E70012800FBBE42 /* NSString+AvoidCrash.m */,
-			);
-			path = AvoidCrash;
 			sourceTree = "<group>";
 		};
 		42FC721C1E70012800FBBE42 /* Foundation */ = {
@@ -1967,7 +1905,6 @@
 				42FC73401E70012800FBBE42 /* NSUserDefaults+CCAdd.h in Headers */,
 				42954A781E712BE100F4CC4C /* UIImage+MultiFormat.h in Headers */,
 				42FC736C1E70012800FBBE42 /* UIImage+CCAdd.h in Headers */,
-				42FC72F51E70012800FBBE42 /* NSDictionary+AvoidCrash.h in Headers */,
 				429A48E121BF545400A3AC1C /* CCNetworkMonitor.h in Headers */,
 				42FC73381E70012800FBBE42 /* NSTimer+CCAdd.h in Headers */,
 				42FC70A51E6FDB7700FBBE42 /* UIViewController+CCProperties.h in Headers */,
@@ -1978,7 +1915,6 @@
 				42FC73801E70012800FBBE42 /* UISearchBar+CCAdd.h in Headers */,
 				42C651FB1F5F8F3A00AA61E7 /* CCViewManager.h in Headers */,
 				429A48E321BF545400A3AC1C /* CCEventNoticeCenter.h in Headers */,
-				42FC72F11E70012800FBBE42 /* NSArray+AvoidCrash.h in Headers */,
 				42954A281E712B1A00F4CC4C /* MBProgressHUD.h in Headers */,
 				429A48E921BF545400A3AC1C /* CCEventCenter.h in Headers */,
 				423B4C6F1E890C8C007139EC /* CCRefreshFooterView.h in Headers */,
@@ -2001,8 +1937,6 @@
 				4233C1FB1E83CCD80041A015 /* FMDatabaseAdditions.h in Headers */,
 				42FC71721E6FDF1400FBBE42 /* AFNetworkReachabilityManager.h in Headers */,
 				42FC71BE1E6FFC0000FBBE42 /* CCTableViewHelper.h in Headers */,
-				42FC72FB1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.h in Headers */,
-				42FC72F91E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.h in Headers */,
 				42FC71BA1E6FFC0000FBBE42 /* NSString+CCExtension.h in Headers */,
 				423B4C711E890C8C007139EC /* CCRefreshHeaderView.h in Headers */,
 				42FC73141E70012800FBBE42 /* NSData+CCAdd.h in Headers */,
@@ -2025,14 +1959,11 @@
 				42FC731A1E70012800FBBE42 /* NSDictionary+CCAdd.h in Headers */,
 				423388781F0F22950055701E /* CCMacros.h in Headers */,
 				42FC70C31E6FDC7F00FBBE42 /* CCKeyValueStore.h in Headers */,
-				42FC72F31E70012800FBBE42 /* NSAttributedString+AvoidCrash.h in Headers */,
 				426CB2242021A03200E4394F /* UICollectionReusableView+CCAdd.h in Headers */,
 				42954A9C1E712C1000F4CC4C /* Tools.h in Headers */,
-				42FC72FD1E70012800FBBE42 /* NSMutableString+AvoidCrash.h in Headers */,
 				42FC717C1E6FDF1400FBBE42 /* UIActivityIndicatorView+AFNetworking.h in Headers */,
 				42954A841E712BE100F4CC4C /* FLAnimatedImageView.h in Headers */,
 				42FC70B11E6FDB7700FBBE42 /* CCViewProtocol.h in Headers */,
-				42FC72FF1E70012800FBBE42 /* NSObject+AvoidCrash.h in Headers */,
 				4244009F1F44452500C5F321 /* CCDB.h in Headers */,
 				42954A721E712BE100F4CC4C /* FLAnimatedImageView+WebCache.h in Headers */,
 				42FC73941E70012800FBBE42 /* UIView+Frame.h in Headers */,
@@ -2054,7 +1985,6 @@
 				42FC71A71E6FFC0000FBBE42 /* CCExtension.h in Headers */,
 				42FC71801E6FDF1400FBBE42 /* UIButton+AFNetworking.h in Headers */,
 				42920F551F4AE4B600A90924 /* CCDBTool.h in Headers */,
-				42FC73011E70012800FBBE42 /* NSString+AvoidCrash.h in Headers */,
 				4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */,
 				42FC73261E70012800FBBE42 /* NSInvocation+CCAdd.h in Headers */,
 				429A48E721BF545400A3AC1C /* CCEventSubscribEntity.h in Headers */,
@@ -2064,6 +1994,7 @@
 				42FC70AF1E6FDB7700FBBE42 /* CCViewManagerProtocol.h in Headers */,
 				42FC70AC1E6FDB7700FBBE42 /* CCViewModel.h in Headers */,
 				42FC73961E70012800FBBE42 /* UIView+Method.h in Headers */,
+				42D3020721D7669D005871E2 /* UITableViewRowAction+CCAdd.h in Headers */,
 				42FC73841E70012800FBBE42 /* UITabBar+CCAdd.h in Headers */,
 				42FC736E1E70012800FBBE42 /* UIImageView+CCAdd.h in Headers */,
 				42FC71841E6FDF1400FBBE42 /* UIKit+AFNetworking.h in Headers */,
@@ -2097,7 +2028,6 @@
 				42FC71AE1E6FFC0000FBBE42 /* CCPropertyKey.h in Headers */,
 				42FC737E1E70012800FBBE42 /* UIScrollView+CCAdd.h in Headers */,
 				42954A911E712BE100F4CC4C /* NSImage+WebCache.h in Headers */,
-				42FC72EF1E70012800FBBE42 /* AvoidCrash.h in Headers */,
 				42FC733E1E70012800FBBE42 /* NSURLRequest+CCAdd.h in Headers */,
 				42FC71B61E6FFC0000FBBE42 /* NSObject+CCKeyValue.h in Headers */,
 				42FC735E1E70012800FBBE42 /* UICollectionView+CCAdd.h in Headers */,
@@ -2135,7 +2065,6 @@
 				42954A0A1E71226F00F4CC4C /* Ability.h in Headers */,
 				42FC70CC1E6FDC7F00FBBE42 /* CCResponseObject.h in Headers */,
 				42954A261E712B1A00F4CC4C /* CustomIOSAlertView.h in Headers */,
-				42FC72F71E70012800FBBE42 /* NSMutableArray+AvoidCrash.h in Headers */,
 				42FC70CB1E6FDC7F00FBBE42 /* RequestProtocol.h in Headers */,
 				42FC70FB1E6FDCF600FBBE42 /* CCCoreData.h in Headers */,
 				423B4C6B1E890C8C007139EC /* CCRefreshBaseView.h in Headers */,
@@ -2249,7 +2178,6 @@
 				42FC731D1E70012800FBBE42 /* NSException+CCAdd.m in Sources */,
 				42FC738F1E70012800FBBE42 /* UITextField+CCAdd.m in Sources */,
 				4233C2031E83CCD80041A015 /* FMResultSet.m in Sources */,
-				42FC72F41E70012800FBBE42 /* NSAttributedString+AvoidCrash.m in Sources */,
 				42FC70CA1E6FDC7F00FBBE42 /* CCHTTPUpDownLoad.m in Sources */,
 				42FC71AB1E6FFC0000FBBE42 /* CCFoundation.m in Sources */,
 				42FC70CF1E6FDC7F00FBBE42 /* HttpFileConfig.m in Sources */,
@@ -2272,7 +2200,6 @@
 				4233C1FA1E83CCD80041A015 /* FMDatabase.m in Sources */,
 				42FC71771E6FDF1400FBBE42 /* AFURLRequestSerialization.m in Sources */,
 				42C43A8821D1CB0A0071D8D6 /* UIView+CCHierarchy.m in Sources */,
-				42FC72F01E70012800FBBE42 /* AvoidCrash.m in Sources */,
 				42FC73331E70012800FBBE42 /* NSSet+CCAdd.m in Sources */,
 				42C91D8721C0FC3100E89B77 /* CCWebViewProgress.m in Sources */,
 				42FC73731E70012800FBBE42 /* UINavigationBar+CCAdd.m in Sources */,
@@ -2283,11 +2210,8 @@
 				42FC71B91E6FFC0000FBBE42 /* NSObject+CCProperty.m in Sources */,
 				42FC71B51E6FFC0000FBBE42 /* NSObject+CCCoding.m in Sources */,
 				42FC70C81E6FDC7F00FBBE42 /* CCHTTPRequest.m in Sources */,
-				42FC72FA1E70012800FBBE42 /* NSMutableAttributedString+AvoidCrash.m in Sources */,
 				42FC71831E6FDF1400FBBE42 /* UIImageView+AFNetworking.m in Sources */,
-				42FC72FC1E70012800FBBE42 /* NSMutableDictionary+AvoidCrash.m in Sources */,
 				42954A831E712BE100F4CC4C /* FLAnimatedImage.m in Sources */,
-				42FC72F21E70012800FBBE42 /* NSArray+AvoidCrash.m in Sources */,
 				42FC71731E6FDF1400FBBE42 /* AFNetworkReachabilityManager.m in Sources */,
 				42954A941E712BE100F4CC4C /* UIButton+WebCache.m in Sources */,
 				42FC717B1E6FDF1400FBBE42 /* AFNetworkActivityIndicatorManager.m in Sources */,
@@ -2304,6 +2228,7 @@
 				42FC73751E70012800FBBE42 /* UINavigationController+CCAdd.m in Sources */,
 				423D58CF1EC2AA17001A02A8 /* NSArray+CCAdd.m in Sources */,
 				423B4C6C1E890C8C007139EC /* CCRefreshBaseView.m in Sources */,
+				42D3020821D7669D005871E2 /* UITableViewRowAction+CCAdd.m in Sources */,
 				42FC73811E70012800FBBE42 /* UISearchBar+CCAdd.m in Sources */,
 				42954A811E712BE100F4CC4C /* SDWebImageDownloaderOperation.m in Sources */,
 				42FC73351E70012800FBBE42 /* NSAttributedString+Teletext.m in Sources */,
@@ -2348,17 +2273,13 @@
 				42954A731E712BE100F4CC4C /* FLAnimatedImageView+WebCache.m in Sources */,
 				42954A9A1E712BE100F4CC4C /* UIView+WebCache.m in Sources */,
 				42FC73851E70012800FBBE42 /* UITabBar+CCAdd.m in Sources */,
-				42FC73001E70012800FBBE42 /* NSObject+AvoidCrash.m in Sources */,
 				42C651FC1F5F8F3A00AA61E7 /* CCViewManager.m in Sources */,
 				42954A1A1E712AC800F4CC4C /* CCProgressHUD.m in Sources */,
-				42FC72F81E70012800FBBE42 /* NSMutableArray+AvoidCrash.m in Sources */,
 				42954A711E712BE100F4CC4C /* SDImageCacheConfig.m in Sources */,
 				42FC733F1E70012800FBBE42 /* NSURLRequest+CCAdd.m in Sources */,
 				429A48E821BF545400A3AC1C /* CCEvent.m in Sources */,
 				42FC71B11E6FFC0000FBBE42 /* CCPropertyType.m in Sources */,
 				42FC73711E70012800FBBE42 /* UILabel+CCAdd.m in Sources */,
-				42FC72F61E70012800FBBE42 /* NSDictionary+AvoidCrash.m in Sources */,
-				42FC73021E70012800FBBE42 /* NSString+AvoidCrash.m in Sources */,
 				42FC732F1E70012800FBBE42 /* NSObject+CCAdd.m in Sources */,
 				42FC73311E70012800FBBE42 /* NSRunLoop+CCAdd.m in Sources */,
 				42FC70A61E6FDB7700FBBE42 /* UIViewController+CCProperties.m in Sources */,
@@ -2400,7 +2321,6 @@
 				426CB2232021A03200E4394F /* UICollectionReusableView+CCAdd.m in Sources */,
 				42FC71691E6FDF1400FBBE42 /* AFHTTPSessionManager.m in Sources */,
 				4233C2001E83CCD80041A015 /* FMDatabaseQueue.m in Sources */,
-				42FC72FE1E70012800FBBE42 /* NSMutableString+AvoidCrash.m in Sources */,
 				42954A7D1E712BE100F4CC4C /* UIView+WebCacheOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -86,8 +86,8 @@ void CCDBEnterLog(BOOL debug)
  @param groupBy 分组字段
  @param orderBy 排序字段
  @param desc YES:降序，NO:升序.
- @param limit 查询范围
- @param offset 查询条数
+ @param limit 查询条数
+ @param offset 查询范围
  */
 + (NSString *)ccdb_FetchRequest:(NSString *)groupBy
                         orderBy:(NSString *)orderBy
@@ -99,17 +99,17 @@ void CCDBEnterLog(BOOL debug)
     if ([CCDBManager isNotEmpty:groupBy]) {
         [query appendFormat:@" group by %@", groupBy];
     }
-    
+
     if ([CCDBManager isNotEmpty:orderBy]) {
         [query appendFormat:@" order by %@ %@", orderBy, desc ? @"DESC" : @"ASC"];
     }
-    
+
     if (limit > 0) {
         [query appendFormat:@" limit %d offset %d", limit, offset];
     } else if (offset > 0) {
         [query appendFormat:@" limit %d offset %d", INT_MAX, offset];
     }
-    
+
     return query;
 }
 
@@ -442,6 +442,49 @@ void CCDBEnterLog(BOOL debug)
                                             }];
 }
 
+/**
+ 批量更新数据
+ 
+ @param tableName 表名
+ @param uniqueKey 关键字段
+ @param objArr 更行数据集合
+ @param complete 完成回调
+ */
++ (void)ccdb_updateBatchTableObject:(NSString *)tableName
+                          uniqueKey:(NSString *)uniqueKey
+                        batchObject:(NSArray<NSDictionary *> *)objArr
+                           complete:(void (^)(BOOL isSuccess))complete
+{
+    [[CCDatabase shareManager] updateBatchTableObject:tableName
+                                            uniqueKey:uniqueKey
+                                          batchObject:objArr
+                                             complete:^(BOOL isSuccess) {
+                                                 [[CCDatabase shareManager] closeDB];
+                                                 !complete ?: complete(isSuccess);
+                                             }];
+}
+
+/**
+ 批量更新数据
+
+ @param tableName 表名
+ @param objArr 关键字段
+ @param conditions 执行条件
+ @param complete 完成回调
+ */
++ (void)ccdb_updateBatchTableObject:(NSString *)tableName
+                        batchObject:(NSArray<NSDictionary *> *)objArr
+                         conditions:(NSString *)conditions
+                           complete:(void (^)(BOOL isSuccess))complete
+{
+    [[CCDatabase shareManager] updateBatchTableObject:tableName
+                                             batchObject:objArr
+                                           conditions:conditions
+                                             complete:^(BOOL isSuccess) {
+                                                 [[CCDatabase shareManager] closeDB];
+                                                 !complete ?: complete(isSuccess);
+                                             }];
+}
 
 /**
  批量更新数据
@@ -687,7 +730,7 @@ void CCDBEnterLog(BOOL debug)
     !param.length ?: [param appendString:@" "];
     !limit ?: [param appendFormat:@"limit %@", @(limit)];
     param = param.length ? param : nil;
-    
+
     __block NSArray *results;
     [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
                                                           where:nil
@@ -703,8 +746,8 @@ void CCDBEnterLog(BOOL debug)
  分页查询
  
  @param tableName 表名
- @param limit 查询范围 开始位置
- @param offset 查询范围 条数
+ @param limit 查询范围 条数
+ @param offset 查询范围 开始位置
  @param where 查询条件
  */
 + (NSArray *)ccdb_selectTablePage:(NSString *)tableName
@@ -724,8 +767,8 @@ void CCDBEnterLog(BOOL debug)
  分页排序查询数据
  
  @param tableName 表名
- @param limit 查询范围 开始位置
- @param offset 查询范围 条数
+ @param limit 查询范围 条数
+ @param offset 查询范围 开始位置
  @param orderBy 排序字段
  @param desc YES:降序，NO:升序.
  @param where 查询条件
@@ -742,7 +785,7 @@ void CCDBEnterLog(BOOL debug)
                                                 desc:desc
                                                limit:limit
                                               offset:offset];
-    
+
     __block NSArray *results;
     [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
                                                           where:where
@@ -770,7 +813,7 @@ void CCDBEnterLog(BOOL debug)
                                                 desc:NO
                                                limit:0
                                               offset:0];
-    
+
     __block NSArray *results;
     [[CCDatabase shareManager] selectQueueTableParamWhereObject:tableName
                                                           where:where

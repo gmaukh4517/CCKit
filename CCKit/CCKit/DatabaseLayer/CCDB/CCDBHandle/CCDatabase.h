@@ -79,7 +79,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  删除数据库文件
- 
+
  @param sqliteName 数据库名
  */
 + (BOOL)deleteSqlite:(NSString *)sqliteName;
@@ -89,7 +89,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  数据库中是否存在表
- 
+
  @param tablename 表面
  @param complete 回调
  */
@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  判断对象数据是否有改变，智能刷星
- 
+
  @param object 对象
  */
 - (void)ifIvarChangeForClass:(id)object;
@@ -107,7 +107,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  清空表数据
- 
+
  @param tableName 表名
  @param complete 完成回调
  */
@@ -116,7 +116,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  删除表
- 
+
  @param tableName 表名
  @param complete 完成回调
  */
@@ -125,7 +125,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  删除表(同步线程处理)
- 
+
  @param tableName 表名
  @param complete 完成回调
  */
@@ -134,7 +134,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  判断数据库中表是否存在
- 
+
  @param tableName 表名
  @param complete 处理回调
  */
@@ -146,7 +146,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  创建表
- 
+
  @param tableName 表面
  @param keys 字段名
  @param uniqueKey "唯一约束"字段名
@@ -161,7 +161,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  插入表数据对象
- 
+
  @param tableName 表名
  @param objDic 对象数据
  @param complete 完成回调
@@ -172,7 +172,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  插入数据(对象形式)
- 
+
  @param object 对象集合
  @param complete 完成回调
  */
@@ -181,7 +181,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  批量插入表数据
- 
+
  @param tableName 表名
  @param objArr 对象集合
  @param complete 完成回调
@@ -192,7 +192,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  批量插入表数据(对象形式)
- 
+
  @param arr 对象集合
  @param complete 完成回调
  */
@@ -203,7 +203,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  删除表数据
- 
+
  @param tableName 表名
  @param where 语句对象
  @param complete 完成回调
@@ -214,7 +214,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  删除表数据(SQL)
- 
+
  @param tableName 表名
  @param conditions sql
  @param complete 完成回调
@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  模糊删除表数据
- 
+
  @param tableName 表名
  @param keyPathValues 查询字段键值
  @param complete 完成回调
@@ -236,8 +236,19 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 #pragma mark :.... update
 /**
+ 更新数据（事物执行）
+
+ @param object 更新对象
+ @param where 条件
+ *      条件数组，形式@[@"name",@"=",@"CC哥",@"age",@"=>",@(25)],即更新name=CC哥,age=>25的数据. 可以为nil,nil时更新所有数据;
+ *      不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath更新接口).
+ */
+- (BOOL)updateTableObjecTransaction:(id)object
+                              where:(NSArray *)where;
+
+/**
  更新数据
- 
+
  @param object 更新对象
  @param where 条件
  *      条件数组，形式@[@"name",@"=",@"CC哥",@"age",@"=>",@(25)],即更新name=CC哥,age=>25的数据. 可以为nil,nil时更新所有数据;
@@ -248,7 +259,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  更新表数据(字段)
- 
+
  @param tableName 表名
  @param keyValue 更新字段键值
  @param where 语句条件
@@ -261,7 +272,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  更新表数据(Sql)
- 
+
  @param tableName 表名
  @param keyValue 更新字段键值
  @param conditions Sql
@@ -274,7 +285,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  更新数据(检查数据结构)
- 
+
  @param tableName 表名
  @param keyValue 更新字段键值
  @param conditions sql
@@ -287,7 +298,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  更新数据(对象方式并检查数据结构)
- 
+
  @param object 对象
  @param conditions sql语句
  @param complete 完成回调
@@ -298,7 +309,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  模糊更新数据
- 
+
  @param tableName 表名
  @param keyPathValues 模糊条件
  @param keyValue 更行字段键值
@@ -309,10 +320,35 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
                      keyValue:(NSDictionary *)keyValue
                      complete:(void (^)(BOOL isSuccess))complete;
 
+/**
+ 批量更新数据
+
+ @param tableName 表名
+ @param uniqueKey 关键字段
+ @param objArr 更行数据集合
+ @param complete 完成回调
+ */
+- (void)updateBatchTableObject:(NSString *)tableName
+                     uniqueKey:(NSString *)uniqueKey
+                   batchObject:(NSArray<NSDictionary *> *)objArr
+                      complete:(void (^)(BOOL isSuccess))complete;
 
 /**
  批量更新数据
- 
+
+ @param tableName 表名
+ @param objArr 关键字段
+ @param conditions 执行条件
+ @param complete 完成回调
+ */
+- (void)updateBatchTableObject:(NSString *)tableName
+                   batchObject:(NSArray<NSDictionary *> *)objArr
+                    conditions:(NSString *)conditions
+                      complete:(void (^)(BOOL isSuccess))complete;
+
+/**
+ 批量更新数据
+
  @param tableName 表名
  @param objArr 更行数据集合
  @param complete 完成回调
@@ -323,7 +359,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  批量更行数据(对象)
- 
+
  @param objects 对象集合
  @param complete 完成回调
  */
@@ -334,7 +370,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表中有多少条数据
- 
+
  @param tableName 表名
  @param where 查询条件
  */
@@ -343,7 +379,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表中有多少条数据(同步队列查询)
- 
+
  @param tableName 表名
  @param where 查询条件
  */
@@ -352,7 +388,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表中有多少条数据(sql)
- 
+
  @param tableName 表名
  @param conditions sql查询条件
  */
@@ -361,7 +397,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表中有多少条数据(sql同步队列查询)
- 
+
  @param tableName 表名
  @param conditions sql查询条件
  */
@@ -370,7 +406,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  函数查询表数据
- 
+
  @param tableName 表名
  @param methodType 函数类型
  @param key 字段名
@@ -383,7 +419,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  函数查询表数据(线程)
- 
+
  @param tableName 表名
  @param methodType 函数类型
  @param key 字段名
@@ -396,7 +432,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  like查询（keyPath方式）数量
- 
+
  @param tableName 表名
  @param keyPathValues 键值
  */
@@ -405,7 +441,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  like查询（keyPath方式）数量 (同步队列查询)
- 
+
  @param tableName 表名
  @param keyPathValues 键值
  */
@@ -414,7 +450,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表(sql语句)
- 
+
  @param tableName 表名
  @param conditions sql语句
  @param complete 完成回调
@@ -425,7 +461,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表(sql语句)同步队列查询
- 
+
  @param tableName 表名
  @param conditions sql语句
  @param complete 完成回调
@@ -436,7 +472,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表键值语句
- 
+
  @param tableName 表名
  @param keys 键值
  @param where 语句
@@ -449,7 +485,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  队列查询表键值语句
- 
+
  @param tableName 表名
  @param keys 条件
  @param where 查询条件
@@ -462,7 +498,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表跟随语句
- 
+
  @param tableName 表名
  @param param 跟随局域
  @param where 查询条件
@@ -475,7 +511,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  同步队列查询表
- 
+
  @param tableName 表名
  @param param 跟随条件
  @param where 查询条件
@@ -488,7 +524,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  查询表like
- 
+
  @param tableName 表名
  @param keyPathValues 键值
  @param complete 完成回调
@@ -499,7 +535,7 @@ typedef NS_ENUM(NSInteger, CCDBDataTimeType) {
 
 /**
  同步查询表like
- 
+
  @param tableName 表名
  @param keyPathValues 条件
  @param complete 完成回调

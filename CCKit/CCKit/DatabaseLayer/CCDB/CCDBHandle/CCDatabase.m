@@ -28,17 +28,17 @@
 #import "FMDB.h"
 
 #define CCDBEnterLog(log)                \
-do {                                 \
-if (self.debug) {                \
-NSLog(@"CCDB = >: %@", log); \
-}                                \
-} while (0)
+    do {                                 \
+        if (self.debug) {                \
+            NSLog(@"CCDB = >: %@", log); \
+        }                                \
+    } while (0)
 
 #define MaxQueryPageNum 50
 
-static NSString *const kPRIMARYKEY = @"cc_identifier";
-static NSString *const kCREATETIMEKEY = @"cc_createTime";
-static NSString *const kUPDSTETIMEKEY = @"cc_updateTime";
+static NSString *const kPRIMARYKEY = @"ccdb_identifier";
+static NSString *const kCREATETIMEKEY = @"ccdb_createTime";
+static NSString *const kUPDSTETIMEKEY = @"ccdb_updateTime";
 
 static NSString *const kSQLITENAME = @"CCDBSqlite";
 
@@ -47,6 +47,8 @@ static NSString *const kSQLEQUAL = @"Relation_Equal";       //等于的关系；
 static NSString *const kSQLCONTAINS = @"Relation_Contains"; //包含的关系.
 
 @interface CCDatabase ()
+
+@property (nonatomic, strong) NSString *dbPath;
 
 @property (nonatomic, strong) FMDatabaseQueue *fmdbQueue;
 @property (nonatomic, strong) FMDatabase *fmdb;
@@ -91,23 +93,25 @@ static CCDatabase *database = nil;
 
 - (NSString *)dbPath
 {
-    NSString *dbsPath = [CCDatabase createDirInDocument:@"CCDataBases"];
-    NSString *sqlName = kSQLITENAME;
-    if (self.sqliteName)
-        sqlName = self.sqliteName;
-    
-    NSString *dbPath = [dbsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", sqlName]];
-    return dbPath;
+    if (!_dbPath) {
+        NSString *dbsPath = [CCDatabase createDirInDocument:@"CCDataBases"];
+        NSString *sqlName = kSQLITENAME;
+        if (self.sqliteName)
+            sqlName = self.sqliteName;
+
+        _dbPath = [dbsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", sqlName]];
+    }
+    return _dbPath;
 }
 
 + (NSString *)createDirInDocument:(NSString *)pathName
 {
-    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
     if (!pathName || pathName.length == 0)
         documentPath = [documentPath stringByAppendingPathComponent:@"CCDataBases"];
     else
         documentPath = [documentPath stringByAppendingPathComponent:pathName];
-    
+
     BOOL isDir = NO;
     BOOL isCreated = [[NSFileManager defaultManager] fileExistsAtPath:documentPath isDirectory:&isDir];
     if (!isCreated || !isDir) {
@@ -141,23 +145,25 @@ static CCDatabase *database = nil;
 /** 关闭数据库 **/
 - (void)closeDB
 {
-    if (_disableCloseDB) return;
-    
+    if (_disableCloseDB) {
+        return;
+    }
+
     if (!_inTransaction && _fmdbQueue) { //没有事务的情况下就关闭数据库.
-        [_fmdbQueue close];		 //关闭数据库.
+        [_fmdbQueue close];              //关闭数据库.
         _fmdbQueue = nil;
     }
 }
 
 /**
  删除数据库文件
- 
+
  @param sqliteName 数据库名
  */
 + (BOOL)deleteSqlite:(NSString *)sqliteName
 {
     NSString *dbsPath = [CCDatabase createDirInDocument:@"CCDataBases"];
-    
+
     NSString *filePath = [dbsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", sqliteName]];
     NSFileManager *file_manager = [NSFileManager defaultManager];
     NSError *error;
@@ -203,13 +209,13 @@ static CCDatabase *database = nil;
         block(db);
         WeakSelf.fmdb = nil;
     }];
-    
+
     //[self.threadLock unlock];//解锁
 }
 
 /**
  数据库中是否存在表
- 
+
  @param tablename 表面
  @param complete 回调
  */
@@ -226,7 +232,7 @@ static CCDatabase *database = nil;
 
 /**
  判断对象数据是否有改变，智能刷星
- 
+
  @param object 对象
  */
 - (void)ifIvarChangeForClass:(id)object
@@ -235,11 +241,11 @@ static CCDatabase *database = nil;
         NSString *tableName = NSStringFromClass([object class]);
         NSMutableArray *newKeys = [NSMutableArray array];
         NSMutableArray *sqlKeys = [NSMutableArray array];
-        
-        NSDictionary *properties = [object properties];
+
+        NSDictionary *properties = [CCDBTool objectProperties:[object class]];
         NSArray *propertyNameArr = [properties objectForKey:@"propertyName"];       //属性名称
         NSArray *propertySQLTypeArr = [properties objectForKey:@"propertySQLType"]; //属性类型
-        
+
         [self executeDB:^(FMDatabase *db) {
             NSString *SQL = [NSString stringWithFormat:@"select * from %@ limit 0,1;", tableName];
             FMResultSet *rs = [db executeQuery:SQL];
@@ -252,7 +258,7 @@ static CCDatabase *database = nil;
                         [newKeys addObject:@{key : [propertySQLTypeArr objectAtIndex:i]}];
                     }
                 }
-                
+
                 [columNames enumerateObjectsUsingBlock:^(NSString *columName, NSUInteger idx, BOOL *stop) {
                     if (![propertyNameArr containsObject:columName])
                         [sqlKeys addObject:columName];
@@ -261,7 +267,7 @@ static CCDatabase *database = nil;
             //查询完后要关闭rs，不然会报@"Warning: there is at least one open result set around after performing
             !rs ?: [rs close];
         }];
-        
+
         if ((sqlKeys.count == 0) && (newKeys.count > 0)) {
             for (NSDictionary *dic in newKeys) { //此处只是增加了新的列.
                 NSString *key = dic.allKeys.firstObject;
@@ -277,7 +283,7 @@ static CCDatabase *database = nil;
 
 /**
  清空表数据
- 
+
  @param tableName 表名
  @param complete 完成回调
  */
@@ -290,7 +296,7 @@ static CCDatabase *database = nil;
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL];
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateDelete];
     !complete ?: complete(result);
@@ -298,7 +304,7 @@ static CCDatabase *database = nil;
 
 /**
  删除表
- 
+
  @param tableName 表名
  @param complete 完成回调
  */
@@ -318,23 +324,19 @@ static CCDatabase *database = nil;
 
 /**
  删除表(同步线程处理)
- 
+
  @param tableName 表名
  @param complete 完成回调
  */
 - (void)deleteSafeTable:(NSString *)tableName
                complete:(void (^)(BOOL isSuccess))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        [self deleteTable:tableName complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    [self deleteTable:tableName complete:complete];
 }
 
 /**
  判断数据库中表是否存在
- 
+
  @param tableName 表名
  @param complete 处理回调
  */
@@ -361,7 +363,7 @@ static CCDatabase *database = nil;
                       complete:^(BOOL isExist) {
                           if (!isExist) { //如果不存在就新建
                               NSDictionary *createKeys = [CCDBTool objectProperties:[object class]];
-                              
+
                               [self createTableWithTableName:tableName
                                                         keys:createKeys
                                                    uniqueKey:uniqueKey
@@ -370,13 +372,17 @@ static CCDatabase *database = nil;
                                                     }];
                           }
                       }];
-    
+
+    if (!isExistTable) { // 无需创建判断是否需要刷新表结构
+        [self ifIvarChangeForClass:object];
+    }
+
     return isExistTable;
 }
 
 /**
  表添加列
- 
+
  @param tableName 表面
  @param columnName 列名
  @param columnType 列类型
@@ -399,7 +405,7 @@ static CCDatabase *database = nil;
 
 /**
  刷新表结构
- 
+
  @param tablename 表名
  @param columnNames 字段
  @param complete 完成回调
@@ -418,7 +424,7 @@ static CCDatabase *database = nil;
                               return;
                           }
                       }];
-    
+
     NSString *CCTempTable = @"CCTempTable";
     //事务操作.
     __block int recordFailCount = 0;
@@ -434,7 +440,7 @@ static CCDatabase *database = nil;
                  complete:^(BOOL isSuccess) {
                      if (isSuccess) recordFailCount++;
                  }];
-        
+
         [self copyTableName:CCTempTable
                 toTableName:tablename
                 columnNames:columnNames
@@ -443,18 +449,18 @@ static CCDatabase *database = nil;
                            recordFailCount++;
                        }
                    }];
-        
+
         [self deleteTable:CCTempTable
                  complete:^(BOOL isSuccess) {
                      if (isSuccess) recordFailCount++;
                  }];
-        
+
         if (recordFailCount != 4) {
             CCDBEnterLog(@"发生错误，更新数据库失败!");
         }
         return recordFailCount == 4;
     }];
-    
+
     //回调结果.
     if (recordFailCount == 0) {
         !complete ?: complete(CCDBDealStateError);
@@ -467,7 +473,7 @@ static CCDatabase *database = nil;
 
 /**
  表迁移
- 
+
  @param tableName 表名
  @param toTablename 迁移表名
  @param columnNames 迁移字段
@@ -493,7 +499,7 @@ static CCDatabase *database = nil;
         !complete ?: complete(CCDBDealStateError);
         return;
     }
-    
+
     __block CCDBDealState refreshstate = CCDBDealStateError;
     __block BOOL recordError = NO;
     __block BOOL recordSuccess = NO;
@@ -510,8 +516,8 @@ static CCDatabase *database = nil;
                                          for (NSDictionary *oldDict in array) {
                                              NSMutableDictionary *newDict = [NSMutableDictionary dictionary];
                                              for (NSString *key in propertyNameArr) {
-                                                 if (oldDict[key])
-                                                     newDict[key] = oldDict[key];
+                                                 if (oldDict[ key ])
+                                                     newDict[ key ] = oldDict[ key ];
                                              }
                                              //将旧表的数据插入到新表
                                              [WeakSelf insertTableObject:toTablename
@@ -526,13 +532,13 @@ static CCDatabase *database = nil;
                                                                             recordError = YES;
                                                                         }
                                                                     }
-                                                                    
+
                                                                 }];
                                          }
                                      }];
         }
     }
-    
+
     if (complete) {
         if (recordError && recordSuccess) {
             refreshstate = CCDBDealStateIncomplete;
@@ -549,7 +555,7 @@ static CCDatabase *database = nil;
 
 /**
  like语句拼接
- 
+
  @param keyPathValues 键值数组
  @param where 是否Where
  */
@@ -561,29 +567,29 @@ static CCDatabase *database = nil;
     NSMutableArray *values = [NSMutableArray array];
     NSMutableArray *relations = [NSMutableArray array];
     for (int i = 0; i < keyPathValues.count; i += 3) {
-        [keys addObject:keyPathValues[i]];
-        [relations addObject:keyPathValues[i + 1]];
-        [values addObject:keyPathValues[i + 2]];
+        [keys addObject:keyPathValues[ i ]];
+        [relations addObject:keyPathValues[ i + 1 ]];
+        [values addObject:keyPathValues[ i + 2 ]];
     }
     NSMutableString *likeM = [NSMutableString string];
     !where ?: [likeM appendString:@" where "];
     for (int i = 0; i < keys.count; i++) {
-        NSString *keyPath = keys[i];
-        id value = values[i];
+        NSString *keyPath = keys[ i ];
+        id value = values[ i ];
         NSAssert([keyPath containsString:@"."], @"keyPath错误,正确形式如: user.stident.name");
         NSArray *keypaths = [keyPath componentsSeparatedByString:@"."];
         NSMutableString *keyPathParam = [NSMutableString string];
         for (int i = 1; i < keypaths.count; i++) {
             i != 1 ?: [keyPathParam appendString:@"%"];
-            [keyPathParam appendFormat:@"%@", keypaths[i]];
+            [keyPathParam appendFormat:@"%@", keypaths[ i ]];
             [keyPathParam appendString:@"%"];
         }
         [keyPathParam appendFormat:@"%@", value];
-        if ([relations[i] isEqualToString:kSQLCONTAINS]) { //包含关系
+        if ([relations[ i ] isEqualToString:kSQLCONTAINS]) { //包含关系
             [keyPathParam appendString:@"%"];
         } else {
             if (keypaths.count <= 2) {
-                if ([values[i] isKindOfClass:[NSString class]]) {
+                if ([values[ i ] isKindOfClass:[NSString class]]) {
                     [keyPathParam appendString:@"\"%"];
                 } else {
                     [keyPathParam appendString:@",%"];
@@ -592,7 +598,7 @@ static CCDatabase *database = nil;
                 [keyPathParam appendString:@"\\%"];
             }
         }
-        [likeM appendFormat:@"%@ like '%@'", keypaths[0], keyPathParam];
+        [likeM appendFormat:@"%@ like '%@'", keypaths[ 0 ], keyPathParam];
         if (i != (keys.count - 1))
             [likeM appendString:@" and "];
     }
@@ -601,7 +607,7 @@ static CCDatabase *database = nil;
 
 /**
  where语句处理
- 
+
  @param keyValues 键值数组
  */
 + (NSArray *)whereSQLKeyAndValueHandle:(NSArray *)keyValues
@@ -611,7 +617,7 @@ static CCDatabase *database = nil;
     if (!(keyValues.count % 3)) {
         [SQL appendString:@" where "];
         for (int i = 0; i < keyValues.count; i += 3) {
-            [SQL appendFormat:@"%@%@?", keyValues[i], keyValues[i + 1]];
+            [SQL appendFormat:@"%@%@?", keyValues[ i ], keyValues[ i + 1 ]];
             if (i != (keyValues.count - 3)) {
                 [SQL appendString:@" and "];
             }
@@ -621,11 +627,11 @@ static CCDatabase *database = nil;
     }
     NSMutableArray *wheres = [NSMutableArray array];
     for (int i = 0; i < keyValues.count; i += 3) {
-        [wheres addObject:keyValues[i + 2]];
+        [wheres addObject:keyValues[ i + 2 ]];
     }
     [results addObject:SQL];
     [results addObject:wheres];
-    
+
     return results;
 }
 
@@ -634,7 +640,7 @@ static CCDatabase *database = nil;
 
 /**
  创建表
- 
+
  @param tableName 表面
  @param keys 字段名
  @param uniqueKey "唯一约束"字段名
@@ -653,14 +659,14 @@ static CCDatabase *database = nil;
         NSString *header = [NSString stringWithFormat:@"create table if not exists %@ (", tableName];
         NSMutableString *sql = [[NSMutableString alloc] init];
         [sql appendString:header];
-        
+
         NSArray *propertyNameArr = [keys objectForKey:@"propertyName"];       //属性名称
         NSArray *propertySQLTypeArr = [keys objectForKey:@"propertySQLType"]; //属性类型
         BOOL uniqueKeyFlag = NO;
         for (int i = 0; i < propertyNameArr.count; i++) {
             NSString *key = [propertyNameArr objectAtIndex:i];
             NSString *sqlType = [propertySQLTypeArr objectAtIndex:i];
-            
+
             NSString *columns = [NSString stringWithFormat:@"%@ %@", key, sqlType];
             if (uniqueKey) {
                 if ([key isEqualToString:uniqueKey]) {
@@ -678,14 +684,14 @@ static CCDatabase *database = nil;
                     [sql appendString:columns];
                 }
             }
-            
+
             if (i == (propertyNameArr.count - 1)) {
                 [sql appendString:@");"];
             } else {
                 [sql appendString:@","];
             }
         }
-        
+
         if (uniqueKey) {
             NSAssert(uniqueKeyFlag, @"没有找到设置的主键,请检查primarykey返回值是否正确!");
         }
@@ -699,7 +705,7 @@ static CCDatabase *database = nil;
 
 /**
  插入数据处理
- 
+
  @param tableName 表名
  @param begin 开始回调
  @param handle 处理回调
@@ -709,30 +715,28 @@ static CCDatabase *database = nil;
                    handle:(void (^)(NSInteger sqlCount))handle
                  complete:(void (^)(void))complete
 {
-    @autoreleasepool {
-        __weak typeof(self) WeakSelf = self;
-        [self isExistWithTableName:tableName
-                          complete:^(BOOL isSuccess) {
-                              if (!isSuccess) {
-                                  Class cls = NSClassFromString(tableName);
-                                  NSString *uniqueKey = [CCDBTool isRespondsToSelector:NSSelectorFromString(kPRIMARYKEY) class:cls]; //获取"唯一约束"字段名
-                                  NSDictionary *createKeys = [CCDBTool objectProperties:cls];
-                                  [WeakSelf createTableWithTableName:tableName keys:createKeys uniqueKey:uniqueKey complete:nil];
-                              }
-                          }];
-        
-        NSInteger sqlCount = [self selectTableMaxID:tableName];
-        [self inTransaction:^BOOL {
-            !handle ?: handle(sqlCount);
-            return YES;
-        }];
-        !complete ?: complete();
-    };
+    __weak typeof(self) WeakSelf = self;
+    [self isExistWithTableName:tableName
+                      complete:^(BOOL isSuccess) {
+                          if (!isSuccess) {
+                              Class cls = NSClassFromString(tableName);
+                              NSString *uniqueKey = [CCDBTool isRespondsToSelector:NSSelectorFromString(kPRIMARYKEY) class:cls]; //获取"唯一约束"字段名
+                              NSDictionary *createKeys = [CCDBTool objectProperties:cls];
+                              [WeakSelf createTableWithTableName:tableName keys:createKeys uniqueKey:uniqueKey complete:nil];
+                          }
+                      }];
+
+    NSInteger sqlCount = [self selectTableMaxID:tableName];
+    [self inTransaction:^BOOL {
+        !handle ?: handle(sqlCount);
+        return YES;
+    }];
+    !complete ?: complete();
 }
 
 /**
  批量插入数据
- 
+
  @param tableName 表名
  @param objeects 对象集合
  @param complete 完成回调
@@ -745,27 +749,27 @@ static CCDatabase *database = nil;
     __block NSInteger num = 0;
     __weak typeof(self) WeakSelf = self;
     [self insertTableHandle:tableName
-                     handle:^(NSInteger sqlCount){
-                         for (id obj in objeects) {
-                             sqlCount++;
-                             NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:obj];
-                             [dicM setObject:@(sqlCount) forKey:kPRIMARYKEY];
-                             [WeakSelf insertTableObject:tableName
-                                                  object:dicM
-                                                complete:^(BOOL isSuccess) {
-                                                    if (isSuccess)
-                                                        num++;
-                                                }];
-                         }
-                     }
-                   complete:^{
-                       !complete ?: complete(objeects.count == num);
-                   }];
+        handle:^(NSInteger sqlCount) {
+            for (id obj in objeects) {
+                sqlCount++;
+                NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:obj];
+                [dicM setObject:@(sqlCount) forKey:kPRIMARYKEY];
+                [WeakSelf insertTableObject:tableName
+                                     object:dicM
+                                   complete:^(BOOL isSuccess) {
+                                       if (isSuccess)
+                                           num++;
+                                   }];
+            }
+        }
+        complete:^{
+            !complete ?: complete(objeects.count == num);
+        }];
 }
 
 /**
  插入表数据对象
- 
+
  @param tableName 表名
  @param objDic 对象数据
  @param complete 完成回调
@@ -783,7 +787,7 @@ static CCDatabase *database = nil;
         NSMutableString *SQL = [[NSMutableString alloc] init];
         [SQL appendFormat:@"insert into %@(", tableName];
         for (int i = 0; i < keys.count; i++) {
-            [SQL appendFormat:@"%@", keys[i]];
+            [SQL appendFormat:@"%@", keys[ i ]];
             if (i == (keys.count - 1)) {
                 [SQL appendString:@") "];
             } else {
@@ -799,7 +803,7 @@ static CCDatabase *database = nil;
                 [SQL appendString:@","];
             }
         }
-        
+
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL withArgumentsInArray:values];
     }];
@@ -810,41 +814,38 @@ static CCDatabase *database = nil;
 
 /**
  插入数据(对象形式)
- 
+
  @param object 对象集合
  @param complete 完成回调
  */
 - (void)inserQueueTableObject:(id)object
                      complete:(void (^)(BOOL isSuccess))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        [self ifNotExistWillCreateTableWithObject:object];
-        Class cls = [object class];
-        NSString *tableName = NSStringFromClass(cls);
-        __block NSInteger num = 0;
-        __weak typeof(self) WeakSelf = self;
-        [self insertTableHandle:tableName
-                         handle:^(NSInteger sqlCount) {
-                             NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:[CCDBTool objectSqlProperties:object]];
-                             [dicM setObject:@(sqlCount) forKey:kPRIMARYKEY];
-                             [WeakSelf insertTableObject:tableName
-                                                  object:dicM
-                                                complete:^(BOOL isSuccess) {
-                                                    if (isSuccess)
-                                                        num++;
-                                                }];
-                         }
-                       complete:^{
-                           !complete ?: complete(1 == num);
-                       }];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    [self ifNotExistWillCreateTableWithObject:object];
+    Class cls = [object class];
+    NSString *tableName = NSStringFromClass(cls);
+    __block NSInteger num = 0;
+    __weak typeof(self) WeakSelf = self;
+    [self insertTableHandle:tableName
+        handle:^(NSInteger sqlCount) {
+            sqlCount++;
+            NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:[CCDBTool objectSqlProperties:object]];
+            [dicM setObject:@(sqlCount) forKey:kPRIMARYKEY];
+            [WeakSelf insertTableObject:tableName
+                                 object:dicM
+                               complete:^(BOOL isSuccess) {
+                                   if (isSuccess)
+                                       num++;
+                               }];
+        }
+        complete:^{
+            !complete ?: complete(1 == num);
+        }];
 }
 
 /**
  批量插入表数据对象
- 
+
  @param tableName 表名
  @param objArr 对象集合
  @param complete 完成回调
@@ -864,7 +865,7 @@ static CCDatabase *database = nil;
                 NSMutableString *SQL = [[NSMutableString alloc] init];
                 [SQL appendFormat:@"insert into %@(", tableName];
                 for (int i = 0; i < keys.count; i++) {
-                    [SQL appendFormat:@"%@", keys[i]];
+                    [SQL appendFormat:@"%@", keys[ i ]];
                     if (i == (keys.count - 1)) {
                         [SQL appendString:@") "];
                     } else {
@@ -894,42 +895,38 @@ static CCDatabase *database = nil;
 
 /**
  批量插入表数据(对象形式)
- 
+
  @param arr 对象集合
  @param complete 完成回调
  */
 - (void)insertQueueBatchTableObject:(NSArray *)arr
                            complete:(void (^)(BOOL isSuccess))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        // 对象归类 用于区分数组中不同对象
-        NSMutableDictionary *classifyM = [NSMutableDictionary dictionary];
-        for (id obj in arr) {
-            Class cls = [obj class];
-            NSString *className = NSStringFromClass(cls);
-            
-            NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
-            [array addObject:[CCDBTool objectSqlProperties:obj]];
-            
-            [classifyM setObject:array forKey:className];
-        }
-        
-        for (NSString *tableName in classifyM.allKeys) {
-            NSArray *arr = [classifyM objectForKey:tableName];
-            
-            [self ifNotExistWillCreateTableWithObject:arr.firstObject];
-            [self insertBatchTableHandle:tableName objects:arr complete:complete];
-        }
+    // 对象归类 用于区分数组中不同对象
+    NSMutableDictionary *classifyM = [NSMutableDictionary dictionary];
+    for (id obj in arr) {
+        Class cls = [obj class];
+        NSString *className = NSStringFromClass(cls);
+
+        NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
+        [array addObject:[CCDBTool objectSqlProperties:obj]];
+
+        [classifyM setObject:array forKey:className];
     }
-    dispatch_semaphore_signal(self.semaphore);
+
+    for (NSString *tableName in classifyM.allKeys) {
+        NSArray *arr = [classifyM objectForKey:tableName];
+
+        [self ifNotExistWillCreateTableWithObject:arr.firstObject];
+        [self insertBatchTableHandle:tableName objects:arr complete:complete];
+    }
 }
 
 #pragma mark :.... delete
 
 /**
  删除表数据
- 
+
  @param tableName 表名
  @param where 语句对象
  @param complete 完成回调
@@ -945,17 +942,17 @@ static CCDatabase *database = nil;
     [self executeDB:^(FMDatabase *db) {
         NSMutableString *SQL = [[NSMutableString alloc] init];
         [SQL appendFormat:@"delete from %@", tableName];
-        
+
         if (where && (where.count > 0)) {
             NSArray *results = [CCDatabase whereSQLKeyAndValueHandle:where];
-            [SQL appendString:results[0]];
-            [arguments addObjectsFromArray:results[1]];
+            [SQL appendString:results[ 0 ]];
+            [arguments addObjectsFromArray:results[ 1 ]];
         }
-        
+
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL withArgumentsInArray:arguments];
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateDelete];
     !complete ?: complete(result);
@@ -963,7 +960,7 @@ static CCDatabase *database = nil;
 
 /**
  删除表数据(SQL)
- 
+
  @param tableName 表名
  @param conditions sql
  @param complete 完成回调
@@ -980,7 +977,7 @@ static CCDatabase *database = nil;
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL];
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateDelete];
     !complete ?: complete(result);
@@ -988,7 +985,7 @@ static CCDatabase *database = nil;
 
 /**
  模糊删除表数据
- 
+
  @param tableName 表名
  @param keyPathValues 查询字段键值
  @param complete 完成回调
@@ -1006,7 +1003,7 @@ static CCDatabase *database = nil;
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL];
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateDelete];
     !complete ?: complete(result);
@@ -1015,8 +1012,44 @@ static CCDatabase *database = nil;
 #pragma mark :.... update
 
 /**
+ 更新数据（事物执行）
+
+ @param object 更新对象
+ @param where 条件
+ *      条件数组，形式@[@"name",@"=",@"CC哥",@"age",@"=>",@(25)],即更新name=CC哥,age=>25的数据. 可以为nil,nil时更新所有数据;
+ *      不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath更新接口).
+ */
+- (BOOL)updateTableObjecTransaction:(id)object
+                              where:(NSArray *)where
+{
+    NSString *tableName = NSStringFromClass([object class]);
+    __block BOOL result = NO;
+    [self isExistWithTableName:tableName
+                      complete:^(BOOL isExist) {
+                          result = isExist;
+                      }];
+
+    if (result) {
+        [self executeDB:^(FMDatabase *db) {
+            [db beginTransaction];
+
+            NSDictionary *sqlDic = [CCDBTool objectSqlProperties:object];
+            [self ifIvarChangeForClass:object];
+            [self updateTableObject:tableName
+                           KeyValue:sqlDic
+                              where:where
+                           complete:^(BOOL isSuccess) {
+                               result = isSuccess;
+                           }];
+            [db commit];
+        }];
+    }
+    return result;
+}
+
+/**
  更新数据
- 
+
  @param object 更新对象
  @param where 条件
  *      条件数组，形式@[@"name",@"=",@"CC哥",@"age",@"=>",@(25)],即更新name=CC哥,age=>25的数据. 可以为nil,nil时更新所有数据;
@@ -1031,7 +1064,7 @@ static CCDatabase *database = nil;
                       complete:^(BOOL isExist) {
                           result = isExist;
                       }];
-    
+
     if (result) {
         NSDictionary *sqlDic = [CCDBTool objectSqlProperties:object];
         [self ifIvarChangeForClass:object];
@@ -1047,7 +1080,7 @@ static CCDatabase *database = nil;
 
 /**
  更新表数据(字段)
- 
+
  @param tableName 表名
  @param keyValue 更新字段键值
  @param where 语句条件
@@ -1066,23 +1099,23 @@ static CCDatabase *database = nil;
         NSMutableString *SQL = [[NSMutableString alloc] init];
         [SQL appendFormat:@"update %@ set ", tableName];
         for (int i = 0; i < keyValue.allKeys.count; i++) {
-            [SQL appendFormat:@"%@=?", keyValue.allKeys[i]];
-            [arguments addObject:keyValue[keyValue.allKeys[i]]];
+            [SQL appendFormat:@"%@=?", keyValue.allKeys[ i ]];
+            [arguments addObject:keyValue[ keyValue.allKeys[ i ] ]];
             if (i != (keyValue.allKeys.count - 1)) {
                 [SQL appendString:@","];
             }
         }
-        
+
         if (where && (where.count > 0)) {
             NSArray *results = [CCDatabase whereSQLKeyAndValueHandle:where];
-            [SQL appendString:results[0]];
-            [arguments addObjectsFromArray:results[1]];
+            [SQL appendString:results[ 0 ]];
+            [arguments addObjectsFromArray:results[ 1 ]];
         }
-        
+
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL withArgumentsInArray:arguments];
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateUpdate];
     !complete ?: complete(result);
@@ -1090,7 +1123,7 @@ static CCDatabase *database = nil;
 
 /**
  更新表数据(Sql)
- 
+
  @param tableName 表名
  @param keyValue 更新字段键值
  @param conditions Sql
@@ -1111,8 +1144,8 @@ static CCDatabase *database = nil;
         } else {
             NSMutableString *param = [NSMutableString stringWithFormat:@"update %@ set ", tableName];
             for (int i = 0; i < keyValue.allKeys.count; i++) {
-                NSString *key = keyValue.allKeys[i];
-                id value = keyValue[key];
+                NSString *key = keyValue.allKeys[ i ];
+                id value = keyValue[ key ];
                 if ([value isKindOfClass:[NSString class]]) {
                     [param appendFormat:@"%@='%@'", key, value];
                 } else {
@@ -1128,7 +1161,7 @@ static CCDatabase *database = nil;
         CCDBEnterLog(SQL);
         result = [db executeUpdate:SQL];
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateUpdate];
     !complete ?: complete(result);
@@ -1136,7 +1169,7 @@ static CCDatabase *database = nil;
 
 /**
  更新数据(检查数据结构)
- 
+
  @param tableName 表名
  @param keyValue 更新字段键值
  @param conditions sql
@@ -1147,18 +1180,14 @@ static CCDatabase *database = nil;
                        conditions:(NSString *)conditions
                          complete:(void (^)(BOOL isSuccess))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        //自动判断是否有字段改变,自动刷新数据库.
-        [self ifIvarChangeForClass:NSClassFromString(tableName)];
-        [self updateSQLTableObject:tableName keyValue:keyValue conditions:conditions complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    //自动判断是否有字段改变,自动刷新数据库.
+    [self ifIvarChangeForClass:NSClassFromString(tableName)];
+    [self updateSQLTableObject:tableName keyValue:keyValue conditions:conditions complete:complete];
 }
 
 /**
  更新数据(对象方式并检查数据结构)
- 
+
  @param object 对象
  @param conditions sql语句
  @param complete 完成回调
@@ -1167,19 +1196,15 @@ static CCDatabase *database = nil;
                        conditions:(NSString *)conditions
                          complete:(void (^)(BOOL isSuccess))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        NSString *tableName = NSStringFromClass([object class]);
-        [self ifIvarChangeForClass:NSClassFromString(tableName)]; //自动判断是否有字段改变,自动刷新数据库.
-        NSDictionary *keyValue = [CCDBTool objectSqlProperties:object];
-        [self updateSQLTableObject:tableName keyValue:keyValue conditions:conditions complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    NSString *tableName = NSStringFromClass([object class]);
+    [self ifIvarChangeForClass:NSClassFromString(tableName)]; //自动判断是否有字段改变,自动刷新数据库.
+    NSDictionary *keyValue = [CCDBTool objectSqlProperties:object];
+    [self updateSQLTableObject:tableName keyValue:keyValue conditions:conditions complete:complete];
 }
 
 /**
  模糊更新数据
- 
+
  @param tableName 表名
  @param keyPathValues 模糊条件
  @param keyValue 更行字段键值
@@ -1197,8 +1222,8 @@ static CCDatabase *database = nil;
         NSMutableString *SQL = [[NSMutableString alloc] init];
         [SQL appendFormat:@"update %@ set ", tableName];
         for (int i = 0; i < keyValue.allKeys.count; i++) {
-            [SQL appendFormat:@"%@=?", keyValue.allKeys[i]];
-            [arguments addObject:keyValue[keyValue.allKeys[i]]];
+            [SQL appendFormat:@"%@=?", keyValue.allKeys[ i ]];
+            [arguments addObject:keyValue[ keyValue.allKeys[ i ] ]];
             if (i != (keyValue.allKeys.count - 1)) {
                 [SQL appendString:@","];
             }
@@ -1207,16 +1232,100 @@ static CCDatabase *database = nil;
         result = [db executeUpdate:SQL withArgumentsInArray:arguments];
         CCDBEnterLog(SQL);
     }];
-    
+
     //数据监听执行函数
     [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateUpdate];
     !complete ?: complete(result);
 }
 
+/**
+ 批量更新数据
+
+ @param tableName 表名
+ @param uniqueKey 关键字段
+ @param objArr 更行数据集合
+ @param complete 完成回调
+ */
+- (void)updateBatchTableObject:(NSString *)tableName
+                     uniqueKey:(NSString *)uniqueKey
+                   batchObject:(NSArray<NSDictionary *> *)objArr
+                      complete:(void (^)(BOOL isSuccess))complete
+{
+    __block BOOL result;
+    [self executeDB:^(FMDatabase *db) {
+        [db beginTransaction];
+        [objArr enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
+            @autoreleasepool {
+                NSMutableArray *arguments = [NSMutableArray array];
+                NSString *where = nil;
+                NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
+                if (uniqueKey) {
+                    id uniqueValue = dict[ uniqueKey ];
+                    where = [NSString stringWithFormat:@" where %@=%@", uniqueKey, uniqueValue];
+                    if ([uniqueValue isKindOfClass:[NSString class]])
+                        where = [NSString stringWithFormat:@" where %@='%@'", uniqueKey, uniqueValue];
+
+                    [tempDict removeObjectForKey:uniqueKey];
+                }
+                dict = tempDict;
+                NSMutableString *SQL = [[NSMutableString alloc] init];
+                [SQL appendFormat:@"update %@ set ", tableName];
+                [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                    [SQL appendFormat:@"%@=?,", key];
+                    [arguments addObject:obj];
+                }];
+                SQL = [NSMutableString stringWithString:[SQL substringToIndex:SQL.length - 1]];
+                if (where) {
+                    [SQL appendString:where];
+                }
+                CCDBEnterLog(SQL);
+                result = [db executeUpdate:SQL withArgumentsInArray:arguments];
+            }
+        }];
+        [db commit];
+    }];
+    //数据监听执行函数
+    [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateUpdate];
+    !complete ?: complete(result);
+    [self closeDB];
+}
+
+- (void)updateBatchTableObject:(NSString *)tableName
+                   batchObject:(NSArray<NSDictionary *> *)objArr
+                    conditions:(NSString *)conditions
+                      complete:(void (^)(BOOL isSuccess))complete
+{
+    __block BOOL result;
+    [self executeDB:^(FMDatabase *db) {
+        [db beginTransaction];
+        [objArr enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
+            @autoreleasepool {
+                NSMutableArray *arguments = [NSMutableArray array];
+                NSMutableString *SQL = [[NSMutableString alloc] init];
+                [SQL appendFormat:@"update %@ set ", tableName];
+                [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                    [SQL appendFormat:@"%@=?,", key];
+                    [arguments addObject:obj];
+                }];
+                SQL = [NSMutableString stringWithString:[SQL substringToIndex:SQL.length - 1]];
+                if (conditions) {
+                    [SQL appendString:conditions];
+                }
+                CCDBEnterLog(SQL);
+                result = [db executeUpdate:SQL withArgumentsInArray:arguments];
+            }
+        }];
+        [db commit];
+    }];
+    //数据监听执行函数
+    [self dbDataChangeWithName:tableName flag:result state:CCDBChangeStateUpdate];
+    !complete ?: complete(result);
+    [self closeDB];
+}
 
 /**
  批量更新数据
- 
+
  @param tableName 表名
  @param objArr 更行数据集合
  @param complete 完成回调
@@ -1235,7 +1344,7 @@ static CCDatabase *database = nil;
                 NSString *where = nil;
                 NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
                 if (uniqueKey) {
-                    where = [NSString stringWithFormat:@" where %@=%@", uniqueKey, dict[uniqueKey]];
+                    where = [NSString stringWithFormat:@" where %@=%@", uniqueKey, dict[ uniqueKey ]];
                     [tempDict removeObjectForKey:uniqueKey];
                 }
                 dict = tempDict;
@@ -1263,7 +1372,7 @@ static CCDatabase *database = nil;
 
 /**
  批量更行数据(对象)
- 
+
  @param objects 对象集合
  @param complete 完成回调
  */
@@ -1273,18 +1382,17 @@ static CCDatabase *database = nil;
     // 对象归类 用于区分数组中不同对象
     NSMutableDictionary *classifyM = [NSMutableDictionary dictionary];
     for (id obj in objects) {
-        Class cls = [obj class];
-        NSString *className = NSStringFromClass(cls);
-        
+        NSString *className = NSStringFromClass([obj class]);
+
         NSMutableArray *array = [NSMutableArray arrayWithArray:[classifyM objectForKey:className]];
-        [array addObject:[CCDBTool objectSqlProperties:obj]];
-        
+        [array addObject:[CCDBTool objectSqlProperties:[obj class]]];
+
         [classifyM setObject:array forKey:className];
     }
-    
+
     for (NSString *tableName in classifyM.allKeys) {
         NSArray *arr = [classifyM objectForKey:tableName];
-        
+
         [self ifNotExistWillCreateTableWithObject:arr.firstObject];
         [self updateBatchTableObject:tableName batchObject:arr complete:complete];
     }
@@ -1313,7 +1421,7 @@ static CCDatabase *database = nil;
 
 /**
  查询表中有多少条数据
- 
+
  @param tableName 表名
  @param where 查询条件
  */
@@ -1325,12 +1433,12 @@ static CCDatabase *database = nil;
     NSMutableString *strM = [NSMutableString string];
     !where ?: [strM appendString:@" where "];
     for (int i = 0; i < where.count; i += 3) {
-        if ([where[i + 2] isKindOfClass:[NSString class]]) {
-            [strM appendFormat:@"%@%@'%@'", where[i], where[i + 1], where[i + 2]];
+        if ([where[ i + 2 ] isKindOfClass:[NSString class]]) {
+            [strM appendFormat:@"%@%@'%@'", where[ i ], where[ i + 1 ], where[ i + 2 ]];
         } else {
-            [strM appendFormat:@"%@%@%@", where[i], where[i + 1], where[i + 2]];
+            [strM appendFormat:@"%@%@%@", where[ i ], where[ i + 1 ], where[ i + 2 ]];
         }
-        
+
         if (i != (where.count - 3)) {
             [strM appendString:@" and "];
         }
@@ -1350,25 +1458,21 @@ static CCDatabase *database = nil;
 
 /**
  查询表中有多少条数据(同步队列查询)
- 
+
  @param tableName 表名
  @param where 查询条件
  */
 - (NSInteger)selectQueueTableHasCount:(NSString *)tableName
                                 where:(NSArray *)where
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     NSInteger count = 0;
-    @autoreleasepool {
-        count = [self selectTableHasCount:tableName where:where];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    count = [self selectTableHasCount:tableName where:where];
     return count;
 }
 
 /**
  查询表中有多少条数据(sql)
- 
+
  @param tableName 表名
  @param conditions sql查询条件
  */
@@ -1392,25 +1496,21 @@ static CCDatabase *database = nil;
 
 /**
  查询表中有多少条数据(sql同步队列查询)
- 
+
  @param tableName 表名
  @param conditions sql查询条件
  */
 - (NSInteger)selectQueueTableHasCount:(NSString *)tableName
                            conditions:(NSString *)conditions
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     NSInteger count = 0;
-    @autoreleasepool {
-        count = [self selectTableHasCount:tableName conditions:conditions];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    count = [self selectTableHasCount:tableName conditions:conditions];
     return count;
 }
 
 /**
  函数查询表数据
- 
+
  @param tableName 表名
  @param methodType 函数类型
  @param key 字段名
@@ -1442,7 +1542,7 @@ static CCDatabase *database = nil;
             NSAssert(NO, @"请传入方法类型!");
             break;
     }
-    
+
     [self executeDB:^(FMDatabase *db) {
         NSString *SQL;
         if (where) {
@@ -1467,7 +1567,7 @@ static CCDatabase *database = nil;
 
 /**
  函数查询表数据(线程)
- 
+
  @param tableName 表名
  @param methodType 函数类型
  @param key 字段名
@@ -1478,18 +1578,14 @@ static CCDatabase *database = nil;
                                      key:(NSString *)key
                                    where:(NSString *_Nullable)where
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     NSInteger num = 0;
-    @autoreleasepool {
-        num = [self selectTableMethodCount:tableName type:methodType key:key where:where];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    num = [self selectTableMethodCount:tableName type:methodType key:key where:where];
     return num;
 }
 
 /**
  like查询（keyPath方式）数量
- 
+
  @param tableName 表名
  @param keyPathValues 键值
  */
@@ -1511,24 +1607,20 @@ static CCDatabase *database = nil;
 
 /**
  like查询（keyPath方式）数量 (同步队列查询)
- 
+
  @param tableName 表名
  @param keyPathValues 键值
  */
 - (NSInteger)selectQueueTableLinkeCount:(NSString *)tableName forKeyPathAndValues:(NSArray *)keyPathValues
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     NSInteger count = 0;
-    @autoreleasepool {
-        count = [self selectTableLikeCount:tableName forKeyPathAndValues:keyPathValues];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    count = [self selectTableLikeCount:tableName forKeyPathAndValues:keyPathValues];
     return count;
 }
 
 /**
  查询表(sql语句)
- 
+
  @param tableName 表名
  @param conditions sql语句
  @param complete 完成回调
@@ -1550,7 +1642,7 @@ static CCDatabase *database = nil;
         while (rs.next) {
             NSMutableDictionary *dictM = [[NSMutableDictionary alloc] init];
             for (int i = 0; i < [[[rs columnNameToIndexMap] allKeys] count]; i++) {
-                dictM[[rs columnNameForIndex:i]] = [rs objectForColumnIndex:i];
+                dictM[ [rs columnNameForIndex:i] ] = [rs objectForColumnIndex:i];
             }
             [arrM addObject:dictM];
         }
@@ -1562,7 +1654,7 @@ static CCDatabase *database = nil;
 
 /**
  查询表(sql语句)同步队列查询
- 
+
  @param tableName 表名
  @param conditions sql语句
  @param complete 完成回调
@@ -1571,16 +1663,12 @@ static CCDatabase *database = nil;
                    conditions:(NSString *)conditions
                      complete:(void (^)(NSArray *array))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        [self selectTableObject:tableName conditions:conditions complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    [self selectTableObject:tableName conditions:conditions complete:complete];
 }
 
 /**
  查询表键值语句
- 
+
  @param tableName 表名
  @param keys 条件
  @param where 查询条件
@@ -1600,7 +1688,7 @@ static CCDatabase *database = nil;
         if ((keys != nil) && (keys.count > 0)) {
             [SQL appendString:@" "];
             for (int i = 0; i < keys.count; i++) {
-                [SQL appendFormat:@"%@", keys[i]];
+                [SQL appendFormat:@"%@", keys[ i ]];
                 if (i != (keys.count - 1)) {
                     [SQL appendString:@","];
                 }
@@ -1609,24 +1697,24 @@ static CCDatabase *database = nil;
             [SQL appendString:@" *"];
         }
         [SQL appendFormat:@" from %@", tableName];
-        
+
         if (where && (where.count > 0)) {
             NSArray *results = [CCDatabase whereSQLKeyAndValueHandle:where];
-            [SQL appendString:results[0]];
-            arguments = results[1];
+            [SQL appendString:results[ 0 ]];
+            arguments = results[ 1 ];
         }
-        
+
         CCDBEnterLog(SQL);
         // 1.查询数据
         FMResultSet *rs = [db executeQuery:SQL withArgumentsInArray:arguments];
         if (!rs)
             CCDBEnterLog(@"查询错误,可能是'类变量名'发生了改变或'字段','表格'不存在!,请存储后再读取,或检查条件数组'字段名称'是否正确");
-        
+
         // 2.遍历结果集
         while (rs.next) {
             NSMutableDictionary *dictM = [[NSMutableDictionary alloc] init];
             for (int i = 0; i < [[[rs columnNameToIndexMap] allKeys] count]; i++) {
-                dictM[[rs columnNameForIndex:i]] = [rs objectForColumnIndex:i];
+                dictM[ [rs columnNameForIndex:i] ] = [rs objectForColumnIndex:i];
             }
             [arrM addObject:dictM];
         }
@@ -1638,7 +1726,7 @@ static CCDatabase *database = nil;
 
 /**
  队列查询表键值语句
- 
+
  @param tableName 表名
  @param keys 条件
  @param where 查询条件
@@ -1649,16 +1737,12 @@ static CCDatabase *database = nil;
                                            where:(NSArray *)where
                                         complete:(void (^)(NSArray *array))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        [self selectTableKeyValuesWithWhereObject:tableName keys:keys where:where complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    [self selectTableKeyValuesWithWhereObject:tableName keys:keys where:where complete:complete];
 }
 
 /**
  查询表跟随语句
- 
+
  @param tableName 表名
  @param param 跟随局域
  @param where 查询条件
@@ -1675,38 +1759,38 @@ static CCDatabase *database = nil;
     [self executeDB:^(FMDatabase *db) {
         NSMutableString *SQL = [NSMutableString string];
         [SQL appendFormat:@"select * from %@", tableName];
-        
+
         if (where && (where.count > 0)) {
             NSArray *results = [CCDatabase whereSQLKeyAndValueHandle:where];
-            [SQL appendString:results[0]];
-            arguments = results[1];
+            [SQL appendString:results[ 0 ]];
+            arguments = results[ 1 ];
         }
-        
+
         !param ?: [SQL appendFormat:@" %@", param];
         CCDBEnterLog(SQL);
         // 1.查询数据
         FMResultSet *rs = [db executeQuery:SQL withArgumentsInArray:arguments];
         if (!rs)
             CCDBEnterLog(@"查询错误,'表格'不存在!,请存储后再读取!");
-        
+
         // 2.遍历结果集
         while (rs.next) {
             NSMutableDictionary *dictM = [[NSMutableDictionary alloc] init];
             for (int i = 0; i < [[[rs columnNameToIndexMap] allKeys] count]; i++) {
-                dictM[[rs columnNameForIndex:i]] = [rs objectForColumnIndex:i];
+                dictM[ [rs columnNameForIndex:i] ] = [rs objectForColumnIndex:i];
             }
             [arrM addObject:dictM];
         }
         //查询完后要关闭rs，不然会报@"Warning: there is at least one open result set around after performing
         [rs close];
     }];
-    
+
     !complete ?: complete(arrM);
 }
 
 /**
  同步队列查询表
- 
+
  @param tableName 表名
  @param param 跟随条件
  @param where 查询条件
@@ -1717,16 +1801,12 @@ static CCDatabase *database = nil;
                                    param:(NSString *)param
                                 complete:(void (^)(NSArray *array))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        [self selectTableParamWhereObject:tableName where:where param:param complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    [self selectTableParamWhereObject:tableName where:where param:param complete:complete];
 }
 
 /**
  查询表like
- 
+
  @param tableName 表名
  @param keyPathValues 条件
  @param complete 完成回调
@@ -1744,7 +1824,7 @@ static CCDatabase *database = nil;
         FMResultSet *rs = [db executeQuery:SQL];
         if (!rs)
             CCDBEnterLog(@"查询错误,数据不存在,请存储后再读取!");
-        
+
         // 2.遍历结果集
         while (rs.next) {
             NSMutableDictionary *dictM = [[NSMutableDictionary alloc] init];
@@ -1756,13 +1836,13 @@ static CCDatabase *database = nil;
         //查询完后要关闭rs，不然会报@"Warning: there is at least one open result set around after performing
         [rs close];
     }];
-    
+
     !complete ?: complete(arrM);
 }
 
 /**
  同步查询表like
- 
+
  @param tableName 表名
  @param keyPathValues 条件
  @param complete 完成回调
@@ -1771,11 +1851,7 @@ static CCDatabase *database = nil;
                    forKeyPathAndValues:(NSArray *)keyPathValues
                               complete:(void (^)(NSArray *array))complete
 {
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        [self selectTableKeyValuesObject:tableName forKeyPathAndValues:keyPathValues complete:complete];
-    }
-    dispatch_semaphore_signal(self.semaphore);
+    [self selectTableKeyValuesObject:tableName forKeyPathAndValues:keyPathValues complete:complete];
 }
 
 
@@ -1814,7 +1890,7 @@ static CCDatabase *database = nil;
     if (flag && _changeBlocks.count > 0) {
         //开一个子线程去执行block,防止死锁.
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [self->_changeBlocks enumerateKeysAndObjectsUsingBlock:^(id  key, id  obj, BOOL * stop) {
+            [self.changeBlocks enumerateKeysAndObjectsUsingBlock:^(id  key, id  obj, BOOL * stop) {
                 if ([tableName isEqualToString:key]) {
                     void (^block)(CCDBChangeState) = obj;
                     //返回主线程回调.
@@ -1839,3 +1915,4 @@ static CCDatabase *database = nil;
 }
 
 @end
+

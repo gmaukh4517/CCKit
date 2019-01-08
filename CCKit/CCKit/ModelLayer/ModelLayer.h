@@ -35,8 +35,10 @@
 
 #import <CCKit/UITableView+CCAdd.h>
 #import <CCKit/UITableViewCell+CCAdd.h>
+#import <CCKit/UITableViewRowAction+CCAdd.h>
 #import <CCKit/CCTableViewHelper.h>
 #import <CCKit/UITableViewHeaderFooterView+CCAdd.h>
+
 #import <CCKit/TableViewCellEntity.h>
 
 #endif

@@ -2,7 +2,7 @@
 //  CCWebViewController.h
 //  CCKit
 //
-// Copyright (c) 2015 CC ( http://www.ccskill.com )
+// Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,29 +27,29 @@
 
 @interface CCWebViewController : UIViewController
 
-@property(nonatomic, assign) UINavigationBar *webViewInitWithProgress;
+@property (nonatomic, assign) UINavigationBar *webViewInitWithProgress;
 
 /**
  是否显示来源背景 (默认显示)
  */
-@property(nonatomic, assign) BOOL isSource;
+@property (nonatomic, assign) BOOL isSource;
 
 /**
  *  @author C C, 2016-10-05
- *  
+ *
  *  @brief  标题是否跟随变化（默认 YES）
  */
-@property(nonatomic, assign) BOOL isTitleFollowChange;
+@property (nonatomic, assign) BOOL isTitleFollowChange;
 
 /**
  是否允许左右划手势导航，默认允许
  */
-@property(nonatomic, assign) BOOL allowsBackForwardNavigationGestures;
+@property (nonatomic, assign) BOOL allowsBackForwardNavigationGestures;
 
 /**
  是否允许滚动, 默认允许
  */
-@property(nonatomic, assign) BOOL isScrollEnabled;
+@property (nonatomic, assign) BOOL isScrollEnabled;
 
 /**
  *  @author CC, 2015-10-13
@@ -70,6 +70,15 @@
 - (void)loadHTMLString:(NSString *)string;
 
 /**
+ 加载本地文件
+
+ @param fileName 文件名
+ @param expansionName 文件扩展名
+ */
+- (void)loadLocalFiles:(NSString *)fileName
+             expansion:(NSString *)expansionName;
+
+/**
  *  @author CC, 16-09-23
  *
  *  @brief 跳转页面
@@ -78,7 +87,14 @@
  */
 - (void)jumpPage:(NSString *)baseURL;
 
+/**
+ 页面是否有返回
+ */
 - (BOOL)isGoBack;
+
+/**
+ 页面是否有前进
+ */
 - (BOOL)isGoForward;
 
 /**
@@ -121,19 +137,10 @@
  *
  *  @brief OC调用Js
  *
- *  @param javaScriptString  JS函数名
+ *  @param javaScriptString  JS函数名(参数)
  *  @param completionHandler 回调事件
  */
 - (void)evaluateJavaScript:(NSString *)javaScriptString
          completionHandler:(void (^)(id response, NSError *error))completionHandler;
-
-/**
- *  @author CC, 16-09-22
- *
- *  @brief 观察标题
- *
- *  @param title 标题
- */
--(void)observeTitle:(NSString *)title;
 
 @end
