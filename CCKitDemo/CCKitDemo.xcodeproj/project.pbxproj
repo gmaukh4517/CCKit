@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4205210C21E0932B00A6BF4E /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4205210B21E0932B00A6BF4E /* WebViewController.m */; };
+		420E316C21E5D974006B10CF /* PostNoticeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 420E316B21E5D974006B10CF /* PostNoticeViewController.m */; };
 		420E4FC721D5C14100D3261D /* TestHandleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 420E4FC621D5C14100D3261D /* TestHandleViewController.m */; };
 		420E4FCA21D5C14E00D3261D /* TestHandleViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 420E4FC921D5C14E00D3261D /* TestHandleViewManager.m */; };
 		420E4FCD21D5C15900D3261D /* TestHandleViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 420E4FCC21D5C15900D3261D /* TestHandleViewModel.m */; };
@@ -22,7 +23,11 @@
 		425822772079E5E8005D3178 /* CCNetowrkRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425822762079E5E8005D3178 /* CCNetowrkRequests.m */; };
 		4258227B2079F123005D3178 /* MainTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4258227A2079F123005D3178 /* MainTabBarViewController.m */; };
 		4258227F2079F266005D3178 /* CCAppDelegateService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4258227E2079F266005D3178 /* CCAppDelegateService.m */; };
+		4273562721E58B760059D962 /* EventNoticeCenterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4273562621E58B760059D962 /* EventNoticeCenterView.m */; };
 		4283FCC321E43CD600409090 /* WebAPPDemo.html in Resources */ = {isa = PBXBuildFile; fileRef = 4283FCC221E43CD600409090 /* WebAPPDemo.html */; };
+		42B3448621E498C4004237C8 /* EventNoticeCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B3448521E498C4004237C8 /* EventNoticeCenterViewController.m */; };
+		42B3448921E498D5004237C8 /* EventNoticeCenterViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B3448821E498D5004237C8 /* EventNoticeCenterViewManager.m */; };
+		42B3448C21E498E2004237C8 /* EventNoticeCenterViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B3448B21E498E2004237C8 /* EventNoticeCenterViewModel.m */; };
 		42D301CC21D600A5005871E2 /* CCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D301CB21D600A5005871E2 /* CCKit.framework */; };
 		42D301D021D6055F005871E2 /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D301CF21D6055F005871E2 /* HomeTableViewCell.m */; };
 		42D301D921D61439005871E2 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D301D821D61439005871E2 /* CollectionViewController.m */; };
@@ -42,6 +47,8 @@
 /* Begin PBXFileReference section */
 		4205210A21E0932B00A6BF4E /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		4205210B21E0932B00A6BF4E /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		420E316A21E5D974006B10CF /* PostNoticeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PostNoticeViewController.h; sourceTree = "<group>"; };
+		420E316B21E5D974006B10CF /* PostNoticeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PostNoticeViewController.m; sourceTree = "<group>"; };
 		420E4FC521D5C14100D3261D /* TestHandleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHandleViewController.h; sourceTree = "<group>"; };
 		420E4FC621D5C14100D3261D /* TestHandleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestHandleViewController.m; sourceTree = "<group>"; };
 		420E4FC821D5C14E00D3261D /* TestHandleViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHandleViewManager.h; sourceTree = "<group>"; };
@@ -70,7 +77,15 @@
 		4258227A2079F123005D3178 /* MainTabBarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarViewController.m; sourceTree = "<group>"; };
 		4258227D2079F266005D3178 /* CCAppDelegateService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCAppDelegateService.h; sourceTree = "<group>"; };
 		4258227E2079F266005D3178 /* CCAppDelegateService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegateService.m; sourceTree = "<group>"; };
+		4273562521E58B760059D962 /* EventNoticeCenterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventNoticeCenterView.h; sourceTree = "<group>"; };
+		4273562621E58B760059D962 /* EventNoticeCenterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventNoticeCenterView.m; sourceTree = "<group>"; };
 		4283FCC221E43CD600409090 /* WebAPPDemo.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = WebAPPDemo.html; sourceTree = "<group>"; };
+		42B3448421E498C4004237C8 /* EventNoticeCenterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventNoticeCenterViewController.h; sourceTree = "<group>"; };
+		42B3448521E498C4004237C8 /* EventNoticeCenterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventNoticeCenterViewController.m; sourceTree = "<group>"; };
+		42B3448721E498D5004237C8 /* EventNoticeCenterViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventNoticeCenterViewManager.h; sourceTree = "<group>"; };
+		42B3448821E498D5004237C8 /* EventNoticeCenterViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventNoticeCenterViewManager.m; sourceTree = "<group>"; };
+		42B3448A21E498E2004237C8 /* EventNoticeCenterViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventNoticeCenterViewModel.h; sourceTree = "<group>"; };
+		42B3448B21E498E2004237C8 /* EventNoticeCenterViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventNoticeCenterViewModel.m; sourceTree = "<group>"; };
 		42D301CB21D600A5005871E2 /* CCKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CCKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42D301CE21D6055F005871E2 /* HomeTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
 		42D301CF21D6055F005871E2 /* HomeTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewCell.m; sourceTree = "<group>"; };
@@ -326,6 +341,15 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		4273562421E58B5E0059D962 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4273562521E58B760059D962 /* EventNoticeCenterView.h */,
+				4273562621E58B760059D962 /* EventNoticeCenterView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		427E4D9820EDAE60002D6BA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,6 +366,46 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		42B3448021E49815004237C8 /* EventNoticeCenter */ = {
+			isa = PBXGroup;
+			children = (
+				4273562421E58B5E0059D962 /* View */,
+				42B3448321E498A0004237C8 /* Controller */,
+				42B3448221E4989A004237C8 /* ViewManager */,
+				42B3448121E49890004237C8 /* ViewModel */,
+			);
+			path = EventNoticeCenter;
+			sourceTree = "<group>";
+		};
+		42B3448121E49890004237C8 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				42B3448A21E498E2004237C8 /* EventNoticeCenterViewModel.h */,
+				42B3448B21E498E2004237C8 /* EventNoticeCenterViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		42B3448221E4989A004237C8 /* ViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				42B3448721E498D5004237C8 /* EventNoticeCenterViewManager.h */,
+				42B3448821E498D5004237C8 /* EventNoticeCenterViewManager.m */,
+			);
+			path = ViewManager;
+			sourceTree = "<group>";
+		};
+		42B3448321E498A0004237C8 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				42B3448421E498C4004237C8 /* EventNoticeCenterViewController.h */,
+				42B3448521E498C4004237C8 /* EventNoticeCenterViewController.m */,
+				420E316A21E5D974006B10CF /* PostNoticeViewController.h */,
+				420E316B21E5D974006B10CF /* PostNoticeViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		42D301CD21D60548005871E2 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -354,6 +418,7 @@
 		42D301D121D613F8005871E2 /* TestDemo */ = {
 			isa = PBXGroup;
 			children = (
+				42B3448021E49815004237C8 /* EventNoticeCenter */,
 				4205210021E08C8F00A6BF4E /* Web */,
 				42D301F421D75EEC005871E2 /* DataBase */,
 				42D301E321D70376005871E2 /* UIVIew */,
@@ -574,7 +639,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4273562721E58B760059D962 /* EventNoticeCenterView.m in Sources */,
 				420E4FC721D5C14100D3261D /* TestHandleViewController.m in Sources */,
+				42B3448621E498C4004237C8 /* EventNoticeCenterViewController.m in Sources */,
 				425822772079E5E8005D3178 /* CCNetowrkRequests.m in Sources */,
 				42D301F021D7044D005871E2 /* ViewDemoViewModel.m in Sources */,
 				420E4FCD21D5C15900D3261D /* TestHandleViewModel.m in Sources */,
@@ -587,12 +654,15 @@
 				42D301E221D6146A005871E2 /* CollectionViewCell.m in Sources */,
 				42D3020421D76119005871E2 /* DataBaseTableViewCell.m in Sources */,
 				42D301DF21D61458005871E2 /* CollectionViewModel.m in Sources */,
+				420E316C21E5D974006B10CF /* PostNoticeViewController.m in Sources */,
+				42B3448C21E498E2004237C8 /* EventNoticeCenterViewModel.m in Sources */,
 				42D301DC21D6144D005871E2 /* CollectionViewManager.m in Sources */,
 				42D301EA21D7042E005871E2 /* ViewDemoViewController.m in Sources */,
 				4258227F2079F266005D3178 /* CCAppDelegateService.m in Sources */,
 				42D301D021D6055F005871E2 /* HomeTableViewCell.m in Sources */,
 				42D301ED21D70441005871E2 /* ViewDemoViewManager.m in Sources */,
 				4246663D20EDBEE1002E3FB1 /* HomeViewManager.m in Sources */,
+				42B3448921E498D5004237C8 /* EventNoticeCenterViewManager.m in Sources */,
 				4205210C21E0932B00A6BF4E /* WebViewController.m in Sources */,
 				42D3020021D75FDD005871E2 /* DataBaseViewModel.m in Sources */,
 				425822532079E443005D3178 /* AppDelegate.m in Sources */,

@@ -22,7 +22,9 @@
                          @{ @"title" : @"DataBase",
                             @"push" : @"DataBaseViewController" },
                          @{ @"title" : @"Web Interaction",
-                            @"push" : @"WebViewController" } ] ];
+                            @"push" : @"WebViewController" },
+                         @{ @"title" : @"CCEventNotice",
+                            @"push" : @"EventNoticeCenterViewController" } ] ];
     NSMutableArray *groupArray = [NSMutableArray array];
     for (NSArray *itemArr in arr) {
         NSMutableArray *array = [NSMutableArray array];
