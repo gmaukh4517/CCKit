@@ -26,7 +26,7 @@
 #import <UIKit/UIKit.h>
 
 
-typedef void(^CCImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageURL);
+typedef void (^CCImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageURL);
 
 @interface UIImageView (CCAdd)
 
@@ -68,20 +68,20 @@ typedef void(^CCImageCompletionBlock)(UIImage *image, NSError *error, NSURL *ima
 // 画水印
 // 图片水印
 - (void)setImage:(UIImage *)image
-   withWaterMark:(UIImage *)mark
-          inRect:(CGRect)rect;
+    withWaterMark:(UIImage *)mark
+           inRect:(CGRect)rect;
 // 文字水印
 - (void)setImage:(UIImage *)image
-withStringWaterMark:(NSString *)markString
-          inRect:(CGRect)rect
-           color:(UIColor *)color
-            font:(UIFont *)font;
+    withStringWaterMark:(NSString *)markString
+                 inRect:(CGRect)rect
+                  color:(UIColor *)color
+                   font:(UIFont *)font;
 
 - (void)setImage:(UIImage *)image
-withStringWaterMark:(NSString *)markString
-         atPoint:(CGPoint)point
-           color:(UIColor *)color
-            font:(UIFont *)font;
+    withStringWaterMark:(NSString *)markString
+                atPoint:(CGPoint)point
+                  color:(UIColor *)color
+                   font:(UIFont *)font;
 
 /**
  *  @author C C, 2015-10-14
@@ -100,8 +100,8 @@ withStringWaterMark:(NSString *)markString
 #pragma mark -
 #pragma mark :. BetterFace
 
-@property(nonatomic) BOOL needsBetterFace;
-@property(nonatomic) BOOL fast;
+@property (nonatomic) BOOL needsBetterFace;
+@property (nonatomic) BOOL fast;
 
 void hack_uiimageview_bf(void);
 - (void)setBetterFaceImage:(UIImage *)image;
@@ -202,7 +202,7 @@ void hack_uiimageview_bf(void);
  *
  *  @brief 图片点击事件  不用再手动添加UITapGestureRecognizer
  */
-@property(nonatomic, copy) void (^onTouchTapBlock)(UIImageView *imageView);
+@property (nonatomic, copy) void (^onTouchTapBlock)(UIImageView *imageView);
 
 /**
  *  @author CC, 16-08-23
@@ -240,7 +240,7 @@ void hack_uiimageview_bf(void);
              placeholderImage:(UIImage *)placeholder;
 
 - (void)cc_setImageWithURLStr:(NSURL *)url
-             placeholderImage:(UIImage *)placeholder 
+             placeholderImage:(UIImage *)placeholder
               completionBlock:(CCImageCompletionBlock)block;
 
 /**
@@ -255,5 +255,25 @@ void hack_uiimageview_bf(void);
 - (void)cc_setImageWithURLStr:(NSString *)urlString
              placeholderImage:(UIImage *)placeholder
         ErrorPlaceholderImage:(UIImage *)errorPlaceholder;
+
+#pragma mark -
+#pragma mark :. 根据URL获取图片大小
+/**
+ 传入图片url  返回图片size
+
+ @param imageURL 图片网络地址
+ @return image size
+ */
++ (CGSize)downloadImageSizeWithURL:(id)imageURL;
+
+/**
+ 传入图片url  返回图片size
+
+ @param imageURL 图片网络地址
+ @param defineWidth 等比最大宽度
+ @return 返回图片Size
+ */
++ (CGSize)downloadImageSizeWithURL:(id)imageURL
+                       targetWidth:(CGFloat)defineWidth;
 
 @end

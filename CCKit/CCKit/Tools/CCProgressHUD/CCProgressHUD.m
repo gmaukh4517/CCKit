@@ -47,8 +47,8 @@
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     hud.removeFromSuperViewOnHide = YES;
     hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
-    hud.backgroundView.color = [UIColor colorWithRed:33 / 255.0 green:33 / 255.0 blue:33 / 255.0 alpha:0.5];
-    hud.bezelView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+    hud.backgroundView.color = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    hud.bezelView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     hud.backgroundView.color = [UIColor clearColor];
     hud.contentColor = [UIColor whiteColor];
     hud.tag = 999999;
@@ -242,7 +242,10 @@
  */
 + (void)hideAnimated:(BOOL)animated
 {
-    [[self initialization] hideAnimated:animated];
+    UIWindow *windowView = [UIApplication sharedApplication].keyWindow;
+    MBProgressHUD *hud = (MBProgressHUD *)[windowView viewWithTag:999999];
+    if (hud)
+        [hud hideAnimated:animated];
 }
 
 + (void)hideView:(UIView *)view

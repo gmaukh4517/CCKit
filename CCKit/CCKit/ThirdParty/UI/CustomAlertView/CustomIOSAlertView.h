@@ -57,6 +57,8 @@
 
 @property(nonatomic, assign) BOOL isPackage;
 
+@property(nonatomic, assign) BOOL handleClose;
+
 @property (copy) void (^onButtonTouchUpInside)(CustomIOSAlertView *alertView, int buttonIndex) ;
 
 - (id)init;
@@ -68,6 +70,7 @@
 
 - (void)show;
 - (void)close;
+- (void)close:(void (^)(void))completion;
 
 - (IBAction)customIOS7dialogButtonTouchUpInside:(id)sender;
 - (void)setOnButtonTouchUpInside:(void (^)(CustomIOSAlertView *alertView, int buttonIndex))onButtonTouchUpInside;

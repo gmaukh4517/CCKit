@@ -30,5 +30,18 @@
 #import <CCKit/CCTransformRefresh.h>
 #import <CCKit/UIScrollView+CCRefresh.h>
 #import <CCKit/CCWebViewController.h>
+#import <CCKit/CCCameraViewController.h>
+#import <CCKit/CCPhotoBrowser.h>
+#import <CCKit/CCPopupView.h>
+#import <CCKit/CCSegmentMenuView.h>
+#import <CCKit/CCSegmentView.h>
+#import <CCKit/CCMessageInputView.h>
+#import <CCKit/CCMessageTextView.h>
+#import <CCKit/CCEmotionManagerView.h>
+#import <CCKit/CCEmotionTextAttachment.h>
+#import <CCKit/CCEmotionManager.h>
+#import <CCKit/CCEmotion.h>
+
+#import <CCKit/CCLoadLogoView.h>
 
 #endif

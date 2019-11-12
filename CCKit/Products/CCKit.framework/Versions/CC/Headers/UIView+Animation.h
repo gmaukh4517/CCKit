@@ -42,12 +42,12 @@ float radiansForDegrees(int degrees);
       callback:(SEL)method;
 
 - (void)raceTo:(CGPoint)destination
-  withSnapBack:(BOOL)withSnapBack;
+    withSnapBack:(BOOL)withSnapBack;
 
 - (void)raceTo:(CGPoint)destination
-  withSnapBack:(BOOL)withSnapBack
-      delegate:(id)delegate
-      callback:(SEL)method;
+    withSnapBack:(BOOL)withSnapBack
+        delegate:(id)delegate
+        callback:(SEL)method;
 
 // Transforms
 - (void)rotate:(int)degrees
@@ -85,47 +85,47 @@ float radiansForDegrees(int degrees);
  *
  *  panGesture The tint color of the blurred view. Set to nil to reset.
  */
-@property(nonatomic) UIPanGestureRecognizer *panGesture;
+@property (nonatomic) UIPanGestureRecognizer *panGesture;
 
 /**
  A caging area such that the view can not be moved outside
  of this frame.
- 
+
  If @c cagingArea is not @c CGRectZero, and @c cagingArea does not contain the
  view's frame then this does nothing (ie. if the bounds of the view extend the
  bounds of @c cagingArea).
- 
+
  Optional. If not set, defaults to @c CGRectZero, which will result
  in no caging behavior.
  */
-@property(nonatomic) CGRect cagingArea;
+@property (nonatomic) CGRect cagingArea;
 
 /**
  Restricts the area of the view where the drag action starts.
- 
+
  Optional. If not set, defaults to self.view.
  */
-@property(nonatomic) CGRect handle;
+@property (nonatomic) CGRect handle;
 
 /**
  Restricts the movement along the X axis
  */
-@property(nonatomic) BOOL shouldMoveAlongX;
+@property (nonatomic) BOOL shouldMoveAlongX;
 
 /**
  Restricts the movement along the Y axis
  */
-@property(nonatomic) BOOL shouldMoveAlongY;
+@property (nonatomic) BOOL shouldMoveAlongY;
 
 /**
  Notifies when dragging started
  */
-@property(nonatomic, copy) void (^draggingStartedBlock)(void);
+@property (nonatomic, copy) void (^draggingStartedBlock)(void);
 
 /**
  Notifies when dragging ended
  */
-@property(nonatomic, copy) void (^draggingEndedBlock)(void);
+@property (nonatomic, copy) void (^draggingEndedBlock)(void);
 
 /** Enables the dragging
  *
@@ -300,5 +300,23 @@ typedef NS_ENUM(NSInteger, ShakeDirection) {
         autoreverse:(BOOL)autoreverse
         repeatCount:(CGFloat)repeatCount
      timingFunction:(CAMediaTimingFunction *)timingFunction;
+
+
+typedef NS_ENUM(NSInteger, CircleArcDirection) {
+    CircleArcDirectionBottom = 0,
+    CircleArcDirectionTop = 1,
+    CircleArcDirectionLeft = 2,
+    CircleArcDirectionRight = 3,
+
+};
+
+/**
+ View 加圆弧
+
+ @param direction 弧方向
+ @param radian 弧度
+ */
+- (void)circleArc:(NSInteger)direction
+           radian:(CGFloat)radian;
 
 @end

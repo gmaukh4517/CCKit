@@ -7,7 +7,7 @@
 		<key>CCAggregate.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>CCKit.xcscheme</key>
 		<dict>
@@ -17,12 +17,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>424FEE702277F85800D9828A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>426B65DD1EA994BF006706A2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>42954A0B1E7124E200F4CC4C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>42E3B3FC22977FCA009FA4A6</key>
 		<dict>
 			<key>primary</key>
 			<true/>

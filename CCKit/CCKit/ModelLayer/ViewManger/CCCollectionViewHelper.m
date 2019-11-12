@@ -24,7 +24,7 @@
 //
 
 #import "CCCollectionViewHelper.h"
-#import "Config.h"
+#import "CCConfig.h"
 #import "UICollectionReusableView+CCAdd.h"
 #import "UICollectionView+CCAdd.h"
 #import "UICollectionViewCell+CCAdd.h"

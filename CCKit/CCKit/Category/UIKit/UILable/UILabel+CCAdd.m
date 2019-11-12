@@ -76,7 +76,14 @@ static char kAutomaticWritingEdgeInsetsKey;
     dispatch_once(&onceToken, ^{
         AutomaticWritingSwizzleSelector([self class], @selector(textRectForBounds:limitedToNumberOfLines:), @selector(automaticWritingTextRectForBounds:limitedToNumberOfLines:));
         AutomaticWritingSwizzleSelector([self class], @selector(drawTextInRect:), @selector(drawAutomaticWritingTextInRect:));
+        AutomaticWritingSwizzleSelector([self class], @selector(setText:), @selector(automaticWritingSetText:));
     });
+}
+
+- (void)automaticWritingSetText:(NSString *)text
+{
+    self.attributedString = nil;
+    [self automaticWritingSetText:text];
 }
 
 - (void)drawAutomaticWritingTextInRect:(CGRect)rect
@@ -173,6 +180,22 @@ static char kAutomaticWritingEdgeInsetsKey;
     [self.automaticWritingOperationQueue addOperationWithBlock:^{
         [self automaticWriting:automaticWritingText duration:duration mode:blinkingMode character:blinkingCharacter completion:completion];
     }];
+}
+
+- (NSInteger)displayNumberOfLines:(CGFloat)width
+{
+    UILabel *label = [UILabel new];
+    label.font = self.font;
+    NSInteger numberLines = 0;
+    NSArray *rowType = [self.text componentsSeparatedByString:@"\n"];
+    for (NSString *currentText in rowType) {
+        label.text = currentText;
+        CGSize textSize = [label systemLayoutSizeFittingSize:CGSizeZero];
+        NSInteger lines = ceil(textSize.width / width);
+        lines = lines == 0 ? 1 : lines;
+        numberLines += lines;
+    }
+    return numberLines;
 }
 
 #pragma mark :. Private Methods
@@ -292,9 +315,9 @@ static char kAutomaticWritingEdgeInsetsKey;
     // Now, calculate the size of the label constrained to maxSize
     CGSize tempSize = [[self text] boundingRectWithSize:maxSize
                                                 options:NSStringDrawingTruncatesLastVisibleLine
-                                             attributes:@{ NSFontAttributeName : [self font] }
+                                             attributes:@{NSFontAttributeName : [self font]}
                                                 context:nil]
-                          .size;
+    .size;
 
     // If minSize is specified (not CGSizeZero) then
     // check if the new calculated size is smaller than
@@ -323,7 +346,7 @@ static char kAutomaticWritingEdgeInsetsKey;
         labelFont = [UIFont fontWithName:[labelFont fontName]
                                     size:fSize];
         // Calculate the frame size
-        calculatedSizeWithCurrentFontSize = [[self text] boundingRectWithSize:unconstrainedSize options:NSStringDrawingTruncatesLastVisibleLine attributes:@{ NSFontAttributeName : labelFont } context:nil].size;
+        calculatedSizeWithCurrentFontSize = [[self text] boundingRectWithSize:unconstrainedSize options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName : labelFont} context:nil].size;
         // Reduce the temporary font size value
         fSize--;
     } while (calculatedSizeWithCurrentFontSize.height > maxSize.height);
@@ -558,6 +581,20 @@ static char kAutomaticWritingEdgeInsetsKey;
                   length:(NSInteger)length
 {
     [[self setTextAttributedString] addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(location, length)];
+    [self drawRectTextAttributedString];
+}
+
+/**
+ 设置行间距
+
+ @param spacing 间距大小
+ */
+- (void)setTextLineSpacing:(NSInteger)spacing
+{
+    NSMutableAttributedString *textAttributedString = [self setTextAttributedString];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:spacing - (self.font.lineHeight - self.font.pointSize)];
+    [textAttributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, textAttributedString.length)];
     [self drawRectTextAttributedString];
 }
 

@@ -50,9 +50,9 @@ typedef void (^UIControlActionBlock)(id sender);
 /**
  *  @author CC, 16-09-02
  *
- *  @brief 用于设置单个按钮不需要被hook
+ *  @brief 用于设置单个按钮需要被hook
  */
-@property (nonatomic, assign) BOOL isIgnore;
+@property (nonatomic, assign) BOOL isNotIgnore;
 
 
 #pragma mark -

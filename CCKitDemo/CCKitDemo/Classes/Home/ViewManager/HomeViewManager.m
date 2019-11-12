@@ -31,6 +31,7 @@
 - (void)tableViewHandle
 {
     self.homeTableView.cc_tableViewHelper.paddedSeparator = YES;
+    self.homeTableView.cc_autoSizingCell = YES;
     self.homeTableView.cc_tableViewHelper.isAntiHurry = YES;
     self.homeTableView.cc_tableViewHelper.titleHeaderHeight = 30;
     [self.homeTableView.cc_tableViewHelper registerNibs:@[ @"HomeTableViewCell" ]];

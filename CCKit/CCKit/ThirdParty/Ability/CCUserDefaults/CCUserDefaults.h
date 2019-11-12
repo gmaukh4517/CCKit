@@ -40,4 +40,11 @@
 
 - (void)clear;
 
+/**
+ 清除Key值
+
+ @param key 属性名
+ */
+- (void)clearKey:(NSString *)key;
+
 @end

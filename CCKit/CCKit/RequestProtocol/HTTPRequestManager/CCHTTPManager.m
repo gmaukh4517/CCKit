@@ -653,7 +653,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
         }
         failure:^(id response, NSError *error) {
             if (failure)
-                failure(response, [self failureError:error requestURL:requestURLString]);
+                failure(response, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
         }];
 }
 
@@ -678,11 +678,11 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
         filePath:filePath
         progress:progress
         success:^(CCResponseObject *responseObject) {
-            success([self requestResultsHandler:nil UserInfo:nil RequestURL:requestURLString]);
+            success([self requestResultsHandler:nil userInfo:nil requestURL:requestURLString requestParameter:nil]);
         }
         failure:^(id response, NSError *error) {
             if (failure)
-                failure(response, [self failureError:error requestURL:requestURLString]);
+                failure(response, [self failureError:error requestURL:requestURLString requestParameter:nil]);
         }];
 }
 
@@ -711,7 +711,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
         }
         failure:^(id response, NSError *error) {
             if (failure)
-                failure(response, [self failureError:error requestURL:requestURLString]);
+                failure(response, [self failureError:error requestURL:requestURLString requestParameter:nil]);
         }];
 }
 
@@ -842,7 +842,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
               failure:(requestFailureBlock)failureHandler
 {
     if (![self requestBeforeCheckNetWork]) {
-        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil] requestURL:requestURLString]);
+        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil] requestURL:requestURLString requestParameter:parameter]);
         return;
     }
 
@@ -856,7 +856,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                             if (cachePolicy != 0)
                                 [self requestCache:requestURLString CacheData:responseObject];
-                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject userInfo:operation.userInfo requestURL:requestURLString requestParameter:parameter];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 successHandler(entity);
                             });
@@ -865,7 +865,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 }
                 failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
                     if (failureHandler)
-                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
                 }];
 
             if ([CCHTTPManager defaultHttp].userInfo)
@@ -882,7 +882,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                             if (cachePolicy != 0)
                                 [self requestCache:requestURLString CacheData:responseObject];
 
-                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject userInfo:operation.userInfo requestURL:requestURLString requestParameter:parameter];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 successHandler(entity);
                             });
@@ -891,7 +891,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 }
                 failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
                     if (failureHandler)
-                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
                 }];
 
             if ([CCHTTPManager defaultHttp].userInfo)
@@ -908,7 +908,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                             if (cachePolicy != 0)
                                 [self requestCache:requestURLString CacheData:responseObject];
 
-                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject userInfo:operation.userInfo requestURL:requestURLString requestParameter:parameter];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 successHandler(entity);
                             });
@@ -917,7 +917,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 }
                 failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
                     if (failureHandler)
-                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
                 }];
 
             if ([CCHTTPManager defaultHttp].userInfo)
@@ -941,7 +941,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 }
                 failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
                     if (failureHandler)
-                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
                 }];
 
             if ([CCHTTPManager defaultHttp].userInfo)
@@ -958,7 +958,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                             if (cachePolicy != 0)
                                 [self requestCache:requestURLString CacheData:responseObject];
 
-                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject userInfo:operation.userInfo requestURL:requestURLString requestParameter:parameter];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 successHandler(entity);
                             });
@@ -968,7 +968,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 }
                 failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
                     if (failureHandler)
-                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
                 }];
 
             if ([CCHTTPManager defaultHttp].userInfo)
@@ -986,7 +986,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                             if (cachePolicy != 0)
                                 [self requestCache:requestURLString CacheData:responseObject];
 
-                            CCResponseObject *entity = [self requestResultsHandler:responseObject UserInfo:operation.userInfo RequestURL:requestURLString];
+                            CCResponseObject *entity = [self requestResultsHandler:responseObject userInfo:operation.userInfo requestURL:requestURLString requestParameter:parameter];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 successHandler(entity);
                             });
@@ -995,7 +995,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                 }
                 failure:^(AFHTTPRequestOperation *_Nonnull operation, NSError *_Nonnull error) {
                     if (failureHandler)
-                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString]);
+                        failureHandler(operation.userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
                 }];
 
             if ([CCHTTPManager defaultHttp].userInfo)
@@ -1017,7 +1017,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
                   failure:(requestFailureBlock)failureHandler
 {
     if (![self requestBeforeCheckNetWork]) {
-        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil] requestURL:requestURLString]);
+        failureHandler([CCHTTPManager defaultHttp].userInfo, [self httpErrorAnalysis:[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil] requestURL:requestURLString requestParameter:parameter]);
         return;
     }
 
@@ -1052,11 +1052,11 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
             if (cachePolicy != 0)
                 [self requestCache:requestURLString CacheData:requestOperation.responseObject];
 
-            successHandler([self requestResultsHandler:requestOperation.responseObject UserInfo:userInfo RequestURL:requestURLString]);
+            successHandler([self requestResultsHandler:requestOperation.responseObject userInfo:userInfo requestURL:requestURLString requestParameter:parameter]);
         }
     } else {
         if (failureHandler)
-            failureHandler(userInfo, [self failureError:error requestURL:requestURLString]);
+            failureHandler(userInfo, [self failureError:error requestURL:requestURLString requestParameter:parameter]);
     }
 }
 
@@ -1071,8 +1071,9 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
  *  @param cachePolicy 缓存类型
  */
 + (CCResponseObject *)requestResultsHandler:(NSDictionary *)results
-                                   UserInfo:(NSDictionary *)userInfo
-                                 RequestURL:(NSString *)requestURL
+                                   userInfo:(NSDictionary *)userInfo
+                                 requestURL:(NSString *)requestURL
+                           requestParameter:(id)parameter
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // 关闭网络指示器
@@ -1091,13 +1092,13 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
         entity = [CCResponseObject cc_objectWithKeyValues:results];
         if (userInfo)
             entity.userInfo = userInfo;
-
-        NSLog(@"\r\n%@\r\n%@", requestURL, [entity cc_keyValues]);
     } else {
         entity = [[CCResponseObject alloc] init];
         if (userInfo)
             entity.userInfo = userInfo;
     }
+
+     NSLog(@"\r\n%@/%@\r\n%@", requestURL, [parameter objectForKey:@"action"], [entity cc_keyValues]);
 
     return entity;
 }
@@ -1111,12 +1112,13 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
  */
 + (NSError *)failureError:(NSError *)error
                requestURL:(NSString *)requestURL
+         requestParameter:(id)parameter
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // 关闭网络指示器
     });
 
-    return [self httpErrorAnalysis:error requestURL:requestURL];
+    return [self httpErrorAnalysis:error requestURL:requestURL requestParameter:parameter];
 }
 
 /**
@@ -1147,6 +1149,7 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
  */
 + (NSError *)httpErrorAnalysis:(NSError *)error
                     requestURL:(NSString *)requestURL
+              requestParameter:(id)parameter
 {
     NSString *errorContent = @"请求服务器失败";
 
@@ -1202,10 +1205,9 @@ static NSString *const CCCacheTableName = @"CCCacheTable";
         errorContent = [errorInfo objectForKey:@(error.code)];
 
     NSError *handleError = [NSError errorWithDomain:errorContent code:error.code userInfo:error.userInfo];
-    NSLog(@"\r\n%@\r\n%@", requestURL, handleError);
+    NSLog(@"\r\n%@/%@\r\n%@", requestURL,[parameter objectForKey:@"action"], handleError);
 
     return handleError;
 }
-
 
 @end

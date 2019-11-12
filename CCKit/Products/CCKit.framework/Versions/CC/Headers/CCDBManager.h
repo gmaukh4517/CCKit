@@ -201,6 +201,31 @@
                           keyValue:(NSDictionary *)keyValue
                           complete:(void (^)(BOOL isSuccess))complete;
 
+/**
+ 批量更新数据
+ 
+ @param tableName 表名
+ @param uniqueKey 关键字段
+ @param objArr 更行数据集合
+ @param complete 完成回调
+ */
++ (void)ccdb_updateBatchTableObject:(NSString *)tableName
+                          uniqueKey:(NSString *)uniqueKey
+                        batchObject:(NSArray<NSDictionary *> *)objArr
+                           complete:(void (^)(BOOL isSuccess))complete;
+
+/**
+ 批量更新数据
+ 
+ @param tableName 表名
+ @param objArr 关键字段
+ @param conditions 执行条件
+ @param complete 完成回调
+ */
++ (void)ccdb_updateBatchTableObject:(NSString *)tableName
+                        batchObject:(NSArray<NSDictionary *> *)objArr
+                         conditions:(NSString *)conditions
+                           complete:(void (^)(BOOL isSuccess))complete;
 
 /**
  批量更新数据
@@ -345,8 +370,8 @@
  分页查询
  
  @param tableName 表名
- @param limit 查询范围 开始位置
- @param offset 查询范围 条数
+ @param limit 查询范围 条数
+ @param offset 查询范围 开始位置
  @param where 查询条件
  */
 + (NSArray *)ccdb_selectTablePage:(NSString *)tableName
@@ -358,8 +383,8 @@
  分页排序查询数据
  
  @param tableName 表名
- @param limit 查询范围 开始位置
- @param offset 查询范围 条数
+ @param limit 查询范围  条数
+ @param offset 查询范围 开始位置
  @param orderBy 排序字段
  @param desc YES:降序，NO:升序.
  @param where 查询条件

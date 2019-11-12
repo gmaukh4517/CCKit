@@ -55,7 +55,7 @@
     }
 }
 
--(void)didViewEventsBlock:(ViewEventsBlock)block
+- (void)didViewEventsBlock:(ViewEventsBlock)block
 {
     [self setViewEventsBlock:block];
 }
@@ -63,6 +63,16 @@
 #pragma mark - Rewrite these func in SubClass !
 
 - (void)cc_configureViewWithModel:(id)model
+{
+    // Rewrite this func in SubClass !
+}
+
+-(void)cc_viewHandler:(NSString *)info withInfos:(NSDictionary *)infos
+{
+    // Rewrite this func in SubClass !
+}
+
+- (void)cc_viewEventHandler:(id)model
 {
     // Rewrite this func in SubClass !
 }

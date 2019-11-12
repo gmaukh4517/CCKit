@@ -24,10 +24,10 @@
 //
 
 #import "NSObject+CCAdd.h"
-#import <objc/runtime.h>
-#import <sys/utsname.h>
 #import <dispatch/dispatch.h>
 #import <objc/objc.h>
+#import <objc/runtime.h>
+#import <sys/utsname.h>
 
 @interface NSObject () <NSSecureCoding>
 
@@ -106,7 +106,7 @@
     unsigned int outCount;
     objc_property_t *props = class_copyPropertyList([self class], &outCount);
     for (int i = 0; i < outCount; i++) {
-        objc_property_t prop = props[i];
+        objc_property_t prop = props[ i ];
         NSString *propName = [[NSString alloc] initWithCString:property_getName(prop) encoding:NSUTF8StringEncoding];
         id propValue = [self valueForKey:propName];
         [dict setObject:propValue ?: [NSNull null] forKey:propName];
@@ -126,7 +126,7 @@
     objc_property_t *properties = class_copyPropertyList(self, &propertyCount);
     NSMutableArray *propertyNames = [NSMutableArray array];
     for (unsigned int i = 0; i < propertyCount; ++i) {
-        objc_property_t property = properties[i];
+        objc_property_t property = properties[ i ];
         const char *name = property_getName(property);
         [propertyNames addObject:[NSString stringWithUTF8String:name]];
     }
@@ -141,59 +141,58 @@
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 属性列表与属性的各种信息
  */
 + (NSArray *)propertiesInfo
 {
     NSMutableArray *propertieArray = [NSMutableArray array];
-    
+
     unsigned int propertyCount;
     objc_property_t *properties = class_copyPropertyList([self class], &propertyCount);
-    
+
     for (int i = 0; i < propertyCount; i++) {
         [propertieArray addObject:({
-            
-            NSDictionary *dictionary = [self dictionaryWithProperty:properties[i]];
-            
+
+            NSDictionary *dictionary = [self dictionaryWithProperty:properties[ i ]];
+
             dictionary;
         })];
     }
-    
+
     free(properties);
-    
+
     return propertieArray;
 }
 
 + (NSArray *)propertiesWithCodeFormat
 {
     NSMutableArray *array = [NSMutableArray array];
-    
+
     NSArray *properties = [[self class] propertiesInfo];
-    
+
     for (NSDictionary *item in properties) {
         NSMutableString *format = ({
-            
+
             NSMutableString *formatString = [NSMutableString stringWithFormat:@"@property "];
             //attribute
             NSArray *attribute = [item objectForKey:@"attribute"];
             attribute = [attribute sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
                 return [obj1 compare:obj2 options:NSNumericSearch];
             }];
-            if (attribute && attribute.count > 0)
-            {
-                NSString *attributeStr = [NSString stringWithFormat:@"(%@)",[attribute componentsJoinedByString:@", "]];
-                
+            if (attribute && attribute.count > 0) {
+                NSString *attributeStr = [NSString stringWithFormat:@"(%@)", [attribute componentsJoinedByString:@", "]];
+
                 [formatString appendString:attributeStr];
             }
-            
+
             //type
             NSString *type = [item objectForKey:@"type"];
             if (type) {
                 [formatString appendString:@" "];
                 [formatString appendString:type];
             }
-            
+
             //name
             NSString *name = [item objectForKey:@"name"];
             if (name) {
@@ -201,13 +200,13 @@
                 [formatString appendString:name];
                 [formatString appendString:@";"];
             }
-            
+
             formatString;
         });
-        
+
         [array addObject:format];
     }
-    
+
     return array;
 }
 
@@ -217,7 +216,7 @@
     NSMutableArray *methodList = [NSMutableArray array];
     Method *methods = class_copyMethodList([self class], &count);
     for (int i = 0; i < count; i++) {
-        SEL name = method_getName(methods[i]);
+        SEL name = method_getName(methods[ i ]);
         NSString *strName = [NSString stringWithCString:sel_getName(name) encoding:NSUTF8StringEncoding];
         [methodList addObject:strName];
     }
@@ -232,8 +231,8 @@
     Method *methods = class_copyMethodList([self class], &count);
     for (int i = 0; i < count; i++) {
         NSMutableDictionary *info = [NSMutableDictionary dictionary];
-        
-        Method method = methods[i];
+
+        Method method = methods[ i ];
         //        IMP imp = method_getImplementation(method);
         SEL name = method_getName(method);
         // 返回方法的参数的个数
@@ -242,7 +241,7 @@
         const char *encoding = method_getTypeEncoding(method);
         //取方法的返回值类型的字符串
         const char *returnType = method_copyReturnType(method);
-        
+
         NSMutableArray *arguments = [NSMutableArray array];
         for (int index = 0; index < argumentsCount; index++) {
             // 获取方法的指定位置参数的类型字符串
@@ -250,11 +249,11 @@
             //            NSString *argString = [NSString stringWithCString:arg encoding:NSUTF8StringEncoding];
             [arguments addObject:[[self class] decodeType:arg]];
         }
-        
+
         NSString *returnTypeString = [[self class] decodeType:returnType];
         NSString *encodeString = [[self class] decodeType:encoding];
         NSString *nameString = [NSString stringWithCString:sel_getName(name) encoding:NSUTF8StringEncoding];
-        
+
         [info setObject:arguments forKey:@"arguments"];
         [info setObject:[NSString stringWithFormat:@"%d", argumentsCount] forKey:@"argumentsCount"];
         [info setObject:returnTypeString forKey:@"returnType"];
@@ -273,12 +272,12 @@
     NSMutableArray *methodList = [NSMutableArray array];
     Method *methods = class_copyMethodList([self class], &count);
     for (int i = 0; i < count; i++) {
-        SEL name = method_getName(methods[i]);
+        SEL name = method_getName(methods[ i ]);
         NSString *strName = [NSString stringWithCString:sel_getName(name) encoding:NSUTF8StringEncoding];
         [methodList addObject:strName];
     }
     free(methods);
-    
+
     return methodList;
 }
 
@@ -286,21 +285,21 @@
 + (NSArray *)registedClassList
 {
     NSMutableArray *result = [NSMutableArray array];
-    
+
     unsigned int count;
     Class *classes = objc_copyClassList(&count);
     for (int i = 0; i < count; i++) {
-        [result addObject:NSStringFromClass(classes[i])];
+        [result addObject:NSStringFromClass(classes[ i ])];
     }
     free(classes);
     [result sortedArrayUsingSelector:@selector(compare:)];
-    
+
     return result;
 }
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 协议列表信息
  *
  *  @return 协议列表信息
@@ -312,37 +311,36 @@
 + (NSDictionary *)protocolList
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    
+
     unsigned int count;
     Protocol *__unsafe_unretained *protocols = class_copyProtocolList([self class], &count);
     for (int i = 0; i < count; i++) {
-        Protocol *protocol = protocols[i];
-        
+        Protocol *protocol = protocols[ i ];
+
         NSString *protocolName = [NSString stringWithCString:protocol_getName(protocol) encoding:NSUTF8StringEncoding];
-        
+
         NSMutableArray *superProtocolArray = ({
-            
+
             NSMutableArray *array = [NSMutableArray array];
-            
+
             unsigned int superProtocolCount;
-            Protocol * __unsafe_unretained * superProtocols = protocol_copyProtocolList(protocol, &superProtocolCount);
-            for (int ii = 0; ii < superProtocolCount; ii++)
-            {
-                Protocol *superProtocol = superProtocols[ii];
-                
+            Protocol *__unsafe_unretained *superProtocols = protocol_copyProtocolList(protocol, &superProtocolCount);
+            for (int ii = 0; ii < superProtocolCount; ii++) {
+                Protocol *superProtocol = superProtocols[ ii ];
+
                 NSString *superProtocolName = [NSString stringWithCString:protocol_getName(superProtocol) encoding:NSUTF8StringEncoding];
-                
+
                 [array addObject:superProtocolName];
             }
             free(superProtocols);
-            
+
             array;
         });
-        
+
         [dictionary setObject:superProtocolArray forKey:protocolName];
     }
     free(protocols);
-    
+
     return dictionary;
 }
 
@@ -352,8 +350,8 @@
     Ivar *ivars = class_copyIvarList([self class], &outCount);
     NSMutableArray *result = [NSMutableArray array];
     for (int i = 0; i < outCount; i++) {
-        NSString *type = [[self class] decodeType:ivar_getTypeEncoding(ivars[i])];
-        NSString *name = [NSString stringWithCString:ivar_getName(ivars[i]) encoding:NSUTF8StringEncoding];
+        NSString *type = [[self class] decodeType:ivar_getTypeEncoding(ivars[ i ])];
+        NSString *name = [NSString stringWithCString:ivar_getName(ivars[ i ]) encoding:NSUTF8StringEncoding];
         NSString *ivarDescription = [NSString stringWithFormat:@"%@ %@", type, name];
         [result addObject:ivarDescription];
     }
@@ -380,30 +378,29 @@
     //name
     NSString *propertyName = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
     [result setObject:propertyName forKey:@"name"];
-    
+
     //attribute
-    
+
     NSMutableDictionary *attributeDictionary = ({
-        
+
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        
+
         unsigned int attributeCount;
         objc_property_attribute_t *attrs = property_copyAttributeList(property, &attributeCount);
-        
-        for (int i = 0; i < attributeCount; i++)
-        {
-            NSString *name = [NSString stringWithCString:attrs[i].name encoding:NSUTF8StringEncoding];
-            NSString *value = [NSString stringWithCString:attrs[i].value encoding:NSUTF8StringEncoding];
+
+        for (int i = 0; i < attributeCount; i++) {
+            NSString *name = [NSString stringWithCString:attrs[ i ].name encoding:NSUTF8StringEncoding];
+            NSString *value = [NSString stringWithCString:attrs[ i ].value encoding:NSUTF8StringEncoding];
             [dictionary setObject:value forKey:name];
         }
-        
+
         free(attrs);
-        
+
         dictionary;
     });
-    
+
     NSMutableArray *attributeArray = [NSMutableArray array];
-    
+
     /***
      R           | The property is read-only (readonly).
      C           | The property is a copy of the value last assigned (copy).
@@ -416,47 +413,47 @@
      P           | The property is eligible for garbage collection.
      t<encoding> | Specifies the type using old-style encoding.
      */
-    
+
     //R
     if ([attributeDictionary objectForKey:@"R"])
         [attributeArray addObject:@"readonly"];
-    
+
     //C
     if ([attributeDictionary objectForKey:@"C"])
         [attributeArray addObject:@"copy"];
-    
+
     //&
     if ([attributeDictionary objectForKey:@"&"])
         [attributeArray addObject:@"strong"];
-    
+
     //N
     if ([attributeDictionary objectForKey:@"N"])
         [attributeArray addObject:@"nonatomic"];
     else
         [attributeArray addObject:@"atomic"];
-    
+
     //G<name>
     if ([attributeDictionary objectForKey:@"G"])
         [attributeArray addObject:[NSString stringWithFormat:@"getter=%@", [attributeDictionary objectForKey:@"G"]]];
-    
+
     //S<name>
     if ([attributeDictionary objectForKey:@"S"])
         [attributeArray addObject:[NSString stringWithFormat:@"setter=%@", [attributeDictionary objectForKey:@"G"]]];
-    
+
     //D
     if ([attributeDictionary objectForKey:@"D"])
         [result setObject:[NSNumber numberWithBool:YES] forKey:@"isDynamic"];
     else
         [result setObject:[NSNumber numberWithBool:NO] forKey:@"isDynamic"];
-    
+
     //W
     if ([attributeDictionary objectForKey:@"W"])
         [attributeArray addObject:@"weak"];
-    
+
     //P
     if ([attributeDictionary objectForKey:@"P"])
         //TODO:P | The property is eligible for garbage collection.
-        
+
         //T
         if ([attributeDictionary objectForKey:@"T"]) {
             /*
@@ -484,9 +481,9 @@
              bnum            A bit field of num bits
              ^type           A pointer to type
              ?               An unknown type (among other things, this code is used for function pointers)
-             
+
              */
-            
+
             NSDictionary *typeDic = @{ @"c" : @"char",
                                        @"i" : @"int",
                                        @"s" : @"short",
@@ -508,15 +505,15 @@
                                        };
             //TODO:An array
             NSString *key = [attributeDictionary objectForKey:@"T"];
-            
+
             id type_str = [typeDic objectForKey:key];
-            
+
             if (type_str == nil) {
                 if ([[key substringToIndex:1] isEqualToString:@"@"] && [key rangeOfString:@"?"].location == NSNotFound) {
                     type_str = [[key substringWithRange:NSMakeRange(2, key.length - 3)] stringByAppendingString:@"*"];
                 } else if ([[key substringToIndex:1] isEqualToString:@"^"]) {
                     id str = [typeDic objectForKey:[key substringFromIndex:1]];
-                    
+
                     if (str) {
                         type_str = [NSString stringWithFormat:@"%@ *", str];
                     }
@@ -524,12 +521,12 @@
                     type_str = @"unknow";
                 }
             }
-            
+
             [result setObject:type_str forKey:@"type"];
         }
-    
+
     [result setObject:attributeArray forKey:@"attribute"];
-    
+
     return result;
 }
 
@@ -575,10 +572,10 @@
         return @"SEL";
     if (!strcmp(cString, @encode(BOOL)))
         return @"BOOL";
-    
+
     //@TODO: do handle bitmasks
     NSString *result = [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
-    
+
     if ([[result substringToIndex:1] isEqualToString:@"@"] && [result rangeOfString:@"?"].location == NSNotFound) {
         result = [[result substringWithRange:NSMakeRange(2, result.length - 3)] stringByAppendingString:@"*"];
     } else {
@@ -706,13 +703,13 @@ static const void *IntegerProperty = &IntegerProperty;
 
 /**
  *  @author CC, 16-03-14
- *  
+ *
  *  @brief  附加一个copy对象
  *
  *  @param value 被附加的对象
  *  @param key   被附加对象的key
  */
--(void)copyAssociateValue:(id)value withKey:(void *)key
+- (void)copyAssociateValue:(id)value withKey:(void *)key
 {
     objc_setAssociatedObject(self, key, value, OBJC_ASSOCIATION_COPY);
 }
@@ -727,6 +724,16 @@ static const void *IntegerProperty = &IntegerProperty;
 - (id)associatedValueForKey:(void *)key
 {
     return objc_getAssociatedObject(self, key);
+}
+
+/**
+ ValueForKey 未找到指定Key调用
+
+ @param key key
+ */
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    return nil;
 }
 
 #pragma mark -
@@ -792,7 +799,7 @@ static NSString *const AutocodingException = @"AutocodingException";
     objc_property_t *properties = class_copyPropertyList(self, &propertyCount);
     for (unsigned int i = 0; i < propertyCount; i++) {
         //get property name
-        objc_property_t property = properties[i];
+        objc_property_t property = properties[ i ];
         const char *propertyName = property_getName(property);
         __autoreleasing NSString *key = @(propertyName);
         //check if codable
@@ -800,7 +807,7 @@ static NSString *const AutocodingException = @"AutocodingException";
             //get property type
             Class propertyClass = nil;
             char *typeEncoding = property_copyAttributeValue(property, "T");
-            switch (typeEncoding[0]) {
+            switch (typeEncoding[ 0 ]) {
                 case '@': {
                     if (strlen(typeEncoding) >= 3) {
                         char *className = strndup(typeEncoding + 2, strlen(typeEncoding) - 3);
@@ -844,7 +851,7 @@ static NSString *const AutocodingException = @"AutocodingException";
                     __autoreleasing NSString *ivarName = @(ivar);
                     if ([ivarName isEqualToString:key] || [ivarName isEqualToString:[@"_" stringByAppendingString:key]]) {
                         //no setter, but setValue:forKey: will still work
-                        codableProperties[key] = propertyClass;
+                        codableProperties[ key ] = propertyClass;
                     }
                     free(ivar);
                 } else {
@@ -853,7 +860,7 @@ static NSString *const AutocodingException = @"AutocodingException";
                     char *readonly = property_copyAttributeValue(property, "R");
                     if (dynamic && !readonly) {
                         //no ivar, but setValue:forKey: will still work
-                        codableProperties[key] = propertyClass;
+                        codableProperties[ key ] = propertyClass;
                     }
                     free(dynamic);
                     free(readonly);
@@ -887,7 +894,7 @@ static NSString *const AutocodingException = @"AutocodingException";
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     for (__unsafe_unretained NSString *key in [self codableProperties]) {
         id value = [self valueForKey:key];
-        if (value) dict[key] = value;
+        if (value) dict[ key ] = value;
     }
     return dict;
 }
@@ -899,7 +906,7 @@ static NSString *const AutocodingException = @"AutocodingException";
     NSDictionary *properties = [self codableProperties];
     for (NSString *key in properties) {
         id object = nil;
-        Class propertyClass = properties[key];
+        Class propertyClass = properties[ key ];
         if (secureAvailable) {
             object = [aDecoder decodeObjectOfClass:propertyClass forKey:key];
         } else {
@@ -941,54 +948,9 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
 + (id)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay
 {
     if (!block) return nil;
-    
-    __block BOOL cancelled = NO;
-    
-    void (^wrappingBlock)(BOOL) = ^(BOOL cancel) {
-        if (cancel) {
-            cancelled = YES;
-            return;
-        }
-        if (!cancelled)block();
-    };
-    
-    wrappingBlock = [wrappingBlock copy];
-    
-    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{  wrappingBlock(NO);
-    });
-    
-    return wrappingBlock;
-}
 
-+ (id)performBlock:(void (^)(id arg))block withObject:(id)anObject afterDelay:(NSTimeInterval)delay
-{
-    if (!block) return nil;
-    
     __block BOOL cancelled = NO;
-    
-    void (^wrappingBlock)(BOOL, id) = ^(BOOL cancel, id arg) {
-        if (cancel) {
-            cancelled = YES;
-            return;
-        }
-        if (!cancelled) block(arg);
-    };
-    
-    wrappingBlock = [wrappingBlock copy];
-    
-    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{  wrappingBlock(NO, anObject);
-    });
-    
-    return wrappingBlock;
-}
 
-- (id)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay
-{
-    
-    if (!block) return nil;
-    
-    __block BOOL cancelled = NO;
-    
     void (^wrappingBlock)(BOOL) = ^(BOOL cancel) {
         if (cancel) {
             cancelled = YES;
@@ -996,21 +958,22 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
         }
         if (!cancelled) block();
     };
-    
+
     wrappingBlock = [wrappingBlock copy];
-    
-    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{  wrappingBlock(NO);
+
+    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{
+        wrappingBlock(NO);
     });
-    
+
     return wrappingBlock;
 }
 
-- (id)performBlock:(void (^)(id arg))block withObject:(id)anObject afterDelay:(NSTimeInterval)delay
++ (id)performBlock:(void (^)(id arg))block withObject:(id)anObject afterDelay:(NSTimeInterval)delay
 {
     if (!block) return nil;
-    
+
     __block BOOL cancelled = NO;
-    
+
     void (^wrappingBlock)(BOOL, id) = ^(BOOL cancel, id arg) {
         if (cancel) {
             cancelled = YES;
@@ -1018,12 +981,59 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
         }
         if (!cancelled) block(arg);
     };
-    
+
     wrappingBlock = [wrappingBlock copy];
-    
-    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{  wrappingBlock(NO, anObject);
+
+    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{
+        wrappingBlock(NO, anObject);
     });
-    
+
+    return wrappingBlock;
+}
+
+- (id)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay
+{
+    if (!block) return nil;
+
+    __block BOOL cancelled = NO;
+
+    void (^wrappingBlock)(BOOL) = ^(BOOL cancel) {
+        if (cancel) {
+            cancelled = YES;
+            return;
+        }
+        if (!cancelled) block();
+    };
+
+    wrappingBlock = [wrappingBlock copy];
+
+    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{
+        wrappingBlock(NO);
+    });
+
+    return wrappingBlock;
+}
+
+- (id)performBlock:(void (^)(id arg))block withObject:(id)anObject afterDelay:(NSTimeInterval)delay
+{
+    if (!block) return nil;
+
+    __block BOOL cancelled = NO;
+
+    void (^wrappingBlock)(BOOL, id) = ^(BOOL cancel, id arg) {
+        if (cancel) {
+            cancelled = YES;
+            return;
+        }
+        if (!cancelled) block(arg);
+    };
+
+    wrappingBlock = [wrappingBlock copy];
+
+    dispatch_after(dTimeDelay(delay), dispatch_get_main_queue(), ^{
+        wrappingBlock(NO, anObject);
+    });
+
     return wrappingBlock;
 }
 
@@ -1044,9 +1054,9 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
     double a = CFAbsoluteTimeGetCurrent();
     block();
     double b = CFAbsoluteTimeGetCurrent();
-    
+
     unsigned int m = ((b - a) * 1000.0f); // convert from seconds to milliseconds
-    
+
     NSLog(@"%@: %d ms", prefixString ? prefixString : @"Time taken", m);
 }
 
@@ -1057,7 +1067,6 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
             context:(void *)context
           withBlock:(KVOBlock)block
 {
-    
     objc_setAssociatedObject(observer, (__bridge const void *)(keyPath), block, OBJC_ASSOCIATION_COPY);
     [self addObserver:observer forKeyPath:keyPath options:options context:context];
 }
@@ -1074,9 +1083,8 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    
     KVOBlock block = objc_getAssociatedObject(self, (__bridge const void *)(keyPath));
-    block(change, context);
+    !block ?: block(change, context);
 }
 
 - (void)addObserverForKeyPath:(NSString *)keyPath
@@ -1084,7 +1092,6 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
                       context:(void *)context
                     withBlock:(KVOBlock)block
 {
-    
     [self addObserver:self forKeyPath:keyPath options:options context:context withBlock:block];
 }
 
@@ -1100,25 +1107,25 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
 {
     Class currentClass = [self class];
     Class instanceClass = [instance class];
-    
+
     if (self == instance) {
         //相同实例
         return NO;
     }
-    
+
     if (![instance isMemberOfClass:currentClass]) {
         //不是当前类的实例
         return NO;
     }
-    
+
     while (instanceClass != [NSObject class]) {
         unsigned int propertyListCount = 0;
         objc_property_t *propertyList = class_copyPropertyList(currentClass, &propertyListCount);
         for (int i = 0; i < propertyListCount; i++) {
-            objc_property_t property = propertyList[i];
+            objc_property_t property = propertyList[ i ];
             const char *property_name = property_getName(property);
             NSString *propertyName = [NSString stringWithCString:property_name encoding:NSUTF8StringEncoding];
-            
+
             //check if property is dynamic and readwrite
             char *dynamic = property_copyAttributeValue(property, "D");
             char *readonly = property_copyAttributeValue(property, "R");
@@ -1132,7 +1139,7 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
         free(propertyList);
         instanceClass = class_getSuperclass(instanceClass);
     }
-    
+
     return YES;
 }
 
@@ -1140,25 +1147,25 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
 {
     Class currentClass = [self class];
     Class instanceClass = [instance class];
-    
+
     if (self == instance) {
         //相同实例
         return NO;
     }
-    
+
     if (![instance isMemberOfClass:currentClass]) {
         //不是当前类的实例
         return NO;
     }
-    
+
     while (instanceClass != [NSObject class]) {
         unsigned int propertyListCount = 0;
         objc_property_t *propertyList = class_copyPropertyList(currentClass, &propertyListCount);
         for (int i = 0; i < propertyListCount; i++) {
-            objc_property_t property = propertyList[i];
+            objc_property_t property = propertyList[ i ];
             const char *property_name = property_getName(property);
             NSString *propertyName = [NSString stringWithCString:property_name encoding:NSUTF8StringEncoding];
-            
+
             //check if property is dynamic and readwrite
             char *dynamic = property_copyAttributeValue(property, "D");
             char *readonly = property_copyAttributeValue(property, "R");
@@ -1185,14 +1192,13 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
         free(propertyList);
         instanceClass = class_getSuperclass(instanceClass);
     }
-    
+
     return YES;
 }
 
 
 + (BOOL)isNSObjectClass:(Class)clazz
 {
-    
     BOOL flag = class_conformsToProtocol(clazz, @protocol(NSObject));
     if (flag) {
         return flag;
@@ -1206,64 +1212,213 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time)
     }
 }
 
-#pragma mark-
+#pragma mark -
 #pragma mark :. Runtime
+/**
+ 检查selector说明
+
+ @param class 检查对象
+ @param selector 检查选择器
+ @return 说明
+ */
+struct objc_method_description cc_MethodDescription(Class class, SEL selector)
+{
+    struct objc_method_description description = (struct objc_method_description){NULL, NULL}; // Result
+    Class currentClass = class;                                                                // Loop class
+    while (currentClass && description.name == NULL) {
+        unsigned int count = 0; // Get protocol list
+        __unsafe_unretained Protocol **protocols = class_copyProtocolList(currentClass, &count);
+        // Check each protocol
+        for (unsigned int i = 0; i < count; i++) {
+            // Required method
+            description = protocol_getMethodDescription(protocols[ i ], selector, YES, class_isMetaClass(currentClass) ^ 1);
+            if (description.name != NULL)
+                break;
+            // Optional method
+            description = protocol_getMethodDescription(protocols[ i ], selector, NO, class_isMetaClass(currentClass) ^ 1);
+            if (description.name != NULL)
+                break;
+        }
+        // release
+        free(protocols);
+        // Found in protocol
+        if (description.name != NULL)
+            return description;
+        // Get superClass and continue
+        currentClass = class_getSuperclass(currentClass);
+    }
+    // Get implemented instance method
+    Method method = class_getInstanceMethod(class, selector);
+    if (method) { // Get description
+        return *method_getDescription(method);
+    } else { // Return Null result
+        return (struct objc_method_description){NULL, NULL};
+    }
+}
+
+static const void *HOOKSELECTORKEY = &HOOKSELECTORKEY;
+static NSMutableArray *cc_aspect_getHookSelectorForObject(NSObject *self) // 记录hook 函数
+{
+    NSCParameterAssert(self);
+    NSMutableArray *aspectArray = objc_getAssociatedObject(self, HOOKSELECTORKEY);
+    if (!aspectArray) {
+        aspectArray = [NSMutableArray array];
+        objc_setAssociatedObject(self, HOOKSELECTORKEY, aspectArray, OBJC_ASSOCIATION_RETAIN);
+    }
+    return aspectArray;
+}
+
+static NSString *const CCAspectsMessagePrefix = @"cc_aspects_";
+static SEL cc_aspect_aliasForSelector(SEL selector) // hook函数名称处理
+{
+    NSCParameterAssert(selector);
+    return NSSelectorFromString([CCAspectsMessagePrefix stringByAppendingFormat:@"_%@", NSStringFromSelector(selector)]);
+}
+
+BOOL cc_forwardInvocation(NSObject *replaced, SEL forwardSelector, IMP imp_hook_selector)
+{
+    BOOL didAddOriginMethod = NO;
+    Method targetMethod = class_getInstanceMethod(replaced.class, forwardSelector);
+    SEL aliasSelector = cc_aspect_aliasForSelector(forwardSelector);
+    const char *typeEncoding = method_getTypeEncoding(targetMethod);
+    IMP originalImplementation = class_replaceMethod(replaced.class, forwardSelector, (IMP)imp_hook_selector, typeEncoding);
+    if (originalImplementation || ![replaced.class instancesRespondToSelector:aliasSelector]) {
+        didAddOriginMethod = class_addMethod(replaced.class, aliasSelector, originalImplementation, typeEncoding);
+    }
+    return didAddOriginMethod;
+}
+
+/**
+ hook 方法签名器处理
+
+ @param self hook对象
+ @param _cmd hook 选择器
+ @param selector 交替选择器
+ @return 处理结果回传
+ */
+static NSMethodSignature *hook_methodSignatureForSelector(id self, SEL _cmd, SEL selector)
+{
+    struct objc_method_description description = cc_MethodDescription([self class], selector); // Get from class
+    if (selector && description.types != NULL) {
+        return [NSMethodSignature signatureWithObjCTypes:description.types];
+    } else {
+        NSMutableArray *aspectArray = cc_aspect_getHookSelectorForObject(self);
+        if ([aspectArray containsObject:NSStringFromSelector(selector)]) {
+            return [NSMethodSignature signatureWithObjCTypes:"v@:*"];
+        }
+        return nil;
+    }
+}
+
+/**
+ hook消息转发处理
+
+ @param self hook 对象
+ @param _cmd hook 选择器
+ @param anInvocation 转发机制对象
+ */
+static void hook_forwardInvocationSelector(id self, SEL _cmd, NSInvocation *anInvocation)
+{
+    //    SEL originSelector = anInvocation.selector;
+    //    NSString *originSelectorString = NSStringFromSelector(originSelector);
+    //    [anInvocation setSelector:originSelector];
+    //    [anInvocation setTarget:self];
+    //
+    //    [anInvocation invoke];
+}
+
+/**
+ hook 对象函数
+ 1.hook 对象实现函数正常传递
+ 2.hook 对象未实现函数传递到函数，并且下一层传递做无法找到时。做消息转发错误处理
+
+ @param original 被hook 对象
+ @param originalSelector 被hook 函数
+ @param replaced 处理对象
+ @param swizzledSelector 处理函数
+ */
+void cc_AutomaticWritingExchangeSelector(NSObject *original, SEL originalSelector, NSObject *replaced, SEL swizzledSelector)
+{
+    Class originalClass = original.class;
+    Class replacedClass = replaced.class;
+
+    Method originalMethod = class_getInstanceMethod(originalClass, originalSelector); // 原方法
+    Method replacedMethod = class_getInstanceMethod(replacedClass, swizzledSelector); // 替换方法
+    if (!originalMethod) {                                                            // 如果没有实现 对象 方法，则手动动态添加
+        BOOL didAddOriginMethod = class_addMethod(originalClass, originalSelector, method_getImplementation(replacedMethod), method_getTypeEncoding(replacedMethod));
+        if (didAddOriginMethod) { // 添加原替换方法 替换成功后对未实现函数做保护机制 消息转发处理错误
+            cc_forwardInvocation(original, @selector(methodSignatureForSelector:), (IMP)hook_methodSignatureForSelector);
+            cc_forwardInvocation(original, @selector(forwardInvocation:), (IMP)hook_forwardInvocationSelector);
+            NSMutableArray *foreardArray = cc_aspect_getHookSelectorForObject(original);
+            [foreardArray addObject:NSStringFromSelector(swizzledSelector)]; // 保存hook 函数用于转发机制中选择处理
+        }
+        return;
+    }
+    // 向实现 对象 的类中添加新的方法
+    // 这里是向 originalClass 的 replaceSel（@selector(replace_webViewDidFinishLoad:)） 添加 replaceMethod
+    if (class_addMethod(originalClass, swizzledSelector, method_getImplementation(replacedMethod), method_getTypeEncoding(replacedMethod))) {
+        // 重新拿到添加被添加的 method,这里是关键(注意这里 originalClass, 不 replacedClass), 因为替换的方法已经添加到原类中了, 应该交换原类中的两个方法
+        Method newMethod = class_getInstanceMethod(originalClass, swizzledSelector);
+        method_exchangeImplementations(originalMethod, newMethod); // 实现交换
+    } else {
+        NSLog(@"Already hook class --> (%@)", NSStringFromClass(originalClass)); // 添加失败，则说明已经 hook 过该类的 对象 方法，防止多次交换。
+    }
+}
 
 BOOL method_swizzle(Class klass, SEL origSel, SEL altSel)
 {
     if (!klass)
         return NO;
-    
+
     Method __block origMethod, __block altMethod;
-    
+
     void (^find_methods)(void) = ^{
         unsigned methodCount = 0;
         Method *methodList = class_copyMethodList(klass, &methodCount);
-        
+
         origMethod = altMethod = NULL;
-        
+
         if (methodList)
-            for (unsigned i = 0; i < methodCount; ++i)
-            {
-                if (method_getName(methodList[i]) == origSel)
-                    origMethod = methodList[i];
-                
-                if (method_getName(methodList[i]) == altSel)
-                    altMethod = methodList[i];
+            for (unsigned i = 0; i < methodCount; ++i) {
+                if (method_getName(methodList[ i ]) == origSel)
+                    origMethod = methodList[ i ];
+
+                if (method_getName(methodList[ i ]) == altSel)
+                    altMethod = methodList[ i ];
             }
-        
+
         free(methodList);
     };
-    
+
     find_methods();
-    
+
     if (!origMethod) {
         origMethod = class_getInstanceMethod(klass, origSel);
-        
+
         if (!origMethod)
             return NO;
-        
+
         if (!class_addMethod(klass, method_getName(origMethod), method_getImplementation(origMethod), method_getTypeEncoding(origMethod)))
             return NO;
     }
-    
+
     if (!altMethod) {
         altMethod = class_getInstanceMethod(klass, altSel);
-        
+
         if (!altMethod)
             return NO;
-        
+
         if (!class_addMethod(klass, method_getName(altMethod), method_getImplementation(altMethod), method_getTypeEncoding(altMethod)))
             return NO;
     }
-    
+
     find_methods();
-    
+
     if (!origMethod || !altMethod)
         return NO;
-    
+
     method_exchangeImplementations(origMethod, altMethod);
-    
+
     return YES;
 }
 
@@ -1271,12 +1426,12 @@ void method_append(Class toClass, Class fromClass, SEL selector)
 {
     if (!toClass || !fromClass || !selector)
         return;
-    
+
     Method method = class_getInstanceMethod(fromClass, selector);
-    
+
     if (!method)
         return;
-    
+
     class_addMethod(toClass, method_getName(method), method_getImplementation(method), method_getTypeEncoding(method));
 }
 
@@ -1284,12 +1439,12 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
 {
     if (!toClass || !fromClass || !selector)
         return;
-    
+
     Method method = class_getInstanceMethod(fromClass, selector);
-    
+
     if (!method)
         return;
-    
+
     class_replaceMethod(toClass, method_getName(method), method_getImplementation(method), method_getTypeEncoding(method));
 }
 
@@ -1326,23 +1481,24 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
 + (BOOL)instancesRespondToSelector:(SEL)selector untilClass:(Class)stopClass
 {
     BOOL __block (^__weak block_self)(Class klass, SEL selector, Class stopClass);
-    BOOL (^block)(Class klass, SEL selector, Class stopClass) = [^(Class klass, SEL selector, Class stopClass) {
+    BOOL (^block)
+    (Class klass, SEL selector, Class stopClass) = [^(Class klass, SEL selector, Class stopClass) {
         if (!klass || klass == stopClass)
             return NO;
-        
+
         unsigned methodCount = 0;
         Method *methodList = class_copyMethodList(klass, &methodCount);
-        
+
         if (methodList)
             for (unsigned i = 0; i < methodCount; ++i)
-                if (method_getName(methodList[i]) == selector)
+                if (method_getName(methodList[ i ]) == selector)
                     return YES;
-        
+
         return block_self(klass.superclass, selector, stopClass);
     } copy];
-    
+
     block_self = block;
-    
+
     return block(self.class, selector, stopClass);
 }
 
@@ -1358,18 +1514,21 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
  *
  *  @return 返回初始化独享
  */
-+ (id)InitDefaultMethod:(NSString *)methodName
++ (id)initMethod:(NSString *)methodName
 {
     SEL methodSEL = NSSelectorFromString(methodName);
     NSObject *valueObj = nil;
     if ([self respondsToSelector:methodSEL]) {
         NSMethodSignature *methodSignature = [self methodSignatureForSelector:methodSEL];
-        
+
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
         [invocation setTarget:self];
         [invocation setSelector:methodSEL];
         [invocation invoke];
-        [invocation getReturnValue:&valueObj];
+
+        void *vObjc;
+        [invocation getReturnValue:&vObjc];
+        valueObj = (__bridge NSObject *)vObjc;
     }
     return valueObj;
 }
@@ -1386,13 +1545,13 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
 - (id)performSelectors:(NSString *)methodName withObject:(id)aObject, ...
 {
     SEL methodSEL = NSSelectorFromString(methodName);
-    
+
     //声明返回值变量
     id anObject = nil;
     if ([self respondsToSelector:methodSEL]) {
         //方法签名类，需要被调用消息所属的类self ,被调用的消息invokeMethod:
         NSMethodSignature *methodSignature = [self methodSignatureForSelector:methodSEL];
-        
+
         //根据方法签名创建一个NSInvocation
         NSInvocation *invo = [NSInvocation invocationWithMethodSignature:methodSignature];
         if (methodSignature) {
@@ -1404,12 +1563,12 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
             [invo setArgument:&aObject atIndex:2];
             //retain 所有参数，防止参数被释放dealloc
             [invo retainArguments];
-            
+
             va_list arguments;
             id eachObject;
             if (aObject) {
                 va_start(arguments, aObject);
-                
+
                 NSInteger index = 3;
                 while ((eachObject = va_arg(arguments, id))) {
                     [invo setArgument:&eachObject atIndex:index];
@@ -1420,10 +1579,10 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
         }
         //消息调用
         [invo invoke];
-        
+
         //获得返回值类型
         const char *returnType = methodSignature.methodReturnType;
-        
+
         //如果没有返回值，也就是消息声明为void，那么returnValue=nil
         if (!strcmp(returnType, @encode(void))) {
             anObject = nil;
@@ -1444,8 +1603,9 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
                 anObject = [NSNumber numberWithBool:*((BOOL *)buffer)];
             } else if (!strcmp(returnType, @encode(NSInteger))) {
                 anObject = [NSNumber numberWithInteger:*((NSInteger *)buffer)];
+            } else {
+                anObject = [NSValue valueWithBytes:buffer objCType:returnType];
             }
-            anObject = [NSValue valueWithBytes:buffer objCType:returnType];
         }
     }
     return anObject;
@@ -1459,15 +1619,15 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
  @param name 函数名
  @return 返回结果
  */
-- (id)invokeMethod:(Class)clazz 
++ (id)invokeMethod:(Class)clazz
           withName:(NSString *)name
-{  
-    id result = nil;   
-    SEL sel = NSSelectorFromString(name);  
-    IMP imp = [clazz methodForSelector:sel];  
-    result = imp(clazz, sel);   
-    return result; 
-} 
+{
+    id result = nil;
+    SEL sel = NSSelectorFromString(name);
+    IMP imp = [clazz methodForSelector:sel];
+    result = imp(clazz, sel);
+    return result;
+}
 
 /**
  调用类的静态函数
@@ -1477,14 +1637,14 @@ void method_replace(Class toClass, Class fromClass, SEL selector)
  @param param 参数
  @return 返回函数结果
  */
-- (id)invokeMethod:(Class)clazz 
-          withName:(NSString *)name 
-         withParam:(id)param 
-{   
-    id  result = nil;     
-    SEL sel = NSSelectorFromString(name);    
-    IMP imp = [clazz methodForSelector:sel];  
-    result = imp(clazz, sel, param); 
++ (id)invokeMethod:(Class)clazz
+          withName:(NSString *)name
+         withParam:(id)param
+{
+    id result = nil;
+    SEL sel = NSSelectorFromString(name);
+    IMP imp = [clazz methodForSelector:sel];
+    result = imp(clazz, sel, param);
     return result;
 }
 

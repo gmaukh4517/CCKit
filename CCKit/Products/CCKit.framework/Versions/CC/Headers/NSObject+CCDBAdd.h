@@ -31,11 +31,11 @@ typedef NSDictionary * (^CCDBObjectClassInArray)(void);
 @interface NSObject (CCDBAdd)
 
 /** 本库自带的自动增长主键. **/
-@property (nonatomic, strong) NSNumber *cc_identifier;
+@property (nonatomic, strong) NSNumber *ccdb_identifier;
 /** 数据创建时间(即存入数据库的时间) **/
-@property (nonatomic, copy) NSString *cc_createTime;
+@property (nonatomic, copy) NSString *ccdb_createTime;
 /** 数据最后那次更新的时间. **/
-@property (nonatomic, copy) NSString *cc_updateTime;
+@property (nonatomic, copy) NSString *ccdb_updateTime;
 
 +(void)ccdb_setupObjectClassInArray:(CCDBObjectClassInArray)objectClassInArray;
 

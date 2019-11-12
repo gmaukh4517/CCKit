@@ -222,6 +222,18 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
 #pragma mark :. Runtime
 
 /**
+ hook 对象函数
+ 1.hook 对象实现函数正常传递
+ 2.hook 对象未实现函数传递到函数，并且下一层传递做无法找到时。做消息转发错误处理
+
+ @param original 被hook 对象
+ @param originalSelector 被hook 函数
+ @param replaced 处理对象
+ @param swizzledSelector 处理函数
+ */
+void cc_AutomaticWritingExchangeSelector(NSObject *original, SEL originalSelector, NSObject *replaced, SEL swizzledSelector);
+
+/**
  Exchange methods' implementations.
  
  @param originalMethod Method to exchange.
@@ -291,7 +303,7 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
  *
  *  @return 返回初始化对象
  */
-+ (id)InitDefaultMethod:(NSString *)methodName;
++ (id)initMethod:(NSString *)methodName;
 
 /**
  多参数调用
@@ -307,7 +319,7 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
  @param name 函数名
  @return 返回结果
  */
-- (id)invokeMethod:(Class)clazz
++ (id)invokeMethod:(Class)clazz
           withName:(NSString *)name;
 
 /**
@@ -318,7 +330,7 @@ typedef void (^KVOBlock)(NSDictionary *change, void *context);
  @param param 参数
  @return 返回函数结果
  */
-- (id)invokeMethod:(Class)clazz
++ (id)invokeMethod:(Class)clazz
           withName:(NSString *)name
          withParam:(id)param;
 

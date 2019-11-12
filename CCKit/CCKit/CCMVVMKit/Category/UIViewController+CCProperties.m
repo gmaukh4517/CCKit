@@ -52,13 +52,13 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     CCViewManager *viewManager = objc_getAssociatedObject(self, @selector(cc_viewManager));
     if (viewManager) {
-        viewManager.viewModelDelegate = nil;
+        viewManager.viewManagerDelegate = nil;
         self.cc_viewManager = nil;
     }
 
     CCViewModel *viewModel = objc_getAssociatedObject(self, @selector(cc_viewModel));
     if (viewModel) {
-        viewManager.viewModelDelegate = nil;
+        viewModel.viewModelDelegate = nil;
         self.cc_viewModel = nil;
     }
 

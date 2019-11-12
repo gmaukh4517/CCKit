@@ -31,7 +31,7 @@
 #pragma mark :. Awesome
 
 /*
- 
+
  导航栏变换
  #define NAVBAR_CHANGE_POINT 50
  - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -45,7 +45,7 @@
  [self.navigationController.navigationBar setBackgroundColor:[color colorWithAlphaComponent:0]];
  }
  }
- 
+
  导航栏缩进
  - (void)scrollViewDidScroll:(UIScrollView *)scrollView
  {
@@ -61,13 +61,13 @@
  self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
  }
  }
- 
+
  - (void)setNavigationBarTransformProgress:(CGFloat)progress
  {
  [self.navigationController.navigationBar setTranslationY:(-44 * progress)];
  [self.navigationController.navigationBar setElementsAlpha:(1-progress)];
  }
- 
+
  */
 
 
@@ -105,7 +105,7 @@
  *
  *  @param alpha 透明度
  */
-- (void)setElementsAlpha:(CGFloat)alpha;
+- (void)setNeedsNavigationTitle:(CGFloat)alpha;
 
 /**
  *  @author CC, 2016-12-30

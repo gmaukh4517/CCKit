@@ -30,13 +30,9 @@
 /** 传递键值 */
 @property (nonatomic, copy) NSDictionary *userInfo;
 /** 响应消息 */
-@property (nonatomic, copy) NSString *msg;
-/** 响应消息ID */
-@property (nonatomic, copy) NSString *messageId;
-@property (nonatomic, copy) NSString *traceId;
-/** 响应数据 */
-@property (nonatomic, copy) id data;
+@property (nonatomic, copy) NSDictionary *error;
 
-@property (nonatomic, copy) NSString *status;
+/** 响应数据 */
+@property (nonatomic, copy) id result;
 
 @end

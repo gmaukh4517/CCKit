@@ -27,6 +27,19 @@
 
 @interface UITextView (CCAdd)
 
+@property (nonatomic, copy) BOOL (^shouldChangeCharactersInRangeBlock)(UITextView *textView, NSRange range, NSString *text);
+@property (nonatomic, copy) void (^textViewDidChangeBlock)(UITextView *textView);
+
+//主要用于设置maxLength 收到变化通知
+@property (nonatomic, copy) void (^textViewTextChangeBlock)(UITextView *textView);
+
+- (void)setShouldChangeCharactersInRangeBlock:(BOOL (^)(UITextView *textView, NSRange range, NSString *text))shouldChangeCharactersInRangeBlock;
+- (void)setTextViewDidChangeBlock:(void (^)(UITextView *textView))textViewDidChangeBlock;
+
+//主要用于设置maxLength 收到变化通知
+- (void)setTextViewTextChangeBlock:(void (^)(UITextView *))textViewTextChangeBlock;
+
+
 /*
  UITextView *textView = [[UITextView alloc] initWithFrame:self.view.frame];
  [self.view addSubview:textView];
@@ -35,9 +48,38 @@
  textView.maxFontSize = 40;
  */
 
-@property(nonatomic) CGFloat maxFontSize, minFontSize;
+@property (nonatomic) CGFloat maxFontSize, minFontSize;
 
-@property(nonatomic, getter=isZoomEnabled) BOOL zoomEnabled;
+@property (nonatomic) NSInteger maxLength;
+
+@property (nonatomic, getter=isZoomEnabled) BOOL zoomEnabled;
+
+/**
+ *  @author CC, 2015-07-31
+ *
+ *  @brief  提示输入文字
+ *
+ *  @since 1.0
+ */
+@property (nonatomic, copy) NSString *placeholder;
+
+/**
+ *  @author CC, 2015-07-31
+ *
+ *  @brief  提示文字颜色
+ *
+ *  @since 1.0
+ */
+@property (nonatomic, strong) UIColor *placeholderColor;
+
+/**
+ *  @author CC, 2015-07-31
+ *
+ *  @brief  提示文字字体
+ *
+ *  @since 1.0
+ */
+@property (nonatomic, strong) UIFont *placeholderFont;
 
 /**
  *  @brief  当前选中的字符串范围
@@ -61,25 +103,25 @@
 // 用于计算textview输入情况下的字符数，解决实现限制字符数时，计算不准的问题
 - (NSInteger)getInputLengthWithText:(NSString *)text;
 /*
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    NSInteger textLength = [textView getInputLengthWithText:text];
-    if (textLength > 20) {
-        //超过20个字可以删除
-        if ([text isEqualToString:@""]) {
-            return YES;
-        }
-        return NO;
-    }
-    return YES;
-}
+ - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+ {
+ NSInteger textLength = [textView getInputLengthWithText:text];
+ if (textLength > 20) {
+ //超过20个字可以删除
+ if ([text isEqualToString:@""]) {
+ return YES;
+ }
+ return NO;
+ }
+ return YES;
+ }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
-    if ([textView getInputLengthWithText:nil] > 20) {
-        textView.text = [textView.text substringToIndex:20];
-    }
-}
-*/
+ - (void)textViewDidChange:(UITextView *)textView
+ {
+ if ([textView getInputLengthWithText:nil] > 20) {
+ textView.text = [textView.text substringToIndex:20];
+ }
+ }
+ */
 
 @end

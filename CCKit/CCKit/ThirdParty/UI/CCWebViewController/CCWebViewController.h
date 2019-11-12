@@ -52,6 +52,30 @@
 @property (nonatomic, assign) BOOL isScrollEnabled;
 
 /**
+ 导航栏是否透明
+ */
+@property (nonatomic, assign) BOOL navigationbarTransparent;
+
+/**
+ 附加web userAgent
+ */
+@property (nonatomic, copy) NSString *userAgent;
+/**
+ 附加web cookie
+ */
+@property (nonatomic, copy) NSDictionary *cookie;
+
+/**
+ 是否适配底部(主要X 以上设备)
+ */
+@property (nonatomic, assign) BOOL isAdapterBottom;
+
+/**
+ 退回或者返回刷新地址
+ */
+@property (nonatomic, copy) NSArray *refreshURL;
+
+/**
  *  @author CC, 2015-10-13
  *
  *  @brief  显示网页地址
@@ -88,6 +112,11 @@
 - (void)jumpPage:(NSString *)baseURL;
 
 /**
+ 刷新窗口
+ */
+- (void)reload;
+
+/**
  页面是否有返回
  */
 - (BOOL)isGoBack;
@@ -111,6 +140,11 @@
 - (void)goForward;
 
 /**
+ 清除缓存数据
+ */
++ (void)clearCache;
+
+/**
  *  @author CC, 16-07-30
  *
  *  @brief JS捕获
@@ -120,6 +154,10 @@
  */
 - (void)didCapture:(NSString *)functionName
      ResponseBlock:(void (^)(NSString *functionName, id arguments))block;
+
+- (void)didCapture:(NSString *)functionName
+            target:(id)target
+         actionSEL:(SEL)action;
 
 /**
  *  @author CC, 16-07-30

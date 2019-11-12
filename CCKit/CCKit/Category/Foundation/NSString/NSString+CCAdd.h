@@ -61,6 +61,16 @@
 + (NSString *)stringWithUUID;
 
 /**
+ 转黄数据 （小点有值保留）
+
+ @param doubles 数据值
+ @param reserved 保留位数
+ @return 转黄值
+ */
++ (NSString *)decimalPointHandler:(double)doubles
+                         reserved:(NSInteger)reserved;
+
+/**
  *  @author CC, 2015-12-11
  *
  *  @brief  根据值生成唯一ID
@@ -153,6 +163,24 @@
 - (UIImage *)decodedImage;
 
 /**
+ *  @author CC, 2015-10-09
+ *
+ *  @brief  生成二维码图像
+ *
+ *  @param size  图像大小
+ */
+- (UIImage *)becomeQRCodeWithQRstring:(float)size;
+
+/**
+ 生成二维码中间带头像
+
+ @param size 生成大小
+ @param avatar 头像
+ */
+- (UIImage *)becomeQRCodeWithQRstring:(float)size
+                          AvatarImage:(UIImage *)avatar;
+
+/**
  *  @author CC, 15-09-02
  *
  *  @brief  转换Data
@@ -165,6 +193,20 @@
  *  @brief  转换64位字符串
  */
 - (NSData *)convertingBase64Encoded;
+
+/**
+ *  @brief 转化显示大小 (B、KB、MB、BG)
+ *
+ *  @param size  字节大小
+ */
++ (NSString *)convertingSizeWith:(long long)size;
+
+/**
+ 转换单位(带单位)
+
+ @param unit 单位数
+ */
++ (NSString *)convertingUnit:(NSInteger)unit;
 
 #pragma mark--- 取值
 /**
@@ -394,6 +436,7 @@
 #pragma mark -
 #pragma mark :. Hash
 
+@property (readonly) NSString *MD532;
 @property (readonly) NSString *MD5;
 @property (readonly) NSString *SHA1;
 @property (readonly) NSString *SHA256;
@@ -562,6 +605,11 @@
 - (BOOL)isMobileNumber;
 
 /**
+ *  QQ的有效性
+ */
+-(BOOL)isQQ;
+
+/**
  *  邮箱的有效性
  */
 - (BOOL)isEmailAddress;
@@ -574,10 +622,8 @@
 
 /**
  *  精确的身份证号码有效性检测
- *
- *  @param value 身份证号
  */
-+ (BOOL)accurateVerifyIDCardNumber:(NSString *)value;
+- (BOOL)accurateVerifyIDCardNumber;
 
 /**
  *  车牌号的有效性

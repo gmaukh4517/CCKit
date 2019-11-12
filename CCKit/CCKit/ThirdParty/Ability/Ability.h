@@ -34,10 +34,14 @@
 #import <CCKit/UIImageView+HighlightedWebCache.h>
 #import <CCKit/UIView+WebCache.h>
 #import <CCKit/UIImageView+WebCache.h>
+#import <CCKit/FLAnimatedImage.h>
+#import <CCKit/FLAnimatedImageView.h>
 
 #import <CCKit/CCLanguage.h>
 
 #import <CCKit/CCEventNoticeCenter.h>
 #import <CCKit/CCNetworkMonitor.h>
+
+#import <CCKit/CCPayManager.h>
 
 #endif

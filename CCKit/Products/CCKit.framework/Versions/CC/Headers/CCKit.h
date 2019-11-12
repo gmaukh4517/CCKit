@@ -25,7 +25,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <CCKit/Config.h>
+#import <CCKit/CCConfig.h>
 #import <CCKit/Ability.h>
 #import <CCKit/CCMVVM.h>
 #import <CCKit/Category.h>

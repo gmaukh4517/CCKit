@@ -37,12 +37,12 @@ typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *eventDic);
 /**
  *  viewDelegate 传递事件
  */
-@property(nullable, nonatomic, weak) id<CCViewProtocol> viewDelegate;
+@property (nullable, nonatomic, weak) id<CCViewProtocol> viewDelegate;
 
 /**
  *  block 传递事件
  */
-@property(nonatomic, copy) ViewEventsBlock viewEventsBlock;
+@property (nonatomic, copy) ViewEventsBlock viewEventsBlock;
 
 /**
  *  将view中的事件交由ViewManager处理
@@ -53,6 +53,23 @@ typedef void (^ViewEventsBlock)(NSString *info, NSDictionary *eventDic);
  *  根据model配置UIView，设置UIView内容
  */
 - (void)cc_configureViewWithModel:(id)model;
+
+/**
+ *  @author CC, 16-04-20
+ *
+ *  @brief 将ViewManager处理结果的信息通过代理传递给View
+ *
+ *  @param info  描述信息
+ *  @param infos 传递参数
+ */
+- (void)cc_viewHandler:(NSString *)info withInfos:(NSDictionary *)infos;
+
+/**
+ 事件处理
+
+ @param model 传递参数
+ */
+- (void)cc_viewEventHandler:(id)model;
 
 /**
  *  根据viewModel配置UIView，设置UIView内容

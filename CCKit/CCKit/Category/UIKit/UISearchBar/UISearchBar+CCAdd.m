@@ -24,7 +24,7 @@
 //
 
 #import "UISearchBar+CCAdd.h"
-#import "Config.h"
+#import "CCConfig.h"
 #import <objc/runtime.h>
 
 /* Only for convenience and readabilty in delegate methods */

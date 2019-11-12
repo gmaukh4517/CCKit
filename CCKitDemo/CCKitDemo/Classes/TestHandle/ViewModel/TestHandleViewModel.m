@@ -19,6 +19,7 @@
                        NSString *message = error.domain;
                        if (!error) {
                            message = @"";
+
                        }
 
                        if ([self.viewModelDelegate respondsToSelector:@selector(cc_viewModel:withInfos:)]) {
@@ -27,6 +28,8 @@
                                                                    @"message" : message }];
                        }
                    }];
+
+
 }
 
 @end

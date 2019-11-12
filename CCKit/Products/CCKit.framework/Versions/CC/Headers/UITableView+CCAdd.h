@@ -39,7 +39,39 @@
 - (BOOL)existsHeightAtIndexPath:(NSIndexPath *)indexPath;
 - (void)cacheHeight:(CGFloat)height byIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)heightForIndexPath:(NSIndexPath *)indexPath;
+- (void)invalidateHeightAtSection:(NSInteger)section;
 - (void)invalidateHeightAtIndexPath:(NSIndexPath *)indexPath;
+- (void)invalidateHeightLast:(NSInteger)section;
+- (void)invalidateAllHeightCache;
+
+@end
+
+@interface CCSectionHedaerHeightCache : NSObject
+
+// Enable automatically if you're using index path driven height cache
+@property (nonatomic, assign) BOOL automaticallyInvalidateEnabled;
+
+// Height cache
+- (BOOL)existsHeightAtSection:(NSInteger)section;
+- (void)cacheHeight:(CGFloat)height bySection:(NSInteger)section;
+- (CGFloat)heightForSection:(NSInteger)section;
+- (void)invalidateHeightAtSection:(NSInteger)section;
+- (void)invalidateHeightLast:(NSInteger)section;
+- (void)invalidateAllHeightCache;
+
+@end
+
+@interface CCSectionFooterHeightCache : NSObject
+
+// Enable automatically if you're using index path driven height cache
+@property (nonatomic, assign) BOOL automaticallyInvalidateEnabled;
+
+// Height cache
+- (BOOL)existsHeightAtSection:(NSInteger)section;
+- (void)cacheHeight:(CGFloat)height bySection:(NSInteger)section;
+- (CGFloat)heightForSection:(NSInteger)section;
+- (void)invalidateHeightAtSection:(NSInteger)section;
+- (void)invalidateHeightLast:(NSInteger)section;
 - (void)invalidateAllHeightCache;
 
 @end
@@ -66,6 +98,7 @@
 @property (nonatomic, strong) CCTableViewHelper *cc_tableViewHelper;
 
 @property (nonatomic) IBInspectable BOOL cc_autoSizingCell;
+@property (nonatomic) IBInspectable BOOL cc_autoSizingHeaderFooter;
 
 
 /**
@@ -102,6 +135,8 @@
 
 /// Height cache by index path. Generally, you don't need to use it directly.
 @property (nonatomic, strong, readonly) CCIndexPathHeightCache *cc_indexPathHeightCache;
+@property (nonatomic, strong, readonly) CCSectionHedaerHeightCache *cc_headerHeightCache;
+@property (nonatomic, strong, readonly) CCSectionFooterHeightCache *cc_footerHeightCache;
 
 
 #pragma mark -
@@ -109,6 +144,14 @@
 
 /// Height cache by key. Generally, you don't need to use it directly.
 @property (nonatomic, strong, readonly) CCKeyedHeightCache *cc_keyedHeightCache;
+
+
+#pragma mark -
+#pragma mark :. CCTemplateLayoutHeaderFooter
+
+- (__kindof UITableViewHeaderFooterView *)cc_templateHeaderFooterForReuseIdentifier:(NSString *)identifier;
+
+- (CGFloat)cc_heightForHeaderFooterWithIdentifier:(NSString *)identifier headerORfooter:(BOOL)headerORfooter cacheBySection:(NSInteger)section configuration:(void (^)(id headerFooter))configuration;
 
 #pragma mark -
 #pragma mark :. CCTemplateLayoutCell
@@ -134,7 +177,7 @@
 ///        to the template cell. The configuration should be minimal for scrolling
 ///        performance yet sufficient for calculating cell's height.
 ///
-- (CGFloat)cc_heightForCellWithIdentifier:(NSString *)identifier configuration:(void (^)(id cell))configuration;
+- (CGFloat)cc_heightForCellWithIdentifier:(NSString *)identifier configuration:(void (^)(UITableViewCell *cell))configuration;
 
 /// This method does what "-fd_heightForCellWithIdentifier:configuration" does, and
 /// calculated height will be cached by its index path, returns a cached height
@@ -146,7 +189,7 @@
 ///
 /// @param indexPath where this cell's height cache belongs.
 ///
-- (CGFloat)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByIndexPath:(NSIndexPath *)indexPath configuration:(void (^)(id cell))configuration;
+- (CGFloat)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByIndexPath:(NSIndexPath *)indexPath configuration:(void (^)(UITableViewCell *cell))configuration;
 
 /// This method caches height by your model entity's identifier.
 /// If your model's changed, call "-invalidateHeightForKey:(id <NSCopying>)key" to
@@ -154,7 +197,7 @@
 ///
 /// @param key model entity's identifier whose data configures a cell.
 ///
-- (CGFloat)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByKey:(id<NSCopying>)key configuration:(void (^)(id cell))configuration;
+- (CGFloat)cc_heightForCellWithIdentifier:(NSString *)identifier cacheByKey:(id<NSCopying>)key configuration:(void (^)(UITableViewCell *cell))configuration;
 
 @end
 

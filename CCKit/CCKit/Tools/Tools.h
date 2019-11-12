@@ -28,6 +28,6 @@
 
 #import <CCKit/CCAlertView.h>
 #import <CCKit/CCProgressHUD.h>
-
+#import <CCKit/CocoaSecurity.h>
 
 #endif

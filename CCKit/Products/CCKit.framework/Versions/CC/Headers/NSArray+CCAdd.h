@@ -155,6 +155,15 @@
 
 - (CGRect)rectWithIndex:(NSUInteger)index;
 
+/**
+ *  @author CC, 2015-07-22
+ *
+ *  @brief  去除重复数据
+ *
+ *  @param PropertyName 去重key
+ */
+- (NSArray *)deduplication:(NSArray *)PropertyName;
+
 @end
 
 
@@ -189,14 +198,5 @@
 - (void)addRect:(CGRect)o;
 
 - (void)addRange:(NSRange)range;
-
-/**
- *  @author CC, 2015-07-22
- *
- *  @brief  去除重复数据
- *
- *  @param PropertyName 去重key
- */
-- (void)deduplication:(NSArray *)PropertyName;
 
 @end

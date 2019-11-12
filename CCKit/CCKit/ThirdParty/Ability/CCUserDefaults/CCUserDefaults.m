@@ -27,8 +27,11 @@
 #import <objc/runtime.h>
 
 @interface CCUserDefaults ()
+
 @property (strong, nonatomic) NSMutableDictionary *mapping;
 @property (strong, nonatomic) NSUserDefaults *userDefault;
+@property (nonatomic, strong) NSMutableDictionary *classDictionary;
+
 @end
 
 @implementation CCUserDefaults
@@ -54,25 +57,23 @@ enum TypeEncodings {
 {
     if (!_userDefault) {
         NSString *suiteName = nil;
-        if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
+        if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)])
             suiteName = [self _suiteName];
-        }
-        
-        if (suiteName && suiteName.length) {
+
+        if (suiteName && suiteName.length)
             _userDefault = [[NSUserDefaults alloc] initWithSuiteName:suiteName];
-        } else {
+        else
             _userDefault = [NSUserDefaults standardUserDefaults];
-        }
     }
-    
+
     return _userDefault;
 }
 
 - (NSString *)defaultsKeyForPropertyNamed:(char const *)propertyName
 {
     NSString *key = [NSString stringWithFormat:@"%s", propertyName];
-    key =  [self _transformKey:key];
-    return [NSString stringWithFormat:@"%@_%@",NSStringFromClass(self.class),key];
+    key = [self _transformKey:key];
+    return [NSString stringWithFormat:@"%@_%@", NSStringFromClass(self.class), key];
 }
 
 - (NSString *)defaultsKeyForSelector:(SEL)selector
@@ -144,13 +145,16 @@ static void doubleSetter(CCUserDefaults *self, SEL _cmd, double value)
 static id objectGetter(CCUserDefaults *self, SEL _cmd)
 {
     NSString *key = [self defaultsKeyForSelector:_cmd];
-    return [self.userDefault objectForKey:key];
+    return [self checkKeyValue:key];
 }
 
 static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
 {
     NSString *key = [self defaultsKeyForSelector:_cmd];
     if (object) {
+        if (![[CCUserDefaults foundationClasses] containsObject:[object class]])
+            object = [CCUserDefaults objectSqlProperties:object];
+
         [self.userDefault setObject:object forKey:key];
     } else {
         [self.userDefault removeObjectForKey:key];
@@ -166,14 +170,14 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
     static NSMutableDictionary *sharedInstanceDic = nil;
     if (!sharedInstanceDic)
         sharedInstanceDic = [NSMutableDictionary dictionary];
-    
+
     id sharedInstance = [sharedInstanceDic objectForKey:key];
-    
+
     if (!sharedInstance) {
         sharedInstance = [[self alloc] init];
         [sharedInstanceDic setObject:sharedInstance forKey:key];
     }
-    
+
     return sharedInstance;
 }
 
@@ -197,10 +201,10 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
             [self.userDefault registerDefaults:mutableDefaults];
             [self.userDefault synchronize];
         }
-        
+
         [self generateAccessorMethods];
     }
-    
+
     return self;
 }
 
@@ -210,6 +214,42 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
     for (NSString *key in keys)
         [self.userDefault removeObjectForKey:key];
     [self.userDefault synchronize];
+
+    [CCUserDefaults cc_enumerateClasses:self.class
+                               complete:^(__unsafe_unretained Class c, BOOL *stop) {
+                                   unsigned int numIvars;
+                                   Ivar *vars = class_copyIvarList(self.class, &numIvars);
+                                   for (int i = 0; i < numIvars; i++) {
+                                       Ivar thisIvar = vars[ i ];
+                                       NSString *propertyName = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
+                                       if ([propertyName containsString:@"_"])
+                                           propertyName = [propertyName substringFromIndex:1];
+
+                                       id propertyValue = [self valueForKey:propertyName];
+                                       if (!propertyValue || [propertyValue isKindOfClass:[NSNull class]]) {
+                                           continue;
+                                       }
+                                       // !!!:同样通过KVC的方式赋值
+                                       if ([propertyValue isKindOfClass:[NSString class]]) {
+                                           [self setValue:nil forKey:propertyName];
+                                       } else if ([propertyValue isKindOfClass:[NSNumber class]]) {
+                                           [self setValue:[NSNumber numberWithInteger:0] forKey:propertyName];
+                                       } else if ([propertyValue isKindOfClass:[NSMutableDictionary class]] || [propertyValue isKindOfClass:[NSDictionary class]]) {
+                                           [self setValue:@{} forKey:propertyName];
+                                       } else if ([propertyValue isKindOfClass:[NSMutableArray class]] || [propertyValue isKindOfClass:[NSArray class]]) {
+                                           [self setValue:@[] forKey:propertyName];
+                                       } else {
+                                           [self setValue:nil forKey:propertyName];
+                                       }
+                                   }
+                                   free(vars);
+                               }];
+}
+
+- (void)clearKey:(NSString *)key
+{
+    [self.userDefault removeObjectForKey:[self defaultsKeyForPropertyNamed:[key UTF8String]]];
+    [self.userDefault synchronize];
 }
 
 - (NSString *)_transformKey:(NSString *)key
@@ -217,7 +257,7 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
     if ([self respondsToSelector:@selector(transformKey:)]) {
         return [self performSelector:@selector(transformKey:) withObject:key];
     }
-    
+
     return key;
 }
 
@@ -226,28 +266,30 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
     if ([self respondsToSelector:@selector(suitName)]) {
         return [self performSelector:@selector(suitName)];
     }
-    
+
     if ([self respondsToSelector:@selector(suiteName)]) {
         return [self performSelector:@selector(suiteName)];
     }
-    
+
     return nil;
 }
 
 #pragma GCC diagnostic pop
 
+
 - (void)generateAccessorMethods
 {
     unsigned int count = 0;
     objc_property_t *properties = class_copyPropertyList([self class], &count);
-    
+
     self.mapping = [NSMutableDictionary dictionary];
-    
+    self.classDictionary = [NSMutableDictionary dictionary];
     for (int i = 0; i < count; ++i) {
-        objc_property_t property = properties[i];
+        objc_property_t property = properties[ i ];
         const char *name = property_getName(property);
         const char *attributes = property_getAttributes(property);
-        
+        [self handlerAttributes:property];
+
         char *getter = strstr(attributes, ",G");
         if (getter) {
             getter = strdup(getter + 2);
@@ -257,24 +299,24 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
         }
         SEL getterSel = sel_registerName(getter);
         free(getter);
-        
+
         char *setter = strstr(attributes, ",S");
         if (setter) {
             setter = strdup(setter + 2);
             setter = strsep(&setter, ",");
         } else {
-            asprintf(&setter, "set%c%s:", toupper(name[0]), name + 1);
+            asprintf(&setter, "set%c%s:", toupper(name[ 0 ]), name + 1);
         }
         SEL setterSel = sel_registerName(setter);
         free(setter);
-        
+
         NSString *key = [self defaultsKeyForPropertyNamed:name];
         [self.mapping setValue:key forKey:NSStringFromSelector(getterSel)];
         [self.mapping setValue:key forKey:NSStringFromSelector(setterSel)];
-        
+
         IMP getterImp = NULL;
         IMP setterImp = NULL;
-        char type = attributes[1];
+        char type = attributes[ 1 ];
         switch (type) {
             case Short:
             case Long:
@@ -287,49 +329,183 @@ static void objectSetter(CCUserDefaults *self, SEL _cmd, id object)
                 getterImp = (IMP)longLongGetter;
                 setterImp = (IMP)longLongSetter;
                 break;
-                
+
             case Bool:
             case Char:
                 getterImp = (IMP)boolGetter;
                 setterImp = (IMP)boolSetter;
                 break;
-                
+
             case Int:
                 getterImp = (IMP)integerGetter;
                 setterImp = (IMP)integerSetter;
                 break;
-                
+
             case Float:
                 getterImp = (IMP)floatGetter;
                 setterImp = (IMP)floatSetter;
                 break;
-                
+
             case Double:
                 getterImp = (IMP)doubleGetter;
                 setterImp = (IMP)doubleSetter;
                 break;
-                
+
             case Object:
                 getterImp = (IMP)objectGetter;
                 setterImp = (IMP)objectSetter;
                 break;
-                
+
             default:
                 free(properties);
                 [NSException raise:NSInternalInconsistencyException format:@"Unsupported type of property \"%s\" in class %@", name, self];
                 break;
         }
-        
-        char types[5];
-        
+
+        char types[ 5 ];
+
         snprintf(types, 4, "%c@:", type);
         class_addMethod([self class], getterSel, getterImp, types);
-        
+
         snprintf(types, 5, "v@:%c", type);
         class_addMethod([self class], setterSel, setterImp, types);
     }
-    
+
     free(properties);
+}
+
+/**
+ 分析属性中包含的对象
+ */
+- (void)handlerAttributes:(objc_property_t)property
+{
+    NSString *attrs = @(property_getAttributes(property));
+    NSUInteger dotLoc = [attrs rangeOfString:@","].location;
+    NSString *code = nil;
+    NSUInteger loc = 1;
+    if (dotLoc == NSNotFound) // 没有,
+        code = [attrs substringFromIndex:loc];
+    else
+        code = [attrs substringWithRange:NSMakeRange(loc, dotLoc - loc)];
+
+    if (code.length > 3 && [code hasPrefix:@"@\""]) {
+        // 去掉@"和"，截取中间的类型名称
+        code = [code substringWithRange:NSMakeRange(2, code.length - 3)];
+        Class typeClass = NSClassFromString(code);
+        BOOL fromFoundation = [CCUserDefaults isClassFromFoundation:typeClass];
+        if (typeClass && !fromFoundation) {
+            const char *propertyName = property_getName(property);
+            NSString *name = [NSString stringWithUTF8String:propertyName];
+            [self.classDictionary setObject:typeClass forKey:name];
+        }
+    }
+}
+
+
+#pragma mark -
+#pragma mark :. 存储对象 进行分解
+
+typedef void (^CCClassesEnumeration)(Class c, BOOL *stop);
+static NSSet *foundationClasses_;
+
++ (NSSet *)foundationClasses
+{
+    if (foundationClasses_ == nil) {
+        // 集合中没有NSObject，因为几乎所有的类都是继承自NSObject，具体是不是NSObject需要特殊判断
+        foundationClasses_ = [NSSet setWithObjects:
+                                        [NSURL class],
+                                        [NSDate class],
+                                        [NSValue class],
+                                        [NSData class],
+                                        [NSError class],
+                                        [NSArray class],
+                                        [NSDictionary class],
+                                        NSClassFromString(@"__NSDictionaryM"),
+                                        [NSString class],
+                                        NSClassFromString(@"__NSCFString"),
+                                        [NSAttributedString class], nil];
+    }
+    return foundationClasses_;
+}
+
++ (void)cc_enumerateClasses:(Class)classs complete:(CCClassesEnumeration)enumeration
+{
+    if (enumeration == nil) return;
+    BOOL stop = NO;
+    Class c = classs;
+    while (c && !stop) {
+        enumeration(c, &stop);
+        c = class_getSuperclass(c);
+        if ([self isClassFromFoundation:c]) break;
+    }
+}
+
++ (BOOL)isClassFromFoundation:(Class)c
+{
+    if (c == [NSObject class]) return YES;
+    __block BOOL result = NO;
+    [[CCUserDefaults foundationClasses] enumerateObjectsUsingBlock:^(Class foundationClass, BOOL *stop) {
+        if ([c isSubclassOfClass:foundationClass]) {
+            result = YES;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
++ (NSDictionary *)objectSqlProperties:(id)object
+{
+    Class classs = [object class];
+    NSMutableDictionary *propertyM = [NSMutableDictionary dictionary];
+    [CCUserDefaults cc_enumerateClasses:classs
+                               complete:^(__unsafe_unretained Class c, BOOL *stop) {
+                                   unsigned int numIvars;
+                                   Ivar *vars = class_copyIvarList(classs, &numIvars);
+                                   for (int i = 0; i < numIvars; i++) {
+                                       Ivar thisIvar = vars[ i ];
+                                       NSString *propertyName = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
+                                       if ([propertyName containsString:@"_"])
+                                           propertyName = [propertyName substringFromIndex:1];
+
+                                       id propertyValue = [object valueForKey:propertyName];
+                                       if (propertyValue)
+                                           [propertyM setObject:propertyValue forKey:propertyName];
+                                   }
+                                   free(vars);
+                               }];
+    return propertyM;
+}
+
+- (id)checkKeyValue:(NSString *)key
+{
+    id object = [self.userDefault objectForKey:key];
+
+    NSString *className = [NSString stringWithFormat:@"%@_", NSStringFromClass(self.class)];
+    NSString *classKey = [key stringByReplacingOccurrencesOfString:className withString:@""];
+    Class classs = [self.classDictionary objectForKey:classKey];
+    if (classs) {
+        id ClassObject = [classs new];
+
+        [CCUserDefaults cc_enumerateClasses:classs
+                                   complete:^(__unsafe_unretained Class c, BOOL *stop) {
+                                       unsigned int numIvars;
+                                       Ivar *vars = class_copyIvarList(classs, &numIvars);
+                                       for (int i = 0; i < numIvars; i++) {
+                                           Ivar thisIvar = vars[ i ];
+                                           NSString *propertyName = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
+                                           if ([propertyName containsString:@"_"])
+                                               propertyName = [propertyName substringFromIndex:1];
+
+                                           id propertyValue = [object valueForKey:propertyName];
+                                           if (propertyValue)
+                                               [ClassObject setValue:propertyValue forKey:propertyName];
+                                       }
+                                       free(vars);
+                                   }];
+
+        object = ClassObject;
+    }
+    return object;
 }
 
 @end

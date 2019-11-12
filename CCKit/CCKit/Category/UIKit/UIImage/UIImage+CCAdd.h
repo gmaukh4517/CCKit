@@ -98,6 +98,14 @@
 - (UIImage *)compression:(CGSize)targetSize;
 
 /**
+ 指定宽度按比例缩放
+
+ @param defineWidth 默认宽度
+ @return 返回缩放图片
+ */
+- (UIImage *)imageCompressForWidthScaleWidth:(CGFloat)defineWidth;
+
+/**
  动态图片压缩
  */
 - (UIImage *)resetSizeOfImage;
@@ -358,6 +366,14 @@ typedef NS_ENUM(NSUInteger, CCAccuracy) {
 #pragma mark :. Color
 
 /**
+ 改变图片显示颜色
+
+ @param color 颜色值
+ @return 生成颜色图片
+ */
+- (UIImage *)imageChangeColor:(UIColor *)color;
+
+/**
  *  @brief  根据颜色生成纯色图片
  *
  *  @param color 颜色
@@ -365,6 +381,7 @@ typedef NS_ENUM(NSUInteger, CCAccuracy) {
  *  @return 纯色图片
  */
 + (UIImage *)imageWithColor:(UIColor *)color;
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 
 /**
  *  @brief  取图片某一点的颜色

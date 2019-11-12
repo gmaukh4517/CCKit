@@ -39,7 +39,8 @@
 static inline void cc_dispatch_semaphore(void (^block)(dispatch_semaphore_t semaphore))
 {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    !block ?: block(semaphore);
+    if (block)
+        block(semaphore);
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
@@ -49,7 +50,8 @@ static inline void cc_dispatch_async_global_semaphore(void (^block)(dispatch_sem
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        !block ?: block(semaphore);
+        if (block)
+            block(semaphore);
     });
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
@@ -165,6 +167,17 @@ static inline void cc_view_shadow(UIView *view, UIColor *color, CGSize offset, C
     view.layer.shadowRadius = radius;
 }
 
+/** 设置阴影和圆角(必须给视图加背景颜色) **/
+static inline void cc_view_shadow_radius(UIView *view, UIColor *color, CGSize offset, CGFloat opacity, CGFloat shadowRadius, CGFloat radius)
+{
+    view.layer.cornerRadius = radius;
+    view.layer.shadowColor = color.CGColor;
+    view.layer.shadowOffset = offset;
+    view.layer.shadowOpacity = opacity;
+    view.layer.shadowRadius = shadowRadius;
+}
+
+
 /** view 圆角 */
 static inline void cc_view_radius(UIView *view, CGFloat radius)
 {
@@ -203,6 +216,29 @@ static inline void cc_view_singleFillet(UIView *view, UIRectCorner angle, CGFloa
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
                                                    byRoundingCorners:angle
                                                          cornerRadii:CGSizeMake(radius, radius)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = view.bounds;
+    maskLayer.path = maskPath.CGPath;
+    view.layer.mask = maskLayer;
+}
+
+static inline void cc_view_singleFilletSize(UIView *view, CGSize size, UIRectCorner angle, CGFloat radius)
+{
+    CGRect frame = CGRectMake(0, 0, size.width, size.height);
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame
+                                                   byRoundingCorners:angle
+                                                         cornerRadii:CGSizeMake(radius, radius)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = frame;
+    maskLayer.path = maskPath.CGPath;
+    view.layer.mask = maskLayer;
+}
+
+static inline void cc_view_singleARC(UIView *view, UIRectCorner angle, CGSize radiusSize)
+{
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+                                                   byRoundingCorners:angle
+                                                         cornerRadii:radiusSize];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = view.bounds;
     maskLayer.path = maskPath.CGPath;
@@ -276,7 +312,7 @@ static inline int cc_isJailbreak()
 
     int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[ 0 ]);
     for (int i = 0; i < appay_size; i++) {
-        if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:jailbreak_tool_pathes[i]]]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:jailbreak_tool_pathes[ i ]]]) {
             return YES;
         }
     }
@@ -292,6 +328,17 @@ static inline double cc_freeDiskSpace()
         freeSpace = (unsigned long long)(buf.f_bsize * buf.f_bavail);
     }
     return freeSpace;
+}
+
+/**
+ 等比计算(iPhone 6 基础)
+
+ @param value 换算值
+ */
+static inline CGFloat autoSizeScale(CGFloat value)
+{
+    CGSize mainSize = [UIScreen mainScreen].bounds.size;
+    return value * (mainSize.width / 320);
 }
 
 #endif /* CCMacros_h */

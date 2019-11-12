@@ -25,43 +25,48 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewController, BOOL animated);
 
 @interface UIViewController (CCAdd)
 
-@property(readonly) UIView *navigationBarView;
+@property (readonly) UIView *navigationBarView;
+
+// 设置导航栏透明度
+@property (nonatomic, assign) CGFloat navigationBarAlpha;
 
 /**
  *  @brief  找到当前viewcontroler所在的tableView
  */
-@property(readonly) UITableView *tableView;
+@property (readonly) UITableView *tableView;
 
 /**
  *  @author CC, 16-03-15
  *
  *  @brief 是否隐藏底部TabBar
  */
-@property(nonatomic, assign) BOOL tabBarHidden;
+@property (nonatomic, assign) BOOL tabBarHidden;
 
 /**
  包含在导航中时，交互式弹出手势是否禁用
  */
-@property(nonatomic, assign) BOOL cc_interactivePopDisabled;
+@property (nonatomic, assign) BOOL cc_interactivePopDisabled;
 
 /**
  指示此视图控制器喜欢其导航栏隐藏或不隐藏，
  检查基于视图控制器的导航栏的外观是否启用。
  默认为NO，栏更有可能显示。
  */
-@property(nonatomic, assign) BOOL cc_prefersNavigationBarHidden;
+@property (nonatomic, assign) BOOL cc_prefersNavigationBarHidden;
 
 /**
  当开始交互式弹出时，最大允许到左边缘的初始距离
  手势。 0默认情况下，这意味着它将忽略此限制。
  */
-@property(nonatomic, assign) CGFloat cc_interactivePopMaxAllowedInitialDistanceToLeftEdge;
+@property (nonatomic, assign) CGFloat cc_interactivePopMaxAllowedInitialDistanceToLeftEdge;
 
-@property(nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
+@property (nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
 
 - (void)backButtonTouched:(void (^)(UIViewController *vc))backButtonHandler;
 
@@ -109,6 +114,15 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
  */
 - (void)pushNewViewController:(UIViewController *)newViewController
                      Animated:(BOOL)animated;
+
+/**
+ *  @author CC, 2016-03-14
+ *
+ *  @brief  push新的控制器到导航控制器(返回按钮无文字)
+ *
+ *  @param newViewControllerName 目标新的控制器名称
+ */
+- (void)pushNewViewControllerWithBackName:(NSString *)newViewControllerName;
 
 /**
  *  @author CC, 2016-03-14
@@ -163,6 +177,8 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
  */
 - (void)pushMultipleNewViewController:(UIViewController *)newViewController, ... NS_REQUIRES_NIL_TERMINATION;
 
+- (void)popToViewControllerName:(NSString *)viewControllerName;
+
 /**
  *  @author CC, 2016-03-14
  *
@@ -190,7 +206,11 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 #pragma mark :. presentViewController
 - (void)presentViewController:(UIViewController *)newViewController;
 
-- (void)presentViewController:(UIViewController *)newViewController Animated:(BOOL)animated;
+- (void)presentViewController:(UIViewController *)newViewController animated:(BOOL)animated;
+
+- (void)presentNewViewController:(UIViewController *)newViewController
+                        animated:(BOOL)animated
+                      completion:(void (^__nullable)(void))completion;
 
 #pragma mark -
 #pragma mark :. PopupViewController
@@ -207,8 +227,8 @@ typedef NS_ENUM(NSInteger, CCPopupViewAnimation) {
     CCPopupViewAnimationSlideRightRight,
 };
 
-@property(nonatomic, retain) UIViewController *popupViewController;
-@property(nonatomic, retain) UIView *popupBackgroundView;
+@property (nonatomic, retain) UIViewController *popupViewController;
+@property (nonatomic, retain) UIView *popupBackgroundView;
 
 - (void)presentPopupViewController:(UIViewController *)popupViewController
                      animationType:(CCPopupViewAnimation)animationType;
@@ -224,8 +244,8 @@ typedef NS_ENUM(NSInteger, CCPopupViewAnimation) {
 #pragma makk :.StoreKit
 
 @property NSString *campaignToken;
-@property(nonatomic, copy) void (^loadingStoreKitItemBlock)(void);
-@property(nonatomic, copy) void (^loadedStoreKitItemBlock)(void);
+@property (nonatomic, copy) void (^loadingStoreKitItemBlock)(void);
+@property (nonatomic, copy) void (^loadedStoreKitItemBlock)(void);
 
 /**
  *  @author CC, 16-03-03
@@ -268,3 +288,5 @@ typedef NS_ENUM(NSInteger, CCPopupViewAnimation) {
 + (NSInteger)IDFromITunesURL:(NSString *)URLString;
 
 @end
+
+NS_ASSUME_NONNULL_END

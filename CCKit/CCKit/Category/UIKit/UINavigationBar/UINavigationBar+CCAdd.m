@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
+#import "CCMacroProperty.h"
 #import "UINavigationBar+CCAdd.h"
 #import <objc/runtime.h>
-#import "CCMacroProperty.h"
 
 @implementation UINavigationBar (CCAdd)
 
@@ -58,7 +58,11 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         self.layoutMargins = UIEdgeInsetsZero;
         for (UIView *view in self.subviews) {
             if ([NSStringFromClass(view.classForCoder) containsString:@"ContentView"]) {
-                view.layoutMargins = UIEdgeInsetsMake(0, 10, 0, 10);
+                if (iOS13Later) {
+
+                } else {
+                    view.layoutMargins = UIEdgeInsetsMake(0, 10, 0, 10);
+                }
             }
         }
     }
@@ -134,6 +138,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 
     UIView *barBackgroundView = [barSubviews firstObject];
     barBackgroundView.alpha = alpha;
+    barBackgroundView.subviews.firstObject.alpha = !alpha;
     if (backgroundColor)
         barBackgroundView.backgroundColor = backgroundColor;
 
@@ -157,25 +162,31 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
  *
  *  @param alpha 透明度
  */
-- (void)setElementsAlpha:(CGFloat)alpha
+- (void)setNeedsNavigationTitle:(CGFloat)alpha
 {
-    [[self valueForKey:@"_leftViews"] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) {
-        view.alpha = alpha;
-    }];
+    NSMutableArray *barSubviews = [NSMutableArray array];
+    if (@available(iOS 11.0, *)) {
+        __block UIView *_UINavigationBarContentView;
+        [[self subviews] enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
+            if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarContentView")])
+                _UINavigationBarContentView = obj;
+        }];
 
-    [[self valueForKey:@"_rightViews"] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) {
-        view.alpha = alpha;
-    }];
-
-    UIView *titleView = [self valueForKey:@"_titleView"];
-    titleView.alpha = alpha;
-    //    when viewController first load, the titleView maybe nil
-    [[self subviews] enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass:NSClassFromString(@"UINavigationItemView")]) {
-            obj.alpha = alpha;
-            *stop = YES;
+        for (UIView *view in _UINavigationBarContentView.subviews) {
+            if (![view isMemberOfClass:NSClassFromString(@"_UIButtonBarButton")])
+                [barSubviews addObject:view];
         }
-    }];
+
+    } else if (@available(iOS 9.0, *)) {
+        for (UIView *view in self.subviews) {
+            if (![view isMemberOfClass:[UIView class]] && ([view isKindOfClass:NSClassFromString(@"UINavigationItemView")] || [view isKindOfClass:NSClassFromString(@"UINavigationButton")])) {
+                [barSubviews addObject:view];
+            }
+        }
+    }
+
+    for (UIView *view in barSubviews)
+        view.alpha = alpha;
 }
 
 /**

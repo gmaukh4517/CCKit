@@ -30,4 +30,6 @@
 #import <CCKit/CCResponseObject.h>
 #import <CCKit/HttpFileConfig.h>
 
+#import <CCKit/CCDownloadManager.h>
+
 #endif

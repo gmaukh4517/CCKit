@@ -68,6 +68,9 @@ typedef NS_ENUM(NSInteger, UILabelCCBlinkingMode) {
 
 - (void)setText:(NSString *)text automaticWritingAnimationWithDuration:(NSTimeInterval)duration blinkingMode:(UILabelCCBlinkingMode)blinkingMode blinkingCharacter:(unichar)blinkingCharacter completion:(void (^)(void))completion;
 
+// 获取可显示行数
+- (NSInteger)displayNumberOfLines:(CGFloat)width;
+
 #pragma mark -
 #pragma mark :. CCAdjustableLabel
 
@@ -191,5 +194,12 @@ typedef NS_ENUM(NSInteger, UILabelCCBlinkingMode) {
  */
 - (void)setTextUnderline:(NSInteger)location
                   length:(NSInteger)length;
+
+/**
+ 设置行间距
+
+ @param spacing 间距大小
+ */
+- (void)setTextLineSpacing:(NSInteger)spacing;
 
 @end

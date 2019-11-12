@@ -687,7 +687,7 @@ static const CGFloat kCancelButtonShadowHeightRatio = 0.333f;
     tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(self.bounds), 0, 0, 0);
     // removes separators below the footer (between empty cells)
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 10)];
-    [tableView setContentOffset:CGPointMake(0, tableView.contentSize.height - tableView.frame.size.height) animated:YES];
+    [tableView setContentOffset:CGPointMake(0, tableView.contentSize.height - tableView.frame.size.height) animated:YES];
     self.tableView = tableView;
 
     [self setUpTableViewHeader];

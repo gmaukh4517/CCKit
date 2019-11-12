@@ -26,7 +26,7 @@
 #import "CCTransformRefresh.h"
 #import <objc/message.h>
 #import "UIScrollView+CCAdd.h"
-#import "config.h"
+#import "CCConfig.h"
 
 // objc_msgSend
 #define msgSend(...) ((void (*)(void *, SEL, UIView *))objc_msgSend)(__VA_ARGS__)

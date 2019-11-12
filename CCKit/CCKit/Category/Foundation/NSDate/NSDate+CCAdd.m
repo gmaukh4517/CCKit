@@ -349,7 +349,7 @@
  *
  *  @brief  获取这个月有多少周
  */
-+ (NSString *)getWeekStringFromInteger:(int)week
++ (NSString *)getWeekStringFromInteger:(NSInteger)week
 {
     NSArray *weekArray = @[ @"周日",
                             @"周一",
@@ -358,7 +358,7 @@
                             @"周四",
                             @"周五",
                             @"周六" ];
-    return [weekArray objectAtIndex:week];
+    return [weekArray objectAtIndex:week-1];
 }
 
 /**
@@ -369,6 +369,21 @@
 - (NSDate *)theDayBefore
 {
     return [NSDate dateWithTimeInterval:-60 * 60 * 24 + 60 * 10 sinceDate:self];
+}
+
+/**
+ 获取当前时间前后天数
+
+ @param day 获取间隔天数（负数获取当前之前的天数）
+ */
++ (NSDate *)currentDayWithInterval:(NSInteger)day
+{
+    return [NSDate dateWithTimeInterval:(day * 60) * 60 * 24 + 60 * 10 sinceDate:[NSDate date]];
+}
+
+-(NSDate *)currentDayWithInterval:(NSInteger)day
+{
+    return [NSDate dateWithTimeInterval:(day * 60) * 60 * 24 + 60 * 10 sinceDate:self];
 }
 
 /**

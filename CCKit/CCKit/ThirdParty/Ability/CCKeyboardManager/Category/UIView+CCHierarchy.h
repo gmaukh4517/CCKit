@@ -24,6 +24,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CCToolbar.h"
 
 @interface UIView (CCHierarchy)
 
@@ -33,5 +34,30 @@
 
 @property (nullable, nonatomic, readonly, strong) UIViewController *viewController;
 @property (nullable, nonatomic, readonly, strong) UIViewController *topMostController;
+
+@end
+
+
+@interface UIView (CCToolbarAddition)
+
+/**
+ CCToolbar references for better customization control.
+ */
+@property (readonly, nonatomic, nonnull) CCToolbar *keyboardToolbar;
+
+/**
+ If `shouldHideToolbarPlaceholder` is YES, then title will not be added to the toolbar. Default to NO.
+ */
+@property (assign, nonatomic) BOOL shouldHideToolbarPlaceholder;
+
+/**
+ `toolbarPlaceholder` to override default `placeholder` text when drawing text on toolbar.
+ */
+@property (nullable, strong, nonatomic) NSString *toolbarPlaceholder;
+
+/**
+ `drawingToolbarPlaceholder` will be actual text used to draw on toolbar. This would either `placeholder` or `toolbarPlaceholder`.
+ */
+@property (nullable, strong, nonatomic, readonly) NSString *drawingToolbarPlaceholder;
 
 @end

@@ -25,6 +25,7 @@
 
 #import "NSData+CCAdd.h"
 #import "NSString+CCAdd.h"
+#import "QRCodeGenerator.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -83,6 +84,40 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 + (NSString *)UUIDTimestamp
 {
     return [[NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970] * 1000] stringValue];
+}
+
+/**
+ 转黄数据 （小点有值保留）
+
+ @param doubles 数据值
+ @param reserved 保留位数
+ @return 转黄值
+ */
++ (NSString *)decimalPointHandler:(double)doubles
+                         reserved:(NSInteger)reserved
+{
+    NSString *number = [NSString stringWithFormat:@"%%.%zif", reserved];
+    number = [NSString stringWithFormat:number, doubles];
+
+    if (reserved > 0) {
+        NSInteger location = [number rangeOfString:@"."].location;
+        NSString *pointStr = [number substringWithRange:NSMakeRange(location + 1, reserved)];
+        NSInteger pointNumber = [pointStr integerValue];
+        if (pointNumber <= 0)
+            number = [number substringToIndex:location];
+        else {
+            for (NSInteger i = pointStr.length - 1; i >= 0; i--) {
+                NSInteger number = [[pointStr substringWithRange:NSMakeRange(i, 1)] integerValue];
+                if (number > 0) {
+                    reserved = i + 1;
+                    break;
+                }
+            }
+            number = [number substringWithRange:NSMakeRange(0, location + 1 + (reserved < 2 ?: reserved))];
+        }
+    }
+
+    return number;
 }
 
 /**
@@ -153,9 +188,9 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
         return NO;
     }
     NSString *urlRegEx = @"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+                          "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+                          "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+                          "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
     NSError *error;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:urlRegEx options:0 error:&error];
@@ -434,6 +469,36 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 }
 
 /**
+ *  @author CC, 2015-10-09
+ *
+ *  @brief  生成二维码图像
+ *
+ *  @param width  图像宽
+ *  @param height 图像高
+ *
+ *  @return 二维码图片
+ */
+- (UIImage *)becomeQRCodeWithQRstring:(float)size
+{
+    return [QRCodeGenerator qrImageForString:self
+                                   imageSize:size];
+}
+
+/**
+ 生成二维码中间带头像
+
+ @param size 生成大小
+ @param avatar 头像
+ */
+- (UIImage *)becomeQRCodeWithQRstring:(float)size
+                          AvatarImage:(UIImage *)avatar
+{
+    return [QRCodeGenerator qrImageForString:self
+                                   imageSize:size
+                                      Topimg:avatar];
+}
+
+/**
  *  @author CC, 15-09-02
  *
  *  @brief  转换Data
@@ -478,6 +543,40 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
         result = [NSString stringWithFormat:@"%.2fGB", size / pow(unit, 3)];
     }
     return result;
+}
+
+/**
+ 转换单位(带单位)
+
+ @param unit 单位数
+ */
++ (NSString *)convertingUnit:(NSInteger)value
+{
+    NSArray *unitArr = @[
+        @{ @"unit" : @(10000),
+           @"unitStr" : @"万" },
+        @{ @"unit" : @(1000000),
+           @"unitStr" : @"百万" },
+        @{ @"unit" : @(10000000),
+           @"unitStr" : @"千万" },
+        @{ @"unit" : @(100000000),
+           @"unitStr" : @"亿" }
+    ];
+
+    unitArr = [[unitArr reverseObjectEnumerator] allObjects];
+
+    NSString *unitStr = [NSString stringWithFormat:@"%zi", value];
+    for (NSDictionary *item in unitArr) {
+        double unit = [[item objectForKey:@"unit"] doubleValue];
+        if (value > unit) {
+            double number = value / unit;
+            if (number >= 1) {
+                unitStr = [NSString stringWithFormat:@"%@%@", [NSString decimalPointHandler:number reserved:2], [item objectForKey:@"unitStr"]];
+                break;
+            }
+        }
+    }
+    return unitStr;
 }
 
 /**
@@ -578,7 +677,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                               options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                            attributes:@{ NSFontAttributeName : font }
                               context:nil]
-    .size;
+               .size;
 #endif
 
     return size;
@@ -607,7 +706,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
                                       context:nil]
-        .size;
+                       .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)
@@ -623,7 +722,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
                                   context:nil]
-    .size;
+                   .size;
 #endif
 
     return ceil(textSize.height);
@@ -652,7 +751,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
                                       context:nil]
-        .size;
+                       .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(CGFLOAT_MAX, height)
@@ -668,7 +767,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
                                   context:nil]
-    .size;
+                   .size;
 #endif
 
     return ceil(textSize.width);
@@ -697,7 +796,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
                                       context:nil]
-        .size;
+                       .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)
@@ -713,7 +812,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
                                   context:nil]
-    .size;
+                   .size;
 #endif
 
     return CGSizeMake(ceil(textSize.width), ceil(textSize.height));
@@ -742,7 +841,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                                NSStringDrawingTruncatesLastVisibleLine)
                                    attributes:attributes
                                       context:nil]
-        .size;
+                       .size;
     } else {
         textSize = [self sizeWithFont:textFont
                     constrainedToSize:CGSizeMake(CGFLOAT_MAX, height)
@@ -758,7 +857,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
                                            NSStringDrawingTruncatesLastVisibleLine)
                                attributes:attributes
                                   context:nil]
-    .size;
+                   .size;
 #endif
 
     return CGSizeMake(ceil(textSize.width), ceil(textSize.height));
@@ -1199,6 +1298,22 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 #pragma mark -
 #pragma mark :. Hash 加密
 
+- (NSString *)MD532
+{
+    const char *cStr = [self UTF8String];
+    unsigned char digest[ CC_MD5_DIGEST_LENGTH ];
+
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02x", digest[ i ]];
+    }
+
+    return [result copy];
+}
+
 - (NSString *)MD5
 {
     const char *string = self.UTF8String;
@@ -1555,203 +1670,203 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
         // There are probably values missed, but this is a good start.
         // A few more have been added that weren't included on the original list.
         MIMEDict = [NSDictionary dictionaryWithObjectsAndKeys:
-                    // Key      // Value
-                    @"", @"application/octet-stream",
-                    @"323", @"text/h323",
-                    @"acx", @"application/internet-property-stream",
-                    @"ai", @"application/postscript",
-                    @"aif", @"audio/x-aiff",
-                    @"aifc", @"audio/x-aiff",
-                    @"aiff", @"audio/x-aiff",
-                    @"asf", @"video/x-ms-asf",
-                    @"asr", @"video/x-ms-asf",
-                    @"asx", @"video/x-ms-asf",
-                    @"au", @"audio/basic",
-                    @"avi", @"video/x-msvideo",
-                    @"axs", @"application/olescript",
-                    @"bas", @"text/plain",
-                    @"bcpio", @"application/x-bcpio",
-                    @"bin", @"application/octet-stream",
-                    @"bmp", @"image/bmp",
-                    @"c", @"text/plain",
-                    @"cat", @"application/vnd.ms-pkiseccat",
-                    @"cdf", @"application/x-cdf",
-                    @"cer", @"application/x-x509-ca-cert",
-                    @"class", @"application/octet-stream",
-                    @"clp", @"application/x-msclip",
-                    @"cmx", @"image/x-cmx",
-                    @"cod", @"image/cis-cod",
-                    @"cpio", @"application/x-cpio",
-                    @"crd", @"application/x-mscardfile",
-                    @"crl", @"application/pkix-crl",
-                    @"crt", @"application/x-x509-ca-cert",
-                    @"csh", @"application/x-csh",
-                    @"css", @"text/css",
-                    @"dcr", @"application/x-director",
-                    @"der", @"application/x-x509-ca-cert",
-                    @"dir", @"application/x-director",
-                    @"dll", @"application/x-msdownload",
-                    @"dms", @"application/octet-stream",
-                    @"doc", @"application/msword",
-                    @"docx", @"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    @"dot", @"application/msword",
-                    @"dvi", @"application/x-dvi",
-                    @"dxr", @"application/x-director",
-                    @"eps", @"application/postscript",
-                    @"etx", @"text/x-setext",
-                    @"evy", @"application/envoy",
-                    @"exe", @"application/octet-stream",
-                    @"fif", @"application/fractals",
-                    @"flr", @"x-world/x-vrml",
-                    @"gif", @"image/gif",
-                    @"gtar", @"application/x-gtar",
-                    @"gz", @"application/x-gzip",
-                    @"h", @"text/plain",
-                    @"hdf", @"application/x-hdf",
-                    @"hlp", @"application/winhlp",
-                    @"hqx", @"application/mac-binhex40",
-                    @"hta", @"application/hta",
-                    @"htc", @"text/x-component",
-                    @"htm", @"text/html",
-                    @"html", @"text/html",
-                    @"htt", @"text/webviewhtml",
-                    @"ico", @"image/x-icon",
-                    @"ief", @"image/ief",
-                    @"iii", @"application/x-iphone",
-                    @"ins", @"application/x-internet-signup",
-                    @"isp", @"application/x-internet-signup",
-                    @"jfif", @"image/pipeg",
-                    @"jpe", @"image/jpeg",
-                    @"jpeg", @"image/jpeg",
-                    @"jpg", @"image/jpeg",
-                    @"js", @"application/x-javascript",
-                    @"json", @"application/json", // According to RFC 4627  // Also application/x-javascript text/javascript text/x-javascript text/x-json
-                    @"latex", @"application/x-latex",
-                    @"lha", @"application/octet-stream",
-                    @"lsf", @"video/x-la-asf",
-                    @"lsx", @"video/x-la-asf",
-                    @"lzh", @"application/octet-stream",
-                    @"m", @"text/plain",
-                    @"m13", @"application/x-msmediaview",
-                    @"m14", @"application/x-msmediaview",
-                    @"m3u", @"audio/x-mpegurl",
-                    @"man", @"application/x-troff-man",
-                    @"mdb", @"application/x-msaccess",
-                    @"me", @"application/x-troff-me",
-                    @"mht", @"message/rfc822",
-                    @"mhtml", @"message/rfc822",
-                    @"mid", @"audio/mid",
-                    @"mny", @"application/x-msmoney",
-                    @"mov", @"video/quicktime",
-                    @"movie", @"video/x-sgi-movie",
-                    @"mp2", @"video/mpeg",
-                    @"mp3", @"audio/mpeg",
-                    @"mpa", @"video/mpeg",
-                    @"mpe", @"video/mpeg",
-                    @"mpeg", @"video/mpeg",
-                    @"mpg", @"video/mpeg",
-                    @"mpp", @"application/vnd.ms-project",
-                    @"mpv2", @"video/mpeg",
-                    @"ms", @"application/x-troff-ms",
-                    @"mvb", @"    application/x-msmediaview",
-                    @"nws", @"message/rfc822",
-                    @"oda", @"application/oda",
-                    @"p10", @"application/pkcs10",
-                    @"p12", @"application/x-pkcs12",
-                    @"p7b", @"application/x-pkcs7-certificates",
-                    @"p7c", @"application/x-pkcs7-mime",
-                    @"p7m", @"application/x-pkcs7-mime",
-                    @"p7r", @"application/x-pkcs7-certreqresp",
-                    @"p7s", @"    application/x-pkcs7-signature",
-                    @"pbm", @"image/x-portable-bitmap",
-                    @"pdf", @"application/pdf",
-                    @"pfx", @"application/x-pkcs12",
-                    @"pgm", @"image/x-portable-graymap",
-                    @"pko", @"application/ynd.ms-pkipko",
-                    @"pma", @"application/x-perfmon",
-                    @"pmc", @"application/x-perfmon",
-                    @"pml", @"application/x-perfmon",
-                    @"pmr", @"application/x-perfmon",
-                    @"pmw", @"application/x-perfmon",
-                    @"png", @"image/png",
-                    @"pnm", @"image/x-portable-anymap",
-                    @"pot", @"application/vnd.ms-powerpoint",
-                    @"vppm", @"image/x-portable-pixmap",
-                    @"pps", @"application/vnd.ms-powerpoint",
-                    @"ppt", @"application/vnd.ms-powerpoint",
-                    @"pptx", @"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    @"prf", @"application/pics-rules",
-                    @"ps", @"application/postscript",
-                    @"pub", @"application/x-mspublisher",
-                    @"qt", @"video/quicktime",
-                    @"ra", @"audio/x-pn-realaudio",
-                    @"ram", @"audio/x-pn-realaudio",
-                    @"ras", @"image/x-cmu-raster",
-                    @"rgb", @"image/x-rgb",
-                    @"rmi", @"audio/mid",
-                    @"roff", @"application/x-troff",
-                    @"rtf", @"application/rtf",
-                    @"rtx", @"text/richtext",
-                    @"scd", @"application/x-msschedule",
-                    @"sct", @"text/scriptlet",
-                    @"setpay", @"application/set-payment-initiation",
-                    @"setreg", @"application/set-registration-initiation",
-                    @"sh", @"application/x-sh",
-                    @"shar", @"application/x-shar",
-                    @"sit", @"application/x-stuffit",
-                    @"snd", @"audio/basic",
-                    @"spc", @"application/x-pkcs7-certificates",
-                    @"spl", @"application/futuresplash",
-                    @"src", @"application/x-wais-source",
-                    @"sst", @"application/vnd.ms-pkicertstore",
-                    @"stl", @"application/vnd.ms-pkistl",
-                    @"stm", @"text/html",
-                    @"svg", @"image/svg+xml",
-                    @"sv4cpio", @"application/x-sv4cpio",
-                    @"sv4crc", @"application/x-sv4crc",
-                    @"swf", @"application/x-shockwave-flash",
-                    @"t", @"application/x-troff",
-                    @"tar", @"application/x-tar",
-                    @"tcl", @"application/x-tcl",
-                    @"tex", @"application/x-tex",
-                    @"texi", @"application/x-texinfo",
-                    @"texinfo", @"application/x-texinfo",
-                    @"tgz", @"application/x-compressed",
-                    @"tif", @"image/tiff",
-                    @"tiff", @"image/tiff",
-                    @"tr", @"application/x-troff",
-                    @"trm", @"application/x-msterminal",
-                    @"tsv", @"text/tab-separated-values",
-                    @"txt", @"text/plain",
-                    @"uls", @"text/iuls",
-                    @"ustar", @"application/x-ustar",
-                    @"vcf", @"text/x-vcard",
-                    @"vrml", @"x-world/x-vrml",
-                    @"wav", @"audio/x-wav",
-                    @"wcm", @"application/vnd.ms-works",
-                    @"wdb", @"application/vnd.ms-works",
-                    @"wks", @"application/vnd.ms-works",
-                    @"wmf", @"application/x-msmetafile",
-                    @"wps", @"application/vnd.ms-works",
-                    @"wri", @"application/x-mswrite",
-                    @"wrl", @"x-world/x-vrml",
-                    @"wrz", @"x-world/x-vrml",
-                    @"xaf", @"x-world/x-vrml",
-                    @"xbm", @"image/x-xbitmap",
-                    @"xla", @"application/vnd.ms-excel",
-                    @"xlc", @"application/vnd.ms-excel",
-                    @"xlm", @"application/vnd.ms-excel",
-                    @"xls", @"application/vnd.ms-excel",
-                    @"xlsx", @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    @"xlt", @"application/vnd.ms-excel",
-                    @"xlw", @"application/vnd.ms-excel",
-                    @"xml", @"text/xml", // According to RFC 3023   // Also application/xml
-                    @"xof", @"x-world/x-vrml",
-                    @"xpm", @"image/x-xpixmap",
-                    @"xwd", @"image/x-xwindowdump",
-                    @"z", @"application/x-compress",
-                    @"zip", @"application/zip",
-                    nil];
+                                     // Key      // Value
+                                     @"", @"application/octet-stream",
+                                     @"323", @"text/h323",
+                                     @"acx", @"application/internet-property-stream",
+                                     @"ai", @"application/postscript",
+                                     @"aif", @"audio/x-aiff",
+                                     @"aifc", @"audio/x-aiff",
+                                     @"aiff", @"audio/x-aiff",
+                                     @"asf", @"video/x-ms-asf",
+                                     @"asr", @"video/x-ms-asf",
+                                     @"asx", @"video/x-ms-asf",
+                                     @"au", @"audio/basic",
+                                     @"avi", @"video/x-msvideo",
+                                     @"axs", @"application/olescript",
+                                     @"bas", @"text/plain",
+                                     @"bcpio", @"application/x-bcpio",
+                                     @"bin", @"application/octet-stream",
+                                     @"bmp", @"image/bmp",
+                                     @"c", @"text/plain",
+                                     @"cat", @"application/vnd.ms-pkiseccat",
+                                     @"cdf", @"application/x-cdf",
+                                     @"cer", @"application/x-x509-ca-cert",
+                                     @"class", @"application/octet-stream",
+                                     @"clp", @"application/x-msclip",
+                                     @"cmx", @"image/x-cmx",
+                                     @"cod", @"image/cis-cod",
+                                     @"cpio", @"application/x-cpio",
+                                     @"crd", @"application/x-mscardfile",
+                                     @"crl", @"application/pkix-crl",
+                                     @"crt", @"application/x-x509-ca-cert",
+                                     @"csh", @"application/x-csh",
+                                     @"css", @"text/css",
+                                     @"dcr", @"application/x-director",
+                                     @"der", @"application/x-x509-ca-cert",
+                                     @"dir", @"application/x-director",
+                                     @"dll", @"application/x-msdownload",
+                                     @"dms", @"application/octet-stream",
+                                     @"doc", @"application/msword",
+                                     @"docx", @"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                     @"dot", @"application/msword",
+                                     @"dvi", @"application/x-dvi",
+                                     @"dxr", @"application/x-director",
+                                     @"eps", @"application/postscript",
+                                     @"etx", @"text/x-setext",
+                                     @"evy", @"application/envoy",
+                                     @"exe", @"application/octet-stream",
+                                     @"fif", @"application/fractals",
+                                     @"flr", @"x-world/x-vrml",
+                                     @"gif", @"image/gif",
+                                     @"gtar", @"application/x-gtar",
+                                     @"gz", @"application/x-gzip",
+                                     @"h", @"text/plain",
+                                     @"hdf", @"application/x-hdf",
+                                     @"hlp", @"application/winhlp",
+                                     @"hqx", @"application/mac-binhex40",
+                                     @"hta", @"application/hta",
+                                     @"htc", @"text/x-component",
+                                     @"htm", @"text/html",
+                                     @"html", @"text/html",
+                                     @"htt", @"text/webviewhtml",
+                                     @"ico", @"image/x-icon",
+                                     @"ief", @"image/ief",
+                                     @"iii", @"application/x-iphone",
+                                     @"ins", @"application/x-internet-signup",
+                                     @"isp", @"application/x-internet-signup",
+                                     @"jfif", @"image/pipeg",
+                                     @"jpe", @"image/jpeg",
+                                     @"jpeg", @"image/jpeg",
+                                     @"jpg", @"image/jpeg",
+                                     @"js", @"application/x-javascript",
+                                     @"json", @"application/json", // According to RFC 4627  // Also application/x-javascript text/javascript text/x-javascript text/x-json
+                                     @"latex", @"application/x-latex",
+                                     @"lha", @"application/octet-stream",
+                                     @"lsf", @"video/x-la-asf",
+                                     @"lsx", @"video/x-la-asf",
+                                     @"lzh", @"application/octet-stream",
+                                     @"m", @"text/plain",
+                                     @"m13", @"application/x-msmediaview",
+                                     @"m14", @"application/x-msmediaview",
+                                     @"m3u", @"audio/x-mpegurl",
+                                     @"man", @"application/x-troff-man",
+                                     @"mdb", @"application/x-msaccess",
+                                     @"me", @"application/x-troff-me",
+                                     @"mht", @"message/rfc822",
+                                     @"mhtml", @"message/rfc822",
+                                     @"mid", @"audio/mid",
+                                     @"mny", @"application/x-msmoney",
+                                     @"mov", @"video/quicktime",
+                                     @"movie", @"video/x-sgi-movie",
+                                     @"mp2", @"video/mpeg",
+                                     @"mp3", @"audio/mpeg",
+                                     @"mpa", @"video/mpeg",
+                                     @"mpe", @"video/mpeg",
+                                     @"mpeg", @"video/mpeg",
+                                     @"mpg", @"video/mpeg",
+                                     @"mpp", @"application/vnd.ms-project",
+                                     @"mpv2", @"video/mpeg",
+                                     @"ms", @"application/x-troff-ms",
+                                     @"mvb", @"    application/x-msmediaview",
+                                     @"nws", @"message/rfc822",
+                                     @"oda", @"application/oda",
+                                     @"p10", @"application/pkcs10",
+                                     @"p12", @"application/x-pkcs12",
+                                     @"p7b", @"application/x-pkcs7-certificates",
+                                     @"p7c", @"application/x-pkcs7-mime",
+                                     @"p7m", @"application/x-pkcs7-mime",
+                                     @"p7r", @"application/x-pkcs7-certreqresp",
+                                     @"p7s", @"    application/x-pkcs7-signature",
+                                     @"pbm", @"image/x-portable-bitmap",
+                                     @"pdf", @"application/pdf",
+                                     @"pfx", @"application/x-pkcs12",
+                                     @"pgm", @"image/x-portable-graymap",
+                                     @"pko", @"application/ynd.ms-pkipko",
+                                     @"pma", @"application/x-perfmon",
+                                     @"pmc", @"application/x-perfmon",
+                                     @"pml", @"application/x-perfmon",
+                                     @"pmr", @"application/x-perfmon",
+                                     @"pmw", @"application/x-perfmon",
+                                     @"png", @"image/png",
+                                     @"pnm", @"image/x-portable-anymap",
+                                     @"pot", @"application/vnd.ms-powerpoint",
+                                     @"vppm", @"image/x-portable-pixmap",
+                                     @"pps", @"application/vnd.ms-powerpoint",
+                                     @"ppt", @"application/vnd.ms-powerpoint",
+                                     @"pptx", @"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                                     @"prf", @"application/pics-rules",
+                                     @"ps", @"application/postscript",
+                                     @"pub", @"application/x-mspublisher",
+                                     @"qt", @"video/quicktime",
+                                     @"ra", @"audio/x-pn-realaudio",
+                                     @"ram", @"audio/x-pn-realaudio",
+                                     @"ras", @"image/x-cmu-raster",
+                                     @"rgb", @"image/x-rgb",
+                                     @"rmi", @"audio/mid",
+                                     @"roff", @"application/x-troff",
+                                     @"rtf", @"application/rtf",
+                                     @"rtx", @"text/richtext",
+                                     @"scd", @"application/x-msschedule",
+                                     @"sct", @"text/scriptlet",
+                                     @"setpay", @"application/set-payment-initiation",
+                                     @"setreg", @"application/set-registration-initiation",
+                                     @"sh", @"application/x-sh",
+                                     @"shar", @"application/x-shar",
+                                     @"sit", @"application/x-stuffit",
+                                     @"snd", @"audio/basic",
+                                     @"spc", @"application/x-pkcs7-certificates",
+                                     @"spl", @"application/futuresplash",
+                                     @"src", @"application/x-wais-source",
+                                     @"sst", @"application/vnd.ms-pkicertstore",
+                                     @"stl", @"application/vnd.ms-pkistl",
+                                     @"stm", @"text/html",
+                                     @"svg", @"image/svg+xml",
+                                     @"sv4cpio", @"application/x-sv4cpio",
+                                     @"sv4crc", @"application/x-sv4crc",
+                                     @"swf", @"application/x-shockwave-flash",
+                                     @"t", @"application/x-troff",
+                                     @"tar", @"application/x-tar",
+                                     @"tcl", @"application/x-tcl",
+                                     @"tex", @"application/x-tex",
+                                     @"texi", @"application/x-texinfo",
+                                     @"texinfo", @"application/x-texinfo",
+                                     @"tgz", @"application/x-compressed",
+                                     @"tif", @"image/tiff",
+                                     @"tiff", @"image/tiff",
+                                     @"tr", @"application/x-troff",
+                                     @"trm", @"application/x-msterminal",
+                                     @"tsv", @"text/tab-separated-values",
+                                     @"txt", @"text/plain",
+                                     @"uls", @"text/iuls",
+                                     @"ustar", @"application/x-ustar",
+                                     @"vcf", @"text/x-vcard",
+                                     @"vrml", @"x-world/x-vrml",
+                                     @"wav", @"audio/x-wav",
+                                     @"wcm", @"application/vnd.ms-works",
+                                     @"wdb", @"application/vnd.ms-works",
+                                     @"wks", @"application/vnd.ms-works",
+                                     @"wmf", @"application/x-msmetafile",
+                                     @"wps", @"application/vnd.ms-works",
+                                     @"wri", @"application/x-mswrite",
+                                     @"wrl", @"x-world/x-vrml",
+                                     @"wrz", @"x-world/x-vrml",
+                                     @"xaf", @"x-world/x-vrml",
+                                     @"xbm", @"image/x-xbitmap",
+                                     @"xla", @"application/vnd.ms-excel",
+                                     @"xlc", @"application/vnd.ms-excel",
+                                     @"xlm", @"application/vnd.ms-excel",
+                                     @"xls", @"application/vnd.ms-excel",
+                                     @"xlsx", @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                     @"xlt", @"application/vnd.ms-excel",
+                                     @"xlw", @"application/vnd.ms-excel",
+                                     @"xml", @"text/xml", // According to RFC 3023   // Also application/xml
+                                     @"xof", @"x-world/x-vrml",
+                                     @"xpm", @"image/x-xpixmap",
+                                     @"xwd", @"image/x-xwindowdump",
+                                     @"z", @"application/x-compress",
+                                     @"zip", @"application/zip",
+                                     nil];
     }
 
     return MIMEDict;
@@ -1763,21 +1878,21 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     if (!CharacterDict) {
         CharacterDict = [NSDictionary dictionaryWithObjectsAndKeys:
 
-                         //实体名字
-                         // Value  // Key
-                         @" ", @"&nbsp;",
-                         @"\"", @"&quot;",
-                         @"'", @"&apos;",
-                         @"<", @"&lt;",
-                         @">", @"&gt;",
-                         @"&", @"&amp;",
+                                          //实体名字
+                                          // Value  // Key
+                                          @" ", @"&nbsp;",
+                                          @"\"", @"&quot;",
+                                          @"'", @"&apos;",
+                                          @"<", @"&lt;",
+                                          @">", @"&gt;",
+                                          @"&", @"&amp;",
 
 
-                         //十进制字符编号
-                         // Value  // Key
-                         @"(", @"&#40;",
-                         @")", @"&#41;",
-                         nil];
+                                          //十进制字符编号
+                                          // Value  // Key
+                                          @"(", @"&#40;",
+                                          @")", @"&#41;",
+                                          nil];
     }
     return CharacterDict;
 }
@@ -1898,6 +2013,12 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
     return NO;
 }
 
+- (BOOL)isQQ
+{
+    NSString *emailRegex = @"^[1-9]\\d{4,}$";
+    return [self isValidateByRegex:emailRegex];
+}
+
 //邮箱
 - (BOOL)isEmailAddress
 {
@@ -1984,9 +2105,9 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 #pragma mark--- 算法相关
 //精确的身份证号码有效性检测
-+ (BOOL)accurateVerifyIDCardNumber:(NSString *)value
+- (BOOL)accurateVerifyIDCardNumber
 {
-    value = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *value = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
     int length = 0;
     if (!value) {
@@ -2044,11 +2165,11 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
         case 18:
             year = [value substringWithRange:NSMakeRange(6, 4)].intValue;
             if (year % 4 == 0 || (year % 100 == 0 && year % 4 == 0)) {
-                regularExpression = [[NSRegularExpression alloc] initWithPattern:@"^[1-9][0-9]{5}19[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}[0-9Xx]$"
+                regularExpression = [[NSRegularExpression alloc] initWithPattern:@"^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|71|(8[12])|91)\\d{4}(((19|20)\\d{2}(0[13-9]|1[012])(0[1-9]|[12]\\d|30))|((19|20)\\d{2}(0[13578]|1[02])31)|((19|20)\\d{2}02(0[1-9]|1\\d|2[0-8]))|((19|20)([13579][26]|[2468][048]|0[048])0229))\\d{3}(\\d|X|x)?$"
                                                                          options:NSRegularExpressionCaseInsensitive
                                                                            error:nil]; //测试出生日期的合法性
             } else {
-                regularExpression = [[NSRegularExpression alloc] initWithPattern:@"^[1-9][0-9]{5}19[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))[0-9]{3}[0-9Xx]$"
+                regularExpression = [[NSRegularExpression alloc] initWithPattern:@"^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|71|(8[12])|91)\\d{4}(((19|20)\\d{2}(0[13-9]|1[012])(0[1-9]|[12]\\d|30))|((19|20)\\d{2}(0[13578]|1[02])31)|((19|20)\\d{2}02(0[1-9]|1\\d|2[0-8]))|((19|20)([13579][26]|[2468][048]|0[048])0229))\\d{3}(\\d|X|x)?$"
                                                                          options:NSRegularExpressionCaseInsensitive
                                                                            error:nil]; //测试出生日期的合法性
             }
@@ -2414,17 +2535,17 @@ NSString *_stringRepresentationOf(id<Concatenatable> object)
     NSRange stringRange = NSMakeRange(0, [self length]);
 
     [@{
-       @"\0" : @"\\0",
-       @"\a" : @"\\a",
-       @"\b" : @"\\b",
-       @"\t" : @"\\t",
-       @"\n" : @"\\n",
-       @"\f" : @"\\f",
-       @"\r" : @"\\r",
-       @"\e" : @"\\e",
-       } enumerateKeysAndObjectsUsingBlock:^(NSString *string, NSString *replacement, BOOL *stop) {
-           [result replaceOccurrencesOfString:string withString:replacement options:0 range:stringRange];
-       }];
+        @"\0" : @"\\0",
+        @"\a" : @"\\a",
+        @"\b" : @"\\b",
+        @"\t" : @"\\t",
+        @"\n" : @"\\n",
+        @"\f" : @"\\f",
+        @"\r" : @"\\r",
+        @"\e" : @"\\e",
+    } enumerateKeysAndObjectsUsingBlock:^(NSString *string, NSString *replacement, BOOL *stop) {
+        [result replaceOccurrencesOfString:string withString:replacement options:0 range:stringRange];
+    }];
 
     return [NSString stringWithFormat:@"\"%@\"", result];
 }

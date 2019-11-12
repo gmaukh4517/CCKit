@@ -26,7 +26,6 @@
 #import "CCKeyboardManager.h"
 #import "UIView+CCHierarchy.h"
 
-
 NSString *const kCCTextFiled = @"kCCTextFiled";
 NSString *const kCCTextFiledDelegate = @"kCCTextFiledDelegate";
 NSString *const kCCTextFiledReturnKeyType = @"kCCTextFiledRetrurnKeyType";
@@ -69,12 +68,12 @@ static dispatch_once_t onceToken;
 - (void)dealloc
 {
     for (NSDictionary *dict in _textFieldInfoCache) {
-        UIView *view = dict[kCCTextFiled];
-        
+        UIView *view = dict[ kCCTextFiled ];
+
         if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) {
             UITextField *textField = (UITextField *)view;
-            textField.returnKeyType = [dict[kCCTextFiledReturnKeyType] integerValue];
-            textField.delegate = dict[kCCTextFiledDelegate];
+            textField.returnKeyType = [dict[ kCCTextFiledReturnKeyType ] integerValue];
+            textField.delegate = dict[ kCCTextFiledDelegate ];
         }
     }
     [_rootViewController.view removeGestureRecognizer:_tapGestureRecognizer];
@@ -86,6 +85,7 @@ static dispatch_once_t onceToken;
  */
 - (void)freed
 {
+    [self keyboardHide];
     onceToken = 0;
     keyboardManager = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -97,7 +97,7 @@ static dispatch_once_t onceToken;
         [self registeredWithViewController:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-        
+
         _keyboardDistanceFromTextField = 10;
         _animationDuration = 0.25;
     }
@@ -106,14 +106,19 @@ static dispatch_once_t onceToken;
 
 - (void)globalKeyboardHide:(UITapGestureRecognizer *)tap
 {
+    [self keyboardHide];
+    [tap.view endEditing:YES];
+}
+
+- (void)keyboardHide
+{
     for (NSDictionary *dict in _textFieldInfoCache) {
-        UIView *view = dict[kCCTextFiled];
+        UIView *view = dict[ kCCTextFiled ];
         if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) {
             UITextField *textField = (UITextField *)view;
             [textField resignFirstResponder];
         }
     }
-    [tap.view endEditing:YES];
 }
 
 #pragma mark -
@@ -135,8 +140,8 @@ static dispatch_once_t onceToken;
 - (NSDictionary *)textFieldViewCachedInfo:(UIView *)textField
 {
     for (NSDictionary *infoDict in _textFieldInfoCache)
-        if (infoDict[kCCTextFiled] == textField) return infoDict;
-    
+        if (infoDict[ kCCTextFiled ] == textField) return infoDict;
+
     return nil;
 }
 
@@ -146,24 +151,24 @@ static dispatch_once_t onceToken;
 {
     if (CGRectEqualToRect(_topViewBeginRect, CGRectZero))
         _topViewBeginRect = self.rootViewController.view.frame;
-    
+
     _keyboardShowing = YES;
-    NSInteger curve = [[aNotification userInfo][UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    NSInteger curve = [[aNotification userInfo][ UIKeyboardAnimationCurveUserInfoKey ] integerValue];
     _animationCurve = curve << 16;
-    CGFloat duration = [[aNotification userInfo][UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    
+    CGFloat duration = [[aNotification userInfo][ UIKeyboardAnimationDurationUserInfoKey ] floatValue];
+
     if (duration != 0.0) _animationDuration = duration;
-    
+
     CGSize oldKBSize = _kSize;
-    CGRect kbFrame = [[aNotification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect kbFrame = [[aNotification userInfo][ UIKeyboardFrameEndUserInfoKey ] CGRectValue];
     CGRect screenSize = [[UIScreen mainScreen] bounds];
     CGRect intersectRect = CGRectIntersection(kbFrame, screenSize);
-    
+
     if (CGRectIsNull(intersectRect))
         _kSize = CGSizeMake(screenSize.size.width, 0);
     else
         _kSize = intersectRect.size;
-    
+
     if (!CGSizeEqualToSize(_kSize, oldKBSize)) {
         if (_keyboardShowing == YES &&
             _textFieldView != nil &&
@@ -176,11 +181,11 @@ static dispatch_once_t onceToken;
 - (void)keyboardWillHide:(NSNotification *)aNotification
 {
     _keyboardShowing = NO;
-    
-    CGFloat aDuration = [[aNotification userInfo][UIKeyboardAnimationDurationUserInfoKey] floatValue];
+
+    CGFloat aDuration = [[aNotification userInfo][ UIKeyboardAnimationDurationUserInfoKey ] floatValue];
     if (aDuration != 0.0f)
         _animationDuration = aDuration;
-    
+
     if (!CGRectEqualToRect(self.topViewBeginRect, CGRectMake(0, 0, 0, 0)))
         [self setRootViewFrame:self.topViewBeginRect];
     _kSize = CGSizeZero;
@@ -196,15 +201,15 @@ static dispatch_once_t onceToken;
     UIViewController *rootViewController = [_textFieldView viewController];
     if (!rootViewController) rootViewController = [keyWindow topMostController];
     CGRect rootViewRect = rootViewController.view.frame;
-    
+
     CGSize kbSize = _kSize;
     kbSize.height += _keyboardDistanceFromTextField;
-    
+
     CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
     CGFloat topLayoutGuide = CGRectGetHeight(statusBarFrame);
-    
+
     CGFloat move = MIN(CGRectGetMinY(textFieldViewRect) - (topLayoutGuide + 5), CGRectGetMaxY(textFieldViewRect) - (CGRectGetHeight(keyWindow.frame) - kbSize.height));
-    
+
     if (move >= 0) {
         rootViewRect.origin.y -= move;
         rootViewRect.origin.y = MAX(rootViewRect.origin.y, MIN(0, -kbSize.height + _keyboardDistanceFromTextField));
@@ -240,7 +245,7 @@ static dispatch_once_t onceToken;
         UIWindow *originalKeyWindow = [[UIApplication sharedApplication] keyWindow];
         if (originalKeyWindow != nil && _keyWindow != originalKeyWindow)
             _keyWindow = originalKeyWindow;
-        
+
         return _keyWindow;
     }
 }
@@ -250,7 +255,7 @@ static dispatch_once_t onceToken;
 - (void)addResponderFromView:(UIView *)view
 {
     NSArray *textFields = [view deepResponderViews];
-    
+
     for (UIView *textField in textFields)
         [self addTextFieldView:textField];
 }
@@ -258,7 +263,7 @@ static dispatch_once_t onceToken;
 - (void)removeResponderFromView:(UIView *)view
 {
     NSArray *textFields = [view deepResponderViews];
-    
+
     for (UIView *textField in textFields)
         [self removeTextFieldView:textField];
 }
@@ -266,30 +271,79 @@ static dispatch_once_t onceToken;
 - (void)removeTextFieldView:(UIView *)view
 {
     NSDictionary *dict = [self textFieldViewCachedInfo:view];
-    
+
     if (dict) {
         if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) {
             UITextField *textField = (UITextField *)view;
-            textField.returnKeyType = [dict[kCCTextFiledReturnKeyType] integerValue];
-            textField.delegate = dict[kCCTextFiledDelegate];
+            textField.returnKeyType = [dict[ kCCTextFiledReturnKeyType ] integerValue];
+            textField.delegate = dict[ kCCTextFiledDelegate ];
         }
         [_textFieldInfoCache removeObject:dict];
     }
 }
 
+
 - (void)addTextFieldView:(UIView *)view
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[kCCTextFiled] = view;
-    
+    dict[ kCCTextFiled ] = view;
+
     if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) {
         UITextField *textField = (UITextField *)view;
-        dict[kCCTextFiledReturnKeyType] = @(textField.returnKeyType);
-        if (textField.delegate) dict[kCCTextFiledDelegate] = textField.delegate;
+        dict[ kCCTextFiledReturnKeyType ] = @(textField.returnKeyType);
+
+        CCToolbar *toolbar = textField.keyboardToolbar;
+        NSMutableArray<UIBarButtonItem *> *items = [[NSMutableArray alloc] init];
+
+        //Flexible space
+        [items addObject:[[self class] flexibleBarButtonItem]];
+        toolbar.titleBarButton.title = textField.placeholder;
+        [items addObject:toolbar.titleBarButton];
+        //Flexible space
+        [items addObject:[[self class] flexibleBarButtonItem]];
+
+        CCBarButtonItem *done = toolbar.doneBarButton;
+        done = [[CCBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
+        done.invocation = toolbar.doneBarButton.invocation;
+        done.accessibilityLabel = toolbar.doneBarButton.accessibilityLabel;
+        toolbar.doneBarButton = done;
+        [items addObject:done];
+
+
+        [toolbar setItems:items];
+
+        [textField setInputAccessoryView:toolbar];
+        if ([textField respondsToSelector:@selector(keyboardAppearance)]) {
+            switch ([(UITextField *)textField keyboardAppearance]) {
+                case UIKeyboardAppearanceDark:
+                    toolbar.barStyle = UIBarStyleBlack;
+                    break;
+                default:
+                    toolbar.barStyle = UIBarStyleDefault;
+                    break;
+            }
+        }
+
+        if (textField.delegate) dict[ kCCTextFiledDelegate ] = textField.delegate;
         [textField setDelegate:self];
     }
-    
+
     [_textFieldInfoCache addObject:dict];
+}
+
+- (void)doneAction:(CCBarButtonItem *)sender
+{
+    [self keyboardHide];
+}
+
++ (CCBarButtonItem *)flexibleBarButtonItem
+{
+    static CCBarButtonItem *nilButton = nil;
+    if (nilButton == nil) {
+        nilButton = [[CCBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    }
+
+    return nilButton;
 }
 
 #pragma mark -
@@ -297,12 +351,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     id<UITextFieldDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textField];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)])
         return [delegate textFieldShouldBeginEditing:textField];
     else
@@ -312,17 +366,17 @@ static dispatch_once_t onceToken;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     _textFieldView = textField;
-    
+
     id<UITextFieldDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textField];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textFieldDidBeginEditing:)])
         [delegate textFieldDidBeginEditing:textField];
-    
+
     if (_keyboardShowing == YES &&
         _textFieldView != nil &&
         [_textFieldView isAlertViewTextField] == NO) {
@@ -333,12 +387,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
     id<UITextFieldDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textField];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textFieldShouldEndEditing:)])
         return [delegate textFieldShouldEndEditing:textField];
     else
@@ -348,12 +402,12 @@ static dispatch_once_t onceToken;
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     id<UITextFieldDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textField];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textFieldDidEndEditing:)])
         [delegate textFieldDidEndEditing:textField];
 }
@@ -363,12 +417,12 @@ static dispatch_once_t onceToken;
 - (void)textFieldDidEndEditing:(UITextField *)textField reason:(UITextFieldDidEndEditingReason)reason
 {
     id<UITextFieldDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textField];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textFieldDidEndEditing:reason:)])
         [delegate textFieldDidEndEditing:textField reason:reason];
 }
@@ -380,12 +434,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textViewShouldBeginEditing:)])
         return [delegate textViewShouldBeginEditing:textView];
     else
@@ -395,12 +449,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textViewShouldEndEditing:)])
         return [delegate textViewShouldEndEditing:textView];
     else
@@ -410,17 +464,17 @@ static dispatch_once_t onceToken;
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
     _textFieldView = textView;
-    
+
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textViewDidBeginEditing:)])
         [delegate textViewDidBeginEditing:textView];
-    
+
     if (_keyboardShowing == YES &&
         _textFieldView != nil &&
         [_textFieldView isAlertViewTextField] == NO) {
@@ -431,12 +485,12 @@ static dispatch_once_t onceToken;
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textViewDidEndEditing:)])
         [delegate textViewDidEndEditing:textView];
 }
@@ -444,28 +498,28 @@ static dispatch_once_t onceToken;
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     BOOL shouldReturn = YES;
     if ([delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)])
         shouldReturn = [delegate textView:textView shouldChangeTextInRange:range replacementText:text];
-    
+
     return shouldReturn;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textViewDidChange:)])
         [delegate textViewDidChange:textView];
 }
@@ -473,12 +527,12 @@ static dispatch_once_t onceToken;
 - (void)textViewDidChangeSelection:(UITextView *)textView
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textViewDidChangeSelection:)])
         [delegate textViewDidChangeSelection:textView];
 }
@@ -488,12 +542,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textView:shouldInteractWithURL:inRange:interaction:)])
         return [delegate textView:textView shouldInteractWithURL:URL inRange:characterRange interaction:interaction];
     else
@@ -503,12 +557,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textView:shouldInteractWithTextAttachment:inRange:interaction:)])
         return [delegate textView:textView shouldInteractWithTextAttachment:textAttachment inRange:characterRange interaction:interaction];
     else
@@ -519,12 +573,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textView:shouldInteractWithURL:inRange:)])
         return [delegate textView:textView shouldInteractWithURL:URL inRange:characterRange];
     else
@@ -534,12 +588,12 @@ static dispatch_once_t onceToken;
 - (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange
 {
     id<UITextViewDelegate> delegate = self.delegate;
-    
+
     if (delegate == nil) {
         NSDictionary *dict = [self textFieldViewCachedInfo:textView];
-        delegate = dict[kCCTextFiledDelegate];
+        delegate = dict[ kCCTextFiledDelegate ];
     }
-    
+
     if ([delegate respondsToSelector:@selector(textView:shouldInteractWithTextAttachment:inRange:)])
         return [delegate textView:textView shouldInteractWithTextAttachment:textAttachment inRange:characterRange];
     else

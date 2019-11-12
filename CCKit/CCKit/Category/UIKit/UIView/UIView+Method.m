@@ -536,6 +536,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeTapGesture:tapGestureId];
     }
+    self.userInteractionEnabled = YES;
     
     UITapGestureRecognizer *tg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
     tg.numberOfTapsRequired = numberOfTapsRequired;
@@ -609,7 +610,8 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removePinchGesture:pinchGestureId];
     }
-    
+
+    self.userInteractionEnabled = YES;
     UIPinchGestureRecognizer *tg = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchHandler:)];
     
     GestureCallbackValues *v = [GestureCallbackValues new];
@@ -685,7 +687,8 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removePanGesture:panGestureId];
     }
-    
+
+    self.userInteractionEnabled = YES;
     UIPanGestureRecognizer *tg = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHandler:)];
     tg.minimumNumberOfTouches = minimumNumberOfTouches;
     tg.maximumNumberOfTouches = maximumNumberOfTouches;
@@ -761,7 +764,8 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeSwipeGesture:swipeGestureId];
     }
-    
+
+    self.userInteractionEnabled = YES;
     UISwipeGestureRecognizer *tg = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     tg.direction = direction;
     tg.numberOfTouchesRequired = numberOfTouchesRequired;
@@ -834,7 +838,8 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeRotationGesture:rotationGestureId];
     }
-    
+
+    self.userInteractionEnabled = YES;
     UIRotationGestureRecognizer *tg = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotationHandler:)];
     
     GestureCallbackValues *v = [GestureCallbackValues new];
@@ -919,7 +924,8 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeLongPressGesture:longPressGestureId];
     }
-    
+
+    self.userInteractionEnabled = YES;
     UILongPressGestureRecognizer *tg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHandler:)];
     tg.numberOfTapsRequired = numberOfTapsRequired;
     tg.numberOfTouchesRequired = numberOfTouchesRequired;

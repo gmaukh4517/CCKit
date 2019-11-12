@@ -155,7 +155,7 @@
  *
  *  @brief  通过数字返回星期几
  */
-+ (NSString *)getWeekStringFromInteger:(int)week;
++ (NSString *)getWeekStringFromInteger:(NSInteger)week;
 
 /**
  *  @author CC, 2015-07-23 10:07:35
@@ -163,6 +163,14 @@
  *  @brief  前一天
  */
 - (NSDate *)theDayBefore;
+
+/**
+ 获取当前时间前后天数
+
+ @param day 获取间隔天数（负数获取当前之前的天数）
+ */
++ (NSDate *)currentDayWithInterval:(NSInteger)day;
+- (NSDate *)currentDayWithInterval:(NSInteger)day;
 
 /**
  *  @author CC, 2015-07-23 10:07:26
@@ -173,7 +181,7 @@
 
 /**
  *  @author C C, 2016-09-29
- *  
+ *
  *  @brief  转换时间格式（微信样式）
  */
 - (NSString *)convertDateFormat;
@@ -188,7 +196,7 @@
 
 /**
  *  @author CC, 16-04-19
- *  
+ *
  *  @brief 比较时间并转换时间格式
  *         多少(秒or分or时or今天or明天or星期or年月日时分)+前 (比如，刚刚、10分钟前)
  */
@@ -196,7 +204,7 @@
 
 /**
  *  @author CC, 2015-11-04
- *  
+ *
  *  @brief  比较时间相隔
  *
  *  @param timestamp 时间
@@ -205,56 +213,56 @@
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 开始日
  */
 - (NSDate *)beginningOfDay;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 结束日
  */
 - (NSDate *)endOfDay;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 开始星期
  */
 - (NSDate *)beginningOfWeek;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 结束星期
  */
 - (NSDate *)endOfWeek;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 开始月份
  */
 - (NSDate *)beginningOfMonth;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 结束月份
  */
 - (NSDate *)endOfMonth;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 开始年份
  */
 - (NSDate *)beginningOfYear;
 
 /**
  *  @author CC, 16-03-03
- *  
+ *
  *  @brief 结束年份
  */
 - (NSDate *)endOfYear;
@@ -471,7 +479,7 @@
 
 /**
  *  @author CC, 16-05-25
- *  
+ *
  *  @brief  时间戳转换
  *
  *  @param timeInterval 时间戳
@@ -480,7 +488,7 @@
 
 /**
  *  @author C C, 2016-10-06
- *  
+ *
  *  @brief  时间转13位时间戳
  */
 - (NSTimeInterval)dataConversionTimestamp;
@@ -614,15 +622,15 @@ typedef enum {
 // Short string utilities
 - (NSString *)stringWithDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
 
-@property(nonatomic, readonly) NSString *shortString;
-@property(nonatomic, readonly) NSString *shortDateString;
-@property(nonatomic, readonly) NSString *shortTimeString;
-@property(nonatomic, readonly) NSString *mediumString;
-@property(nonatomic, readonly) NSString *mediumDateString;
-@property(nonatomic, readonly) NSString *mediumTimeString;
-@property(nonatomic, readonly) NSString *longString;
-@property(nonatomic, readonly) NSString *longDateString;
-@property(nonatomic, readonly) NSString *longTimeString;
+@property (nonatomic, readonly) NSString *shortString;
+@property (nonatomic, readonly) NSString *shortDateString;
+@property (nonatomic, readonly) NSString *shortTimeString;
+@property (nonatomic, readonly) NSString *mediumString;
+@property (nonatomic, readonly) NSString *mediumDateString;
+@property (nonatomic, readonly) NSString *mediumTimeString;
+@property (nonatomic, readonly) NSString *longString;
+@property (nonatomic, readonly) NSString *longDateString;
+@property (nonatomic, readonly) NSString *longTimeString;
 
 
 // Comparing dates

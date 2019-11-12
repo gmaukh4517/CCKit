@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
+#import "UINavigationBar+CCAdd.h"
 #import "UINavigationController+CCAdd.h"
 #import "UIViewController+CCAdd.h"
-#import "UINavigationBar+CCAdd.h"
 #import <objc/runtime.h>
 
 @interface _CCFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
@@ -71,8 +71,12 @@
     return YES;
 }
 
-@end
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return self.navigationController.viewControllers.count > 1;
+}
 
+@end
 
 @implementation UINavigationController (CCAdd)
 
@@ -99,11 +103,10 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 
 - (void)cc_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    if (self.viewControllers.count) {
+    if (self.viewControllers.count)
         viewController.hidesBottomBarWhenPushed = YES;
-        objc_setAssociatedObject(viewController, @"navigationBarAlpha", @(1), OBJC_ASSOCIATION_COPY_NONATOMIC);
-        [self.navigationBar setNeedsNavigationBackground:1];
-    }
+    objc_setAssociatedObject(viewController, @"navigationBarAlpha", @(1), OBJC_ASSOCIATION_COPY_NONATOMIC);
+
 
     if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.cc_fullscreenPopGestureRecognizer]) {
         // Add our own gesture recognizer to where the onboard screen edge pan gesture recognizer is attached to.
@@ -121,7 +124,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     }
 
     // Handle perferred navigation bar appearance.
-    [self cc_setupViewControllerBasedNavigationBarAppearanceIfNeeded:viewController];
+    [self cc_setupViewControllerBasedNavigationBarAppearanceIfNeeded:viewController animated:animated];
 
     // Forward to primary implementation.
     if (![self.viewControllers containsObject:viewController]) {
@@ -132,18 +135,59 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 }
 
 #pragma mark :. 转场效果
-- (void)cc_setupViewControllerBasedNavigationBarAppearanceIfNeeded:(UIViewController *)appearingViewController
+- (void)cc_setupViewControllerBasedNavigationBarAppearanceIfNeeded:(UIViewController *)appearingViewController animated:(BOOL)animated
 {
-    if (!self.cc_viewControllerBasedNavigationBarAppearanceEnabled) {
+    if (!self.cc_viewControllerBasedNavigationBarAppearanceEnabled || !self.viewControllers.count)
         return;
+
+    id fromVCAlpha = objc_getAssociatedObject(self.topViewController, @"navigationBarAlpha");
+    CGFloat fromAlpha = 1;
+    if (fromVCAlpha)
+        fromAlpha = [fromVCAlpha floatValue];
+
+    id toVCAlpha = objc_getAssociatedObject(appearingViewController, @"navigationBarAlpha");
+    CGFloat toAlpha = 1;
+    if (toVCAlpha)
+        toAlpha = [toVCAlpha floatValue];
+
+    if (fromAlpha == 0 && toAlpha == 0 && self.viewControllers.count) {
+        [self.navigationBar setSlideNavigationBackground:0];
+        self.topViewController.navigationBarView.hidden = YES;
+        appearingViewController.navigationBarView.hidden = YES;
+    } else if (fromAlpha == 0 && toAlpha == 1 && self.viewControllers.count) {
+        appearingViewController.navigationBarView.hidden = NO;
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            CGFloat alpha = [objc_getAssociatedObject(appearingViewController, @"navigationBarAlpha") floatValue];
+            if (toAlpha == alpha)
+                [self.navigationBar setSlideNavigationBackground:1];
+            appearingViewController.navigationBarView.hidden = YES;
+        });
+
+    } else if (fromAlpha == 1 && toAlpha == 0 && self.viewControllers.count) {
+        self.topViewController.navigationBarView.hidden = NO;
+        [self.navigationBar setSlideNavigationBackground:0];
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            self.topViewController.navigationBarView.hidden = YES;
+        });
+    } else if (fromAlpha == 1 && toAlpha == 1 && self.viewControllers.count) {
+        self.topViewController.navigationBarView.hidden = NO;
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            self.topViewController.navigationBarView.hidden = YES;
+        });
+    } else if (fromAlpha > 0 && fromAlpha < 1 && toAlpha == 1 && self.viewControllers.count) {
+        [self.navigationBar setSlideNavigationBackground:fromAlpha];
+        appearingViewController.navigationBarView.hidden = NO;
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            [self.navigationBar setSlideNavigationBackground:toAlpha];
+            appearingViewController.navigationBarView.hidden = YES;
+        });
     }
 
     __weak typeof(self) weakSelf = self;
     _CCViewControllerWillAppearInjectBlock block = ^(UIViewController *viewController, BOOL animated) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf) {
+        if (strongSelf)
             [strongSelf setNavigationBarHidden:viewController.cc_prefersNavigationBarHidden animated:animated];
-        }
     };
 
     // Setup will appear inject block to appearing view controller.
@@ -203,27 +247,49 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 
 - (void)cc_updateInteractiveTransition:(CGFloat)percentComplete
 {
-    [self cc_updateInteractiveTransition:percentComplete];
     UIViewController *topVC = self.topViewController;
     if (topVC) {
         id<UIViewControllerTransitionCoordinator> coordinator = topVC.transitionCoordinator;
         if (coordinator != nil) {
+            //            [self viewcontrollerOver: [coordinator viewControllerForKey:UITransitionContextFromViewControllerKey] fromViewController:[coordinator viewControllerForKey:UITransitionContextToViewControllerKey]];
             UIViewController *fromViewController = [coordinator viewControllerForKey:UITransitionContextFromViewControllerKey];
-            id fromAlpha = objc_getAssociatedObject(fromViewController, @"navigationBarAlpha");
-            CGFloat fromVCAlpha = 1;
-            if (fromAlpha)
-                fromVCAlpha = [fromAlpha floatValue];
+            id fromVCAlpha = objc_getAssociatedObject(fromViewController, @"navigationBarAlpha");
+            CGFloat fromAlpha = 1;
+            if (fromVCAlpha)
+                fromAlpha = [fromVCAlpha floatValue];
 
             UIViewController *toViewController = [coordinator viewControllerForKey:UITransitionContextToViewControllerKey];
-            id toAlpha = objc_getAssociatedObject(toViewController, @"navigationBarAlpha");
-            CGFloat toVCAlpha = 1;
-            if (toAlpha)
-                toVCAlpha = [toAlpha floatValue];
+            id toVCAlpha = objc_getAssociatedObject(toViewController, @"navigationBarAlpha");
+            CGFloat toAlpha = 1;
+            if (toVCAlpha)
+                toAlpha = [toVCAlpha floatValue];
 
-            CGFloat newAlpha = fromVCAlpha + ((toVCAlpha - fromVCAlpha) * percentComplete);
-            [self.navigationBar setSlideNavigationBackground:newAlpha];
+            CGFloat newAlpha = fromAlpha + ((toAlpha - fromAlpha) * percentComplete);
+            if (toAlpha == 0 && fromAlpha == 0) {
+                [self.navigationBar setSlideNavigationBackground:0];
+                toViewController.navigationBarView.hidden = YES;
+                fromViewController.navigationBarView.hidden = YES;
+            } else if (toAlpha == 0 && fromAlpha == 1) {
+                fromViewController.navigationBarView.hidden = NO;
+                [self.navigationBar setSlideNavigationBackground:0];
+            } else if (toAlpha == 1 && fromAlpha == 0) {
+                [self.navigationBar setSlideNavigationBackground:0];
+                toViewController.navigationBarView.hidden = NO;
+            } else if (toAlpha == 1 && fromAlpha == 1) {
+                toViewController.navigationBarView.hidden = YES;
+                fromViewController.navigationBarView.hidden = YES;
+                [self.navigationBar setSlideNavigationBackground:1];
+            } else if (fromAlpha == 1 && toAlpha > 0 && toAlpha < 1) {
+                [self.navigationBar setSlideNavigationBackground:newAlpha];
+                if (fromViewController.navigationBarView.hidden)
+                    fromViewController.navigationBarView.hidden = NO;
+            } else if (fromAlpha == 1 && toAlpha == 0 && fromViewController.navigationBarView.hidden) {
+                fromViewController.navigationBarView.hidden = NO;
+            }
         }
     }
+
+    [self cc_updateInteractiveTransition:percentComplete];
 }
 
 - (UIViewController *)cc_popViewControllerAnimated:(BOOL)animated
@@ -240,14 +306,13 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
                 [coordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                     [self dealNavBarChangeAction:context];
                 }];
-
-                if (!self.cc_grTransitioning)
-                    [self dealNavBarChangeAction:coordinator];
             } else {
                 [coordinator notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
                     [self dealNavBarChangeAction:context];
                 }];
             }
+            if (!self.cc_grTransitioning)
+                [self dealNavBarChangeAction:coordinator];
         }
     }
     return popVc;
@@ -258,21 +323,61 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if ([context isCancelled]) { // 取消了(还在当前页面)
         CGFloat animdDuration = [context transitionDuration] * [context percentComplete];
         UIViewController *fromViewController = [context viewControllerForKey:UITransitionContextFromViewControllerKey];
-        CGFloat fromVCAlpha = [objc_getAssociatedObject(fromViewController, @"navigationBarAlpha") floatValue];
+        id fromAlpha = objc_getAssociatedObject(fromViewController, @"navigationBarAlpha");
+        CGFloat fromVCAlpha = 1;
+        if (fromAlpha)
+            fromVCAlpha = [fromAlpha floatValue];
+
         [UIView animateWithDuration:animdDuration
                          animations:^{
                              [self.navigationBar setSlideNavigationBackground:fromVCAlpha];
                          }];
     } else { // 自动完成(pop到上一个界面了)
-        CGFloat animdDuration = [context transitionDuration] * (1 - [context percentComplete]);
-        UIViewController *toViewController = [context viewControllerForKey:UITransitionContextToViewControllerKey];
-        CGFloat toVCAlpha = [objc_getAssociatedObject(toViewController, @"navigationBarAlpha") floatValue];
-        [UIView animateWithDuration:animdDuration
-                         animations:^{
-                             [self.navigationBar setSlideNavigationBackground:toVCAlpha];
-                         }];
+        [self viewcontrollerOver:[context viewControllerForKey:UITransitionContextToViewControllerKey] fromViewController:[context viewControllerForKey:UITransitionContextFromViewControllerKey]];
     };
     self.cc_grTransitioning = NO;
+}
+
+- (void)viewcontrollerOver:(UIViewController *)toViewController fromViewController:(UIViewController *)fromViewController
+{
+    id toVCAlpha = objc_getAssociatedObject(toViewController, @"navigationBarAlpha");
+    CGFloat toAlpha = 1;
+    if (toVCAlpha)
+        toAlpha = [toVCAlpha floatValue];
+
+    id fromVCAlpha = objc_getAssociatedObject(fromViewController, @"navigationBarAlpha");
+    CGFloat fromAlpha = 1;
+    if (fromVCAlpha)
+        fromAlpha = [fromVCAlpha floatValue];
+
+    if (toAlpha == 0 && fromAlpha == 0) {
+        [self.navigationBar setSlideNavigationBackground:0];
+        toViewController.navigationBarView.hidden = YES;
+        fromViewController.navigationBarView.hidden = YES;
+    } else if (toAlpha == 0 && fromAlpha == 1) {
+        fromViewController.navigationBarView.hidden = NO;
+        [self.navigationBar setSlideNavigationBackground:0];
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            fromViewController.navigationBarView.hidden = YES;
+        });
+    } else if (toAlpha == 1 && fromAlpha == 0) {
+        UIColor *backgroundColor = self.navigationBar.barTintColor;
+        [self.navigationBar setSlideNavigationBackground:0];
+        toViewController.navigationBarView.hidden = NO;
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            toViewController.navigationBarView.backgroundColor = self.navigationBar.barTintColor;
+        });
+
+        dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+            toViewController.navigationBarView.hidden = YES;
+            toViewController.navigationBarView.backgroundColor = backgroundColor;
+            [self.navigationBar setSlideNavigationBackground:1];
+        });
+    } else if (toAlpha == 1 && fromAlpha == 1) {
+        toViewController.navigationBarView.hidden = YES;
+        fromViewController.navigationBarView.hidden = YES;
+        [self.navigationBar setSlideNavigationBackground:1];
+    }
 }
 
 - (BOOL)cc_isGrTransitioning

@@ -25,7 +25,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, CCNetworkReachabilityStatus) {
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSInteger, CCNetworkReachabilityStatus) {
     /** 未知网络 **/
     CCNetworkReachabilityStatusUnknown = -1,
     /** 无网络 **/
@@ -85,3 +88,5 @@ extern NSString *const CCNetworkReachabilityNotificationStatusItem;
 - (void)setReachabilityStatusChangeBlock:(nullable void (^)(CCNetworkReachabilityStatus status))block;
 
 @end
+
+NS_ASSUME_NONNULL_END

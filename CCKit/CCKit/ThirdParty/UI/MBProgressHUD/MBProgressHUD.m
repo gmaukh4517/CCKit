@@ -6,6 +6,7 @@
 
 #import "MBProgressHUD.h"
 #import "UIImage+CCAdd.h"
+#import "CCLoadLogoView.h"
 #import <tgmath.h>
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_7_0
@@ -106,7 +107,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     
     // Default color, depending on the current iOS version
     BOOL isLegacy = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_7_0;
-    _contentColor = isLegacy ? [UIColor whiteColor] : [UIColor colorWithWhite:0.f alpha:0.7f];
+    _contentColor = isLegacy ? [UIColor whiteColor] : [[UIColor blackColor] colorWithAlphaComponent:0.5];
     // Transparent background
     self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
@@ -432,7 +433,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         [self.bezelView addSubview:indicator];
     } else if (mode == MBProgressHUDModeIndeterminateLogo) {
         [indicator removeFromSuperview];
-//        indicator = [[CCLoadLogoView alloc] initWithLogo:self.IndeterminateLogo Frame:CGRectMake(0, 0, 40, 40)];
+        indicator = [[CCLoadLogoView alloc] initWithLogo:self.IndeterminateLogo Frame:CGRectMake(0, 0, 40, 40)];
         [self.bezelView addSubview:indicator];
     } else if (mode == MBProgressHUDModeGIF) {
         [indicator removeFromSuperview];
@@ -1280,7 +1281,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     if (style == MBProgressHUDBackgroundStyleBlur) {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 || TARGET_OS_TV
         if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0) {
-            UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+            UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
             UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
             [self addSubview:effectView];
             effectView.frame = self.bounds;

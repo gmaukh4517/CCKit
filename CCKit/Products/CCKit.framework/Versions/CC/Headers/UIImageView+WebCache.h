@@ -56,6 +56,9 @@
  */
 - (void)sd_setImageWithURL:(nullable NSURL *)url;
 
+- (void)sd_setImageWithURLString:(nullable NSString *)urlString
+                placeholderImage:(nullable UIImage *)placeholder;
+
 /**
  * Set the imageView `image` with an `url` and a placeholder.
  *

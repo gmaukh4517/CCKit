@@ -62,7 +62,12 @@
         return nil;
     }
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return jsonString;
+    NSMutableString *mJsonStr = [NSMutableString stringWithString:jsonString];
+    //去掉字符串中的空格
+    [mJsonStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:NSMakeRange(0, mJsonStr.length)];
+    //去掉字符串中的换行符
+    [mJsonStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, mJsonStr.length)];
+    return mJsonStr;
 }
 
 #pragma mark -

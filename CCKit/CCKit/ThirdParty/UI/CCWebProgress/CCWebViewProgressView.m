@@ -1,6 +1,6 @@
 //
 //  CCWebViewProgressView.m
-//  CCFramework
+//  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
 //

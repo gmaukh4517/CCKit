@@ -25,7 +25,7 @@
 
 #import "CCTableViewHelper.h"
 #import "CCProperty.h"
-#import "Config.h"
+#import "CCConfig.h"
 #import "UITableView+CCAdd.h"
 #import "UITableViewCell+CCAdd.h"
 #import "UIView+CCTransfer.h"
@@ -33,19 +33,30 @@
 #import "UIViewController+CCAdd.h"
 #import "NSObject+CCAdd.h"
 #import "NSString+CCAdd.h"
+
+#import "UITableViewHeaderFooterView+CCAdd.h"
+
 #define CCAssert(condition, format, ...)                                                       \
-do {                                                                                       \
-_Pragma("clang diagnostic push")                                                       \
-_Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
-NSLog(format, ##__VA_ARGS__);                                                  \
-_Pragma("clang diagnostic pop")                                                        \
-} while (0);
+    do {                                                                                       \
+        _Pragma("clang diagnostic push")                                                       \
+            _Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
+                NSLog(format, ##__VA_ARGS__);                                                  \
+        _Pragma("clang diagnostic pop")                                                        \
+    } while (0);
 
 #define defaultInterval .5 //默认时间间隔
 
 @interface CCTableViewHelper ()
 
+@property (nonatomic, strong) NSArray *headerNibNames;
+@property (nonatomic, strong) NSArray *footerNibNames;
+
+@property (nonatomic, assign) NSInteger headerSection;
+@property (nonatomic, assign) NSInteger footerSection;
+
+@property (nonatomic, strong) NSArray *dataHeaderArr;
 @property (nonatomic, strong) NSMutableArray<NSMutableArray *> *dataArray;
+@property (nonatomic, strong) NSArray *dataFooterArr;
 
 @property (nonatomic, strong) NSMutableArray *sectionIndexTitles;
 
@@ -55,7 +66,6 @@ _Pragma("clang diagnostic pop")                                                 
 
 @property (nonatomic, assign) BOOL isIgnoreEvent;
 
-
 /**
  *  @author CC, 16-07-23
  *
@@ -63,7 +73,10 @@ _Pragma("clang diagnostic pop")                                                 
  */
 @property (nonatomic, strong) UISearchBar *searchBar;
 
+@property (nonatomic, copy) CCTableHelperHeaderIdentifierBlock headerIdentifierBlock;
 @property (nonatomic, copy) CCTableHelperCellIdentifierBlock cellIdentifierBlock;
+@property (nonatomic, copy) CCTableHelperFooterIdentifierBlock footerIdentifierBlock;
+
 @property (nonatomic, copy) CCTableHelperDidSelectBlock didSelectBlock;
 @property (nonatomic, copy) CCTableHelperDidDeSelectBlock didDeSelectBlock;
 @property (nonatomic, copy) CCTableHelperDidMoveToRowBlock didMoveToRowBlock;
@@ -78,10 +91,10 @@ _Pragma("clang diagnostic pop")                                                 
 @property (nonatomic, copy) CCScrollViewWillBeginDragging scrollViewBdBlock;
 @property (nonatomic, copy) CCScrollViewDidScroll scrollViewddBlock;
 
-@property (nonatomic, copy) CCTableHelperHeaderBlock headerBlock;
+@property (nonatomic, copy) CCTableHelperHeaderBlock didHeaderWillDisplayBlock;
 @property (nonatomic, copy) CCTableHelperTitleHeaderBlock headerTitleBlock;
 
-@property (nonatomic, copy) CCTableHelperFooterBlock footerBlock;
+@property (nonatomic, copy) CCTableHelperFooterBlock didFooterWillDisplayBlock;
 @property (nonatomic, copy) CCTableHelperTitleFooterBlock footerTitleBlock;
 
 @property (nonatomic, copy) CCTableHelperNumberOfSections numberOfSections;
@@ -105,29 +118,63 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)initialization
 {
-    self.titleHeaderHeight = 0.1;
-    self.titleFooterHeight = 0.1;
+    _titleHeaderHeight = 0;
+    _titleFooterHeight = 0;
+    if (@available(iOS 10.0, *)) {
+        _titleHeaderHeight = 0.001;
+        _titleFooterHeight = 0.001;
+    }
 }
 
 #pragma mark -
 #pragma mark :. getset
+
+- (void)setCc_tableView:(UITableView *)cc_tableView
+{
+    _cc_tableView = cc_tableView;
+    if (@available(iOS 11.0, *)) {
+        _cc_tableView.estimatedRowHeight = 0;
+        _cc_tableView.estimatedSectionFooterHeight = 0;
+        _cc_tableView.estimatedSectionHeaderHeight = 0;
+    }
+}
+
 - (NSString *)cellIdentifier
 {
-    if (_cellIdentifier == nil) {
+    if (!_cellIdentifier) {
         NSString *curVCIdentifier = [self cc_tableView_identifier];
-        if (curVCIdentifier) {
-            NSString *curCellIdentifier = [NSString stringWithFormat:@"CC%@Cell", curVCIdentifier];
-            _cellIdentifier = curCellIdentifier;
-        }
+        if (curVCIdentifier)
+            _cellIdentifier = [NSString stringWithFormat:@"CC%@Cell", curVCIdentifier];
     }
     return _cellIdentifier;
 }
+
+- (NSString *)headerIdentifier
+{
+    if (!_headerIdentifier) {
+        NSString *curVCIdentifier = [self cc_tableView_identifier];
+        if (curVCIdentifier)
+            _headerIdentifier = [NSString stringWithFormat:@"CC%@HeaderFooter", curVCIdentifier];
+    }
+    return _headerIdentifier;
+}
+
+- (NSString *)footerIdentifier
+{
+    if (!_footerIdentifier) {
+        NSString *curVCIdentifier = [self cc_tableView_identifier];
+        if (curVCIdentifier)
+            _footerIdentifier = [NSString stringWithFormat:@"CC%@HeaderFooter", curVCIdentifier];
+    }
+    return _footerIdentifier;
+}
+
 
 - (void)registerNibs:(NSArray<NSString *> *)cellNibNames
 {
     if (cellNibNames.count > 0) {
         [cellNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            if (self.cc_CellXIB && [[self.cc_CellXIB objectAtIndex:idx] boolValue])
+            if (self.cc_CellXIB && [self.cc_CellXIB containsObject:obj])
                 [self.cc_tableView registerNib:[UINib nibWithNibName:obj bundle:nil] forCellReuseIdentifier:obj];
             else
                 [self.cc_tableView registerClass:NSClassFromString(obj) forCellReuseIdentifier:obj];
@@ -138,6 +185,40 @@ _Pragma("clang diagnostic pop")                                                 
     }
 }
 
+- (void)registerHeaderNibs:(NSArray<NSString *> *)headerNibNames
+{
+    _headerNibNames = headerNibNames;
+    if (headerNibNames.count) {
+        [headerNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+            if (self.cc_HeaderXIB && [self.cc_HeaderXIB containsObject:obj]) {
+                [self.cc_tableView registerNib:[UINib nibWithNibName:obj bundle:nil] forHeaderFooterViewReuseIdentifier:obj];
+            } else {
+                [self.cc_tableView registerClass:NSClassFromString(obj) forHeaderFooterViewReuseIdentifier:obj];
+            }
+        }];
+
+        if (headerNibNames.count == 1)
+            self.headerIdentifier = headerNibNames[ 0 ];
+    }
+}
+
+- (void)registerFooterNibs:(NSArray<NSString *> *)footerNibNames
+{
+    _footerNibNames = footerNibNames;
+    if (footerNibNames.count) {
+        [footerNibNames enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+            if (self.cc_FooterXIB && [self.cc_FooterXIB containsObject:obj]) {
+                [self.cc_tableView registerNib:[UINib nibWithNibName:obj bundle:nil] forHeaderFooterViewReuseIdentifier:obj];
+            } else {
+                [self.cc_tableView registerClass:NSClassFromString(obj) forHeaderFooterViewReuseIdentifier:obj];
+            }
+        }];
+
+        if (footerNibNames.count == 1)
+            self.footerIdentifier = footerNibNames[ 0 ];
+    }
+}
+
 
 - (NSMutableArray *)dataSource
 {
@@ -145,9 +226,19 @@ _Pragma("clang diagnostic pop")                                                 
     if (self.dataArray.count > 1)
         array = self.dataArray;
     else
-        array = self.dataArray.firstObject;
-    
+        array = self.dataArray;
+
     return array;
+}
+
+- (NSArray *)dataHeaderSource
+{
+    return self.dataHeaderArr;
+}
+
+- (NSArray *)dataFooterSource
+{
+    return self.dataFooterArr;
 }
 
 - (NSArray *)sectionIndexTitles
@@ -158,7 +249,7 @@ _Pragma("clang diagnostic pop")                                                 
             self.searchBar = (UISearchBar *)self.cc_tableView.tableHeaderView;
             [sectionIndex addObject:UITableViewIndexSearch];
         }
-        
+
         if (self.sectionIndexTitle)
             [sectionIndex addObjectsFromArray:self.sectionIndexTitle];
         else
@@ -176,7 +267,7 @@ _Pragma("clang diagnostic pop")                                                 
     return _theCollation;
 }
 
--(NSString *)cc_tableView_identifier
+- (NSString *)cc_tableView_identifier
 {
     NSString *curIdentifier = [self associatedValueForKey:_cmd];
     if (curIdentifier) return curIdentifier;
@@ -194,9 +285,19 @@ _Pragma("clang diagnostic pop")                                                 
 
 #pragma mark -
 #pragma mark :. Block事件
+- (void)headerMultipleIdentifier:(CCTableHelperHeaderIdentifierBlock)cb
+{
+    self.headerIdentifierBlock = cb;
+}
+
 - (void)cellMultipleIdentifier:(CCTableHelperCellIdentifierBlock)cb
 {
     self.cellIdentifierBlock = cb;
+}
+
+- (void)fotterMultipleIdentifier:(CCTableHelperFooterIdentifierBlock)cb
+{
+    self.footerIdentifierBlock = cb;
 }
 
 - (void)didSelect:(CCTableHelperDidSelectBlock)cb
@@ -244,9 +345,9 @@ _Pragma("clang diagnostic pop")                                                 
     self.scrollViewBdBlock = block;
 }
 
-- (void)headerView:(CCTableHelperHeaderBlock)cb
+- (void)headerWillDisplay:(CCTableHelperHeaderBlock)cb
 {
-    self.headerBlock = cb;
+    self.didHeaderWillDisplayBlock = cb;
 }
 
 - (void)headerTitle:(CCTableHelperTitleHeaderBlock)cb
@@ -254,9 +355,9 @@ _Pragma("clang diagnostic pop")                                                 
     self.headerTitleBlock = cb;
 }
 
-- (void)footerView:(CCTableHelperFooterBlock)cb
+- (void)footerWillDisplay:(CCTableHelperFooterBlock)cb
 {
-    self.footerBlock = cb;
+    self.didFooterWillDisplayBlock = cb;
 }
 
 - (void)footerTitle:(CCTableHelperTitleFooterBlock)cb
@@ -303,7 +404,7 @@ _Pragma("clang diagnostic pop")                                                 
     NSInteger curNumOfSections = self.dataArray.count;
     if (self.numberOfSections)
         curNumOfSections = self.numberOfSections(tableView, curNumOfSections);
-    
+
     return curNumOfSections;
 }
 
@@ -318,29 +419,75 @@ _Pragma("clang diagnostic pop")                                                 
             curNumOfRows = subDataAry.count;
         }
     }
+    
     return curNumOfRows;
 }
 
 #pragma mark :. GourpsView
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section
+{
+    return [self cc_heightForHeader:tableView section:section];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    CGFloat height = self.titleHeaderHeight;
-    if (self.headerBlock) {
-        UIView *headerView = self.headerBlock(tableView, section, [self currentSectionModel:section]);
-        if (headerView) {
-            if (headerView.LayoutSizeFittingSize.height > height)
-                height = headerView.LayoutSizeFittingSize.height;
+    return [self cc_heightForHeader:tableView section:section];
+}
+
+- (CGFloat)cc_heightForHeader:(UITableView *)tableView section:(NSInteger)section
+{
+    CGFloat curHeight = self.titleHeaderHeight;
+    if (tableView.cc_autoSizingHeaderFooter) {
+        if ([self.cc_tableView.cc_headerHeightCache existsHeightAtSection:section])
+            curHeight = [self.cc_tableView.cc_headerHeightCache heightForSection:section];
+        else {
+            id curModel = [self currentSectionModel:section];
+            if (self.dataHeaderArr.count)
+                curModel = [self currentHeaderModelAtSection:section];
+
+            NSString *curHeaderIdentifier = [self headerIdentifierForRowSection:section model:curModel];
+            if (![curHeaderIdentifier isEqualToString:@"CCHeaderFooter"] && curModel) {
+                @weakify(self);
+                curHeight = [tableView cc_heightForHeaderFooterWithIdentifier:curHeaderIdentifier
+                                                               headerORfooter:YES
+                                                               cacheBySection:section
+                                                                configuration:^(id headerFooter) {
+                                                                    @strongify(self);
+                                                                    if ([headerFooter respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
+                                                                        [headerFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
+                                                                    }
+
+                                                                    if (self.didHeaderWillDisplayBlock) {
+                                                                        self.didHeaderWillDisplayBlock(headerFooter, section, curModel);
+                                                                    }
+                                                                }];
+            }
         }
     }
-    return height;
+
+   if (@available(iOS 11.0, *))
+        return curHeight;
+    else
+        return floor(curHeight);
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *hederView = nil;
-    if (self.headerBlock) {
-        hederView = self.headerBlock(tableView, section, [self currentSectionModel:section]);
+    self.headerSection = section;
+    id curModel = [self currentSectionModel:section];
+    if (self.dataHeaderArr.count)
+        curModel = [self currentHeaderModelAtSection:section];
+
+    UIView *hederView;
+    if (self.headerNibNames.count) {
+        NSString *curHeaderIdentifier = [self headerIdentifierForRowSection:section model:curModel];
+        UITableViewHeaderFooterView *curHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:curHeaderIdentifier];
+
+        CCAssert(curHeader, @"header is nil Identifier ⤭ %@ ⤪", curHeaderIdentifier);
+        hederView = curHeader;
     }
+
     return hederView;
 }
 
@@ -349,36 +496,101 @@ _Pragma("clang diagnostic pop")                                                 
     NSString *title = nil;
     if (self.headerTitleBlock)
         title = self.headerTitleBlock(tableView, section);
-    
+
     return title;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(nonnull UIView *)view forSection:(NSInteger)section
 {
-    if (!self.headerBlock)
-        view.tintColor = tableView.backgroundColor;
+    id curModel = [self currentSectionModel:section];
+    if (self.dataHeaderArr.count)
+        curModel = [self currentHeaderModelAtSection:section];
+
+    UITableViewHeaderFooterView *headerFooterView = (UITableViewHeaderFooterView *)view;
+
+    if ([headerFooterView respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
+        headerFooterView.cc_dataSources = curModel;
+        headerFooterView.cc_Section = section;
+        [headerFooterView cc_headerFooterWillDisplayWithModel:curModel section:section];
+    }
+
+    if (self.didHeaderWillDisplayBlock) {
+        self.didHeaderWillDisplayBlock(headerFooterView, section, curModel);
+    }
+
+    if (self.headerFooterDelegate)
+        headerFooterView.viewDelegate = self.headerFooterDelegate;
+
+    if (!self.didHeaderWillDisplayBlock && !headerFooterView.backgroundColor)
+        headerFooterView.tintColor = tableView.backgroundView ? tableView.backgroundView.backgroundColor : tableView.backgroundColor;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section
+{
+    return [self cc_heightForFooter:tableView section:section];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    CGFloat height = self.titleFooterHeight;
-    if (self.footerBlock) {
-        UIView *footerView = self.footerBlock(tableView, section, [self currentSectionModel:section]);
-        if (footerView) {
-            if (footerView.LayoutSizeFittingSize.height > height)
-                height = footerView.LayoutSizeFittingSize.height;
+    return [self cc_heightForFooter:tableView section:section];
+}
+
+- (CGFloat)cc_heightForFooter:(UITableView *)tableView section:(NSInteger)section
+{
+    CGFloat curHeight = self.titleFooterHeight;
+    if (tableView.cc_autoSizingHeaderFooter) {
+        if ([self.cc_tableView.cc_footerHeightCache existsHeightAtSection:section])
+            curHeight = [self.cc_tableView.cc_footerHeightCache heightForSection:section];
+        else {
+            id curModel = [self currentSectionModel:section];
+            if (self.dataFooterArr.count)
+                curModel = [self currentFooterModelAtSection:section];
+
+            NSString *curFooterIdentifier = [self footerIdentifierForRowSection:section model:curModel];
+            if (![curFooterIdentifier isEqualToString:@"CCHeaderFooter"] && curModel) {
+                @weakify(self);
+                curHeight = [tableView cc_heightForHeaderFooterWithIdentifier:curFooterIdentifier
+                                                               headerORfooter:NO
+                                                               cacheBySection:section
+                                                                configuration:^(UITableViewHeaderFooterView *headerFooter) {
+                                                                    @strongify(self);
+                                                                    if ([headerFooter respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
+                                                                        [headerFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
+                                                                    }
+
+                                                                    if (self.didFooterWillDisplayBlock) {
+                                                                        self.didFooterWillDisplayBlock(headerFooter, section, curModel);
+                                                                    }
+                                                                }];
+            }
         }
     }
     
-    return height;
+    if (@available(iOS 11.0, *))
+        return curHeight;
+    else
+        return floor(curHeight);
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    UIView *footerView = nil;
-    if (self.footerBlock) {
-        footerView = self.footerBlock(tableView, section, [self currentSectionModel:section]);
+    self.footerSection = section;
+
+    id curModel = [self currentSectionModel:section];
+    if (self.dataFooterArr.count)
+        curModel = [self currentFooterModelAtSection:section];
+
+    UIView *footerView;
+    if (self.footerNibNames.count) {
+        NSString *curFooterIdentifier = [self footerIdentifierForRowSection:section model:curModel];
+        UITableViewHeaderFooterView *curFooter = [tableView dequeueReusableHeaderFooterViewWithIdentifier:curFooterIdentifier];
+
+        CCAssert(curFooter, @"header is nil Identifier ⤭ %@ ⤪", curFooterIdentifier);
+
+        //        [curFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
+        footerView = curFooter;
     }
+
     return footerView;
 }
 
@@ -387,14 +599,33 @@ _Pragma("clang diagnostic pop")                                                 
     NSString *title = nil;
     if (self.footerTitleBlock)
         title = self.footerTitleBlock(tableView, section);
-    
+
     return title;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section
 {
-    if (!self.footerBlock)
-        view.tintColor = [UIColor clearColor];
+    id curModel = [self currentSectionModel:section];
+    if (self.dataFooterArr.count)
+        curModel = [self currentFooterModelAtSection:section];
+
+    UITableViewHeaderFooterView *headerFooterView = (UITableViewHeaderFooterView *)view;
+
+    if ([headerFooterView respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
+        headerFooterView.cc_dataSources = curModel;
+        headerFooterView.cc_Section = section;
+        [headerFooterView cc_headerFooterWillDisplayWithModel:curModel section:section];
+    }
+
+    if (self.didFooterWillDisplayBlock) {
+        self.didFooterWillDisplayBlock(headerFooterView, section, curModel);
+    }
+
+    if (self.headerFooterDelegate)
+        headerFooterView.viewDelegate = self.headerFooterDelegate;
+
+    if (!self.didFooterWillDisplayBlock && !headerFooterView.backgroundColor)
+        headerFooterView.tintColor = tableView.backgroundView ? tableView.backgroundView.backgroundColor : tableView.backgroundColor;
 }
 
 #pragma mark :. 侧边
@@ -424,7 +655,7 @@ _Pragma("clang diagnostic pop")                                                 
         [tableView scrollRectToVisible:_searchBar.frame animated:NO];
         indexs = -1;
     }
-    
+
     return indexs;
 }
 
@@ -437,7 +668,7 @@ _Pragma("clang diagnostic pop")                                                 
         style = self.didEditingStyle(tableView, indexPath, [self currentModelAtIndexPath:indexPath]);
     else if (self.didEditActionsBlock && !tableView.allowsMultipleSelectionDuringEditing)
         style = UITableViewCellEditingStyleDelete;
-    
+
     return style;
 }
 
@@ -452,7 +683,7 @@ _Pragma("clang diagnostic pop")                                                 
     NSString *title = nil;
     if (self.didEditTileBlock)
         title = self.didEditTileBlock(tableView, indexPath, [self currentModelAtIndexPath:indexPath]);
-    
+
     return title;
 }
 
@@ -461,29 +692,45 @@ _Pragma("clang diagnostic pop")                                                 
     NSArray *ary = [NSArray array];
     if (self.didEditActionsBlock)
         ary = self.didEditActionsBlock(tableView, indexPath, [self currentModelAtIndexPath:indexPath]);
-    
+
     return ary;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self cc_heightForCell:tableView IndexPath:indexPath];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat curHeight = 0;
+    return [self cc_heightForCell:tableView IndexPath:indexPath];
+}
+
+- (CGFloat)cc_heightForCell:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat curHeight = 44;
     if (tableView.cc_autoSizingCell) {
-        id curModel = [self currentModelAtIndexPath:indexPath];
-        NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
-        @weakify(self);
-        curHeight = [tableView cc_heightForCellWithIdentifier:curCellIdentifier
-                                             cacheByIndexPath:indexPath
-                                                configuration:^(id cell) {
-                                                    @strongify(self);
-                                                    if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
-                                                        [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
-                                                    }
-                                                    
-                                                    if (self.didWillDisplayBlock) {
-                                                        self.didWillDisplayBlock(cell, indexPath, curModel, NO);
-                                                    }
-                                                }];
+        if ([self.cc_tableView.cc_indexPathHeightCache existsHeightAtIndexPath:indexPath])
+            curHeight = [self.cc_tableView.cc_indexPathHeightCache heightForIndexPath:indexPath];
+        else {
+            id curModel = [self currentModelAtIndexPath:indexPath];
+            NSString *curCellIdentifier = [self cellIdentifierForRowAtIndexPath:indexPath model:curModel];
+            @weakify(self);
+            curHeight = [tableView cc_heightForCellWithIdentifier:curCellIdentifier
+                                                 cacheByIndexPath:indexPath
+                                                    configuration:^(UITableViewCell *cell) {
+                                                        @strongify(self);
+                                                        if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+                                                            cell.cc_dataSources = curModel;
+                                                            cell.cc_indexPath = indexPath;
+                                                            [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
+                                                        }
+
+                                                        if (self.didWillDisplayBlock) {
+                                                            self.didWillDisplayBlock(cell, indexPath, curModel, NO);
+                                                        }
+                                                    }];
+        }
     } else {
         curHeight = tableView.rowHeight;
     }
@@ -514,10 +761,10 @@ _Pragma("clang diagnostic pop")                                                 
 
     if (self.cellDelegate)
         curCell.viewDelegate = self.cellDelegate;
-    
+
     if (self.cellViewEventsBlock)
         curCell.viewEventsBlock = self.cellViewEventsBlock;
-    
+
     return curCell;
 }
 
@@ -534,13 +781,15 @@ _Pragma("clang diagnostic pop")                                                 
             [cell setLayoutMargins:UIEdgeInsetsZero];
         }
     }
-    
+
     id curModel = [self currentModelAtIndexPath:indexPath];
-    
+
     if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+        cell.cc_dataSources = curModel;
+        cell.cc_indexPath = indexPath;
         [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
     }
-    
+
     if (self.didWillDisplayBlock) {
         self.didWillDisplayBlock(cell, indexPath, curModel, YES);
     }
@@ -548,16 +797,17 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.cc_indexPath = indexPath;
-    
+    _cc_indexPath = indexPath;
+
     if (self.isAntiHurry) {
         self.timeInterval = self.timeInterval == 0 ? defaultInterval : self.timeInterval;
         if (self.isIgnoreEvent) {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
             return;
         } else if (self.timeInterval > 0) {
             [self performSelector:@selector(resetState) withObject:nil afterDelay:self.timeInterval];
         }
-        
+
         self.isIgnoreEvent = YES;
     }
     if (self.didSelectBlock) {
@@ -573,7 +823,7 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.cc_indexPath = indexPath;
+    _cc_indexPath = indexPath;
     if (self.didDeSelectBlock) {
         id curModel = [self currentModelAtIndexPath:indexPath];
         self.didDeSelectBlock(tableView, indexPath, curModel);
@@ -590,7 +840,7 @@ _Pragma("clang diagnostic pop")                                                 
 {
     if (self.scrollViewddBlock)
         self.scrollViewddBlock(scrollView);
-    
+
     if (self.isHover) {
         CGFloat sectionHeaderHeight = 40;
         if (scrollView.contentOffset.y <= sectionHeaderHeight && scrollView.contentOffset.y >= 0) {
@@ -599,7 +849,7 @@ _Pragma("clang diagnostic pop")                                                 
             scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
         }
     }
-    
+
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scrollViewDidEndScrollingAnimation:) object:scrollView];
     [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:scrollView afterDelay:0.5];
 }
@@ -622,13 +872,13 @@ _Pragma("clang diagnostic pop")                                                 
         color = [UIColor colorWithRed:0.926 green:0.920 blue:0.956 alpha:1.000];
     }
     customHeaderView.backgroundColor = color;
-    
+
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 0, CGRectGetWidth(customHeaderView.bounds) - 15.0f, self.titleHeaderHeight)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:14.0f];
     headerLabel.textColor = [UIColor darkGrayColor];
     [customHeaderView addSubview:headerLabel];
-    
+
     if (self.isSection) {
         BOOL showSection = NO;
         showSection = [tableView numberOfRowsInSection:section] != 0;
@@ -637,7 +887,8 @@ _Pragma("clang diagnostic pop")                                                 
     return customHeaderView;
 }
 
-#pragma mark :. Handler
+#pragma mark -
+#pragma mark :. ModelHandler
 
 - (NSString *)cellIdentifierForRowAtIndexPath:(NSIndexPath *)cIndexPath model:(id)cModel
 {
@@ -653,13 +904,41 @@ _Pragma("clang diagnostic pop")                                                 
 - (id)currentSectionModel:(NSInteger)section
 {
     id currentModel = nil;
-    NSArray *arr = [self.dataArray objectAtIndex:section];
-    if (arr.count)
-        currentModel = [arr objectAtIndex:0];
-    
+    if (section < self.dataArray.count) {
+        NSArray *arr = [self.dataArray objectAtIndex:section];
+        if (arr.count)
+            currentModel = [arr objectAtIndex:0];
+    }
     return currentModel;
 }
 
+#pragma mark :. header
+- (NSString *)headerIdentifierForRowSection:(NSInteger)section model:(id)cModel
+{
+    NSString *curHeaderIdentifier = nil;
+    if (self.headerIdentifierBlock) {
+        curHeaderIdentifier = self.headerIdentifierBlock(section, cModel);
+    } else {
+        curHeaderIdentifier = self.headerIdentifier;
+    }
+    return curHeaderIdentifier;
+}
+
+- (id)currentHeaderModel
+{
+    return [self currentHeaderModelAtSection:self.headerSection];
+}
+
+- (id)currentHeaderModelAtSection:(NSInteger)section
+{
+    id currentModel = nil;
+    if (section < self.dataHeaderArr.count)
+        currentModel = [self.dataHeaderArr objectAtIndex:section];
+
+    return currentModel;
+}
+
+#pragma mark :. cell
 - (id)currentModel
 {
     return [self currentModelAtIndexPath:self.cc_indexPath];
@@ -679,12 +958,51 @@ _Pragma("clang diagnostic pop")                                                 
     return nil;
 }
 
+#pragma mark :. footer
+- (NSString *)footerIdentifierForRowSection:(NSInteger)section model:(id)cModel
+{
+    NSString *curFooterIdentifier = nil;
+    if (self.footerIdentifierBlock) {
+        curFooterIdentifier = self.footerIdentifierBlock(section, cModel);
+    } else {
+        curFooterIdentifier = self.footerIdentifier;
+    }
+    return curFooterIdentifier;
+}
+
+
+- (id)currentFooterModel
+{
+    return [self currentFooterModelAtSection:self.footerSection];
+}
+
+- (id)currentFooterModelAtSection:(NSInteger)section
+{
+    id currentModel = nil;
+    if (section < self.dataFooterArr.count)
+        currentModel = [self.dataFooterArr objectAtIndex:section];
+
+    return currentModel;
+}
+
+#pragma mark -
+#pragma mark :. data
+- (void)cc_clearData
+{
+    [self.dataArray removeAllObjects];
+    [self.cc_tableView reloadData];
+}
+
+
 - (void)cc_reloadGroupDataAry:(NSArray *)newDataAry
 {
+    [self.cc_tableView.cc_indexPathHeightCache invalidateAllHeightCache];
+    [self.cc_tableView.cc_headerHeightCache invalidateAllHeightCache];
+    [self.cc_tableView.cc_footerHeightCache invalidateAllHeightCache];
     [self.dataArray removeAllObjects];
     for (NSInteger i = 0; i < newDataAry.count; i++)
         [self cc_makeUpDataAryForSection:i];
-    
+
     for (int idx = 0; idx < self.dataArray.count; idx++) {
         NSMutableArray *subAry = self.dataArray[ idx ];
         if (subAry.count) [subAry removeAllObjects];
@@ -702,11 +1020,15 @@ _Pragma("clang diagnostic pop")                                                 
                    forSection:(NSInteger)cSection
 {
     if (newDataAry.count == 0) return;
-    
+
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightAtSection:cSection];
+    [self.cc_tableView.cc_headerHeightCache invalidateHeightAtSection:cSection];
+    [self.cc_tableView.cc_footerHeightCache invalidateHeightAtSection:cSection];
+
     NSMutableArray *subAry = self.dataArray[ cSection ];
     if (subAry.count) [subAry removeAllObjects];
     [subAry addObjectsFromArray:newDataAry];
-    
+
     [self.cc_tableView beginUpdates];
     [self.cc_tableView reloadSections:[NSIndexSet indexSetWithIndex:cSection] withRowAnimation:UITableViewRowAnimationNone];
     [self.cc_tableView endUpdates];
@@ -714,20 +1036,34 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)cc_addGroupDataAry:(NSArray *)newDataAry
 {
-    [self.dataArray addObject:[NSMutableArray arrayWithArray:newDataAry]];
+    if (newDataAry.count == 0) return;
+    [self.dataArray addObjectsFromArray:newDataAry];
     [self.cc_tableView reloadData];
 }
 
 - (void)cc_insertGroupDataAry:(NSArray *)newDataAry
                    forSection:(NSInteger)cSection
 {
-    [self.dataArray insertObject:[NSMutableArray arrayWithArray:newDataAry] atIndex:cSection == -1 ? 0 : cSection];
+    if (newDataAry.count == 0) return;
+
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightLast:cSection];
+    [self.cc_tableView.cc_headerHeightCache invalidateHeightLast:cSection];
+    [self.cc_tableView.cc_footerHeightCache invalidateHeightLast:cSection];
+
+    NSRange range = NSMakeRange(cSection == -1 ? 0 : cSection, newDataAry.count);
+    [self.dataArray insertObjects:newDataAry atIndexes:[NSIndexSet indexSetWithIndexesInRange:range]];
     [self.cc_tableView reloadData];
 }
 
 - (void)cc_insertMultiplGroupDataAry:(NSArray *)newDataAry
                           forSection:(NSInteger)cSection
 {
+    if (newDataAry.count == 0) return;
+
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightLast:cSection];
+    [self.cc_tableView.cc_headerHeightCache invalidateHeightLast:cSection];
+    [self.cc_tableView.cc_footerHeightCache invalidateHeightLast:cSection];
+
     NSMutableArray *idxArray = [NSMutableArray array];
     if (cSection < 0) {
         for (NSInteger i = 0; i < newDataAry.count; i++) {
@@ -740,7 +1076,7 @@ _Pragma("clang diagnostic pop")                                                 
             [idxArray addObject:@(cSection + i)];
         }
     }
-    
+
     for (NSInteger i = 0; i < idxArray.count; i++) {
         NSInteger idx = [[idxArray objectAtIndex:i] integerValue];
         NSMutableArray *subAry = self.dataArray[ idx ];
@@ -757,9 +1093,12 @@ _Pragma("clang diagnostic pop")                                                 
 
 - (void)cc_deleteGroupData:(NSInteger)cSection
 {
-    NSMutableArray *subAry = self.dataArray[ cSection ];
-    if (subAry.count) [subAry removeAllObjects];
-    
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightLast:cSection];
+    [self.cc_tableView.cc_headerHeightCache invalidateHeightLast:cSection];
+    [self.cc_tableView.cc_footerHeightCache invalidateHeightLast:cSection];
+
+    [self.dataArray removeObjectAtIndex:cSection];
+
     [self.cc_tableView beginUpdates];
     [self.cc_tableView deleteSections:[NSIndexSet indexSetWithIndex:cSection] withRowAnimation:UITableViewRowAnimationNone];
     [self.cc_tableView endUpdates];
@@ -768,14 +1107,31 @@ _Pragma("clang diagnostic pop")                                                 
 #pragma mark -
 #pragma mark :. Plain
 
+- (void)cc_resetHeaderAry:(NSArray *)newHeaderAry
+{
+    self.dataHeaderArr = newHeaderAry;
+}
+
+- (void)cc_resetFooterAry:(NSArray *)newFooterAry
+{
+    self.dataFooterArr = newFooterAry;
+}
+
 - (void)cc_resetDataAry:(NSArray *)newDataAry
 {
     self.dataArray = nil;
+    [self.cc_tableView.cc_indexPathHeightCache invalidateAllHeightCache];
+    [self.cc_tableView.cc_headerHeightCache invalidateAllHeightCache];
+    [self.cc_tableView.cc_footerHeightCache invalidateAllHeightCache];
     [self cc_resetDataAry:newDataAry forSection:0];
 }
 
 - (void)cc_resetDataAry:(NSArray *)newDataAry forSection:(NSInteger)cSection
 {
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightAtSection:cSection];
+    [self.cc_tableView.cc_headerHeightCache invalidateHeightAtSection:cSection];
+    [self.cc_tableView.cc_footerHeightCache invalidateHeightAtSection:cSection];
+
     [self cc_makeUpDataAryForSection:cSection];
     NSMutableArray *subAry = self.dataArray[ cSection ];
     if (subAry.count) [subAry removeAllObjects];
@@ -795,12 +1151,16 @@ _Pragma("clang diagnostic pop")                                                 
 - (void)cc_reloadDataAry:(NSArray *)newDataAry forSection:(NSInteger)cSection
 {
     if (newDataAry.count == 0) return;
-    
+
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightAtSection:cSection];
+    [self.cc_tableView.cc_headerHeightCache invalidateHeightAtSection:cSection];
+    [self.cc_tableView.cc_footerHeightCache invalidateHeightAtSection:cSection];
+
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cSection];
     NSMutableArray *subAry = self.dataArray[ cSection ];
     if (subAry.count) [subAry removeAllObjects];
     [subAry addObjectsFromArray:newDataAry];
-    
+
     [self.cc_tableView beginUpdates];
     if (curIndexSet) {
         [self.cc_tableView insertSections:curIndexSet withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -818,14 +1178,15 @@ _Pragma("clang diagnostic pop")                                                 
 - (void)cc_addDataAry:(NSArray *)newDataAry forSection:(NSInteger)cSection
 {
     if (newDataAry.count == 0) return;
-    
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightLast:cSection];
+
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cSection];
     NSMutableArray *subAry;
     if (cSection < 0) {
         subAry = self.dataArray[ 0 ];
     } else
         subAry = self.dataArray[ cSection ];
-    
+
     if (curIndexSet) {
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_tableView beginUpdates];
@@ -838,18 +1199,21 @@ _Pragma("clang diagnostic pop")                                                 
         }];
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_tableView beginUpdates];
-        [self.cc_tableView insertRowsAtIndexPaths:curIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.cc_tableView insertRowsAtIndexPaths:curIndexPaths withRowAnimation:UITableViewRowAnimationNone];
         [self.cc_tableView endUpdates];
     }
 }
 
 - (void)cc_insertData:(id)cModel AtIndex:(NSIndexPath *)cIndexPath;
 {
+    if (!cModel) return;
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightAtIndexPath:cIndexPath];
+
     NSIndexSet *curIndexSet = [self cc_makeUpDataAryForSection:cIndexPath.section];
     NSMutableArray *subAry = self.dataArray[ cIndexPath.section ];
     if (subAry.count < cIndexPath.row) return;
     [subAry insertObject:cModel atIndex:cIndexPath.row];
-    
+
     [self.cc_tableView beginUpdates];
     if (curIndexSet) {
         [self.cc_tableView insertSections:curIndexSet withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -872,16 +1236,17 @@ _Pragma("clang diagnostic pop")                                                 
         [sectionArray addObjectsFromArray:arr];
         [delArray addObject:sectionArray];
     }
-    
+
     for (NSIndexPath *indexPath in indexPaths) {
         if (self.dataArray.count <= indexPath.section) continue;
         NSMutableArray *subAry = self.dataArray[ indexPath.section ];
         if (subAry.count <= indexPath.row) continue;
-        
+
         [[delArray objectAtIndex:indexPath.section] removeObject:[subAry objectAtIndex:indexPath.row]];
+        [self.cc_tableView.cc_indexPathHeightCache invalidateHeightAtIndexPath:indexPath];
     }
     self.dataArray = delArray;
-    
+
     [self.cc_tableView beginUpdates];
     [self.cc_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
     [self.cc_tableView endUpdates];
@@ -897,6 +1262,7 @@ _Pragma("clang diagnostic pop")                                                 
                     IndexPath:(NSIndexPath *)cIndexPath
              withRowAnimation:(UITableViewRowAnimation)animated
 {
+    [self.cc_tableView.cc_indexPathHeightCache invalidateHeightAtIndexPath:cIndexPath];
     if (self.dataArray.count > cIndexPath.section) {
         NSMutableArray *subDataAry = self.dataArray[ cIndexPath.section ];
         if (subDataAry.count > cIndexPath.row) {
@@ -933,9 +1299,7 @@ _Pragma("clang diagnostic pop")                                                 
         _dataArray = [NSMutableArray new];
     }
     return _dataArray;
-}
+    }
 
 
-@end
-
-
+    @end

@@ -42,7 +42,12 @@
         return nil;
     }
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return jsonString;
+    NSMutableString *mJsonStr = [NSMutableString stringWithString:jsonString];
+    //去掉字符串中的空格
+    [mJsonStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:NSMakeRange(0, mJsonStr.length)];
+    //去掉字符串中的换行符
+    [mJsonStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, mJsonStr.length)];
+    return mJsonStr;
 }
 
 /**
@@ -80,7 +85,7 @@
     [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [variableStr appendFormat:@"%@,", obj];
     }];
-    
+
     NSString *strForRigth = [variableStr substringWithRange:NSMakeRange(0, variableStr.length - 1)];
     return strForRigth;
 }
@@ -111,14 +116,14 @@
     NSMutableArray *intersectionArray = [NSMutableArray array];
     if (self.count == 0) return nil;
     if (otherAry == nil) return nil;
-    
+
     //遍历
     for (id obj in self) {
         if (![otherAry containsObject:obj]) continue;
         //添加
         [intersectionArray addObject:obj];
     }
-    
+
     return intersectionArray;
 }
 
@@ -133,7 +138,7 @@
 {
     if (!self) return nil;
     if (!otherAry) return self;
-    
+
     NSMutableArray *minusArray = [NSMutableArray arrayWithArray:self];
     //遍历
     for (id obj in otherAry) {
@@ -141,7 +146,7 @@
         //添加
         [minusArray removeObject:obj];
     }
-    
+
     return minusArray;
 }
 
@@ -162,13 +167,13 @@
         NSString *persoName = [self obtainObjectPropertyValues:object Attributes:analysisName];
         if (!persoName)
             continue;
-        
+
         NSMutableString *personName = [[NSMutableString alloc] initWithString:persoName];
         //转拼音带音标
         CFStringTransform((__bridge CFMutableStringRef)personName, 0, kCFStringTransformMandarinLatin, NO);
         //必须先执行转带音标方法 转拼音不带音标
         CFStringTransform((__bridge CFMutableStringRef)personName, 0, kCFStringTransformStripDiacritics, NO);
-        
+
         //转译错误的拼音
         NSString *sectionName;
         if ([[persoName substringToIndex:1] compare:@"长"] == NSOrderedSame)
@@ -181,16 +186,16 @@
             [personName replaceCharactersInRange:NSMakeRange(0, 3) withString:@"di"];
         else if ([[personName substringToIndex:1] compare:@"重"] == NSOrderedSame)
             [personName replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chong"];
-        
+
         char first = [[personName substringToIndex:1] characterAtIndex:0]; //头字母 转码
         //判断是是否 a-z|| A-Z
         if (isalpha(first) > 0)
             sectionName = [personName substringToIndex:1];
         else
             sectionName = @"#";
-        
+
         NSMutableArray *temp = [[NSMutableArray alloc] initWithArray:[sortGroupDic objectForKey:[sectionName uppercaseString]]];
-        
+
         NSString *pinyin = personName;
         NSArray *arr = [pinyin componentsSeparatedByString:@" "];
         NSString *InitialName = @"";
@@ -198,19 +203,19 @@
             if (str.length)
                 InitialName = [NSString stringWithFormat:@"%@%@", InitialName, [str substringWithRange:NSMakeRange(0, 1)]];
         }
-        
+
         id pinyinObject = [self objectPropertyWithAttribute:object PinyinValue:personName InitialName:InitialName];
-        
+
         NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:analysisName ascending:YES];
         if ([object isKindOfClass:[NSDictionary class]]) {
             sort = [NSSortDescriptor sortDescriptorWithKey:@"pinyin" ascending:YES];
         }
-        
+
         [temp addObject:pinyinObject];
         temp = [[NSMutableArray alloc] initWithArray:[temp sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sort, nil]]];
         [sortGroupDic setObject:temp forKey:[sectionName uppercaseString]];
     }
-    
+
     return sortGroupDic;
 }
 
@@ -232,7 +237,7 @@
         unsigned int outCount, i;
         objc_property_t *properties = class_copyPropertyList([obj class], &outCount);
         for (i = 0; i < outCount; i++) {
-            objc_property_t property = properties[i];
+            objc_property_t property = properties[ i ];
             const char *char_f = property_getName(property);
             NSString *propertyName = [NSString stringWithUTF8String:char_f];
             if ([propertyName isEqualToString:attribute]) {
@@ -313,26 +318,26 @@
 - (NSArray *)map:(id (^)(id object))block
 {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.count];
-    
+
     for (id object in self) {
         [array addObject:block(object) ?: [NSNull null]];
     }
-    
+
     return array;
 }
 
 - (NSArray *)filter:(BOOL (^)(id object))block
 {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        return block(evaluatedObject);
-    }]];
+                     return block(evaluatedObject);
+                 }]];
 }
 
 - (NSArray *)reject:(BOOL (^)(id object))block
 {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        return !block(evaluatedObject);
-    }]];
+                     return !block(evaluatedObject);
+                 }]];
 }
 
 - (id)detect:(BOOL (^)(id object))block
@@ -352,10 +357,10 @@
 - (id)reduce:(id)initial withBlock:(id (^)(id accumulator, id object))block
 {
     id accumulator = initial;
-    
+
     for (id object in self)
         accumulator = accumulator ? block(accumulator, object) : object;
-    
+
     return accumulator;
 }
 
@@ -365,7 +370,7 @@
 - (id)objectWithIndex:(NSUInteger)index
 {
     if (index < self.count) {
-        return self[index];
+        return self[ index ];
     } else {
         return nil;
     }
@@ -383,7 +388,7 @@
     if ([value isKindOfClass:[NSNumber class]]) {
         return [value stringValue];
     }
-    
+
     return nil;
 }
 
@@ -405,7 +410,7 @@
 - (NSDecimalNumber *)decimalNumberWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if ([value isKindOfClass:[NSDecimalNumber class]]) {
         return value;
     } else if ([value isKindOfClass:[NSNumber class]]) {
@@ -468,7 +473,7 @@
 - (BOOL)boolWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return NO;
     }
@@ -483,7 +488,7 @@
 - (int16_t)int16WithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -498,7 +503,7 @@
 - (int32_t)int32WithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -510,7 +515,7 @@
 - (int64_t)int64WithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -522,9 +527,8 @@
 
 - (char)charWithIndex:(NSUInteger)index
 {
-    
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -537,7 +541,7 @@
 - (short)shortWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -552,7 +556,7 @@
 - (float)floatWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -564,7 +568,7 @@
 - (double)doubleWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -579,11 +583,11 @@
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
     formater.dateFormat = dateFormat;
     id value = [self objectWithIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return nil;
     }
-    
+
     if ([value isKindOfClass:[NSString class]] && ![value isEqualToString:@""] && !dateFormat) {
         return [formater dateFromString:value];
     }
@@ -594,35 +598,67 @@
 - (CGFloat)CGFloatWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     CGFloat f = [value doubleValue];
-    
+
     return f;
 }
 
 - (CGPoint)pointWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     CGPoint point = CGPointFromString(value);
-    
+
     return point;
 }
 - (CGSize)sizeWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     CGSize size = CGSizeFromString(value);
-    
+
     return size;
 }
 - (CGRect)rectWithIndex:(NSUInteger)index
 {
     id value = [self objectWithIndex:index];
-    
+
     CGRect rect = CGRectFromString(value);
-    
+
     return rect;
+}
+
+/**
+ *  @author CC, 2015-07-22
+ *
+ *  @brief  去除重复数据
+ *
+ *  @param PropertyName 去重key
+ */
+- (NSArray *)deduplication:(NSArray *)PropertyName
+{
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObjectsFromArray:[[NSSet setWithArray:[self mutableCopy]] allObjects]];
+
+    NSMutableSet *seenObject = [NSMutableSet set];
+    array = [[NSMutableArray alloc] initWithArray:[array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [PropertyName enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSDictionary *oDic = evaluatedObject;
+            if ([evaluatedObject isKindOfClass:[NSObject class]]) {
+                oDic = [evaluatedObject cc_keyValues];
+            }
+            id vlaue = [oDic objectForKey:obj];
+            if (vlaue)
+                [dic setObject:[oDic objectForKey:obj] forKey:obj];
+        }];
+        BOOL seen = [seenObject containsObject:dic];
+        if (!seen)
+            [seenObject addObject:dic];
+        return !seen;
+    }]]];
+    return array;
 }
 
 @end
@@ -695,39 +731,6 @@
 - (void)addRange:(NSRange)range
 {
     [self addObject:NSStringFromRange(range)];
-}
-
-/**
- *  @author CC, 2015-07-22
- *
- *  @brief  去除重复数据
- *
- *  @param PropertyName 去重key
- */
-- (void)deduplication:(NSArray *)PropertyName
-{
-    NSMutableArray *array = [NSMutableArray array];
-    [array addObjectsFromArray:[[NSSet setWithArray:[self mutableCopy]] allObjects]];
-    
-    NSMutableSet *seenObject = [NSMutableSet set];
-    array = [[NSMutableArray alloc] initWithArray:[array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        [PropertyName enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSDictionary *oDic = evaluatedObject;
-            if ([evaluatedObject isKindOfClass:[NSObject class]]) {
-                oDic = [evaluatedObject cc_keyValues];
-            }
-            id vlaue = [oDic objectForKey:obj];
-            if (vlaue)
-                [dic setObject:[oDic objectForKey:obj] forKey:obj];
-        }];
-        BOOL seen = [seenObject containsObject:dic];
-        if (!seen)
-            [seenObject addObject:dic];
-        return !seen;
-    }]]];
-    [self removeAllObjects];
-    [self addObjectsFromArray:array];
 }
 
 @end

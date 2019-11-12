@@ -154,6 +154,7 @@
  隐藏弹窗
  */
 + (void)close;
++ (void)closeCompletion:(void (^)(void))completion;
 
 /**
  隐藏弹窗

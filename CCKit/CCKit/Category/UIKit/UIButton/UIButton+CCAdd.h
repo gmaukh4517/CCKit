@@ -74,6 +74,12 @@
  */
 - (void)setImage:(NSString *)imagePath;
 
+/**
+ 设置按钮背景图片
+
+ @param imagePath 图片路径
+ */
+- (void)setBackgroundImage:(NSString *)imagePath;
 
 /**
  *  @author CC, 2015-07-16
@@ -361,5 +367,19 @@
  *  @brief  设置按钮额外热区
  */
 @property(nonatomic, assign) UIEdgeInsets touchAreaInsets;
+
+#pragma mark -
+#pragma mark :. getter/setter
+
+@property (nonatomic, assign) CGFloat titleEdgeInsetsTop;
+@property (nonatomic, assign) CGFloat titleEdgeInsetsLeft;
+@property (nonatomic, assign) CGFloat titleEdgeInsetsBottom;
+@property (nonatomic, assign) CGFloat titleEdgeInsetsRight;
+
+@property (nonatomic, assign) CGFloat imageEdgeInsetsTop;
+@property (nonatomic, assign) CGFloat imageEdgeInsetsLeft;
+@property (nonatomic, assign) CGFloat imageEdgeInsetsBottom;
+@property (nonatomic, assign) CGFloat imageEdgeInsetsRight;
+
 
 @end

@@ -37,7 +37,7 @@ typedef void (^CCEventSubscriberActionBlock)(CCEvent *info);
  @param eventName 事件名
  @param action 回调
  */
-+ (void)addTarget:(id)target EventName:(NSString *)eventName action:(CCEventSubscriberActionBlock)action;
++ (void)addTarget:(id)target eventName:(NSString *)eventName action:(CCEventSubscriberActionBlock)action;
 + (void)addTarget:(id)target eventName:(NSString *)eventName actionSEL:(SEL)action;
 
 /**
@@ -47,6 +47,7 @@ typedef void (^CCEventSubscriberActionBlock)(CCEvent *info);
  @param object 发送参数
  */
 + (void)postEventName:(NSString *)eventName object:(id)object;
++ (void)postEventName:(NSString *)eventName object:(id)object afterDelay:(NSTimeInterval)delay;
 
 /**
  删除监听对象

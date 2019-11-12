@@ -56,6 +56,8 @@
 #define iOS9Later (CURRENT_SYS_VERSION >= 9.0f)
 #define iOS10Later (CURRENT_SYS_VERSION >= 10.0f)
 #define iOS11Later (CURRENT_SYS_VERSION >= 11.0f)
+#define iOS12Later (CURRENT_SYS_VERSION >= 12.0f)
+#define iOS13Later (CURRENT_SYS_VERSION >= 13.0f)
 
 /** 设备版本号 */
 #define CURRENT_SYS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
@@ -157,13 +159,13 @@
 #define device_iPhoneXMax ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2688), [[UIScreen mainScreen] currentMode].size) : NO)
 
 /** 设备是否为iPhone 是否是X及以上设备 */
-#define device_iPhoneXAbove ({                                                                                            \
-    BOOL isBool = NO;                                                                                                     \
-    if (@available(iOS 11.0, *)) {                                                                                        \
-        if (!UIEdgeInsetsEqualToEdgeInsets([UIApplication sharedApplication].keyWindow.safeAreaInsets, UIEdgeInsetsZero)) \
-            isBool = YES;                                                                                                 \
-    }                                                                                                                     \
-    isBool;                                                                                                               \
+#define device_iPhoneXAbove ({                                                    \
+    BOOL isBool = NO;                                                             \
+    if (@available(iOS 11.0, *)) {                                                \
+        if ([UIApplication sharedApplication].keyWindow.safeAreaInsets.top == 44) \
+            isBool = YES;                                                         \
+    }                                                                             \
+    isBool;                                                                       \
 })
 
 #pragma mark -

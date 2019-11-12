@@ -29,7 +29,7 @@
 
 @implementation CCEventNoticeCenter
 
-+ (void)addTarget:(id)target EventName:(NSString *)eventName action:(CCEventSubscriberActionBlock)action
++ (void)addTarget:(id)target eventName:(NSString *)eventName action:(CCEventSubscriberActionBlock)action
 {
     [[CCEventCenter sharedInstance] registSubscribModel:target markEvent:eventName action:action actionSEL:nil];
 }
@@ -51,6 +51,13 @@
     }
 
     [[CCEventCenter sharedInstance] postEvent:eventName delivery:event];
+}
+
++ (void)postEventName:(NSString *)eventName object:(id)object afterDelay:(NSTimeInterval)delay
+{
+    dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [CCEventNoticeCenter postEventName:eventName object:eventName];
+    });
 }
 
 + (void)removeTarget:(id)target

@@ -28,11 +28,29 @@
 
 @interface CCProgressHUD : NSObject
 
+/**
+ 提示消息(展现层级)
+
+ @param message 消息内容
+ @param view 显示层
+ */
 + (void)showMessage:(NSString *)message toView:(UIView *)view;
 + (void)showMessage:(NSString *)message toView:(UIView *)superView belowView:(UIView *)view;
 
 
+/**
+ 提示窗(Load)
+
+ @param detailsLabelText 提示消息
+ */
 + (void)show:(NSString *)detailsLabelText;
+
+/**
+ 提示窗(进度条)
+
+ @param message 提示消息
+ @param view 显示层
+ */
 + (void)showProgress:(NSString *)message view:(UIView *)view;
 + (void)setProgress:(float)progress view:(UIView *)view;
 

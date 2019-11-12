@@ -72,6 +72,7 @@ CGFloat buttonSpacerHeight = 0;
     if (self) {
         self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         _isPackage = YES;
+        _handleClose = YES;
         delegate = self;
         useMotionEffects = false;
         closeOnTouchUpOutside = YES;
@@ -159,11 +160,17 @@ CGFloat buttonSpacerHeight = 0;
 // Default button behaviour
 - (void)customIOS7dialogButtonTouchUpInside:(CustomIOSAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [self close];
+    if (_handleClose)
+        [self close];
 }
 
 // Dialog close animation then cleaning and removing the view from the parent
 - (void)close
+{
+    [self close:nil];
+}
+
+- (void)close:(void (^)(void))completion
 {
     CATransform3D currentTransform = dialogView.layer.transform;
 
@@ -189,6 +196,7 @@ CGFloat buttonSpacerHeight = 0;
                 [v removeFromSuperview];
             }
             [self removeFromSuperview];
+            !completion ?: completion();
         }];
 }
 

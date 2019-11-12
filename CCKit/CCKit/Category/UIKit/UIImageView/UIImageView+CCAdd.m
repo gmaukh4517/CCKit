@@ -31,7 +31,7 @@
 #import "SDImageCache.h"
 #import "UIView+WebCache.h"
 #import "UIImageView+WebCache.h"
-#import "Config.h"
+#import "CCConfig.h"
 
 typedef NS_ENUM(NSInteger, CCImageViewStatus) {
     /** 默认 */
@@ -98,8 +98,8 @@ typedef NS_ENUM(NSInteger, CCImageViewStatus) {
 
 // 画水印
 - (void)setImage:(UIImage *)image
-   withWaterMark:(UIImage *)mark
-          inRect:(CGRect)rect
+    withWaterMark:(UIImage *)mark
+           inRect:(CGRect)rect
 {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0) {
         UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, 0.0); // 0.0 for scale means "scale for device's main screen".
@@ -136,10 +136,11 @@ typedef NS_ENUM(NSInteger, CCImageViewStatus) {
     if ([markString respondsToSelector:@selector(drawInRect:withAttributes:)]) {
         [markString drawInRect:rect withAttributes:@{NSFontAttributeName : font}];
     } else {
-        // pre-iOS7.0
+// pre-iOS7.0
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [markString drawInRect:rect withFont:font];
+        [markString drawInRect:rect
+                      withFont:font];
 #pragma clang diagnostic pop
     }
 
@@ -149,10 +150,10 @@ typedef NS_ENUM(NSInteger, CCImageViewStatus) {
 }
 
 - (void)setImage:(UIImage *)image
-withStringWaterMark:(NSString *)markString
-         atPoint:(CGPoint)point
-           color:(UIColor *)color
-            font:(UIFont *)font
+    withStringWaterMark:(NSString *)markString
+                atPoint:(CGPoint)point
+                  color:(UIColor *)color
+                   font:(UIFont *)font
 {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0) {
         UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, 0.0); // 0.0 for scale means "scale for device's main screen".
@@ -166,10 +167,11 @@ withStringWaterMark:(NSString *)markString
     if ([markString respondsToSelector:@selector(drawAtPoint:withAttributes:)]) {
         [markString drawAtPoint:point withAttributes:@{NSFontAttributeName : font}];
     } else {
-        // pre-iOS7.0
+// pre-iOS7.0
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [markString drawAtPoint:point withFont:font];
+        [markString drawAtPoint:point
+                       withFont:font];
 #pragma clang diagnostic pop
     }
 
@@ -196,7 +198,7 @@ withStringWaterMark:(NSString *)markString
     NSURL *mURL = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError * error;
+        NSError *error;
         NSData *imgData = [NSData dataWithContentsOfURL:mURL options:NSDataReadingMappedIfSafe error:&error];
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -215,7 +217,7 @@ withStringWaterMark:(NSString *)markString
     NSURL *mURL = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError * error;
+        NSError *error;
         NSData *imgData = [NSData dataWithContentsOfURL:mURL options:NSDataReadingMappedIfSafe error:&error];
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -289,19 +291,19 @@ char detectorKey;
 {
     dispatch_queue_t queue = dispatch_queue_create("com.croath.betterface.queue", NULL);
     dispatch_async(queue, ^{
-        CIImage* image = aImage.CIImage;
+        CIImage *image = aImage.CIImage;
         if (image == nil) { // just in case the UIImage was created using a CGImage revert to the previous, slower implementation
             image = [CIImage imageWithCGImage:aImage.CGImage];
         }
         if (detector == nil) {
-            NSDictionary  *opts = [NSDictionary dictionaryWithObject:[self fast] ? CIDetectorAccuracyLow : CIDetectorAccuracyHigh
-                                                              forKey:CIDetectorAccuracy];
+            NSDictionary *opts = [NSDictionary dictionaryWithObject:[self fast] ? CIDetectorAccuracyLow : CIDetectorAccuracyHigh
+                                                             forKey:CIDetectorAccuracy];
             detector = [CIDetector detectorOfType:CIDetectorTypeFace
                                           context:nil
                                           options:opts];
         }
 
-        NSArray* features = [detector featuresInImage:image];
+        NSArray *features = [detector featuresInImage:image];
 
         if ([features count] == 0) {
             NSLog(@"no faces");
@@ -483,7 +485,7 @@ static CIDetector *_faceDetector;
 
     self.image = newImage;
 
-    //This is to show the red rectangle over the faces
+//This is to show the red rectangle over the faces
 #ifdef DEBUGGING_FACE_AWARE_FILL
     NSInteger theRedRectangleTag = -3312;
     UIView *facesRectLine = [self viewWithTag:theRedRectangleTag];
@@ -786,9 +788,9 @@ static const CGFloat kFontResizingProportion = 0.42f;
                        color:color
                     circular:isCircular
               textAttributes:@{
-                               NSFontAttributeName : [self fontForFontName:fontName],
-                               NSForegroundColorAttributeName : [UIColor whiteColor]
-                               }];
+                  NSFontAttributeName : [self fontForFontName:fontName],
+                  NSForegroundColorAttributeName : [UIColor whiteColor]
+              }];
 }
 
 - (void)setImageWithString:(NSString *)string
@@ -798,9 +800,9 @@ static const CGFloat kFontResizingProportion = 0.42f;
 {
     if (!textAttributes) {
         textAttributes = @{
-                           NSFontAttributeName : [self fontForFontName:nil],
-                           NSForegroundColorAttributeName : [UIColor whiteColor]
-                           };
+            NSFontAttributeName : [self fontForFontName:nil],
+            NSForegroundColorAttributeName : [UIColor whiteColor]
+        };
     }
 
     NSMutableString *displayString = [NSMutableString stringWithString:@""];
@@ -846,7 +848,6 @@ static const CGFloat kFontResizingProportion = 0.42f;
 
 - (UIFont *)fontForFontName:(NSString *)fontName
 {
-
     CGFloat fontSize = CGRectGetWidth(self.bounds) * kFontResizingProportion;
     if (fontName) {
         return [UIFont fontWithName:fontName size:fontSize];
@@ -857,7 +858,6 @@ static const CGFloat kFontResizingProportion = 0.42f;
 
 - (UIColor *)randomColor
 {
-
     float red = 0.0;
     while (red < 0.1 || red > 0.84) {
         red = drand48();
@@ -881,7 +881,6 @@ static const CGFloat kFontResizingProportion = 0.42f;
                           circular:(BOOL)isCircular
                     textAttributes:(NSDictionary *)textAttributes
 {
-
     CGFloat scale = [UIScreen mainScreen].scale;
 
     CGSize size = self.bounds.size;
@@ -923,7 +922,7 @@ static const CGFloat kFontResizingProportion = 0.42f;
                                 bounds.size.height / 2 - textSize.height / 2,
                                 textSize.width,
                                 textSize.height)
-      withAttributes:textAttributes];
+        withAttributes:textAttributes];
 
     UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -954,8 +953,8 @@ static const CGFloat kFontResizingProportion = 0.42f;
     gradientLayer.bounds = reflectionLayer.bounds;
     gradientLayer.position = CGPointMake(reflectionLayer.bounds.size.width / 2, reflectionLayer.bounds.size.height * 0.5);
     gradientLayer.colors = [NSArray arrayWithObjects:
-                            (id)[[UIColor clearColor] CGColor],
-                            (id)[[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3] CGColor], nil];
+                                        (id)[ [UIColor clearColor] CGColor ],
+                                        (id)[ [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3] CGColor ], nil];
 
     gradientLayer.startPoint = CGPointMake(0.5, 0.5);
     gradientLayer.endPoint = CGPointMake(0.5, 1.0);
@@ -1026,7 +1025,7 @@ static char imageLoadedModeKey;
     CCImageViewStatus status = self.cc_status;
     if (status == CCImageViewStatusClickDownload || status == CCImageViewStatusFail) {
         [self cc_reloadImageURL];
-         UITapGestureRecognizer *tap = objc_getAssociatedObject(self, &tapEventLoadedKey);
+        UITapGestureRecognizer *tap = objc_getAssociatedObject(self, &tapEventLoadedKey);
         [self removeGestureRecognizer:tap];
     } else {
         if (self.onTouchTapBlock) {
@@ -1106,12 +1105,12 @@ static char imageLoadedModeKey;
     objc_setAssociatedObject(self, &imageLoadedModeKey, @(loadedViewContentMode), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(CCImageCompletionBlock)imageCompletionBlock
+- (CCImageCompletionBlock)imageCompletionBlock
 {
     return objc_getAssociatedObject(self, @selector(imageCompletionBlock));
 }
 
--(void)setImageCompletionBlock:(CCImageCompletionBlock)imageCompletionBlock
+- (void)setImageCompletionBlock:(CCImageCompletionBlock)imageCompletionBlock
 {
     objc_setAssociatedObject(self, @selector(imageCompletionBlock), imageCompletionBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
@@ -1129,8 +1128,8 @@ static char imageLoadedModeKey;
           placeholderImage:(UIImage *)placeholder
 {
     [self cc_setImageWithURL:url
-            placeholderImage:placeholder
-       ErrorPlaceholderImage:CCResourceImage(@"cc_noimage")];
+             placeholderImage:placeholder
+        ErrorPlaceholderImage:CCResourceImage(@"cc_noimage")];
 }
 
 /**
@@ -1167,7 +1166,7 @@ static char imageLoadedModeKey;
 
         BOOL hasCache = NO;
         if (hasShowClickDownload)
-          hasCache = [[SDImageCache sharedImageCache] diskImageExistsWithKey:[url absoluteString]];
+            hasCache = [[SDImageCache sharedImageCache] diskImageExistsWithKey:[url absoluteString]];
 
         //需要显示点击下载图片的选项
         if (hasShowClickDownload && hasCache == NO) {
@@ -1203,15 +1202,15 @@ static char imageLoadedModeKey;
 }
 
 - (void)cc_setImageWithURLStr:(NSURL *)url
-          placeholderImage:(UIImage *)placeholder 
-           completionBlock:(CCImageCompletionBlock)block
+             placeholderImage:(UIImage *)placeholder
+              completionBlock:(CCImageCompletionBlock)block
 {
     if (block)
         [self setImageCompletionBlock:block];
-    
+
     [self cc_setImageWithURL:url
-            placeholderImage:placeholder
-       ErrorPlaceholderImage:CCResourceImage(@"cc_noimage")];
+             placeholderImage:placeholder
+        ErrorPlaceholderImage:CCResourceImage(@"cc_noimage")];
 }
 
 /**
@@ -1229,8 +1228,8 @@ static char imageLoadedModeKey;
 {
     NSURL *imageURL = [self cc_URLWithImageURL:urlString];
     [self cc_setImageWithURL:imageURL
-            placeholderImage:placeholder
-       ErrorPlaceholderImage:errorPlaceholder];
+             placeholderImage:placeholder
+        ErrorPlaceholderImage:errorPlaceholder];
 }
 
 - (void)cc_reloadImageURL
@@ -1242,54 +1241,58 @@ static char imageLoadedModeKey;
     pv.hidden = NO;
     [pv setNeedsDisplay];
     [self setNeedsDisplay];
-    
-    [self sd_setImageWithURL:self.cc_ImageURL placeholderImage:self.cc_Placeholder options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-        if(expectedSize <= 0)
-            return;
 
-        float pvalue = MAX(0, MIN(1, receivedSize / (float) expectedSize));
-        dispatch_main_async_safe(^{
-            if(!wself.image){
-                if(!pv)
-                    pv = [wself cc_progressView:YES];
+    [self sd_setImageWithURL:self.cc_ImageURL
+        placeholderImage:self.cc_Placeholder
+        options:SDWebImageRetryFailed
+        progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *_Nullable targetURL) {
+            if (expectedSize <= 0)
+                return;
 
-                pv.hidden = NO;
-            }
-            pv.progress = pvalue;
-        });
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        if (image){
-            [wself cc_hideProgressView];
-            wself.cc_status = CCImageViewStatusLoaded;
-            if(image.duration == 0){
-                if(wself.loadedViewContentMode > 0 && wself.contentMode != wself.loadedViewContentMode){
-                    wself.contentMode = wself.loadedViewContentMode;
-                    wself.image = image;
-                    [wself setNeedsDisplay];
+            float pvalue = MAX(0, MIN(1, receivedSize / (float)expectedSize));
+            dispatch_main_async_safe(^{
+                if (!wself.image) {
+                    if (!pv)
+                        pv = [wself cc_progressView:YES];
+
+                    pv.hidden = NO;
                 }
-                wself.backgroundColor = [UIColor clearColor];
-            }
-        }else{
-            if (error){
-                int reloadCount = [wself reloadCount];
-                if(reloadCount < 2){
-                    [wself setReloadCount:reloadCount+1];
-                    [wself cc_reloadImageURL];
-                    return ;
-                }
-
-                [wself cc_hideProgressView];
-                wself.cc_status = CCImageViewStatusFail;
-                [wself cc_showImage:self.cc_ErrorPlaceholder];
-            }else{
-                wself.cc_status = CCImageViewStatusNone;
-                [wself cc_hideProgressView];
-            }
+                pv.progress = pvalue;
+            });
         }
-        
-        if (wself.imageCompletionBlock)
-            wself.imageCompletionBlock(image,error,imageURL);
-    }];
+        completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            if (image) {
+                [wself cc_hideProgressView];
+                wself.cc_status = CCImageViewStatusLoaded;
+                if (image.duration == 0) {
+                    if (wself.loadedViewContentMode > 0 && wself.contentMode != wself.loadedViewContentMode) {
+                        wself.contentMode = wself.loadedViewContentMode;
+                        wself.image = image;
+                        [wself setNeedsDisplay];
+                    }
+                    wself.backgroundColor = [UIColor clearColor];
+                }
+            } else {
+                if (error) {
+                    int reloadCount = [wself reloadCount];
+                    if (reloadCount < 2) {
+                        [wself setReloadCount:reloadCount + 1];
+                        [wself cc_reloadImageURL];
+                        return;
+                    }
+
+                    [wself cc_hideProgressView];
+                    wself.cc_status = CCImageViewStatusFail;
+                    [wself cc_showImage:self.cc_ErrorPlaceholder];
+                } else {
+                    wself.cc_status = CCImageViewStatusNone;
+                    [wself cc_hideProgressView];
+                }
+            }
+
+            if (wself.imageCompletionBlock)
+                wself.imageCompletionBlock(image, error, imageURL);
+        }];
 }
 
 - (void)cc_init_imageview
@@ -1368,6 +1371,217 @@ static char imageLoadedModeKey;
     }
     //根据状态选择
     return state;
+}
+
+#pragma mark -
+#pragma mark :. 根据URL获取图片大小
+
+
+/**
+ 传入图片url  返回图片size
+
+ @param imageURL 图片网络地址
+ @return image size
+ */
++ (CGSize)downloadImageSizeWithURL:(id)imageURL
+{
+    return [UIImageView downloadImageSizeWithURL:imageURL targetWidth:0];
+}
+
+/**
+ 传入图片url  返回图片size
+
+ @param imageURL 图片网络地址
+ @param defineWidth 等比最大宽度
+ @return 返回图片Size
+ */
++ (CGSize)downloadImageSizeWithURL:(id)imageURL
+                       targetWidth:(CGFloat)defineWidth
+{
+    NSURL *URL = nil;
+    //判断url类型
+    if ([imageURL isKindOfClass:[NSURL class]])
+        URL = imageURL;
+
+    if ([imageURL isKindOfClass:[NSString class]])
+        URL = [NSURL URLWithString:imageURL];
+
+    if (URL == nil)
+        return CGSizeZero;
+
+    NSString *absoluteString = URL.absoluteString;
+    //通过SDWebimage 查看图片是否已有缓存，如果有直接获取，如果没有，请求文件头
+    if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:absoluteString]) {
+        UIImage *image = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:absoluteString];
+        if (!image) {
+            NSData *data = [[SDImageCache sharedImageCache] performSelector:@selector(diskImageDataBySearchingAllPathsForKey:) withObject:URL.absoluteString];
+            image = [UIImage imageWithData:data];
+        }
+
+        if (image) {
+            if (defineWidth > 0)
+                return [UIImageView imageCompressForWidthScale:image.size targetWidth:defineWidth];
+            return image.size;
+        }
+    }
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
+    NSString *pathExtendsion = [URL.pathExtension lowercaseString];
+    CGSize size = CGSizeZero;
+    //区分加载图片的类型
+    if ([pathExtendsion isEqualToString:@"png"])
+        size = [self downloadPNGImageSizeWithRequest:request];
+    else if ([pathExtendsion isEqual:@"gif"])
+        size = [self downloadGIFImageSizeWithRequest:request];
+    else
+        size = [self downloadJPGImageSizeWithRequest:request];
+
+    if (CGSizeEqualToSize(CGSizeZero, size)) {
+        NSData *imageData = [NSData dataWithContentsOfURL:URL];
+        UIImage *image = [UIImage imageWithData:imageData];
+        if (image) {
+            [[SDImageCache sharedImageCache] storeImage:image imageData:imageData forKey:URL.absoluteString toDisk:YES completion:nil];
+            size = image.size;
+        }
+    }
+    if (defineWidth > 0)
+        size = [UIImageView imageCompressForWidthScale:size targetWidth:defineWidth];
+
+    return size;
+}
+
+/**
+ 指定宽度按比例缩放
+
+ @param defineWidth 默认宽度
+ @return 返回缩放图片
+ */
++ (CGSize)imageCompressForWidthScale:(CGSize)sourceImageSize
+                         targetWidth:(CGFloat)defineWidth
+{
+    CGFloat width = sourceImageSize.width;
+    CGFloat height = sourceImageSize.height;
+    CGFloat targetWidth = defineWidth;
+    CGFloat targetHeight = height / (width / targetWidth);
+    CGSize size = CGSizeMake(targetWidth, targetHeight);
+    CGFloat scaleFactor = 0.0;
+    CGFloat scaledWidth = targetWidth;
+    CGFloat scaledHeight = targetHeight;
+    CGPoint thumbnailPoint = CGPointMake(0.0, 0.0);
+
+    if (CGSizeEqualToSize(sourceImageSize, size) == NO) {
+        CGFloat widthFactor = targetWidth / width;
+        CGFloat heightFactor = targetHeight / height;
+
+        if (widthFactor > heightFactor)
+            scaleFactor = widthFactor;
+        else
+            scaleFactor = heightFactor;
+
+        scaledWidth = width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+
+        if (widthFactor > heightFactor)
+            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+        else if (widthFactor < heightFactor)
+            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+    }
+
+    return CGSizeMake(scaledWidth, scaledHeight);
+}
+
+
+//PNG格式的图片
++ (CGSize)downloadPNGImageSizeWithRequest:(NSMutableURLRequest *)request
+{
+    [request setValue:@"bytes=16-23" forHTTPHeaderField:@"Range"];
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    if (data.length == 8) {
+        int w1 = 0, w2 = 0, w3 = 0, w4 = 0;
+        [data getBytes:&w1 range:NSMakeRange(0, 1)];
+        [data getBytes:&w2 range:NSMakeRange(1, 1)];
+        [data getBytes:&w3 range:NSMakeRange(2, 1)];
+        [data getBytes:&w4 range:NSMakeRange(3, 1)];
+        int w = (w1 << 24) + (w2 << 16) + (w3 << 8) + w4;
+        int h1 = 0, h2 = 0, h3 = 0, h4 = 0;
+        [data getBytes:&h1 range:NSMakeRange(4, 1)];
+        [data getBytes:&h2 range:NSMakeRange(5, 1)];
+        [data getBytes:&h3 range:NSMakeRange(6, 1)];
+        [data getBytes:&h4 range:NSMakeRange(7, 1)];
+        int h = (h1 << 24) + (h2 << 16) + (h3 << 8) + h4;
+        return CGSizeMake(w, h);
+    }
+    return CGSizeZero;
+}
+
+//GIF格式
++ (CGSize)downloadGIFImageSizeWithRequest:(NSMutableURLRequest *)request
+{
+    [request setValue:@"bytes=6-9" forHTTPHeaderField:@"Range"];
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    if (data.length == 4) {
+        short w1 = 0, w2 = 0;
+        [data getBytes:&w1 range:NSMakeRange(0, 1)];
+        [data getBytes:&w2 range:NSMakeRange(1, 1)];
+        short w = w1 + (w2 << 8);
+        short h1 = 0, h2 = 0;
+        [data getBytes:&h1 range:NSMakeRange(2, 1)];
+        [data getBytes:&h2 range:NSMakeRange(3, 1)];
+        short h = h1 + (h2 << 8);
+        return CGSizeMake(w, h);
+    }
+    return CGSizeZero;
+}
+
+//JPG格式
++ (CGSize)downloadJPGImageSizeWithRequest:(NSMutableURLRequest *)request
+{
+    [request setValue:@"bytes=0-209" forHTTPHeaderField:@"Range"];
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+
+    if ([data length] <= 0x58)
+        return CGSizeZero;
+
+    if ([data length] < 210) { // 肯定只有一个DQT字段
+        short w1 = 0, w2 = 0;
+        [data getBytes:&w1 range:NSMakeRange(0x60, 0x1)];
+        [data getBytes:&w2 range:NSMakeRange(0x61, 0x1)];
+        short w = (w1 << 8) + w2;
+        short h1 = 0, h2 = 0;
+        [data getBytes:&h1 range:NSMakeRange(0x5e, 0x1)];
+        [data getBytes:&h2 range:NSMakeRange(0x5f, 0x1)];
+        short h = (h1 << 8) + h2;
+        return CGSizeMake(w, h);
+    } else {
+        short word = 0x0;
+        [data getBytes:&word range:NSMakeRange(0x15, 0x1)];
+        if (word == 0xdb) {
+            [data getBytes:&word range:NSMakeRange(0x5a, 0x1)];
+            if (word == 0xdb) { // 两个DQT字段
+                short w1 = 0, w2 = 0;
+                [data getBytes:&w1 range:NSMakeRange(0xa5, 0x1)];
+                [data getBytes:&w2 range:NSMakeRange(0xa6, 0x1)];
+                short w = (w1 << 8) + w2;
+                short h1 = 0, h2 = 0;
+                [data getBytes:&h1 range:NSMakeRange(0xa3, 0x1)];
+                [data getBytes:&h2 range:NSMakeRange(0xa4, 0x1)];
+                short h = (h1 << 8) + h2;
+                return CGSizeMake(w, h);
+            } else { // 一个DQT字段
+                short w1 = 0, w2 = 0;
+                [data getBytes:&w1 range:NSMakeRange(0x60, 0x1)];
+                [data getBytes:&w2 range:NSMakeRange(0x61, 0x1)];
+                short w = (w1 << 8) + w2;
+                short h1 = 0, h2 = 0;
+                [data getBytes:&h1 range:NSMakeRange(0x5e, 0x1)];
+                [data getBytes:&h2 range:NSMakeRange(0x5f, 0x1)];
+                short h = (h1 << 8) + h2;
+                return CGSizeMake(w, h);
+            }
+        } else {
+            return CGSizeZero;
+        }
+    }
 }
 
 @end

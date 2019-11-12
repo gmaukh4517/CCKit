@@ -83,10 +83,7 @@
 
     dispatch_async(event_bus_dispatcher_serialQueue(), ^{
         CCEventObject *event = self.events[ eventName ];
-        if (!event) {
-            NSLog(@"!post_to_no_exist_event!\nName:%@", eventName);
-            return;
-        }
+        if (!event) return;
 
         if ([event isEmptyMap]) {
             [self removeEvent:eventName];

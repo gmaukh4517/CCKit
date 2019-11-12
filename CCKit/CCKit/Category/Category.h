@@ -55,6 +55,8 @@
 
 #pragma mark UIKit
 
+#import <CCKit/UIDevice+CCAdd.h>
+#import <CCKit/UIBarButtonItem+CCBadge.h>
 #import <CCKit/UIButton+CCAdd.h>
 #import <CCKit/UIColor+CCAdd.h>
 #import <CCKit/UIControl+CCAdd.h>
