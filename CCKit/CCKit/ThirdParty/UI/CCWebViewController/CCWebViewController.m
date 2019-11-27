@@ -46,8 +46,7 @@
 
 - (instancetype)initWithDelegate:(id<WKScriptMessageHandler>)scriptDelegate
 {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _scriptDelegate = scriptDelegate;
     }
     return self;
@@ -107,9 +106,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
 @property (nonatomic, strong) WKWebView *webWKView;
 
-@property (nonatomic, strong) UILabel *originLable;
-
-@property (nonatomic, strong) UIView *backgroundView;
+@property (nonatomic, weak) UILabel *originLable;
 
 @property (nonatomic, strong) CCWebViewProgress *webViewProgress;
 
@@ -192,7 +189,8 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)initControl
 {
     if (!self.isSource)
-        [self.view addSubview:self.backgroundView];
+        [self initOriginAddress];
+
     UIView *view;
     if (NSClassFromString(@"WKWebView"))
         view = self.webWKView;
@@ -220,6 +218,21 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     [self backButtonTouched:^(UIViewController *vc) {
         [weakSelf backButtonTouchedHandel:vc];
     }];
+}
+
+- (void)initOriginAddress
+{
+    CGFloat y = 10;
+    if (_navigationbarTransparent)
+        y = [self obtainNavigationbarHeight];
+
+    UILabel *originLable = [[UILabel alloc] initWithFrame:CGRectMake(0, y, CGRectGetWidth(self.view.bounds), 15)];
+    originLable.backgroundColor = [UIColor clearColor];
+    originLable.textAlignment = NSTextAlignmentCenter;
+    originLable.textColor = [UIColor lightGrayColor];
+    originLable.font = [UIFont systemFontOfSize:12];
+    originLable.text = @"网页由 www.CCKit.com 提供";
+    [self.view addSubview:_originLable = originLable];
 }
 
 #pragma mark -
@@ -318,21 +331,21 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
         NSSet *websiteDataTypes = [NSSet setWithArray:@[
-                                                        WKWebsiteDataTypeDiskCache,
-                                                        WKWebsiteDataTypeOfflineWebApplicationCache,
-                                                        WKWebsiteDataTypeMemoryCache,
-                                                        WKWebsiteDataTypeLocalStorage,
-                                                        WKWebsiteDataTypeCookies,
-                                                        WKWebsiteDataTypeSessionStorage,
-                                                        WKWebsiteDataTypeIndexedDBDatabases,
-                                                        WKWebsiteDataTypeWebSQLDatabases
-                                                        ]];
+            WKWebsiteDataTypeDiskCache,
+            WKWebsiteDataTypeOfflineWebApplicationCache,
+            WKWebsiteDataTypeMemoryCache,
+            WKWebsiteDataTypeLocalStorage,
+            WKWebsiteDataTypeCookies,
+            WKWebsiteDataTypeSessionStorage,
+            WKWebsiteDataTypeIndexedDBDatabases,
+            WKWebsiteDataTypeWebSQLDatabases
+        ]];
         NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
         [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes
                                                    modifiedSince:dateFrom
                                                completionHandler:^{
-                                                   // 结束回调
-                                               }];
+            // 结束回调
+        }];
     } else {
         NSString *libraryDir = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)[ 0 ];
         NSString *bundleId = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
@@ -411,8 +424,8 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         [self.scriptMessages addObject:javaScriptString];
         [self.webWKView evaluateJavaScript:javaScriptString
                          completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                             completionHandler ? completionHandler(response, error) : nil;
-                         }];
+            completionHandler ? completionHandler(response, error) : nil;
+        }];
     } else {
         [self.webViewJSContext evaluateScript:javaScriptString];
     }
@@ -567,18 +580,18 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         __weak typeof(self) weakSelf = self;
         [self.webWKView evaluateJavaScript:@"navigator.userAgent"
                          completionHandler:^(id result, NSError *error) {
-                             __strong typeof(weakSelf) strongSelf = weakSelf;
-                             NSString *newUserAgent = [[NSUserDefaults standardUserDefaults] objectForKey:@"firstUserAgent"] ?: result;
-                             if (![[NSUserDefaults standardUserDefaults] objectForKey:@"firstUserAgent"]) {
-                                 [[NSUserDefaults standardUserDefaults] setObject:result forKey:@"firstUserAgent"];
-                                 [[NSUserDefaults standardUserDefaults] synchronize];
-                             }
-                             newUserAgent = [newUserAgent stringByAppendingString:self.userAgent];
-                             if (@available(iOS 9.0, *))
-                                 [strongSelf.webWKView setCustomUserAgent:newUserAgent];
-                             else
-                                 [strongSelf.webWKView setValue:newUserAgent forKey:@"applicationNameForUserAgent"];
-                         }];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            NSString *newUserAgent = [[NSUserDefaults standardUserDefaults] objectForKey:@"firstUserAgent"] ?: result;
+            if (![[NSUserDefaults standardUserDefaults] objectForKey:@"firstUserAgent"]) {
+                [[NSUserDefaults standardUserDefaults] setObject:result forKey:@"firstUserAgent"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            newUserAgent = [newUserAgent stringByAppendingString:self.userAgent];
+            if (@available(iOS 9.0, *))
+                [strongSelf.webWKView setCustomUserAgent:newUserAgent];
+            else
+                [strongSelf.webWKView setValue:newUserAgent forKey:@"applicationNameForUserAgent"];
+        }];
     }
 }
 
@@ -594,7 +607,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         [_webWKView evaluateJavaScript:cookieStr
                      completionHandler:^(id result, NSError *error){
 
-                     }];
+        }];
     }
 }
 
@@ -639,33 +652,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     tipsLabel.textColor = [UIColor lightGrayColor];
     tipsLabel.text = @"网络出错，轻点屏幕重新加载";
     [networkErrorView addSubview:tipsLabel];
-}
-
-- (UILabel *)originLable
-{
-    if (!_originLable) {
-        CGFloat y = 10;
-        if (_navigationbarTransparent)
-            y = [self obtainNavigationbarHeight];
-
-        _originLable = [[UILabel alloc] initWithFrame:CGRectMake(0, y, CGRectGetWidth(self.view.bounds), 20)];
-        _originLable.backgroundColor = [UIColor clearColor];
-        _originLable.textAlignment = NSTextAlignmentCenter;
-        _originLable.textColor = [UIColor lightGrayColor];
-        _originLable.font = [UIFont systemFontOfSize:12];
-        _originLable.text = @"网页由 www.CCKit.com 提供";
-    }
-    return _originLable;
-}
-
-- (UIView *)backgroundView
-{
-    if (!_backgroundView) {
-        _backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
-        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [_backgroundView addSubview:self.originLable];
-    }
-    return _backgroundView;
 }
 
 - (WKWebViewConfiguration *)configuration
@@ -767,8 +753,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     if ([keyPath isEqualToString:kEstimatedProgress]) {
         [self progressChanged:[change objectForKey:NSKeyValueChangeNewKey]];
     } else if ([keyPath isEqualToString:kTitle]) {
-        _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
-
         if (self.isTitleFollowChange) {
             NSString *changeTitle = change[ NSKeyValueChangeNewKey ];
             if (![self.title isEqualToString:changeTitle]) {
@@ -787,7 +771,6 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)webViewProgress:(CCWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
     [_progressView setProgress:progress animated:YES];
-    _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
     if (self.isTitleFollowChange) {
         NSString *changeTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
         if (![self.title isEqualToString:changeTitle]) {
@@ -812,13 +795,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         self.progressView.progress = 0;
         [UIView animateWithDuration:.02
                          animations:^{
-                             self.progressView.alpha = 0;
-                         }];
+            self.progressView.alpha = 0;
+        }];
     } else if (self.progressView.alpha == 0) {
         [UIView animateWithDuration:.02
                          animations:^{
-                             self.progressView.alpha = 1;
-                         }];
+            self.progressView.alpha = 1;
+        }];
     }
 }
 
@@ -855,6 +838,15 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
             [self.navigationController.navigationBar setbarbackgroundView:[self.navigationColor colorWithAlphaComponent:alpha]];
         } else {
             [self.navigationController.navigationBar setbarbackgroundView:[self.navigationColor colorWithAlphaComponent:0]];
+        }
+    }
+
+    if (!self.isSource){
+        CGFloat navbar_change_point = 80;
+         CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY< 0) {
+             CGFloat alpha = MIN(1, 1 - ((offsetY + navbar_change_point) / navbar_change_point));
+            self.originLable.alpha = alpha;
         }
     }
 }

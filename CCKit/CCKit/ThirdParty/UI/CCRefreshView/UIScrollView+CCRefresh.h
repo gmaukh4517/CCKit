@@ -204,6 +204,7 @@
  */
 - (void)EndRefreshing;
 
+#pragma mark - 刷新设置
 /**
  *  上拉刷新头部控件的可见性
  */
@@ -227,4 +228,40 @@
 @property (copy, nonatomic) NSString *headerPullToRefreshText; // 默认:@"下拉可以刷新"
 @property (copy, nonatomic) NSString *headerReleaseToRefreshText; // 默认:@"松开立即刷新"
 @property (copy, nonatomic) NSString *headerRefreshingText; // 默认:@"正在刷新...."
+
+
+#pragma mark - 预加载
+
+/**
+ *  添加一个预加载刷新尾部控件
+ *
+ *  @param callback 回调
+ */
+- (void)addAdvanceWithCallback:(void (^)(void))callback;
+
+/**
+ *  移除预加载控件
+ */
+- (void)removeAdvance;
+
+/**
+ *  主动让预加载刷新头部控件进入刷新状态
+ */
+- (void)advanceBeginRefreshing;
+
+/**
+ *  让预加载刷新控件停止刷新状态
+ */
+- (void)advanceEndRefreshing;
+
+/**
+ *  预加载刷新控件的可见性
+ */
+@property(nonatomic, assign, getter=isAdvanceHidden) BOOL advanceHidden;
+
+/**
+ *  是否正在预加载
+ */
+@property(nonatomic, assign, readonly, getter=isAdvanceRefreshing) BOOL advanceRefreshing;
+
 @end

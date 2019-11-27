@@ -23,23 +23,24 @@
 // THE SOFTWARE.
 //
 
-#import "UIScrollView+CCRefresh.h"
-#import "CCRefreshHeaderView.h"
+#import "CCRefreshAdvanceView.h"
 #import "CCRefreshFooterView.h"
+#import "CCRefreshHeaderView.h"
+#import "UIScrollView+CCRefresh.h"
 #import <objc/runtime.h>
 
 #import "CCTransformRefresh.h"
 
 @interface UIScrollView ()
-@property(weak, nonatomic) CCRefreshHeaderView *header;
-@property(weak, nonatomic) CCRefreshFooterView *footer;
+@property (weak, nonatomic) CCRefreshHeaderView *header;
+@property (weak, nonatomic) CCRefreshFooterView *footer;
 
 /**
  *  @author CC, 16-03-18
  *
  *  @brief 旋转刷新
  */
-@property(nonatomic, weak) CCTransformRefresh *transformHeader;
+@property (nonatomic, weak) CCTransformRefresh *transformHeader;
 
 @end
 
@@ -49,6 +50,8 @@
 #pragma mark - 运行时相关
 static char CCRefreshHeaderViewKey;
 static char CCRefreshFooterViewKey;
+
+static char CCRefreshAdvanceViewKey;
 
 static char CCTransformRefreshKey;
 
@@ -90,6 +93,19 @@ static char CCTransformRefreshKey;
     [self didChangeValueForKey:@"CCTransformRefreshKey"];
 }
 
+- (void)setAdvance:(CCRefreshAdvanceView *)advance
+{
+    [self willChangeValueForKey:@"CCRefreshAdvanceViewKey"];
+    objc_setAssociatedObject(self, &CCRefreshAdvanceViewKey, advance, OBJC_ASSOCIATION_ASSIGN);
+    [self didChangeValueForKey:@"CCRefreshAdvanceViewKey"];
+}
+
+- (CCRefreshAdvanceView *)advance
+{
+    return objc_getAssociatedObject(self, &CCRefreshAdvanceViewKey);
+}
+
+
 #pragma mark :. 下拉旋转刷新
 - (void)addTransformRefresh:(NSString *)trasImageName
                    Callback:(void (^)(void))callback
@@ -122,14 +138,13 @@ static char CCTransformRefreshKey;
 }
 
 
-
 #pragma mark - 下拉刷新
 /**
  *  添加一个下拉刷新头部控件
  *
  *  @param callback 回调
  */
-- (void)addHeaderWithCallback:(void(^)(void))callback
+- (void)addHeaderWithCallback:(void (^)(void))callback
 {
     [self addHeaderWithCallback:callback dateKey:nil];
 }
@@ -143,7 +158,7 @@ static char CCTransformRefreshKey;
  *  @param callback 回调
  */
 - (void)addHeaderWithImageCallback:(UIImage *)image
-                          Callback:(void(^)(void))callback
+                          Callback:(void (^)(void))callback
 {
     [self addHeaderWithInit:image
                    Callback:callback
@@ -156,7 +171,7 @@ static char CCTransformRefreshKey;
  *  @param callback 回调
  *  @param dateKey 刷新时间保存的key值
  */
-- (void)addHeaderWithCallback:(void(^)(void))callback
+- (void)addHeaderWithCallback:(void (^)(void))callback
                       dateKey:(NSString *)dateKey
 {
     [self addHeaderWithInit:nil
@@ -165,7 +180,7 @@ static char CCTransformRefreshKey;
 }
 
 - (void)addHeaderWithInit:(UIImage *)image
-                 Callback:(void(^)(void))callback
+                 Callback:(void (^)(void))callback
                   dateKey:(NSString *)dateKey
 {
     // 1.创建新的header
@@ -230,7 +245,8 @@ static char CCTransformRefreshKey;
                      action:(SEL)action
                     dateKey:(NSString *)dateKey
 {
-    [self addHeaderWithTarget:target action:action
+    [self addHeaderWithTarget:target
+                       action:action
                       dateKey:dateKey
                         Style:CCRefreshViewStyleDefault];
 }
@@ -306,7 +322,7 @@ static char CCTransformRefreshKey;
  *
  *  @param callback 回调
  */
-- (void)addFooterWithCallback:(void(^)(void))callback
+- (void)addFooterWithCallback:(void (^)(void))callback
 {
     // 1.创建新的footer
     if (!self.footer) {
@@ -328,9 +344,8 @@ static char CCTransformRefreshKey;
  *  @param callback 回调函数
  */
 - (void)addFooterWithInit:(UIImage *)image
-                 Callback:(void(^)(void))callback
+                 Callback:(void (^)(void))callback
 {
-
     // 1.创建新的footer
     if (!self.footer) {
         CCRefreshFooterView *footer = [CCRefreshFooterView footer];
@@ -401,13 +416,6 @@ static char CCTransformRefreshKey;
     [self.footer endRefreshing];
 }
 
-
-- (void)EndRefreshing
-{
-    [self.header endRefreshing];
-    [self.footer endRefreshing];
-}
-
 /**
  *  下拉刷新头部控件的可见性
  */
@@ -424,6 +432,16 @@ static char CCTransformRefreshKey;
 - (BOOL)isFooterRefreshing
 {
     return self.footer.isRefreshing;
+}
+
+
+#pragma mark - 刷新设置
+
+- (void)EndRefreshing
+{
+    [self.header endRefreshing];
+    [self.footer endRefreshing];
+    [self.advance endRefreshing];
 }
 
 /**
@@ -489,5 +507,67 @@ static char CCTransformRefreshKey;
     return self.header.refreshingText;
 }
 
+#pragma mark - 预加载
+
+/**
+ *  添加一个上拉刷新尾部控件
+ *
+ *  @param callback 回调
+ */
+- (void)addAdvanceWithCallback:(void (^)(void))callback
+{
+    // 1.创建新的advance
+    if (!self.advance) {
+        CCRefreshAdvanceView *advance = [CCRefreshAdvanceView advance];
+        [self addSubview:advance];
+        self.advance = advance;
+    }
+
+    // 2.设置block回调
+    self.advance.beginRefreshingCallback = callback;
+}
+
+/**
+ *  移除上拉刷新尾部控件
+ */
+- (void)removeAdvance
+{
+    [self.advance removeFromSuperview];
+    self.advance = nil;
+}
+
+/**
+ *  主动让上拉刷新尾部控件进入刷新状态
+ */
+- (void)advanceBeginRefreshing
+{
+    [self.advance beginRefreshing];
+}
+
+/**
+ *  让上拉刷新尾部控件停止刷新状态
+ */
+- (void)advanceEndRefreshing
+{
+    [self.advance endRefreshing];
+}
+
+/**
+ *  下拉刷新头部控件的可见性
+ */
+- (void)setAdvanceHidden:(BOOL)hidden
+{
+    self.advance.hidden = hidden;
+}
+
+- (BOOL)isAdvanceHidden
+{
+    return self.advance.isHidden;
+}
+
+- (BOOL)isAdvanceRefreshing
+{
+    return self.advance.isRefreshing;
+}
 
 @end

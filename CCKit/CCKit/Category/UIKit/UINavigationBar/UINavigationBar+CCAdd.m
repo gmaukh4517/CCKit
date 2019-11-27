@@ -59,7 +59,8 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         for (UIView *view in self.subviews) {
             if ([NSStringFromClass(view.classForCoder) containsString:@"ContentView"]) {
                 if (iOS13Later) {
-
+                    UIEdgeInsets margins = view.layoutMargins;
+                    view.frame = CGRectMake(-margins.left + 15, -margins.top, margins.left + margins.right + view.frame.size.width -  25, margins.top + margins.bottom + view.frame.size.height);
                 } else {
                     view.layoutMargins = UIEdgeInsetsMake(0, 10, 0, 10);
                 }

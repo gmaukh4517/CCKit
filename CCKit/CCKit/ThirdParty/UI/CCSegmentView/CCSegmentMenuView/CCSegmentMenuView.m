@@ -376,10 +376,9 @@ static CGFloat const kSpacing = 15;
                      animations:^{
                          self.sliderView.centerX = currentButton.centerX;
                      }
-                     completion:^(BOOL finished) {
-                         if ([self.segmentDelegate respondsToSelector:@selector(didScrollSelectedIndex:)])
-                             [self.segmentDelegate didScrollSelectedIndex:self->_currentIndex];
-                     }];
+                     completion:nil];
+    if ([self.segmentDelegate respondsToSelector:@selector(didScrollSelectedIndex:)])
+    [self.segmentDelegate didScrollSelectedIndex:self->_currentIndex];
 }
 
 - (void)didBeginDraaWillBeginDragging:(CGPoint)offset

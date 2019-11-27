@@ -231,7 +231,7 @@
         self.statusLabel.hidden = YES;
         _arrowImage.hidden = YES;
         self.activityView.hidden = NO;
-        self.height = 30;
+        self.height = 50;
         [self setNeedsDisplay];
     } else {
         self.statusLabel.hidden = NO;

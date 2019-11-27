@@ -24,25 +24,25 @@
 //
 
 #import "CCTableViewHelper.h"
-#import "CCProperty.h"
 #import "CCConfig.h"
+#import "CCProperty.h"
+#import "NSObject+CCAdd.h"
+#import "NSString+CCAdd.h"
 #import "UITableView+CCAdd.h"
 #import "UITableViewCell+CCAdd.h"
 #import "UIView+CCTransfer.h"
 #import "UIView+Method.h"
 #import "UIViewController+CCAdd.h"
-#import "NSObject+CCAdd.h"
-#import "NSString+CCAdd.h"
 
 #import "UITableViewHeaderFooterView+CCAdd.h"
 
 #define CCAssert(condition, format, ...)                                                       \
-    do {                                                                                       \
-        _Pragma("clang diagnostic push")                                                       \
-            _Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
-                NSLog(format, ##__VA_ARGS__);                                                  \
-        _Pragma("clang diagnostic pop")                                                        \
-    } while (0);
+do {                                                                                       \
+_Pragma("clang diagnostic push")                                                       \
+_Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
+NSLog(format, ##__VA_ARGS__);                                                  \
+_Pragma("clang diagnostic pop")                                                        \
+} while (0);
 
 #define defaultInterval .5 //默认时间间隔
 
@@ -419,7 +419,7 @@
             curNumOfRows = subDataAry.count;
         }
     }
-    
+
     return curNumOfRows;
 }
 
@@ -453,20 +453,20 @@
                                                                headerORfooter:YES
                                                                cacheBySection:section
                                                                 configuration:^(id headerFooter) {
-                                                                    @strongify(self);
-                                                                    if ([headerFooter respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
-                                                                        [headerFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
-                                                                    }
+                    @strongify(self);
+                    if ([headerFooter respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
+                        [headerFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
+                    }
 
-                                                                    if (self.didHeaderWillDisplayBlock) {
-                                                                        self.didHeaderWillDisplayBlock(headerFooter, section, curModel);
-                                                                    }
-                                                                }];
+                    if (self.didHeaderWillDisplayBlock) {
+                        self.didHeaderWillDisplayBlock(headerFooter, section, curModel);
+                    }
+                }];
             }
         }
     }
 
-   if (@available(iOS 11.0, *))
+    if (@available(iOS 11.0, *))
         return curHeight;
     else
         return floor(curHeight);
@@ -553,19 +553,19 @@
                                                                headerORfooter:NO
                                                                cacheBySection:section
                                                                 configuration:^(UITableViewHeaderFooterView *headerFooter) {
-                                                                    @strongify(self);
-                                                                    if ([headerFooter respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
-                                                                        [headerFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
-                                                                    }
+                    @strongify(self);
+                    if ([headerFooter respondsToSelector:@selector(cc_headerFooterWillDisplayWithModel:section:)]) {
+                        [headerFooter cc_headerFooterWillDisplayWithModel:curModel section:section];
+                    }
 
-                                                                    if (self.didFooterWillDisplayBlock) {
-                                                                        self.didFooterWillDisplayBlock(headerFooter, section, curModel);
-                                                                    }
-                                                                }];
+                    if (self.didFooterWillDisplayBlock) {
+                        self.didFooterWillDisplayBlock(headerFooter, section, curModel);
+                    }
+                }];
             }
         }
     }
-    
+
     if (@available(iOS 11.0, *))
         return curHeight;
     else
@@ -719,17 +719,17 @@
             curHeight = [tableView cc_heightForCellWithIdentifier:curCellIdentifier
                                                  cacheByIndexPath:indexPath
                                                     configuration:^(UITableViewCell *cell) {
-                                                        @strongify(self);
-                                                        if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
-                                                            cell.cc_dataSources = curModel;
-                                                            cell.cc_indexPath = indexPath;
-                                                            [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
-                                                        }
+                @strongify(self);
+                if ([cell respondsToSelector:@selector(cc_cellWillDisplayWithModel:indexPath:)]) {
+                    cell.cc_dataSources = curModel;
+                    cell.cc_indexPath = indexPath;
+                    [cell cc_cellWillDisplayWithModel:curModel indexPath:indexPath];
+                }
 
-                                                        if (self.didWillDisplayBlock) {
-                                                            self.didWillDisplayBlock(cell, indexPath, curModel, NO);
-                                                        }
-                                                    }];
+                if (self.didWillDisplayBlock) {
+                    self.didWillDisplayBlock(cell, indexPath, curModel, NO);
+                }
+            }];
         }
     } else {
         curHeight = tableView.rowHeight;
@@ -1190,7 +1190,7 @@
     if (curIndexSet) {
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_tableView beginUpdates];
-        [self.cc_tableView insertSections:curIndexSet withRowAnimation:UITableViewRowAnimationNone];
+        [self.cc_tableView insertSections:curIndexSet withRowAnimation:UITableViewRowAnimationFade];
         [self.cc_tableView endUpdates];
     } else {
         __block NSMutableArray *curIndexPaths = [NSMutableArray arrayWithCapacity:newDataAry.count];
@@ -1199,7 +1199,7 @@
         }];
         [subAry addObjectsFromArray:newDataAry];
         [self.cc_tableView beginUpdates];
-        [self.cc_tableView insertRowsAtIndexPaths:curIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [self.cc_tableView insertRowsAtIndexPaths:curIndexPaths withRowAnimation:UITableViewRowAnimationFade];
         [self.cc_tableView endUpdates];
     }
 }
@@ -1299,7 +1299,6 @@
         _dataArray = [NSMutableArray new];
     }
     return _dataArray;
-    }
+}
 
-
-    @end
+@end

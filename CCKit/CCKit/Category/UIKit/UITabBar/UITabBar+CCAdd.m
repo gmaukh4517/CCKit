@@ -44,7 +44,7 @@ static const NSTimeInterval kBadgeRadius = 5;
     //新建小红点
     UIView *badgeView = [UIView new];
     badgeView.tag = 888 + index;
-    badgeView.layer.cornerRadius = kBadgeRadius;		 //圆形
+    badgeView.layer.cornerRadius = kBadgeRadius;    //圆形
     badgeView.backgroundColor = [UIColor redColor]; //颜色：红色
     CGRect tabFrame = self.frame;
 
@@ -79,7 +79,7 @@ static const NSTimeInterval kBadgeRadius = 5;
 - (void)removeBadgePointOnItemIndex:(NSInteger)index
 {
     for (UIView *subView in self.subviews) {
-        if (subView.tag == 888+index) {
+        if (subView.tag == 888 + index) {
             [subView removeFromSuperview];
         }
     }

@@ -1,5 +1,5 @@
 //
-//  UI.h
+//  UITabBarItem+CCAnimation.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,27 +23,33 @@
 // THE SOFTWARE.
 //
 
-#ifndef CCKit_UI_h
-#define CCKit_UI_h
+#import <UIKit/UIKit.h>
 
-#import <CCKit/CCActionSheet.h>
-#import <CCKit/CCTransformRefresh.h>
-#import <CCKit/UIScrollView+CCRefresh.h>
-#import <CCKit/CCWebViewController.h>
-#import <CCKit/CCCameraViewController.h>
-#import <CCKit/CCPhotoBrowser.h>
-#import <CCKit/CCPopupView.h>
-#import <CCKit/CCSegmentMenuView.h>
-#import <CCKit/CCSegmentView.h>
-#import <CCKit/CCMessageInputView.h>
-#import <CCKit/CCMessageTextView.h>
-#import <CCKit/CCEmotionManagerView.h>
-#import <CCKit/CCEmotionTextAttachment.h>
-#import <CCKit/CCEmotionManager.h>
-#import <CCKit/CCEmotion.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import <CCKit/UITabBarItem+CCAnimation.h>
+typedef NS_ENUM(NSInteger, CCTabBarItemAnimationStyle) {
+    CCTabBarItemAnimationStyleNone = 0,
+    // 弹性动画
+    CCTabBarItemAnimationStyleElasticity,
+    // 重力弹跳动画
+    CCTabBarItemAnimationStyleGravityBounce,
+    // 旋转动画
+    CCTabBarItemAnimationStyleRotate,
+    // 贞动画
+    CCTabBarItemAnimationStyleFrame,
+    // 转场动画
+    CCTabBarItemAnimationStyleTransition,
+};
 
-#import <CCKit/CCLoadLogoView.h>
+@interface UITabBarItem (CCAnimation)
 
-#endif
+/// 背景动画，默认NO
+@property (nonatomic, assign) BOOL isBackgroundAnimation;
+
+@property (nonatomic, assign) CCTabBarItemAnimationStyle animationStyle;
+// 播放动画图片
+@property(nonatomic, strong) NSArray <CIImage *>*images;
+
+@end
+
+NS_ASSUME_NONNULL_END
