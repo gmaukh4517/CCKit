@@ -106,7 +106,7 @@ static CCDatabase *database = nil;
 
 + (NSString *)createDirInDocument:(NSString *)pathName
 {
-    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
     if (!pathName || pathName.length == 0)
         documentPath = [documentPath stringByAppendingPathComponent:@"CCDataBases"];
     else

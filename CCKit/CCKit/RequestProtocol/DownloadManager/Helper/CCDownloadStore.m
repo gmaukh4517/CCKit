@@ -49,7 +49,7 @@
 static NSString *const DEFAULT_DB_NAME = @"CCDownloadDatabase.sqlite";
 
 static NSString *const CREATE_TABLE_SQL =
-    @"CREATE TABLE IF NOT EXISTS %@ ( \
+@"CREATE TABLE IF NOT EXISTS %@ ( \
 id TEXT NOT NULL, \
 json TEXT NOT NULL, \
 createdTime TEXT NOT NULL, \
@@ -72,6 +72,25 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 
 @implementation CCDownloadStore
 
++ (NSString *)createDirInDocument:(NSString *)pathName
+{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
+    if (!pathName || pathName.length == 0)
+        documentPath = [documentPath stringByAppendingPathComponent:@"CCDataBases"];
+    else
+        documentPath = [documentPath stringByAppendingPathComponent:pathName];
+
+    BOOL isDir = NO;
+    BOOL isCreated = [[NSFileManager defaultManager] fileExistsAtPath:documentPath isDirectory:&isDir];
+    if (!isCreated || !isDir) {
+        NSError *error = nil;
+        BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:documentPath withIntermediateDirectories:YES attributes:nil error:&error];
+        if (success == NO)
+            NSLog(@"create dir error: %@", error.debugDescription);
+    }
+    return documentPath;
+}
+
 + (BOOL)checkTableName:(NSString *)tableName
 {
     if (tableName == nil || tableName.length == 0 || [tableName rangeOfString:@" "].location != NSNotFound) {
@@ -83,7 +102,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 - (id)initDBWithName:(NSString *)dbName
 {
     if (self = [super init]) {
-        _dbPath = [PATH_OF_DOCUMENT stringByAppendingPathComponent:dbName];
+        _dbPath = [[CCDownloadStore createDirInDocument:nil] stringByAppendingPathComponent:dbName];
 
         if (_dbQueue)
             [self close];
@@ -112,7 +131,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 
 - (BOOL)checkTableName:(NSString *)tableName
 {
-    NSString *sql = [NSString stringWithFormat:@"select count(*) as 'count' from sqlite_master where type ='table' and name = %@", tableName];
+    NSString *sql = [NSString stringWithFormat:@"select count(*) as 'count' from sqlite_master where type ='table' and name = '%@'", tableName];
     __block BOOL isCkeck = NO;
     [_dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:sql];

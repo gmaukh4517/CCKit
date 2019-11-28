@@ -2,7 +2,7 @@
 //  CCKeyValueStore.m
 //  CCKit
 //
-// Copyright (c) 2015 CC 
+// Copyright (c) 2015 CC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,6 @@
 #import "FMDatabase.h"
 #import "FMDatabaseQueue.h"
 
-#define PATH_OF_DOCUMENT [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
-
 @implementation CCKeyValueItem
 
 - (NSString *)description
@@ -46,7 +44,12 @@
 
 @end
 
+// 缓存数据最大天数
+static const NSInteger kSqliteCacheDay = 30;
+
 static NSString *const DEFAULT_DB_NAME = @"CCDatabase.sqlite";
+
+static NSString *const VERIFICATION_TABLE = @"select count(*) as 'count' from sqlite_master where type ='table' and name = '%@'";
 
 static NSString *const CREATE_TABLE_SQL =
 @"CREATE TABLE IF NOT EXISTS %@ ( \
@@ -58,20 +61,41 @@ PRIMARY KEY(id)) \
 
 static NSString *const UPDATE_ITEM_SQL = @"REPLACE INTO %@ (id, json, createdTime) values (?, ?, ?)";
 
-static NSString *const QUERY_ITEM_SQL = @"SELECT json, createdTime from %@ where id = ? Limit 1";
+static NSString *const QUERY_ITEM_SQL = @"SELECT json, createdTime FROM %@ WHERE id = ? Limit 1";
 
-static NSString *const SELECT_ALL_SQL = @"SELECT * from %@";
+static NSString *const SELECT_ALL_SQL = @"SELECT * FROM %@";
 
-static NSString *const CLEAR_ALL_SQL = @"DELETE from %@";
+static NSString *const CLEAR_ALL_SQL = @"DELETE FROM %@";
 
-static NSString *const DELETE_ITEM_SQL = @"DELETE from %@ where id = ?";
+static NSString *const DELETE_ITEM_SQL = @"DELETE FROM %@ WHERE id = ?";
 
-static NSString *const DELETE_ITEMS_SQL = @"DELETE from %@ where id in ( %@ )";
+static NSString *const DELETE_ITEMS_SQL = @"DELETE FROM %@ WHERE id IN ( %@ )";
 
-static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id like ? ";
+static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE FROM %@ WHERE id LIKE ? ";
+
+static NSString *const LRU_CACHE_SQL = @"DELETE FROM '%@' WHERE id IN (SELECT id FROM '%@'  WHERE createdTime < ?)";
 
 @implementation CCKeyValueStore
 
+
++ (NSString *)createDirInDocument:(NSString *)pathName
+{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
+    if (!pathName || pathName.length == 0)
+        documentPath = [documentPath stringByAppendingPathComponent:@"CCDataBases"];
+    else
+        documentPath = [documentPath stringByAppendingPathComponent:pathName];
+
+    BOOL isDir = NO;
+    BOOL isCreated = [[NSFileManager defaultManager] fileExistsAtPath:documentPath isDirectory:&isDir];
+    if (!isCreated || !isDir) {
+        NSError *error = nil;
+        BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:documentPath withIntermediateDirectories:YES attributes:nil error:&error];
+        if (success == NO)
+            NSLog(@"create dir error: %@", error.debugDescription);
+    }
+    return documentPath;
+}
 
 + (BOOL)checkTableName:(NSString *)tableName
 {
@@ -85,8 +109,8 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 - (id)initDBWithName:(NSString *)dbName
 {
     if (self = [super init]) {
-        _dbPath = [PATH_OF_DOCUMENT stringByAppendingPathComponent:dbName];
-        
+        _dbPath = [[CCKeyValueStore createDirInDocument:nil] stringByAppendingPathComponent:dbName];
+
         if (_dbQueue)
             [self close];
         _dbQueue = [FMDatabaseQueue databaseQueueWithPath:_dbPath];
@@ -100,7 +124,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         _dbPath = dbPath;
         if (_dbQueue)
             [self close];
-        
+
         _dbQueue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
     }
     return self;
@@ -108,7 +132,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 
 - (BOOL)checkTableName:(NSString *)tableName
 {
-    NSString *sql = [NSString stringWithFormat:@"select count(*) as 'count' from sqlite_master where type ='table' and name = %@", tableName];
+    NSString *sql = [NSString stringWithFormat:VERIFICATION_TABLE, tableName];
     __block BOOL isCkeck = NO;
     [_dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:sql];
@@ -160,7 +184,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return;
-    
+
     NSError *error;
     NSData *data = object;
     if (![data isKindOfClass:[NSData class]]) {
@@ -170,15 +194,18 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         //        CCNSLogger(@"ERROR, faild to get json data");
         return;
     }
-    
+
     NSString *jsonString = [[NSString alloc] initWithData:data encoding:(NSUTF8StringEncoding)];
     NSDate *createdTime = [NSDate date];
+    NSDate *lRUTime = [NSDate dateWithTimeInterval:(-kSqliteCacheDay * 60) * 60 * 24 + 60 * 10 sinceDate:createdTime];
     NSString *sql = [NSString stringWithFormat:UPDATE_ITEM_SQL, tableName];
+    NSString *lruSql = [NSString stringWithFormat:LRU_CACHE_SQL, tableName, tableName];
     __block BOOL result;
     [_dbQueue inDatabase:^(FMDatabase *db) {
+        result = [db executeUpdate:lruSql, lRUTime];
         result = [db executeUpdate:sql, objectId, jsonString, createdTime];
     }];
-    
+
     if (!result) {
         //        CCNSLogger(@"ERROR, failed to insert/replace into table: %@", tableName);
     }
@@ -201,11 +228,11 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return nil;
-    
+
     if (![self checkTableName:tableName]) {
         [self createTableWithName:tableName];
     }
-    
+
     NSString *sql = [NSString stringWithFormat:QUERY_ITEM_SQL, tableName];
     __block NSString *json = nil;
     __block NSDate *createdTime = nil;
@@ -217,7 +244,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         }
         [rs close];
     }];
-    
+
     if (json) {
         NSError *error;
         id result = [NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding]
@@ -227,7 +254,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
             //            CCNSLogger(@"ERROR, faild to prase to json");
             return nil;
         }
-        
+
         CCKeyValueItem *item = [[CCKeyValueItem alloc] init];
         item.itemId = objectId;
         item.itemObject = result;
@@ -246,7 +273,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         //        CCNSLogger(@"error, string is nil");
         return;
     }
-    
+
     [self putObject:@[ string ]
              withId:stringId
           intoTable:tableName];
@@ -257,8 +284,8 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     NSArray *array = [self getObjectById:stringId fromTable:tableName];
     if (array && [array isKindOfClass:[NSArray class]])
-        return array[0];
-    
+        return array[ 0 ];
+
     return nil;
 }
 
@@ -270,7 +297,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         //        CCNSLogger(@"error, number is nil");
         return;
     }
-    
+
     [self putObject:@[ number ]
              withId:numberId
           intoTable:tableName];
@@ -281,7 +308,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     NSArray *array = [self getObjectById:numberId fromTable:tableName];
     if (array && [array isKindOfClass:[NSArray class]]) {
-        return array[0];
+        return array[ 0 ];
     }
     return nil;
 }
@@ -290,7 +317,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return nil;
-    
+
     NSString *sql = [NSString stringWithFormat:SELECT_ALL_SQL, tableName];
     __block NSMutableArray *result = [NSMutableArray array];
     [_dbQueue inDatabase:^(FMDatabase *db) {
@@ -316,7 +343,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         } else
             item.itemObject = object;
     }
-    
+
     return result;
 }
 
@@ -325,13 +352,13 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return;
-    
+
     NSString *sql = [NSString stringWithFormat:DELETE_ITEM_SQL, tableName];
     __block BOOL result;
     [_dbQueue inDatabase:^(FMDatabase *db) {
         result = [db executeUpdate:sql, objectId];
     }];
-    
+
     if (!result) {
         //        CCNSLogger(@"ERROR, failed to delete item from table: %@", tableName);
     }
@@ -342,7 +369,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return;
-    
+
     NSMutableString *stringBuilder = [NSMutableString string];
     for (id objectId in objectIdArray) {
         NSString *item = [NSString stringWithFormat:@" '%@' ", objectId];
@@ -353,14 +380,14 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
             [stringBuilder appendString:item];
         }
     }
-    
+
     NSString *sql = [NSString stringWithFormat:DELETE_ITEMS_SQL, tableName, stringBuilder];
     __block BOOL result;
-    
+
     [_dbQueue inDatabase:^(FMDatabase *db) {
         result = [db executeUpdate:sql];
     }];
-    
+
     if (!result) {
         //        CCNSLogger(@"ERROR, failed to delete items by ids from table: %@", tableName);
     }
@@ -371,14 +398,14 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return;
-    
+
     NSString *sql = [NSString stringWithFormat:DELETE_ITEMS_WITH_PREFIX_SQL, tableName];
     NSString *prefixArgument = [NSString stringWithFormat:@"%@%%", objectIdPrefix];
     __block BOOL result;
     [_dbQueue inDatabase:^(FMDatabase *db) {
         result = [db executeUpdate:sql, prefixArgument];
     }];
-    
+
     if (!result) {
         //        CCNSLogger(@"ERROR, failed to delete items by id prefix from table: %@", tableName);
     }
@@ -393,10 +420,9 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 - (NSArray *)getItemsFromTable:(NSString *)tableName
                      withRange:(NSRange)range
 {
-    
     if ([CCKeyValueStore checkTableName:tableName] == NO)
         return nil;
-    
+
     NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ LIMIT %lu, %lu", tableName, (unsigned long)range.location, (unsigned long)range.length];
     __block NSMutableArray *result = [NSMutableArray array];
     [_dbQueue inDatabase:^(FMDatabase *db) {
@@ -410,7 +436,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
         }
         [rs close];
     }];
-    
+
     // parse json string to object
     NSError *error;
     for (CCKeyValueItem *item in result) {
@@ -429,9 +455,9 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 - (BOOL)isExistTableWithName:(NSString *)tableName
 {
     __block BOOL result;
-    
+
     [_dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"select count(*) as 'count' from sqlite_master where type ='table' and name = ?", tableName];
+        FMResultSet *rs = [db executeQuery:[NSString stringWithFormat:VERIFICATION_TABLE, tableName]];
         while ([rs next]) {
             // just print out what we've got in a number of formats.
             NSInteger count = [rs intForColumn:@"count"];
@@ -441,7 +467,7 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
                 result = YES;
             }
         }
-        
+
     }];
     return result;
 }
@@ -466,9 +492,9 @@ static NSString *const DELETE_ITEMS_WITH_PREFIX_SQL = @"DELETE from %@ where id 
 {
     __block BOOL success;
     __block NSError *error;
-    
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
+
     // delete the old db.
     if ([fileManager fileExistsAtPath:DBName]) {
         [_dbQueue inDatabase:^(FMDatabase *db) {
