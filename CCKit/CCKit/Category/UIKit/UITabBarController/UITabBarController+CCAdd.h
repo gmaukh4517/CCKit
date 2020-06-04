@@ -42,18 +42,18 @@
 
 /**
  设置切换选项卡并跳转页面
-
+ 
  @param selectedIndex 选项卡下标
  @param viewControllers 跳转的页面
  @param animated  是否动画效果
  */
 - (void)setSelectedIndex:(NSUInteger)selectedIndex
-      pushViewControllers:(NSArray *)viewControllers
+     pushViewControllers:(NSArray *)viewControllers
                 animated:(BOOL)animated;
 
 /**
  设置切换选项卡并跳转页面与返回标题
-
+ 
  @param selectedIndex 选项卡下标
  @param viewController 跳转页面
  @param title 返回按钮标题
@@ -74,5 +74,18 @@
  */
 - (void)popToRootWithPushViewConroller:(UIViewController *)viewController
                               animated:(BOOL)animated;
+
+/**
+ *  @author CC, 2020-05-25
+ *
+ *  @brief 跳转到指定选项卡并且设置参数
+ *
+ *  @param selectedIndex 选项卡下标
+ *  @param parameters 传递餐宿
+ *  @param animated 动画效果
+ */
+- (void)setSelectedIndex:(NSUInteger)selectedIndex
+          pushParameters:(NSDictionary *)parameters
+                animated:(BOOL)animated;
 
 @end

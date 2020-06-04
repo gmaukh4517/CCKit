@@ -48,7 +48,7 @@
 
 /**
  设置切换选项卡并跳转页面
-
+ 
  @param selectedIndex 选项卡下标
  @param viewControllers 跳转的页面
  @param animated  是否动画效果
@@ -67,16 +67,16 @@
                 id viewController = [viewControllers objectAtIndex:i];
                 if ([viewController isKindOfClass:[NSString class]])
                     viewController = [NSClassFromString([viewControllers objectAtIndex:i]) new];
-
+                
                 ((UIViewController *)viewController).hidesBottomBarWhenPushed = YES;
                 [selectedNavigationViewControllers addObject:viewController];
             }
         }
-
+        
         selectedNavigationController.viewControllers = selectedNavigationViewControllers;
         for (UIViewController *viewController in selectedNavigationController.viewControllers)
             viewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-
+        
         if (viewControllers.count) {
             id viewController = viewControllers.lastObject;
             if ([viewController isKindOfClass:[NSString class]])
@@ -88,7 +88,7 @@
 
 /**
  设置切换选项卡并跳转页面与返回标题
-
+ 
  @param selectedIndex 选项卡下标
  @param viewController 跳转页面
  @param title 返回按钮标题
@@ -105,10 +105,10 @@
     if (selectedNavigationController) {
         if (title)
             selectedNavigationController.topViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:nil];
-
+        
         for (UIViewController *viewController in selectedNavigationController.viewControllers)
             viewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-
+        
         [selectedNavigationController pushViewController:viewController animated:animated];
     }
 }
@@ -130,6 +130,30 @@
         [selectedNavigationController pushViewController:viewController
                                                 animated:animated];
     }
+}
+
+/**
+ *  @author CC, 2020-05-25
+ *
+ *  @brief 跳转到指定选项卡并且设置参数
+ *
+ *  @param selectedIndex 选项卡下标
+ *  @param parameters 传递餐宿
+ *  @param animated 动画效果
+ */
+- (void)setSelectedIndex:(NSUInteger)selectedIndex
+          pushParameters:(NSDictionary *)parameters
+                animated:(BOOL)animated
+{
+    UINavigationController *selectedNavigationController = [self.viewControllers objectAtIndex:selectedIndex];
+    [selectedNavigationController popToRootViewControllerAnimated:NO];
+    if (selectedNavigationController) {
+        UIViewController *viewController = selectedNavigationController.topViewController;
+        for (NSString *key in parameters.allKeys)
+            [viewController setValue:[parameters objectForKey:key] forKey:key];
+    }
+    
+    [self setSelectedIndex:selectedIndex];
 }
 
 @end

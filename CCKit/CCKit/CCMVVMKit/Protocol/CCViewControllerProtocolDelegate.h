@@ -31,19 +31,61 @@
 @protocol CCViewControllerProtocolDelegate <NSObject>
 @optional
 
+#pragma mark -
+#pragma mark :. 类别管理器
+
 /**
  *  @author CC, 16-03-14
- *  
+ *
  *  @brief 所属类别视图模型
  */
 - (Class)cc_classOfViewModel;
 
 /**
+ *  @author CC, 20-03-04
+ *
+ *  @brief 所属类别视图模型
+ */
+- (NSString *)cc_classNameViewModel;
+
+/**
  *  @author CC, 16-03-14
- *  
+ *
  *  @brief 所属类别视图管理器
  */
 - (Class)cc_classOfViewManager;
+
+/**
+ *  @author CC, 20-03-04
+ *
+ *  @brief 所属类别视图管理器
+ */
+- (NSString *)cc_classNameViewManager;
+
+
+#pragma mark -
+#pragma mark :. 页面初始化函数
+
+/**
+ *  @author CC, 20-03-04
+ *
+ *  @brief  所属类别始化导航
+ */
+- (void)initNavigation;
+
+/**
+ *  @author CC, 20-03-04
+ *
+ *  @brief 所属类别初始换视图控件
+ */
+- (void)initControl;
+
+/**
+ *  @author CC, 20-03-04
+ *
+ *  @brief 所属类别初始化数据加载
+ */
+- (void)initLoadData;
 
 @end
 

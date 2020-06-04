@@ -102,12 +102,22 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 
 - (void)setCc_Section:(NSInteger)cc_Section
 {
-    objc_setAssociatedObject(self, @selector(cc_Section), @(cc_Section), OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, @selector(cc_Section), [NSNumber numberWithInteger:cc_Section], OBJC_ASSOCIATION_RETAIN);
 }
 
 - (NSInteger)cc_Section
 {
-    return (NSInteger)objc_getAssociatedObject(self, @selector(cc_Section));
+    return [objc_getAssociatedObject(self, @selector(cc_Section)) integerValue];
+}
+
+- (void)setCc_rowCount:(NSInteger)cc_rowCount
+{
+    objc_setAssociatedObject(self, @selector(cc_rowCount), [NSNumber numberWithInteger:cc_rowCount], OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSInteger)cc_rowCount
+{
+    return [objc_getAssociatedObject(self, @selector(cc_rowCount)) integerValue];
 }
 
 - (void)cc_headerFooterWillDisplayWithModel:(id)cModel

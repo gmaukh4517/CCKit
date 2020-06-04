@@ -66,14 +66,14 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 - (NSRange)selectedRange
 {
     UITextPosition *beginning = self.beginningOfDocument;
-
+    
     UITextRange *selectedRange = self.selectedTextRange;
     UITextPosition *selectionStart = selectedRange.start;
     UITextPosition *selectionEnd = selectedRange.end;
-
+    
     NSInteger location = [self offsetFromPosition:beginning toPosition:selectionStart];
     NSInteger length = [self offsetFromPosition:selectionStart toPosition:selectionEnd];
-
+    
     return NSMakeRange(location, length);
 }
 /**
@@ -139,11 +139,11 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 - (void)pinchGesture:(UIPinchGestureRecognizer *)gestureRecognizer
 {
     if (!self.isZoomEnabled) return;
-
+    
     CGFloat pointSize = (gestureRecognizer.velocity > 0.0f ? 1.0f : -1.0f) + self.font.pointSize;
-
+    
     pointSize = MAX(MIN(pointSize, self.maxFontSize), self.minFontSize);
-
+    
     self.font = [UIFont fontWithName:self.font.fontName size:pointSize];
 }
 
@@ -152,11 +152,11 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     objc_setAssociatedObject(self, &zoomEnabledKey, [NSNumber numberWithBool:zoomEnabled],
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     if (zoomEnabled) {
         for (UIGestureRecognizer *recognizer in self.gestureRecognizers) // initialized already
             if ([recognizer isKindOfClass:[UIPinchGestureRecognizer class]]) return;
-
+        
         self.minFontSize = self.minFontSize ?: 8.0f;
         self.maxFontSize = self.maxFontSize ?: 42.0f;
         UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc]
@@ -178,9 +178,16 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     [super layoutSubviews];
     CGRect frame = self.placeholderLabel.frame;
-    frame.size.width = self.bounds.size.width - 8;
+    frame.origin.x = 8;
+    frame.size.width = self.bounds.size.width - 16;
     self.placeholderLabel.frame = frame;
     [self.placeholderLabel sizeToFit];
+    
+    NSMutableAttributedString *textAttributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.placeholderLabel.attributedText];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:8 - (self.placeholderLabel.font.lineHeight - self.placeholderLabel.font.pointSize)];
+    [textAttributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, textAttributedString.length)];
+    self.placeholderLabel.attributedText = textAttributedString;
 }
 
 #pragma make :.设置默认提示
@@ -195,7 +202,8 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     [self initPlaceholder];
     self.placeholderLabel.text = placeholder;
     [self.placeholderLabel sizeToFit];
-    self.placeholderLabel.frame = CGRectMake(8, 5, self.placeholderLabel.frame.size.width, self.placeholderLabel.frame.size.height);
+    self.placeholderLabel.frame = CGRectMake(8, 5, self.placeholderLabel.frame.size.width - 16, self.placeholderLabel.frame.size.height);
+    
     objc_setAssociatedObject(self, @selector(placeholder), placeholder, OBJC_ASSOCIATION_RETAIN);
 }
 
@@ -250,7 +258,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if (self.placeholder.length == 0 || [self.placeholder isEqualToString:@""]) {
         self.placeholderLabel.hidden = YES;
     }
-
+    
     self.placeholderLabel.hidden = NO;
     if (self.text.length > 0) {
         self.placeholderLabel.hidden = YES;
@@ -286,7 +294,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 - (void)setMaxLength:(NSInteger)maxLength
 {
     objc_setAssociatedObject(self, @selector(maxLength), [NSNumber numberWithInteger:maxLength], OBJC_ASSOCIATION_RETAIN);
-
+    
     __weak typeof(self) weakSelf = self;
     [self setShouldChangeCharactersInRangeBlock:^BOOL(UITextView *textView, NSRange range, NSString *text) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -306,7 +314,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
                 return NO;
             }
         }
-
+        
         NSString *comcatstr = [textView.text stringByReplacingCharactersInRange:range withString:text];
         NSInteger caninputlen = strongSelf.maxLength - comcatstr.length;
         if (caninputlen >= 0) {
@@ -346,8 +354,8 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             return NO;
         }
     }];
-
-
+    
+    
     [self setTextViewDidChangeBlock:^(UITextView *textView) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         UITextRange *selectedRange = [textView markedTextRange];
@@ -367,7 +375,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         //不让显示负数
         //        self.surplusLbl.text = [NSString stringWithFormat:@"%ld/%ld", MAX(0, self.maxLength - existTextNum), self.maxLength];
         !strongSelf.textViewTextChangeBlock ?: strongSelf.textViewTextChangeBlock(textView);
-
+        
         // 自动增加textView的高度
         //    CGRect bouns = textView.bounds;
         //    CGSize maxSize = CGSizeMake(bouns.size.width, CGFLOAT_MAX);
@@ -378,7 +386,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         //        self.surplusLbl.top = textView.height - 20;
         //        self.placeholderLbl.top = CGRectGetMaxY(textView.frame);
         //    }
-
+        
         //不支持系统表情的输入
         //        if ([NSString isStringContainsEmoji:textView.text]) {
         //            [[UIViewController currentViewController] showInfo:@"不支持输入表情，请重新输入!"];
@@ -407,7 +415,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if (textView.textViewDidChangeBlock) {
         textView.textViewDidChangeBlock(textView);
     }
-
+    
     id delegate = objc_getAssociatedObject(self, UITextViewDidChange);
     if ([delegate respondsToSelector:@selector(textViewDidChange:)]) {
         [delegate textViewDidChange:textView];

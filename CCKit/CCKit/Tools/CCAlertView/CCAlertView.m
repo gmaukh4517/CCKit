@@ -24,9 +24,9 @@
 //
 
 #import "CCAlertView.h"
+#import "CCMacros.h"
 #import "CustomIOSAlertView.h"
 #import "UIView+Frame.h"
-#import "CCMacros.h"
 
 @implementation CCAlertButtonModel
 
@@ -52,14 +52,14 @@
         [alertView setUseMotionEffects:YES];
         alertView.tag = 666666;
     }
-
+    
     return alertView;
 }
 
 
 /**
  弹出提示输入框
-
+ 
  @param title 标题
  @param placeholder 输入框提示语
  @param buttonTitles 按钮
@@ -79,7 +79,7 @@
 
 /**
  弹出提示输入框
-
+ 
  @param title 标题
  @param text  文本框内容
  @param placeholder 输入框提示语
@@ -102,13 +102,13 @@
         [containerView addSubview:titleLabel];
         heigth = titleLabel.bottom + 15;
     }
-
+    
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10, heigth, containerView.width - 20, 40)];
     view.backgroundColor = [UIColor colorWithRed:243 / 255.0 green:245 / 255.0 blue:247 / 255.0 alpha:1];
     view.layer.masksToBounds = YES;
     view.layer.cornerRadius = 5;
     [containerView addSubview:view];
-
+    
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(5, 0, view.width - 5, view.height)];
     if (placeholder)
         textField.placeholder = placeholder;
@@ -116,9 +116,9 @@
         textField.text = text;
     textField.tag = 1;
     [view addSubview:textField];
-
+    
     containerView.height = view.bottom + 15;
-
+    
     [self showWithContainerView:containerView
            withButtonTitleArray:buttonTitles
                     handleClose:NO
@@ -135,8 +135,8 @@
  *  @param onButtonTouchUpInside 回调事件
  */
 + (void)showWithMessage:(NSString *)message
-     withButtonTitleArray:(NSArray *)buttonTitles
-    OnButtonTouchUpInside:(void (^)(NSInteger buttonIndex))onButtonTouchUpInside
+   withButtonTitleArray:(NSArray *)buttonTitles
+  OnButtonTouchUpInside:(void (^)(NSInteger buttonIndex))onButtonTouchUpInside
 {
     NSMutableArray *buttons = [NSMutableArray array];
     for (id button in buttonTitles) {
@@ -149,11 +149,11 @@
             [buttons addObject:button];
         }
     }
-
+    
     [self showWithMessage:nil
-                  withMessage:message
-         withButtonTitleArray:buttons
-        OnButtonTouchUpInside:onButtonTouchUpInside];
+              withMessage:message
+     withButtonTitleArray:buttons
+    OnButtonTouchUpInside:onButtonTouchUpInside];
 }
 
 /**
@@ -167,13 +167,13 @@
  *  @param onButtonTouchUpInside 回调事件
  */
 + (void)showWithMessage:(NSString *)title
-              withMessage:(NSString *)message
-     withButtonTitleArray:(NSArray *)buttonTitles
-    OnButtonTouchUpInside:(void (^)(NSInteger buttonIndex))onButtonTouchUpInside
+            withMessage:(id)message
+   withButtonTitleArray:(NSArray *)buttonTitles
+  OnButtonTouchUpInside:(void (^)(NSInteger buttonIndex))onButtonTouchUpInside
 {
     CGFloat heigth = 20;
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 100, 0)];
-
+    
     if (title && ![title isEqualToString:@""]) {
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, containerView.width - 20, 20)];
         titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -182,22 +182,31 @@
         [containerView addSubview:titleLabel];
         heigth = titleLabel.bottom + 20;
     }
-
-    if (message && ![message isEqualToString:@""]) {
+    
+    if (message && [message length]) {
         UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, heigth, containerView.width - 30, 0)];
         messageLabel.numberOfLines = 0;
-        messageLabel.textAlignment = NSTextAlignmentCenter;
-        messageLabel.font = title ? [UIFont systemFontOfSize:15] : [UIFont systemFontOfSize:18];
-        messageLabel.textColor = title ? [UIColor grayColor] : [UIColor blackColor];
-        messageLabel.text = message;
+        messageLabel.font = [UIFont systemFontOfSize:15];
+        messageLabel.textColor = [UIColor grayColor];
         [containerView addSubview:messageLabel];
+        
+        if ([message isKindOfClass:[NSString class]]) {
+            NSMutableAttributedString *textAttributedString = [[NSMutableAttributedString alloc] initWithString:message];
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            [paragraphStyle setLineSpacing:8 - (messageLabel.font.lineHeight - messageLabel.font.pointSize)];
+            [textAttributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, textAttributedString.length)];
+            messageLabel.attributedText = textAttributedString;
+        } else {
+            messageLabel.attributedText = message;
+        }
+        messageLabel.textAlignment = NSTextAlignmentCenter;
         [messageLabel sizeToFit];
         messageLabel.centerX = containerView.centerX;
-
+        
         heigth = messageLabel.bottom + 25;
     }
     containerView.height = heigth;
-
+    
     NSMutableArray *buttons = [NSMutableArray array];
     for (id button in buttonTitles) {
         if ([button isKindOfClass:[NSString class]]) {
@@ -209,13 +218,13 @@
             [buttons addObject:button];
         }
     }
-
-
+    
+    
     [self showWithContainerView:containerView
            withButtonTitleArray:buttons
           OnButtonTouchUpInside:^(UIView *containerView, NSInteger buttonIndex) {
-              onButtonTouchUpInside ? onButtonTouchUpInside(buttonIndex) : nil;
-          }];
+        onButtonTouchUpInside ? onButtonTouchUpInside(buttonIndex) : nil;
+    }];
 }
 
 + (void)showWithContainerView:(UIView *)containerView
@@ -223,7 +232,7 @@
                withIsExternal:(BOOL)isExternal
 {
     cc_view_singleFillet(containerView, UIRectCornerTopLeft | UIRectCornerTopRight, 5);
-
+    
     CustomIOSAlertView *alertView = [self alertView];
     alertView.containerView = containerView;
     alertView.IsExternal = isExternal;
@@ -275,7 +284,7 @@
     alertView.handleClose = handleClose;
     alertView.isPackage = YES;
     [alertView setContainerView:containerView];
-
+    
     NSMutableArray *buttons = [NSMutableArray array];
     for (id button in buttonTitles) {
         if ([button isKindOfClass:[NSString class]]) {
@@ -294,7 +303,7 @@
             [buttons addObject:button];
         }
     }
-
+    
     [alertView setButtonTitles:buttons];
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         if (handleClose)
@@ -308,7 +317,7 @@
 
 /**
  自定义显示
-
+ 
  @param containerView 自定义视图
  */
 + (void)showWithContainerView:(UIView *)containerView
@@ -322,7 +331,7 @@
 
 /**
  隐藏弹窗
-
+ 
  @param animated 动画
  */
 + (void)close
@@ -337,7 +346,7 @@
 
 /**
  隐藏弹窗
-
+ 
  @param animated 动画
  @param delay 时长
  */

@@ -79,25 +79,25 @@ static CGFloat const kSpacing = 15;
 {
     if (self.height == 0)
         self.height = 40;
-
+    
     self.showsHorizontalScrollIndicator = NO;
     self.delegate = self;
     self.backgroundColor = [UIColor whiteColor];
-
+    
     _titleColor = [UIColor colorFromHexCode:@"303943"];
     _titleSelectedColor = [UIColor colorFromHexCode:@"303943"];
     _titleFont = [UIFont systemFontOfSize:15];
     _titleSelectedFont = [UIFont boldSystemFontOfSize:15];
-
+    
     _lineHeight = 2;
     _isLine = NO;
     _isint = YES;
     _isSlider = YES;
-
+    
     _shadow = NO;
-
+    
     _titleButtons = [NSMutableArray array];
-
+    
     self.layer.shadowOffset = CGSizeMake(0, 5);
     self.layer.shadowOpacity = 0.5;
     self.layer.shadowRadius = 4;
@@ -111,20 +111,20 @@ static CGFloat const kSpacing = 15;
         btn.tag = i + 100;
         [btn setTitle:[self titleHandle:_titleArr[ i ]] forState:UIControlStateNormal];
         [btn.titleLabel setFont:_titleFont];
-
+        
         [btn setTitleColor:_titleColor forState:UIControlStateNormal];
         [btn setTitleColor:_titleSelectedColor forState:UIControlStateSelected];
         [btn setTitleColor:_titleSelectedColor forState:UIControlStateSelected | UIControlStateHighlighted];
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-
+        
         if (i == self.currentIndex) {
             btn.selected = YES;
             btn.titleLabel.font = _titleSelectedFont;
             self.selectedBtn = btn;
         }
-
+        
         [self.titleButtons addObject:btn];
-
+        
         if (self.isFullofLine) {
             UIView *lineView = [UIView new];
             lineView.tag = 1111;
@@ -132,12 +132,12 @@ static CGFloat const kSpacing = 15;
             [self addSubview:lineView];
         }
     }
-
-
+    
+    
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - 0.5, self.width, 0.5)];
     lineView.backgroundColor = [UIColor colorFromHexCode:@"EAEBEC"];
     [self addSubview:_lineView = lineView];
-
+    
     if (self.isSlider) { //滑块
         UIView *sliderView = [[UIView alloc] init];
         [self addSubview:sliderView];
@@ -161,17 +161,17 @@ static CGFloat const kSpacing = 15;
     [self.titleButtons removeAllObjects];
     if (!arr.count)
         return;
-
+    
     _currentIndex = 0;
     cc_dispatch_after(0.1, ^{
         [self setContentOffset:CGPointMake(0, 0) animated:YES];
     });
-
+    
     if (self.isSlider && self.isint) {
         _titleFont = [self.titleFont fontWithSize:self.titleFont.pointSize - 2];
         _titleSelectedFont = [self.titleFont fontWithSize:self.titleSelectedFont.pointSize - 2];
     }
-
+    
     _titleArr = arr;
     _isint = YES;
     [self initialization];
@@ -206,7 +206,7 @@ static CGFloat const kSpacing = 15;
 {
     _titleSelectedColor = titleSelectedColor;
     self.sliderView.backgroundColor = self.titleSelectedColor;
-
+    
     [self.titleButtons enumerateObjectsUsingBlock:^(UIButton *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         [obj setTitleColor:self.titleSelectedColor forState:UIControlStateSelected];
         [obj setTitleColor:self.titleSelectedColor forState:UIControlStateSelected | UIControlStateHighlighted];
@@ -226,14 +226,14 @@ static CGFloat const kSpacing = 15;
 {
     //移除之前的小红点
     [self removeBadgePointOnItemIndex:index];
-
+    
     //新建小红点
     UIView *badgeView = [UIView new];
     badgeView.tag = 888 + index;
     badgeView.layer.cornerRadius = 2.5;             //圆形
     badgeView.backgroundColor = [UIColor redColor]; //颜色：红色
     badgeView.size = CGSizeMake(5, 5);
-
+    
     UIButton *itemButtont = (UIButton *)[self.titleButtons objectAtIndex:index];
     badgeView.x = itemButtont.titleLabel.right;
     badgeView.y = itemButtont.titleLabel.y - 3;
@@ -262,18 +262,18 @@ static CGFloat const kSpacing = 15;
     if (_isint) {
         self.lineView.y = self.height - self.lineView.height;
         self.lineView.hidden = self.isLine;
-
+        
         //    按钮
         CGFloat btnH = self.height - 2;
         __block CGFloat totalX = self.isFullof ? 0 : 5;
-
+        
         __block UIButton *currentBtn;
         [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
             if ([obj isKindOfClass:[UIButton class]]) {
                 UIButton *btn = (UIButton *)obj;
                 if (btn.selected)
                     currentBtn = btn;
-
+                
                 if (self.isFullof) {
                     btn.x = totalX;
                     btn.y = 1;
@@ -291,16 +291,16 @@ static CGFloat const kSpacing = 15;
                     btn.y = 1;
                     btn.width = btnRect.size.width + kSpacing;
                     btn.height = btnH;
-
+                    
                     if (self.isSlider) {
                         btn.width = btnRect.size.width + 30;
                         btn.height = btnRect.size.height + 8;
                         btn.y = (btnH - btn.height) / 2;
-
+                        
                         if (self.isSlider)
                             cc_view_border_radius(btn, btn.height / 2, 0.5, btn.selected ? self.titleSelectedColor : self.titleColor);
                     }
-
+                    
                     totalX = totalX + btn.width;
                 }
             } else if (obj.tag == 1111) {
@@ -308,13 +308,13 @@ static CGFloat const kSpacing = 15;
                 totalX += 0.5;
             }
         }];
-
+        
         if (totalX - 10 < winsize.width) {
             self.contentSize = CGSizeMake(winsize.width, 0);
         } else {
             self.contentSize = CGSizeMake(totalX, 0);
         }
-
+        
         if (self.isSlider) {
             if (self.isFullof) {
                 NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObject:_titleFont forKey:NSFontAttributeName];
@@ -325,16 +325,16 @@ static CGFloat const kSpacing = 15;
             }
             self.sliderView.centerX = currentBtn.centerX;
         }
-
+        
         self.lineView.width = self.contentSize.width;
         _isint = NO;
-
+        
         self.sliderView.width = kSiderWidth;
         if (self.isFullof) {
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObject:_titleFont forKey:NSFontAttributeName];
             CGSize textSize = [_titleArr[ _currentIndex ] boundingRectWithSize:CGSizeMake(MAXFLOAT, 0.0) options:NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil].size;
             self.sliderView.width = textSize.width;
-
+            
             if (self.lineWidth > 0)
                 self.sliderView.width = self.lineWidth;
         }
@@ -352,33 +352,38 @@ static CGFloat const kSpacing = 15;
 
 - (void)setCurrentIndex:(NSInteger)currentIndex
 {
-    if (currentIndex == self.currentIndex) return;
+    [self changeCurrentIndex:currentIndex];
+    if ([self.segmentDelegate respondsToSelector:@selector(didScrollSelectedIndex:)])
+        [self.segmentDelegate didScrollSelectedIndex:self->_currentIndex];
+}
 
+- (void)changeCurrentIndex:(NSInteger)currentIndex
+{
+    if (currentIndex == self.currentIndex) return;
+    
     UIButton *currentButton = self.titleButtons[ currentIndex ];
     UIButton *oldButton = self.titleButtons[ self.currentIndex ];
-
+    
     currentButton.titleLabel.font = _titleSelectedFont;
     [currentButton setTitleColor:self.titleSelectedColor forState:UIControlStateNormal];
     [currentButton setTitleColor:self.titleSelectedColor forState:UIControlStateSelected];
     currentButton.selected = YES;
-
+    
     [oldButton setTitleColor:self.titleColor forState:UIControlStateNormal];
     [oldButton setTitleColor:self.titleColor forState:UIControlStateSelected];
     oldButton.titleLabel.font = _titleFont;
     oldButton.selected = NO;
-
+    
     self.isForbidScroll = YES;
     _currentIndex = currentIndex;
     [self titleViewDidEndScroll];
-
-
+    
+    
     [UIView animateWithDuration:0.2
                      animations:^{
-                         self.sliderView.centerX = currentButton.centerX;
-                     }
+        self.sliderView.centerX = currentButton.centerX;
+    }
                      completion:nil];
-    if ([self.segmentDelegate respondsToSelector:@selector(didScrollSelectedIndex:)])
-    [self.segmentDelegate didScrollSelectedIndex:self->_currentIndex];
 }
 
 - (void)didBeginDraaWillBeginDragging:(CGPoint)offset
@@ -390,11 +395,11 @@ static CGFloat const kSpacing = 15;
 - (void)didScrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (self.isForbidScroll) return;
-
+    
     CGFloat progress = 0.0;
     NSInteger sourceIndex = 0;
     NSInteger targetIndex = 0;
-
+    
     CGFloat currentOffsetX = scrollView.contentOffset.x;
     CGFloat scrollViewW = scrollView.bounds.size.width;
     if (currentOffsetX > self.lastContentOffset.x) { //左滑
@@ -405,7 +410,7 @@ static CGFloat const kSpacing = 15;
             targetIndex = self.titleArr.count - 1;
             sourceIndex = self.titleArr.count - 1;
         }
-
+        
         if (currentOffsetX - self.lastContentOffset.x == scrollViewW) {
             progress = 1.0;
             targetIndex = sourceIndex;
@@ -413,14 +418,14 @@ static CGFloat const kSpacing = 15;
     } else { //右滑
         progress = 1 - (currentOffsetX / scrollViewW - floor(currentOffsetX / scrollViewW));
         targetIndex = (NSInteger)(currentOffsetX / scrollViewW);
-
+        
         sourceIndex = targetIndex + 1;
         if (sourceIndex >= self.titleArr.count)
             sourceIndex = self.titleArr.count - 1;
     }
-
+    
     [self setTitleWithProgress:progress sourceIndex:sourceIndex targetIndex:targetIndex];
-
+    
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scrollViewDidEndScrollingAnimation:) object:scrollView];
     [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:scrollView afterDelay:0.2];
 }
@@ -430,8 +435,8 @@ static CGFloat const kSpacing = 15;
     //取出sourceLabel和targetLabel
     UIButton *sourceLabel = self.titleButtons[ sourceIndex ];
     UIButton *targetLabel = self.titleButtons[ targetIndex ];
-
-
+    
+    
     UIColor *selectedColor = self.titleSelectedColor, *normalColor = self.titleColor;
     if (self.selectedColorRGB && self.normalColorRGB) {
         UIColor *delataColor = [UIColor colorWithRed:self.selectedColorRGB[ 0 ] - self.normalColorRGB[ 0 ] green:self.selectedColorRGB[ 1 ] - self.normalColorRGB[ 1 ] blue:self.selectedColorRGB[ 2 ] - self.normalColorRGB[ 2 ] alpha:1.0];
@@ -439,22 +444,22 @@ static CGFloat const kSpacing = 15;
         selectedColor = [UIColor colorWithRed:self.selectedColorRGB[ 0 ] - colorDelta[ 0 ] * progress green:self.selectedColorRGB[ 1 ] - colorDelta[ 1 ] * progress blue:self.selectedColorRGB[ 2 ] - colorDelta[ 2 ] * progress alpha:1.0];
         normalColor = [UIColor colorWithRed:self.normalColorRGB[ 0 ] + colorDelta[ 0 ] * progress green:self.normalColorRGB[ 1 ] + colorDelta[ 1 ] * progress blue:self.normalColorRGB[ 2 ] + colorDelta[ 2 ] * progress alpha:1.0];
     }
-
+    
     CGFloat pointSize = self.titleSelectedFont.pointSize - self.titleFont.pointSize;
     //颜色渐变
     sourceLabel.titleLabel.font = [self.titleFont fontWithSize:self.titleSelectedFont.pointSize - (pointSize * progress)];
     [sourceLabel setTitleColor:selectedColor forState:UIControlStateNormal];
     [sourceLabel setTitleColor:selectedColor forState:UIControlStateSelected];
-
+    
     targetLabel.titleLabel.font = [self.titleSelectedFont fontWithSize:self.titleFont.pointSize + (pointSize * progress)];
     [targetLabel setTitleColor:normalColor forState:UIControlStateNormal];
     [targetLabel setTitleColor:normalColor forState:UIControlStateSelected];
-
+    
     //记录最新的index
     _currentIndex = targetIndex;
     CGFloat moveTotalX = targetLabel.centerX - sourceLabel.centerX;
     CGFloat moveTotalW = targetLabel.frame.size.width - sourceLabel.frame.size.width;
-
+    
     //计算滚动的范围差值
     if (self.isSlider) {
         CGFloat x = sourceLabel.frame.origin.x + ((sourceLabel.frame.size.width - (self.isFullof ? self.sliderView.width : self.lineWidth)) / 2.0) + moveTotalX * progress;
@@ -484,7 +489,7 @@ static CGFloat const kSpacing = 15;
 {
     CGFloat currentOffsetX = scrollView.contentOffset.x;
     CGFloat scrollViewW = scrollView.bounds.size.width;
-
+    
     //快速滑动之后 可能会出现偏差 需要重置
     NSInteger targetIndex = (NSInteger)(currentOffsetX / scrollViewW);
     if (targetIndex >= self.titleArr.count - 1) {
@@ -492,9 +497,9 @@ static CGFloat const kSpacing = 15;
         CGFloat progress = 1.0;
         [self setTitleWithProgress:progress sourceIndex:sourceIndex targetIndex:targetIndex];
     }
-
+    
     [self titleViewDidEndScroll];
-
+    
     if ([self.segmentDelegate respondsToSelector:@selector(didScrollSelectedIndex:)])
         [self.segmentDelegate didScrollSelectedIndex:self->_currentIndex];
 }
@@ -512,21 +517,21 @@ static CGFloat const kSpacing = 15;
 - (void)titleViewDidEndScroll
 {
     UIButton *targetLabel = self.titleButtons[ self.currentIndex ];
-
+    
     targetLabel.selected = YES;
     targetLabel.titleLabel.font = self.titleSelectedFont;
-
+    
     CGFloat offset = targetLabel.center.x - winsize.width * 0.5;
     if (offset < 0)
         offset = 0;
-
+    
     CGFloat maxOffset = self.contentSize.width - winsize.width;
     if (offset > maxOffset) {
         offset = maxOffset;
         if (!self.isFullof && offset > 0)
-            offset += targetLabel.width / 2;
+            offset += targetLabel.width + kSpacing;
     }
-
+    
     [self setContentOffset:CGPointMake(offset, 0) animated:YES];
 }
 

@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
+#import "NSObject+CCProperties.h"
 #import "UIViewController+CCProperties.h"
 #import <objc/runtime.h>
-#import "NSObject+CCProperties.h"
 
 @implementation UIViewController (CCProperties)
 
@@ -55,13 +55,13 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         viewManager.viewManagerDelegate = nil;
         self.cc_viewManager = nil;
     }
-
+    
     CCViewModel *viewModel = objc_getAssociatedObject(self, @selector(cc_viewModel));
     if (viewModel) {
         viewModel.viewModelDelegate = nil;
         self.cc_viewModel = nil;
     }
-
+    
     [self cc_dealloc];
 }
 
@@ -69,11 +69,20 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     CCViewManager *curVM = objc_getAssociatedObject(self, @selector(cc_viewManager));
     if (curVM) return curVM;
-    if (![self respondsToSelector:@selector(cc_classOfViewManager)]) {
-        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewManager" reason:@"you forgot to add cc_classOfViewManager() in VivewController" userInfo:nil];
+    if ([self respondsToSelector:@selector(cc_classOfViewManager)] || [self respondsToSelector:@selector(cc_classNameViewManager)]) {
+        if ([self respondsToSelector:@selector(cc_classOfViewManager)])
+            curVM = [[[self cc_classOfViewManager] alloc] init];
+        else if ([self respondsToSelector:@selector(cc_classNameViewManager)])
+            curVM = [[NSClassFromString([self cc_classNameViewManager]) alloc] init];
+    } else {
+        NSException *exp;
+        if (![self respondsToSelector:@selector(cc_classOfViewManager)])
+            exp = [NSException exceptionWithName:@"not found cc_classOfViewManager" reason:@"you forgot to add cc_classOfViewManager() in VivewController" userInfo:nil];
+        else if (![self respondsToSelector:@selector(cc_classNameViewManager)])
+            exp = [NSException exceptionWithName:@"not found cc_classNameViewManager" reason:@"you forgot to add cc_classNameViewManager() in VivewController" userInfo:nil];
+        
         [exp raise];
     }
-    curVM = [[[self cc_classOfViewManager] alloc] init];
     self.cc_viewManager = curVM;
     return curVM;
 }
@@ -87,11 +96,21 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     CCViewModel *curVM = objc_getAssociatedObject(self, @selector(cc_viewModel));
     if (curVM) return curVM;
-    if (![self respondsToSelector:@selector(cc_classOfViewModel)]) {
-        NSException *exp = [NSException exceptionWithName:@"not found cc_classOfViewModel" reason:@"you forgot to add cc_classOfViewModel() in VivewController" userInfo:nil];
+    if ([self respondsToSelector:@selector(cc_classOfViewModel)] || [self respondsToSelector:@selector(cc_classNameViewModel)]) {
+        if ([self respondsToSelector:@selector(cc_classOfViewModel)])
+            curVM = [[[self cc_classOfViewModel] alloc] init];
+        else if ([self respondsToSelector:@selector(cc_classNameViewModel)])
+            curVM = [[NSClassFromString([self cc_classNameViewModel]) alloc] init];
+    } else {
+        NSException *exp;
+        if (![self respondsToSelector:@selector(cc_classOfViewModel)])
+            exp = [NSException exceptionWithName:@"not found cc_classOfViewModel" reason:@"you forgot to add cc_classOfViewModel() in VivewController" userInfo:nil];
+        else if (![self respondsToSelector:@selector(cc_classNameViewModel)])
+            exp = [NSException exceptionWithName:@"not found cc_classNameViewModel" reason:@"you forgot to add cc_classNameViewModel() in VivewController" userInfo:nil];
+        
         [exp raise];
     }
-    curVM = [[[self cc_classOfViewModel] alloc] init];
+    
     self.cc_viewModel = curVM;
     return curVM;
 }

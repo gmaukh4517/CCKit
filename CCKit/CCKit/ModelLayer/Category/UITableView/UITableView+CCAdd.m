@@ -706,7 +706,7 @@ typedef NSMutableArray<NSNumber *> CCSectionFooterHeightsBySection;
         fittingHeight = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
         [cell.contentView removeConstraint:widthFenceConstraint];
         if (isSystemVersionEqualOrGreaterThen10_2) {
-            [cell removeConstraints:edgeConstraints];
+            [cell.contentView removeConstraints:edgeConstraints];
         }
     }
 

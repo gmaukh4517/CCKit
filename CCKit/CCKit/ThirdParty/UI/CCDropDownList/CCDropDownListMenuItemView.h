@@ -1,5 +1,5 @@
 //
-//  UITableViewHeaderFooterView+CCAdd.h
+//  CCDropDownListMenuItemView.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -23,46 +23,17 @@
 // THE SOFTWARE.
 //
 
+#import "CCDropDownList.h"
 #import <UIKit/UIKit.h>
 
-@interface UITableViewHeaderFooterView (CCAdd)
+@interface CCDropDownListMenuItemView : UITableViewCell
 
-/**
- *  @author CC, 16-09-08
- *
- *  @brief  当前Cell数据源
- */
-@property (nonatomic, copy) id cc_dataSources;
+@property (nonatomic, strong) CCDropDownListItem *dropDownItem;
 
-/**
- *  @author C C, 16-09-08
- *
- *  @brief  HeaderFooterView 获取下标
- */
-@property (nonatomic, assign) NSInteger cc_Section;
+@property (nonatomic, copy) void (^accessoryButtonClick)(NSIndexPath *cIndexPath);
 
-/**
- *  @author C C, 16-09-08
- *
- *  @brief  HeaderFooterView 获取RowCount
- */
-@property (nonatomic, assign) NSInteger cc_rowCount;
-
-/**
- *  @author CC, 16-09-08
- *
- *  @brief  背景线图片
- */
-@property (nonatomic, copy) UIImage *backgroundImage;
-
-/**
- *  @author CC, 16-09-08
- *
- *  @brief 设置背景颜色
- */
-@property (nonatomic, copy) UIColor *backgroundViewColor;
-
-- (void)cc_headerFooterWillDisplayWithModel:(id)cModel
-                                    section:(NSInteger)section;
+- (void)setupDorpDownMenuItem:(CCDropDownListItem *)dropDownItem
+                  atIndexPath:(NSIndexPath *)indexPath
+                     isBottom:(BOOL)isBottom;
 
 @end

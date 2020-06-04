@@ -24,8 +24,8 @@
 //
 
 #import "UIButton+CCAdd.h"
-#import "UIImageView+WebCache.h"
 #import "UIButton+WebCache.h"
+#import "UIImageView+WebCache.h"
 #import "UIView+Method.h"
 #import <objc/runtime.h>
 
@@ -55,7 +55,7 @@
 {
     [self setTitleColor:color forState:UIControlStateNormal];
     [self setTitleColor:color forState:UIControlStateHighlighted];
-
+    
     UILabel *title = (UILabel *)[self viewWithTag:9999];
     if ([title isKindOfClass:[UILabel class]])
         title.textColor = color;
@@ -101,26 +101,26 @@
 {
     [self setImage:[UIImage imageNamed:imagePath] forState:UIControlStateNormal];
     [self setImage:[UIImage imageNamed:imagePath] forState:UIControlStateHighlighted];
-
+    
     if ([imagePath rangeOfString:@"http://"].location != NSNotFound) {
         UIImageView *imageView = (UIImageView *)[self viewWithTag:8888];
         if (!imageView)
             imageView = self.imageView;
-
+        
         [imageView sd_setImageWithURL:[NSURL URLWithString:imagePath]];
     }
 }
 
 /**
  设置按钮背景图片
-
+ 
  @param imagePath 图片路径
  */
 - (void)setBackgroundImage:(NSString *)imagePath
 {
     [self setBackgroundImage:[UIImage imageNamed:imagePath] forState:UIControlStateNormal];
     [self setBackgroundImage:[UIImage imageNamed:imagePath] forState:UIControlStateHighlighted];
-
+    
     if ([imagePath rangeOfString:@"http://"].location != NSNotFound) {
         [self sd_setBackgroundImageWithURL:[NSURL URLWithString:imagePath] forState:UIControlStateNormal | UIControlStateHighlighted];
     }
@@ -155,7 +155,7 @@
     button.frame = CGRectMake(0, 0, 30, 30);
     button.titleLabel.font = [UIFont systemFontOfSize:15.f];
     [button setExclusiveTouch:YES];
-
+    
     return button;
 }
 
@@ -173,12 +173,12 @@
 + (id)buttonWithTitle:(NSString *)title
 {
     UIButton *button = [self buttonWith];
-
+    
     if (![title isEqualToString:@""]) {
         [button setTitle:title forState:UIControlStateNormal];
         [button setTitle:title forState:UIControlStateHighlighted];
     }
-
+    
     return button;
 }
 
@@ -200,12 +200,12 @@
     UIButton *button = [self buttonWith];
     if (![image isEqualToString:@""])
         [button setImage:image];
-
+    
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
     [button setTitleColor:color forState:UIControlStateNormal];
     [button setTitleColor:color forState:UIControlStateHighlighted];
-
+    
     return button;
 }
 
@@ -225,12 +225,12 @@
     UIButton *button = [self buttonWith];
     if (![image isEqualToString:@""])
         [button setImage:image];
-
+    
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
-
+    
     return button;
 }
 
@@ -250,13 +250,13 @@
     UIButton *button = [self buttonWith];
     if (![FinishedSelectedImage isEqualToString:@""])
         [button setBackgroundImage:[UIImage imageNamed:FinishedSelectedImage] forState:UIControlStateNormal];
-
+    
     if (![FinishedUnselectedImage isEqualToString:@""])
         [button setBackgroundImage:[UIImage imageNamed:FinishedUnselectedImage] forState:UIControlStateHighlighted];
-
+    
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-
+    
     return button;
 }
 
@@ -278,12 +278,12 @@
     UIImage *shedImage = nil;
     if (![FinishedImage isEqualToString:@""])
         shedImage = [UIImage imageNamed:FinishedImage];
-
+    
     UIImage *shedUnImage = nil;
     if (![FinishedUnImage isEqualToString:@""])
         shedUnImage = [UIImage imageNamed:FinishedUnImage];
-
-
+    
+    
     return [self buttonWithImage:title
                    FinishedImage:shedImage
              WithFinishedUnImage:shedUnImage];
@@ -301,16 +301,16 @@
  *  @return 返回按钮
  */
 + (id)buttonWithImage:(NSString *)title
-          FinishedImage:(UIImage *)FinishedImage
-    WithFinishedUnImage:(UIImage *)FinishedUnImage
+        FinishedImage:(UIImage *)FinishedImage
+  WithFinishedUnImage:(UIImage *)FinishedUnImage
 {
     UIButton *button = [self buttonWith];
     if (!FinishedImage)
         [button setBackgroundImage:FinishedImage forState:UIControlStateNormal];
-
+    
     if (!FinishedUnImage)
         [button setBackgroundImage:FinishedUnImage forState:UIControlStateHighlighted];
-
+    
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -318,7 +318,7 @@
     [button setTitleShadowColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     [button setTitleShadowColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
     [button.titleLabel setShadowOffset:CGSizeMake(0, -0.5)];
-
+    
     return button;
 }
 
@@ -337,7 +337,7 @@
     UIButton *button = [self buttonWith];
     if (![image isEqualToString:@""])
         [button setImage:image];
-
+    
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     return button;
@@ -359,14 +359,14 @@
                                Frame:(CGRect)frame
 {
     UIButton *button = [self buttonWith];
-
+    
     if (![image isEqualToString:@""])
         [button setImage:image];
-
+    
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     button.frame = frame;
-
+    
     return button;
 }
 
@@ -386,19 +386,19 @@
                      Frame:(CGRect)frame
 {
     UIButton *button = [self buttonWith];
-
+    
     button.frame = frame;
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateNormal];
     button.titleLabel.numberOfLines = 0;
     button.titleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize] - 1];
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
-
+    
     UIImage *LeftIcon = [UIImage imageNamed:LeftImage];
     [button setImage:LeftIcon forState:UIControlStateNormal];
     [button setImage:LeftIcon forState:UIControlStateHighlighted];
     button.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
-
+    
     return button;
 }
 
@@ -436,7 +436,7 @@
                          Frame:(CGRect)frame
 {
     UIButton *button = [self buttonWith];
-
+    
     button.frame = frame;
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateNormal];
@@ -445,11 +445,11 @@
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     CGFloat w = -(frame.size.width - button.titleLabel.frame.size.width) / 3;
     //    button.titleEdgeInsets = UIEdgeInsetsMake(0, w / 6, 0, 0);
-
+    
     [button setImage:rightImage forState:UIControlStateNormal];
     [button setImage:rightImage forState:UIControlStateHighlighted];
     button.imageEdgeInsets = UIEdgeInsetsMake(0, frame.size.width - button.imageView.frame.size.width + w / 2.5, 0, 0);
-
+    
     return button;
 }
 
@@ -471,37 +471,37 @@
 {
     UIButton *button = [self buttonWith];
     button.frame = frame;
-
+    
     UIImage *Image = [UIImage imageNamed:image];
     UIImageView *imageView = (UIImageView *)[button viewWithTag:8888];
-
+    
     CGFloat titleH = 20;
     if (!title || [title isEqualToString:@""])
         titleH = 0;
-
+    
     if (!imageView) {
         CGFloat x = (frame.size.width - Image.size.width) / 2;
         CGFloat y = (frame.size.height - Image.size.height - titleH) / 2;
         CGFloat w = Image.size.width;
         CGFloat h = Image.size.height;
-
+        
         if (Image.size.width > frame.size.width) {
             x = 0;
             w = frame.size.width;
         }
-
+        
         if (Image.size.height > frame.size.height) {
             y = 0;
             h = frame.size.height - titleH;
         }
-
+        
         imageView = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
-
+        
         imageView.tag = 8888;
         [button addSubview:imageView];
     }
     imageView.image = Image;
-
+    
     if (titleH) {
         UILabel *titleLabel = (UILabel *)[button viewWithTag:9999];
         if (!titleLabel) {
@@ -513,7 +513,7 @@
         }
         titleLabel.text = title;
     }
-
+    
     return button;
 }
 
@@ -532,13 +532,13 @@
 {
     UIButton *button = [self buttonWith];
     button.frame = frame;
-
+    
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
-
+    
     button.layer.masksToBounds = YES;
     button.layer.cornerRadius = 4;
-
+    
     return button;
 }
 
@@ -560,14 +560,14 @@
     UIButton *button = [self buttonWith];
     if (![image isEqualToString:@""])
         [button setImage:image];
-
+    
     button.frame = frame;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
-
+    
     button.layer.masksToBounds = YES;
     button.layer.cornerRadius = 4;
-
+    
     return button;
 }
 
@@ -592,17 +592,17 @@
     button.frame = frame;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
-
+    
     button.layer.masksToBounds = YES;
     button.layer.cornerRadius = 4;
-
+    
     [button setTitleColor:color forState:UIControlStateNormal];
     [button setTitleColor:color forState:UIControlStateHighlighted];
-
+    
     if (mode == UIControlContentHorizontalAlignmentLeft)
         button.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     button.contentHorizontalAlignment = mode;
-
+    
     return button;
 }
 
@@ -624,7 +624,7 @@
 {
     UIColor *color = self.titleLabel.textColor;
     UIColor *backgroundColor = self.backgroundColor;
-
+    
     __block NSInteger timeOut = timeout; //倒计时时间
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
@@ -646,11 +646,11 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
                 self.backgroundColor = [UIColor groupTableViewBackgroundColor];
-
+                
                 if (self.layer.masksToBounds)
                     [self.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
-
-                [self setTitle:[NSString stringWithFormat:@"%@%@", strTime, waitTittle] forState:UIControlStateNormal];
+                
+                [self setTitle:[NSString stringWithFormat:@"%@(%@)", waitTittle, strTime] forState:UIControlStateNormal];
                 self.userInteractionEnabled = NO;
             });
             timeOut--;
@@ -670,12 +670,12 @@ static NSString *const kButtonTextObjectKey = @"buttonTextObject";
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     indicator.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     [indicator startAnimating];
-
+    
     NSString *currentButtonText = self.titleLabel.text;
-
+    
     objc_setAssociatedObject(self, &kButtonTextObjectKey, currentButtonText, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, &kIndicatorViewKey, indicator, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     [self setTitle:@"" forState:UIControlStateNormal];
     self.enabled = NO;
     [self addSubview:indicator];
@@ -685,7 +685,7 @@ static NSString *const kButtonTextObjectKey = @"buttonTextObject";
 {
     NSString *currentButtonText = (NSString *)objc_getAssociatedObject(self, &kButtonTextObjectKey);
     UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)objc_getAssociatedObject(self, &kIndicatorViewKey);
-
+    
     [indicator removeFromSuperview];
     [self setTitle:currentButtonText forState:UIControlStateNormal];
     self.enabled = YES;
@@ -719,29 +719,29 @@ static NSString *const kButtonTextObjectKey = @"buttonTextObject";
         }
         [self setImage:newImage forState:UIControlStateNormal];
     }
-
+    
     CGFloat imageVerticalDiff = titleSize.height + spacing;
     CGFloat imageHorizontalDiff = titleSize.width;
-
+    
     self.imageEdgeInsets = UIEdgeInsetsMake(-imageVerticalDiff, 0, 0, -imageHorizontalDiff);
-
+    
     CGFloat titleVerticalDiff = imageSize.height + spacing;
     CGFloat titleHorizontalDiff = imageSize.width;
-
+    
     self.titleEdgeInsets = UIEdgeInsetsMake(0, -titleHorizontalDiff, -titleVerticalDiff, 0);
 }
 
 static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
 {
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextTranslateCTM(context, 0.0, size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
     CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, size.width, size.height), image.CGImage);
-
+    
     UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-
+    
     UIGraphicsEndImageContext();
     return scaledImage;
 }
@@ -752,26 +752,26 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
 - (void)beginSubmitting:(NSString *)title
 {
     [self endSubmitting];
-
+    
     self.submitting = @YES;
     self.hidden = YES;
-
+    
     self.modalView = [[UIView alloc] initWithFrame:self.frame];
     self.modalView.backgroundColor =
-        [self.backgroundColor colorWithAlphaComponent:0.6];
+    [self.backgroundColor colorWithAlphaComponent:0.6];
     self.modalView.layer.cornerRadius = self.layer.cornerRadius;
     self.modalView.layer.borderWidth = self.layer.borderWidth;
     self.modalView.layer.borderColor = self.layer.borderColor;
-
+    
     CGRect viewBounds = self.modalView.bounds;
     self.spinnerView = [[UIActivityIndicatorView alloc]
-        initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+                        initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.spinnerView.tintColor = self.titleLabel.textColor;
-
+    
     CGRect spinnerViewBounds = self.spinnerView.bounds;
     self.spinnerView.frame = CGRectMake(
-        15, viewBounds.size.height / 2 - spinnerViewBounds.size.height / 2,
-        spinnerViewBounds.size.width, spinnerViewBounds.size.height);
+                                        15, viewBounds.size.height / 2 - spinnerViewBounds.size.height / 2,
+                                        spinnerViewBounds.size.width, spinnerViewBounds.size.height);
     self.spinnerTitleLabel = [[UILabel alloc] initWithFrame:viewBounds];
     self.spinnerTitleLabel.textAlignment = NSTextAlignmentCenter;
     self.spinnerTitleLabel.text = title;
@@ -788,10 +788,10 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
     if (!self.isSubmitting.boolValue) {
         return;
     }
-
+    
     self.submitting = @NO;
     self.hidden = NO;
-
+    
     [self.modalView removeFromSuperview];
     self.modalView = nil;
     self.spinnerView = nil;
@@ -869,7 +869,7 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
 #pragma mark -
 #pragma mark :. getter/setter
 
--(void)setTitleEdgeInsetsTop:(CGFloat)titleEdgeInsetsTop
+- (void)setTitleEdgeInsetsTop:(CGFloat)titleEdgeInsetsTop
 {
     UIEdgeInsets insets = self.titleEdgeInsets;
     insets.top = titleEdgeInsetsTop;
@@ -881,7 +881,7 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
     return self.titleEdgeInsets.top;
 }
 
--(void)setTitleEdgeInsetsLeft:(CGFloat)titleEdgeInsetsLeft
+- (void)setTitleEdgeInsetsLeft:(CGFloat)titleEdgeInsetsLeft
 {
     UIEdgeInsets insets = self.titleEdgeInsets;
     insets.left = titleEdgeInsetsLeft;
@@ -890,34 +890,34 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
 
 - (CGFloat)titleEdgeInsetsLeft
 {
-     return self.titleEdgeInsets.left;
+    return self.titleEdgeInsets.left;
 }
 
--(void)setTitleEdgeInsetsBottom:(CGFloat)titleEdgeInsetsBottom
+- (void)setTitleEdgeInsetsBottom:(CGFloat)titleEdgeInsetsBottom
 {
     UIEdgeInsets insets = self.titleEdgeInsets;
     insets.bottom = titleEdgeInsetsBottom;
     self.titleEdgeInsets = insets;
 }
 
--(CGFloat)titleEdgeInsetsBottom
+- (CGFloat)titleEdgeInsetsBottom
 {
-        return self.titleEdgeInsets.bottom;
+    return self.titleEdgeInsets.bottom;
 }
 
--(void)setTitleEdgeInsetsRight:(CGFloat)titleEdgeInsetsRight
+- (void)setTitleEdgeInsetsRight:(CGFloat)titleEdgeInsetsRight
 {
     UIEdgeInsets insets = self.titleEdgeInsets;
     insets.right = titleEdgeInsetsRight;
     self.titleEdgeInsets = insets;
 }
 
--(CGFloat)titleEdgeInsetsRight
+- (CGFloat)titleEdgeInsetsRight
 {
     return self.titleEdgeInsets.right;
 }
 
--(void)setImageEdgeInsetsTop:(CGFloat)imageEdgeInsetsTop
+- (void)setImageEdgeInsetsTop:(CGFloat)imageEdgeInsetsTop
 {
     UIEdgeInsets insets = self.imageEdgeInsets;
     insets.top = imageEdgeInsetsTop;
@@ -929,7 +929,7 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
     return self.imageEdgeInsets.top;
 }
 
--(void)setImageEdgeInsetsLeft:(CGFloat)imageEdgeInsetsLeft
+- (void)setImageEdgeInsetsLeft:(CGFloat)imageEdgeInsetsLeft
 {
     UIEdgeInsets insets = self.imageEdgeInsets;
     insets.left = imageEdgeInsetsLeft;
@@ -941,26 +941,26 @@ static UIImage *MiddleAlignedButtonImageScaleToSize(UIImage *image, CGSize size)
     return self.imageEdgeInsets.left;
 }
 
--(void)setImageEdgeInsetsBottom:(CGFloat)imageEdgeInsetsBottom
+- (void)setImageEdgeInsetsBottom:(CGFloat)imageEdgeInsetsBottom
 {
     UIEdgeInsets insets = self.imageEdgeInsets;
     insets.bottom = imageEdgeInsetsBottom;
     self.imageEdgeInsets = insets;
 }
 
--(CGFloat)imageEdgeInsetsBottom
+- (CGFloat)imageEdgeInsetsBottom
 {
     return self.imageEdgeInsets.bottom;
 }
 
--(void)setImageEdgeInsetsRight:(CGFloat)imageEdgeInsetsRight
+- (void)setImageEdgeInsetsRight:(CGFloat)imageEdgeInsetsRight
 {
     UIEdgeInsets insets = self.imageEdgeInsets;
     insets.right = imageEdgeInsetsRight;
     self.imageEdgeInsets = insets;
 }
 
--(CGFloat)imageEdgeInsetsRight
+- (CGFloat)imageEdgeInsetsRight
 {
     return self.imageEdgeInsets.right;
 }

@@ -54,7 +54,7 @@
 
 /**
  创建任务
-
+ 
  @param model 下载对象
  */
 - (instancetype)initWithModel:(CCSessionDownload *)model
@@ -89,6 +89,7 @@
     _executing = YES;
     [self.dataTask resume];
     [self downloadStateHandler:CCDownloadStateReady];
+    self.lastSpeedTime = [NSDate date];
     [self didChangeValueForKey:kCCExecuting];
 }
 
@@ -102,7 +103,7 @@
     self.sessionModel.model.currentSize = cacheLength;
     [self downloadStateHandler:CCDownloadStateReady];
     self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
-
+    
     NSMutableURLRequest *request = [CCDownLoadHelper requestWithUrl:self.sessionModel.model.url Range:cacheLength];
     self.dataTask = [self.session dataTaskWithRequest:request];
 }
@@ -111,9 +112,9 @@
 #pragma mark :. NSURLSessionDataDelegate
 
 - (void)URLSession:(NSURLSession *)session
-              dataTask:(NSURLSessionDataTask *)dataTask
-    didReceiveResponse:(NSURLResponse *)response
-     completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
+          dataTask:(NSURLSessionDataTask *)dataTask
+didReceiveResponse:(NSURLResponse *)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
     self.outputStream = [NSOutputStream outputStreamToFileAtPath:self.sessionModel.model.absolutePath append:YES];
     [self.outputStream open];
@@ -128,27 +129,30 @@
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data
 {
+    if (self.sessionModel.status != CCDownloadStateRunning)
+        [self downloadStateHandler:CCDownloadStateRunning];
+    
     [self.outputStream write:data.bytes maxLength:data.length];
     self.currentSize += data.length;
     self.sessionModel.model.currentSize = self.currentSize;
     self.totalRead += data.length;
     if (self.sessionModel.model.totalSize > 0) {
         double progress = (double)self.currentSize / self.sessionModel.model.totalSize;
-
+        
         id<CCSessionDownloadDelegate> downloadDelegate = (id<CCSessionDownloadDelegate>)self.sessionModel;
         if ([downloadDelegate respondsToSelector:@selector(dataDownloadAtPercent:withUniqueid:percent:)]) //下载进度回调
             [downloadDelegate dataDownloadAtPercent:self.sessionModel
                                        withUniqueid:self.sessionModel.uniqueId
                                             percent:[NSNumber numberWithDouble:progress]];
     }
-
+    
     NSTimeInterval timeInterval = [self.lastSpeedTime timeIntervalSinceDate:[NSDate date]];
     timeInterval = -timeInterval;
     if (timeInterval >= 1) {
         NSInteger speed = self.totalRead / timeInterval;
         self.totalRead = 0;
         self.lastSpeedTime = [NSDate date];
-
+        
         id<CCSessionDownloadDelegate> downloadDelegate = (id<CCSessionDownloadDelegate>)self.sessionModel;
         if ([downloadDelegate respondsToSelector:@selector(dataDownloadAtRate:withUniqueid:rate:)]) //下载速度回调
             [downloadDelegate dataDownloadAtRate:self.sessionModel withUniqueid:self.sessionModel.uniqueId rate:[NSNumber numberWithDouble:speed]];
@@ -156,8 +160,8 @@
 }
 
 - (void)URLSession:(NSURLSession *)session
-                    task:(NSURLSessionTask *)task
-    didCompleteWithError:(NSError *)error
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(NSError *)error
 {
     if (error) {
         [self downloadStateHandler:CCDownloadStateFailed];
@@ -225,7 +229,8 @@
     return _executing;
 }
 
-- (BOOL)isFinished {
+- (BOOL)isFinished
+{
     return _finished;
 }
 

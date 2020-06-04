@@ -146,21 +146,21 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         NSString *newUserAgent = [NSString stringWithFormat:@"%@%@", wkUserAgent, self.userAgent];
         [self.webWKView setValue:newUserAgent forKey:@"applicationNameForUserAgent"];
     }
-
+    
     self.view.backgroundColor = [UIColor whiteColor];
     self.scriptMessages = [NSMutableArray array];
     if (_navigationbarTransparent)
         self.navigationColor = self.navigationController.navigationBar.barTintColor;
-
+    
     [self initControlLayout];
-
+    
     [self initControl];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-
+    
     [self handlerUserAgent];
     [self handlerCookie];
 }
@@ -175,13 +175,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
+    
     [self.navigationController.navigationBar.subviews enumerateObjectsUsingBlock:^(__kindof UIView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         if ([obj isKindOfClass:[CCWebViewProgressView class]]) {
             [obj removeFromSuperview];
         }
     }];
-
+    
     [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setShadowImage:nil];
 }
@@ -190,13 +190,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 {
     if (!self.isSource)
         [self initOriginAddress];
-
+    
     UIView *view;
     if (NSClassFromString(@"WKWebView"))
         view = self.webWKView;
     else
         view = self.webView;
-
+    
     if (!self.navigationbarTransparent) {
         CGRect frame = self.view.frame;
         frame.size.height -= [self obtainNavigationbarHeight];
@@ -207,12 +207,12 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
             [self.view addSubview:bottomCoverView];
         }
     }
-
+    
     if (self.urlString)
         [self loadRequest];
     else if (self.htmlString)
         [self loadHTMLString];
-
+    
     [self.view addSubview:view];
     typeof(self) __weak weakSelf = self;
     [self backButtonTouched:^(UIViewController *vc) {
@@ -225,7 +225,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     CGFloat y = 10;
     if (_navigationbarTransparent)
         y = [self obtainNavigationbarHeight];
-
+    
     UILabel *originLable = [[UILabel alloc] initWithFrame:CGRectMake(0, y, CGRectGetWidth(self.view.bounds), 15)];
     originLable.backgroundColor = [UIColor clearColor];
     originLable.textAlignment = NSTextAlignmentCenter;
@@ -241,13 +241,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)loadRequest
 {
     NSURL *url = [NSURL URLWithString:[self.urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
+    
     self.originLable.text = [NSString stringWithFormat:@"网页由 %@ 提供", url.host];
-
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     //    for (NSString *key in self.cookie.allKeys)
     //        [request addValue:[NSString stringWithFormat:@"%@=%@", key, [self.cookie objectForKey:key]] forHTTPHeaderField:@"Cookie"];
-
+    
     if (NSClassFromString(@"WKWebView"))
         [self.webWKView loadRequest:request];
     else
@@ -311,7 +311,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         self.edgesForExtendedLayout = _navigationbarTransparent ? UIRectEdgeAll : UIRectEdgeNone;
         self.extendedLayoutIncludesOpaqueBars = _navigationbarTransparent;
         self.modalPresentationCapturesStatusBarAppearance = _navigationbarTransparent;
-
+        
         if (_navigationbarTransparent)
             [self.navigationController.navigationBar setSlideNavigationBackground:0];
     }
@@ -466,7 +466,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         baseURL = [NSString stringWithFormat:@"http://%@", baseURL];
     else if ([baseURL rangeOfString:@"https://"].location == NSNotFound)
         baseURL = [NSString stringWithFormat:@"https://%@", baseURL];
-
+    
     if (!_urlString) {
         _urlString = baseURL;
     }
@@ -474,7 +474,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
 /**
  加载本地文件
-
+ 
  @param fileName 文件名
  @param expansionName 文件扩展名
  */
@@ -483,12 +483,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 {
     NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:expansionName];
     NSString *appHtml = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    NSURL *baseURL = [NSURL fileURLWithPath:filePath];
-    if (NSClassFromString(@"WKWebView")) {
-        [self.webWKView loadHTMLString:appHtml baseURL:baseURL];
-    } else {
-        [self.webView loadHTMLString:appHtml baseURL:baseURL];
-    }
+    [self loadHTMLString:appHtml];
 }
 
 /**
@@ -508,11 +503,11 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 {
     if ([baseURL rangeOfString:@"http://"].location == NSNotFound)
         baseURL = [NSString stringWithFormat:@"http://%@", baseURL];
-
+    
     NSURL *url = [NSURL URLWithString:[baseURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
+    
     self.originLable.text = [NSString stringWithFormat:@"网页由 %@ 提供", url.host];
-
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     if (NSClassFromString(@"WKWebView"))
         [self.webWKView loadRequest:request];
@@ -526,11 +521,11 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     self.navigationItem.leftBarButtonItems = nil;
     if ([self isGoBack]) {
         UIBarButtonItem *backButtonItem;
-
+        
         UIImage *backIndicatorImage = [UINavigationBar appearance].backIndicatorImage;
         if (!backIndicatorImage)
             backIndicatorImage = [UINavigationBar appearance].backIndicatorTransitionMaskImage;
-
+        
         if (backIndicatorImage) {
             UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [backButton setImage:backIndicatorImage forState:UIControlStateNormal];
@@ -544,7 +539,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         } else {
             backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backBarButtonClick)];
         }
-
+        
         UIBarButtonItem *closeButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(closeBarButtonClick:)];
         //        self.navigationItem.leftBarButtonItems = @[ backButtonItem, closeButtonItem ];
         self.navigationItem.leftBarButtonItem = backButtonItem;
@@ -601,12 +596,12 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         NSMutableString *cookieStr = [[NSMutableString alloc] init];
         for (NSString *key in self.cookie.allKeys)
             [cookieStr appendFormat:@"document.cookie = '%@=%@';path:/;", key, [self.cookie objectForKey:key]];
-
+        
         WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:cookieStr injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
         [self.configuration.userContentController addUserScript:cookieScript];
         [_webWKView evaluateJavaScript:cookieStr
                      completionHandler:^(id result, NSError *error){
-
+            
         }];
     }
 }
@@ -629,7 +624,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)networkError
 {
     [[self.view viewWithTag:123321] removeFromSuperview];
-
+    
     UIView *networkErrorView = [[UIView alloc] initWithFrame:self.view.bounds];
     networkErrorView.backgroundColor = [UIColor whiteColor];
     networkErrorView.tag = 123321;
@@ -639,13 +634,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     tap.numberOfTapsRequired = 1;
     [networkErrorView addGestureRecognizer:tap];
     [self.view addSubview:networkErrorView];
-
+    
     UIImage *reloadImage = CCResourceImage(@"web_networkError");
-
+    
     UIImageView *reloadImageView = [[UIImageView alloc] initWithFrame:CGRectMake((networkErrorView.frame.size.width - reloadImage.size.width) / 2, 60, reloadImage.size.width, reloadImage.size.height)];
     reloadImageView.image = reloadImage;
     [networkErrorView addSubview:reloadImageView];
-
+    
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, reloadImageView.frame.origin.y + reloadImage.size.height + 15, networkErrorView.bounds.size.width - 20, 20)];
     tipsLabel.textAlignment = NSTextAlignmentCenter;
     tipsLabel.font = [UIFont systemFontOfSize:13];
@@ -663,7 +658,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         _configuration.preferences.javaScriptEnabled = YES;
         _configuration.preferences.javaScriptCanOpenWindowsAutomatically = NO;
         _configuration.processPool = [CCProcessPool sharedProcessPool];
-
+        
         WKUserContentController *userContentController = [[WKUserContentController alloc] init];
         _configuration.userContentController = userContentController;
     }
@@ -681,12 +676,12 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         webWKView.allowsBackForwardNavigationGestures = YES;
         if (@available(iOS 11.0, *))
             [webWKView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
-
+        
         [webWKView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [webWKView addObserver:self forKeyPath:kEstimatedProgress options:NSKeyValueObservingOptionNew context:nil];
         [webWKView addObserver:self forKeyPath:kTitle options:NSKeyValueObservingOptionNew context:nil];
         [webWKView addObserver:self forKeyPath:kCanGoBack options:NSKeyValueObservingOptionNew context:nil];
-
+        
         _webWKView = webWKView;
     }
     return _webWKView;
@@ -705,15 +700,15 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         _webView = [[UIWebView alloc] initWithFrame:self.view.frame];
         _webView.backgroundColor = [UIColor whiteColor];
         _webView.scrollView.delegate = self;
-
+        
         _webViewProgress = [[CCWebViewProgress alloc] init];
         _webView.delegate = _webViewProgress;
         _webViewProgress.webViewProxyDelegate = self;
         _webViewProgress.progressDelegate = self;
-
+        
         if (@available(iOS 11.0, *))
             [_webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
-
+        
         [_webView addObserver:self forKeyPath:kEstimatedProgress options:NSKeyValueObservingOptionNew context:nil];
         self.webViewJSContext = [_webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     }
@@ -789,7 +784,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)progressChanged:(NSNumber *)newValue
 {
     if (!self.progressView) return;
-
+    
     self.progressView.progress = newValue.floatValue;
     if (newValue.floatValue == 1) {
         self.progressView.progress = 0;
@@ -809,7 +804,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 {
     if (self.navigationbarTransparent)
         self.navigationbarScroll = YES;
-
+    
     if (NSClassFromString(@"WKWebView")) {
         self.webWKView.opaque = NO;
         self.webWKView.backgroundColor = [UIColor clearColor];
@@ -840,12 +835,12 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
             [self.navigationController.navigationBar setbarbackgroundView:[self.navigationColor colorWithAlphaComponent:0]];
         }
     }
-
-    if (!self.isSource){
+    
+    if (!self.isSource) {
         CGFloat navbar_change_point = 80;
-         CGFloat offsetY = scrollView.contentOffset.y;
-        if (offsetY< 0) {
-             CGFloat alpha = MIN(1, 1 - ((offsetY + navbar_change_point) / navbar_change_point));
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY < 0) {
+            CGFloat alpha = MIN(1, 1 - ((offsetY + navbar_change_point) / navbar_change_point));
             self.originLable.alpha = alpha;
         }
     }
@@ -867,7 +862,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 }
 
 #pragma mark -
-#pragma mark :. WKWebViewDelegate
+#pragma mark :. WKNavigationDelegate
 // 页面开始加载时调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
@@ -884,7 +879,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     NSString *urlStr = [webView.URL.absoluteString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     if (self.isBackward && [self.refreshURL containsObject:urlStr])
         [webView reload];
-
+    
     [self performSelector:@selector(delaySetColor)
                withObject:nil
                afterDelay:0.5];
@@ -918,12 +913,27 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     self.isBackward = (navigationAction.navigationType == WKNavigationTypeBackForward);
+    if (!navigationAction.targetFrame)
+        [webView loadRequest:navigationAction.request];
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
+}
+
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *_Nullable credential))completionHandler
+{
+    if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
+        if (challenge.previousFailureCount == 0) {
+            completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+        } else {
+            completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+        }
+    } else {
+        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+    }
 }
 
 #pragma mark - WKUIDelegate
@@ -943,7 +953,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 // 调用JS的alert()方法
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
 {
-    completionHandler();
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"确认"
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+        completionHandler();
+    }]];
+    [self presentViewController:alertController animated:YES completion:^{}];
 }
 
 // 调用JS的confirm()方法

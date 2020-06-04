@@ -1,5 +1,5 @@
 //
-//  CJPhotoBrowser.m
+//  CCPhotoBrowser.m
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )
@@ -27,6 +27,7 @@
 #import "UIView+Frame.h"
 #import "CCConfig.h"
 #import "CCProgressHUD.h"
+#import "UIImage+CCAdd.h"
 
 #define kPadding 10
 
@@ -98,7 +99,7 @@
         backIndicatorImage = [UIImage imageNamed:@"nav_back"];
 
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, y, 44, 44)];
-    [backButton setImage:backIndicatorImage forState:UIControlStateNormal];
+    [backButton setImage:[backIndicatorImage imageChangeColor:[UIColor whiteColor]] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(handleBackAction) forControlEvents:UIControlEventTouchUpInside];
     [_navigationView addSubview:backButton];
 

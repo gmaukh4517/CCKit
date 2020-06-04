@@ -687,7 +687,7 @@ static void *const keypath = (void *)&keypath;
                      backgroundTouch:YES
                            dismissed:^{
 
-                           }];
+    }];
 }
 
 - (void)dismissPopupViewControllerWithanimationType:(CCPopupViewAnimation)animationType
@@ -920,13 +920,13 @@ static void *const keypath = (void *)&keypath;
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         [self.popupViewController viewWillAppear:NO];
-                         self.popupBackgroundView.alpha = 1.0f;
-                         popupView.frame = popupEndRect;
-                     }
+        [self.popupViewController viewWillAppear:NO];
+        self.popupBackgroundView.alpha = 1.0f;
+        popupView.frame = popupEndRect;
+    }
                      completion:^(BOOL finished) {
-                         [self.popupViewController viewDidAppear:NO];
-                     }];
+        [self.popupViewController viewDidAppear:NO];
+    }];
 }
 
 - (void)slideViewOut:(UIView *)popupView
@@ -972,22 +972,22 @@ static void *const keypath = (void *)&keypath;
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         [self.popupViewController viewWillDisappear:NO];
-                         popupView.frame = popupEndRect;
-                         self.popupBackgroundView.alpha = 0.0f;
-                     }
+        [self.popupViewController viewWillDisappear:NO];
+        popupView.frame = popupEndRect;
+        self.popupBackgroundView.alpha = 0.0f;
+    }
                      completion:^(BOOL finished) {
-                         [popupView removeFromSuperview];
-                         [overlayView removeFromSuperview];
-                         [self.popupViewController viewDidDisappear:NO];
-                         //            self.popupViewController = nil;
+        [popupView removeFromSuperview];
+        [overlayView removeFromSuperview];
+        [self.popupViewController viewDidDisappear:NO];
+        //            self.popupViewController = nil;
 
-                         id dismissed = [self dismissedCallback];
-                         if (dismissed != nil) {
-                             ((void (^)(void))dismissed)();
-                             [self setDismissedCallback:nil];
-                         }
-                     }];
+        id dismissed = [self dismissedCallback];
+        if (dismissed != nil) {
+            ((void (^)(void))dismissed)();
+            [self setDismissedCallback:nil];
+        }
+    }];
 }
 
 #pragma mark--- Fade
@@ -1010,13 +1010,13 @@ static void *const keypath = (void *)&keypath;
 
     [UIView animateWithDuration:kPopupModalAnimationDuration
                      animations:^{
-                         [self.popupViewController viewWillAppear:NO];
-                         self.popupBackgroundView.alpha = 0.5f;
-                         popupView.alpha = 1.0f;
-                     }
+        [self.popupViewController viewWillAppear:NO];
+        self.popupBackgroundView.alpha = 0.5f;
+        popupView.alpha = 1.0f;
+    }
                      completion:^(BOOL finished) {
-                         [self.popupViewController viewDidAppear:NO];
-                     }];
+        [self.popupViewController viewDidAppear:NO];
+    }];
 }
 
 - (void)fadeViewOut:(UIView *)popupView
@@ -1025,22 +1025,22 @@ static void *const keypath = (void *)&keypath;
 {
     [UIView animateWithDuration:kPopupModalAnimationDuration
                      animations:^{
-                         [self.popupViewController viewWillDisappear:NO];
-                         self.popupBackgroundView.alpha = 0.0f;
-                         popupView.alpha = 0.0f;
-                     }
+        [self.popupViewController viewWillDisappear:NO];
+        self.popupBackgroundView.alpha = 0.0f;
+        popupView.alpha = 0.0f;
+    }
                      completion:^(BOOL finished) {
-                         [popupView removeFromSuperview];
-                         [overlayView removeFromSuperview];
-                         [self.popupViewController viewDidDisappear:NO];
-                         //            self.popupViewController = nil;
+        [popupView removeFromSuperview];
+        [overlayView removeFromSuperview];
+        [self.popupViewController viewDidDisappear:NO];
+        //            self.popupViewController = nil;
 
-                         id dismissed = [self dismissedCallback];
-                         if (dismissed != nil) {
-                             ((void (^)(void))dismissed)();
-                             [self setDismissedCallback:nil];
-                         }
-                     }];
+        id dismissed = [self dismissedCallback];
+        if (dismissed != nil) {
+            ((void (^)(void))dismissed)();
+            [self setDismissedCallback:nil];
+        }
+    }];
 }
 
 #pragma mark :. Category Accessors
@@ -1072,24 +1072,24 @@ NSString *const iTunesAppleString = @"itunes.apple.com";
     NSString *campaignToken = self.campaignToken ?: @"";
 
     NSDictionary *parameters = @{
-                                 SKStoreProductParameterITunesItemIdentifier : @(itemIdentifier),
-                                 affiliateTokenKey : affiliateTokenKey,
-                                 campaignTokenKey : campaignToken,
-                                 };
+        SKStoreProductParameterITunesItemIdentifier : @(itemIdentifier),
+        affiliateTokenKey : affiliateTokenKey,
+        campaignTokenKey : campaignToken,
+    };
 
     if (self.loadingStoreKitItemBlock) {
         self.loadingStoreKitItemBlock();
     }
     [storeViewController loadProductWithParameters:parameters
                                    completionBlock:^(BOOL result, NSError *error) {
-                                       if (self.loadedStoreKitItemBlock) {
-                                           self.loadedStoreKitItemBlock();
-                                       }
+        if (self.loadedStoreKitItemBlock) {
+            self.loadedStoreKitItemBlock();
+        }
 
-                                       if (result && !error) {
-                                           [self presentViewController:storeViewController animated:YES completion:nil];
-                                       }
-                                   }];
+        if (result && !error) {
+            [self presentViewController:storeViewController animated:YES completion:nil];
+        }
+    }];
 }
 
 #pragma mark--- Delegation - SKStoreProductViewControllerDelegate
@@ -1185,16 +1185,7 @@ NSString *const iTunesAppleString = @"itunes.apple.com";
 
     UIViewController *vc = [self topViewController];
     void (^handler)(UIViewController *vc) = [vc backButtonHandler];
-    if (handler) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(vc);
-        });
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self popViewControllerAnimated:YES];
-        });
-    }
-
+    handler ? handler(vc) : [self popViewControllerAnimated:YES];
     return NO;
 }
 

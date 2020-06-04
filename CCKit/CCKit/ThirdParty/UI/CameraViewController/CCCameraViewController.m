@@ -25,23 +25,23 @@
 
 #import "CCCameraViewController.h"
 #import "CCActionSheet.h"
-#import <MobileCoreServices/MobileCoreServices.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <AVFoundation/AVFoundation.h>
 #import "CCImageCropViewController.h"
-#import "UIImage+CCAdd.h"
-#import "TZImagePickerController.h"
 #import "CCLanguage.h"
 #import "CameraSessionView.h"
 #import "Config.h"
+#import "TZImagePickerController.h"
+#import "UIImage+CCAdd.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface CCCameraViewController () <UIActionSheetDelegate, UINavigationControllerDelegate,CACameraSessionDelegate, CCImageCropViewControllerDelegate, CCImageCropViewControllerDataSource>
+@interface CCCameraViewController () <UIActionSheetDelegate, UINavigationControllerDelegate, CACameraSessionDelegate, CCImageCropViewControllerDelegate, CCImageCropViewControllerDataSource>
 
-@property(strong, nonatomic) UIViewController *currentViewController;
+@property (strong, nonatomic) UIViewController *currentViewController;
 
-@property(nonatomic, copy) CameraCompletion callBackBlock;
+@property (nonatomic, copy) CameraCompletion callBackBlock;
 
-@property(nonatomic, strong) UIImagePickerController *imagePickerVc;
+@property (nonatomic, strong) UIImagePickerController *imagePickerVc;
 
 @end
 
@@ -67,7 +67,7 @@
                                         complate:(CameraCompletion)complate
 {
     [self startCameraOrPhotoFileWithViewController:viewController
-                                           Options:nil 
+                                           Options:nil
                                           complate:complate];
 }
 
@@ -78,18 +78,24 @@
     _currentViewController = viewController;
     
     CCActionSheet *actionSheet = [[CCActionSheet alloc] initWithWhiteExample];
-    [actionSheet addButtonWithTitle:@"拍照获取" image:nil type:CCActionSheetButtonTypeTextAlignmentCenter handler:^(CCActionSheet *actionSheet) {
+    [actionSheet addButtonWithTitle:@"拍照获取"
+                              image:nil
+                               type:CCActionSheetButtonTypeTextAlignmentCenter
+                            handler:^(CCActionSheet *actionSheet) {
         [self cameras];
     }];
     
-    [actionSheet addButtonWithTitle:@"从相册选择" image:nil type:CCActionSheetButtonTypeTextAlignmentCenter handler:^(CCActionSheet *actionSheet) {
+    [actionSheet addButtonWithTitle:@"从相册选择"
+                              image:nil
+                               type:CCActionSheetButtonTypeTextAlignmentCenter
+                            handler:^(CCActionSheet *actionSheet) {
         [self LocalPhoto];
     }];
-    options?options(actionSheet):nil;
+    options ? options(actionSheet) : nil;
     
     [actionSheet show];
     
-    _callBackBlock = complate; 
+    _callBackBlock = complate;
 }
 
 /**
@@ -141,6 +147,8 @@
     photoPickerC.allowPickingImage = YES;
     photoPickerC.allowPickingOriginalPhoto = YES;
     photoPickerC.minImagesCount = self.minCount;
+    photoPickerC.isStatusBarDefault = YES;
+    photoPickerC.modalPresentationStyle = 0;
     
     typeof(self) __weak weakSelf = self;
     [photoPickerC setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
@@ -150,14 +158,14 @@
             for (UIImage *image in photos) {
                 [photoArray addObject:image];
             }
-        }else{
+        } else {
             [photoArray addObjectsFromArray:photos];
         }
         
         
         if (weakSelf.isClipping && weakSelf.maxCount == 1) {
             [weakSelf performSelector:@selector(pushCropViewController:) withObject:photoArray.lastObject afterDelay:0.5];
-        } else {            
+        } else {
             weakSelf.callBackBlock(photoArray);
         }
     }];
@@ -283,9 +291,9 @@
     NSArray *availableMediaTypes = [UIImagePickerController availableMediaTypesForSourceType:paramSourceType];
     [availableMediaTypes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *mediaType = (NSString *)obj;
-        if ([mediaType isEqualToString:paramMediaType]){
+        if ([mediaType isEqualToString:paramMediaType]) {
             result = YES;
-            *stop= YES;
+            *stop = YES;
         }
     }];
     return result;
@@ -341,34 +349,38 @@
         CameraSessionView *cameraView = [[CameraSessionView alloc] init];
         cameraView.delegate = self;
         typeof(self) __weak weakSelf = self;
-        [_currentViewController presentViewController:cameraView animated:YES completion:^{
+        cameraView.modalPresentationStyle = UIModalPresentationFullScreen;
+        [_currentViewController presentViewController:cameraView
+                                             animated:YES
+                                           completion:^{
             [weakSelf isCameraUsageRights];
         }];
     }
 }
 
--(void)didCaptureImage:(UIImage *)image {    
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{  
+- (void)didCaptureImage:(UIImage *)image
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         // 保存图片到相册中
         SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
         UIImageWriteToSavedPhotosAlbum(image, self, selectorToCall, NULL);
     });
     
-    UIImage *theImage = [UIImage fixOrientation:image]; 
+    UIImage *theImage = [UIImage fixOrientation:image];
     if (_isClipping && self.maxCount == 1) {
         [self performSelector:@selector(pushCropViewController:) withObject:theImage afterDelay:0.5];
     } else {
         NSMutableArray *photoArray = [NSMutableArray array];
-        if (self.isPhotoType) 
-            [photoArray addObject:@{@"image":theImage}];
+        if (self.isPhotoType)
+            [photoArray addObject:@{ @"image" : theImage }];
         else
             [photoArray addObject:theImage];
         _callBackBlock(photoArray);
-        
     }
 }
 
--(void)didCaptureImageWithData:(NSData *)imageData {
+- (void)didCaptureImageWithData:(NSData *)imageData
+{
     NSLog(@"CAPTURED IMAGE DATA");
     //UIImage *image = [[UIImage alloc] initWithData:imageData];
     //UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
@@ -413,7 +425,7 @@
 #pragma mark :. 跳转截图
 - (void)pushCropViewController:(id)ImageObj
 {
-    UIImage *image = ImageObj; 
+    UIImage *image = ImageObj;
     if ([ImageObj isKindOfClass:[NSDictionary class]])
         image = [ImageObj objectForKey:@"image"];
     
@@ -427,17 +439,17 @@
             [navViewController pushViewController:imageCropVC animated:YES];
         } else
             [_currentViewController.parentViewController presentViewController:imageCropVC animated:YES completion:nil];
-    }else
+    } else
         [[[[UIApplication sharedApplication].windows firstObject] rootViewController] presentViewController:imageCropVC animated:YES completion:nil];
 }
 
 #pragma mark :. imageCropViewDelegate
--(CGRect)imageCropViewControllerCustomMaskRect:(CCImageCropViewController *)controller
+- (CGRect)imageCropViewControllerCustomMaskRect:(CCImageCropViewController *)controller
 {
     return CGRectZero;
 }
 
--(UIBezierPath *)imageCropViewControllerCustomMaskPath:(CCImageCropViewController *)controller
+- (UIBezierPath *)imageCropViewControllerCustomMaskPath:(CCImageCropViewController *)controller
 {
     return [UIBezierPath new];
 }

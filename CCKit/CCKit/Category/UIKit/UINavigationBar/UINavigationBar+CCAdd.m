@@ -60,7 +60,28 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             if ([NSStringFromClass(view.classForCoder) containsString:@"ContentView"]) {
                 if (iOS13Later) {
                     UIEdgeInsets margins = view.layoutMargins;
-                    view.frame = CGRectMake(-margins.left + 15, -margins.top, margins.left + margins.right + view.frame.size.width -  25, margins.top + margins.bottom + view.frame.size.height);
+                    CGFloat letf = 12;
+                    
+                    CGFloat UIButtonBarStackViewX = 0, UIButtonBarButtonX = 0;
+                    for (UIView *viewItem in view.subviews) { // 页面切换是存在 当前页面未自定义按钮 上级存在之自定义按钮 记录当前位子判断是否需要调整布局
+                        if ([NSStringFromClass(viewItem.classForCoder) containsString:@"_UIButtonBarStackView"] && !UIButtonBarStackViewX)
+                            UIButtonBarStackViewX = ceil(viewItem.frame.origin.x);
+                        if ([NSStringFromClass(viewItem.classForCoder) containsString:@"_UIButtonBarButton"])
+                            UIButtonBarButtonX = viewItem.frame.origin.x;
+                    }
+                    
+                    if (UIButtonBarStackViewX != 12 && UIButtonBarButtonX == 0) { // 判断是否调整布局 如果当前处于过度动画中 不调整布局
+                        for (UIView *viewItem in view.subviews) {
+                            if ([NSStringFromClass(viewItem.classForCoder) containsString:@"_UIReplicantView"])
+                                break;
+                            if ([NSStringFromClass(viewItem.classForCoder) containsString:@"_UIButtonBarButton"]) {
+                                letf = 20;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    view.frame = CGRectMake(-margins.left + letf, -margins.top, margins.left + margins.right + view.frame.size.width - letf * 2, margins.top + margins.bottom + view.frame.size.height);
                 } else {
                     view.layoutMargins = UIEdgeInsetsMake(0, 10, 0, 10);
                 }
@@ -127,22 +148,22 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         if (![view isMemberOfClass:[UIView class]])
             [barSubviews addObject:view];
     }
-
+    
     if (alpha == 0 && backgroundColor) {
         const CGFloat *components = CGColorGetComponents(backgroundColor.CGColor);
         alpha = MAX(1, components[ 3 ] ?: 1);
     }
-
+    
     Ivar backgroundOpacityVar = class_getInstanceVariable([UINavigationBar class], "__backgroundOpacity");
     if (backgroundOpacityVar)
         [self setValue:@(alpha) forKey:@"__backgroundOpacity"];
-
+    
     UIView *barBackgroundView = [barSubviews firstObject];
     barBackgroundView.alpha = alpha;
     barBackgroundView.subviews.firstObject.alpha = !alpha;
     if (backgroundColor)
         barBackgroundView.backgroundColor = backgroundColor;
-
+    
     if (isAlpha) {
         UINavigationController *superNav = (UINavigationController *)[self viewController];
         if (superNav && superNav.topViewController)
@@ -172,12 +193,12 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarContentView")])
                 _UINavigationBarContentView = obj;
         }];
-
+        
         for (UIView *view in _UINavigationBarContentView.subviews) {
             if (![view isMemberOfClass:NSClassFromString(@"_UIButtonBarButton")])
                 [barSubviews addObject:view];
         }
-
+        
     } else if (@available(iOS 9.0, *)) {
         for (UIView *view in self.subviews) {
             if (![view isMemberOfClass:[UIView class]] && ([view isKindOfClass:NSClassFromString(@"UINavigationItemView")] || [view isKindOfClass:NSClassFromString(@"UINavigationButton")])) {
@@ -185,7 +206,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             }
         }
     }
-
+    
     for (UIView *view in barSubviews)
         view.alpha = alpha;
 }

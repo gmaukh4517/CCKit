@@ -96,7 +96,7 @@
  *  @param onButtonTouchUpInside 回调事件
  */
 + (void)showWithMessage:(NSString *)title
-            withMessage:(NSString *)message
+            withMessage:(id)message
    withButtonTitleArray:(NSArray *)buttonTitles
   OnButtonTouchUpInside:(void (^)(NSInteger buttonIndex))onButtonTouchUpInside;
 

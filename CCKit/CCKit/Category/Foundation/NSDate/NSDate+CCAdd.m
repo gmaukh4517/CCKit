@@ -469,7 +469,7 @@
     NSDateComponents *otherComps = [currentCalendar components:unitFlags fromDate:self];
 
     NSString *strDate;
-    NSInteger weekIntValue = [self weekIntValueWithDate] - 1; //获取星期对应的数字
+    NSInteger weekIntValue = [self weekIntValueWithDate]; //获取星期对应的数字
     NSInteger days = currentComps.day - otherComps.day;
 
     if (currentComps.year == otherComps.year && currentComps.month == otherComps.month && currentComps.day == otherComps.day)

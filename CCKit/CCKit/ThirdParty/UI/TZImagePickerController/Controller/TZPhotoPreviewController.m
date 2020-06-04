@@ -13,6 +13,7 @@
 #import "TZImagePickerController.h"
 #import "TZImageManager.h"
 #import "TZImageCropManager.h"
+#import "UIImage+CCAdd.h"
 
 @interface TZPhotoPreviewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIScrollViewDelegate> {
     UICollectionView *_collectionView;
@@ -77,7 +78,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
-    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (iOS7Later) {
         [UIApplication sharedApplication].statusBarHidden = NO;
     }
@@ -102,7 +102,7 @@
         backIndicatorImage =[UIImage imageNamedFromMyBundle:@"nav_back"];
 
     _backButton = [[UIButton alloc] initWithFrame:CGRectZero];
-    [_backButton setImage:backIndicatorImage forState:UIControlStateNormal];
+    [_backButton setImage:[backIndicatorImage imageChangeColor:[UIColor whiteColor]] forState:UIControlStateNormal];
     [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
     

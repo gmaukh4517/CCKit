@@ -99,7 +99,7 @@
 
 /**
  指定宽度按比例缩放
-
+ 
  @param defineWidth 默认宽度
  @return 返回缩放图片
  */
@@ -367,7 +367,7 @@ typedef NS_ENUM(NSUInteger, CCAccuracy) {
 
 /**
  改变图片显示颜色
-
+ 
  @param color 颜色值
  @return 生成颜色图片
  */
@@ -623,5 +623,14 @@ typedef NS_ENUM(NSUInteger, CCAccuracy) {
 + (UIImage *)imageWithPDFFile:(NSString *)pdfFile
                 withTintColor:(UIColor *)tintColor
                       forSize:(CGSize)size;
+
+#pragma mark -
+#pragma mark :. Video
+
+
+/// 获取视频第一帧
+/// @param videoURL 视频地址
+/// @param time 获取视频任意秒的帧
++ (UIImage *)thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time;
 
 @end

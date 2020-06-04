@@ -62,7 +62,7 @@
     self.oKButtonTitleColorDisabled = [UIColor colorWithRed:(83/255.0) green:(179/255.0) blue:(17/255.0) alpha:0.5];
     
     self.navigationBar.barTintColor = [UINavigationBar appearance].barTintColor;
-    self.navigationBar.tintColor = [UIColor blueColor];
+    self.navigationBar.tintColor = [UINavigationBar appearance].tintColor;
     self.automaticallyAdjustsScrollViewInsets = NO;
     if (self.needShowStatusBar) [UIApplication sharedApplication].statusBarHidden = NO;
 }
@@ -248,7 +248,7 @@
     self.timeout = 15;
     self.photoWidth = 828.0;
     self.photoPreviewMaxWidth = 600;
-    self.naviTitleColor = [UINavigationBar appearance].tintColor;// [UIColor whiteColor];
+    self.naviTitleColor = [UINavigationBar appearance].tintColor;// [UIColor redColor]; //
     self.naviTitleFont = [UIFont systemFontOfSize:17];
     self.barItemTextFont = [UIFont systemFontOfSize:15];
     self.barItemTextColor = [UINavigationBar appearance].tintColor;//[UIColor whiteColor];

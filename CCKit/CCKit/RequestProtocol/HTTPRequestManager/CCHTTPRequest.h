@@ -2,7 +2,7 @@
 //  CCHTTPRequest.h
 //  CCKit
 //
-// Copyright (c) 2015 CC 
+// Copyright (c) 2015 CC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
 #import "CCResponseObject.h"
 #import "HttpFileConfig.h"
+#import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, CCHTTPRequestCachePolicy) {
     /** 不作任何处理，只请求数据 */
@@ -64,10 +64,17 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
 
 /**
  全局设置请求HTTP Header头
-
+ 
  @param headerField 参数
  */
 + (void)setAppendingServerHTTPHeaderField:(NSDictionary *)headerField;
+
+/**
+ 全局设置请求 传递参数UserInfo
+ 
+ @param userInfo 参数
+ */
++ (void)setAppendingServerHTTPUserInfo:(NSDictionary *)userInfo;
 
 /**
  *  @author CC, 2016-3-10
@@ -130,9 +137,9 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure       故障处理回调
  */
 + (void)GET:(NSString *)api
-    parameters:(NSDictionary *)parameter
-      response:(requestSuccessBlock)response
-       failure:(requestFailureBlock)failure;
+ parameters:(NSDictionary *)parameter
+   response:(requestSuccessBlock)response
+    failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -147,11 +154,11 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure          故障处理回调
  */
 + (void)GET:(NSString *)requestURLString
-     parameters:(NSDictionary *)parameter
-     modelClass:(Class)modelClass
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       response:(responseBlock)response
-        failure:(requestFailureBlock)failure;
+ parameters:(NSDictionary *)parameter
+ modelClass:(Class)modelClass
+cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+   response:(responseBlock)response
+    failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-04-06
@@ -164,9 +171,9 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure       故障处理回调
  */
 + (void)POST:(NSString *)api
-    parameters:(NSDictionary *)parameter
-      response:(requestSuccessBlock)response
-       failure:(requestFailureBlock)failure;
+  parameters:(NSDictionary *)parameter
+    response:(requestSuccessBlock)response
+     failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -181,11 +188,11 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure          故障处理回调
  */
 + (void)POST:(NSString *)requestURLString
-     parameters:(NSDictionary *)parameter
-     modelClass:(Class)modelClass
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       response:(responseBlock)response
-        failure:(requestFailureBlock)failure;
+  parameters:(NSDictionary *)parameter
+  modelClass:(Class)modelClass
+ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+    response:(responseBlock)response
+     failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-04-06
@@ -215,11 +222,11 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure          故障处理回调
  */
 + (void)DELETE:(NSString *)requestURLString
-     parameters:(NSDictionary *)parameter
-     modelClass:(Class)modelClass
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       response:(responseBlock)response
-        failure:(requestFailureBlock)failure;
+    parameters:(NSDictionary *)parameter
+    modelClass:(Class)modelClass
+   cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+      response:(responseBlock)response
+       failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-04-06
@@ -232,9 +239,9 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure       故障处理回调
  */
 + (void)HEAD:(NSString *)api
-    parameters:(NSDictionary *)parameter
-      response:(requestSuccessBlock)response
-       failure:(requestFailureBlock)failure;
+  parameters:(NSDictionary *)parameter
+    response:(requestSuccessBlock)response
+     failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -249,11 +256,11 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure          故障处理回调
  */
 + (void)HEAD:(NSString *)requestURLString
-     parameters:(NSDictionary *)parameter
-     modelClass:(Class)modelClass
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       response:(responseBlock)response
-        failure:(requestFailureBlock)failure;
+  parameters:(NSDictionary *)parameter
+  modelClass:(Class)modelClass
+ cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+    response:(responseBlock)response
+     failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-04-06
@@ -266,9 +273,9 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure       故障处理回调
  */
 + (void)PUT:(NSString *)api
-    parameters:(NSDictionary *)parameter
-      response:(requestSuccessBlock)response
-       failure:(requestFailureBlock)failure;
+ parameters:(NSDictionary *)parameter
+   response:(requestSuccessBlock)response
+    failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -283,11 +290,11 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure          故障处理回调
  */
 + (void)PUT:(NSString *)requestURLString
-     parameters:(NSDictionary *)parameter
-     modelClass:(Class)modelClass
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       response:(responseBlock)response
-        failure:(requestFailureBlock)failure;
+ parameters:(NSDictionary *)parameter
+ modelClass:(Class)modelClass
+cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+   response:(responseBlock)response
+    failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-04-06
@@ -300,9 +307,9 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure       故障处理回调
  */
 + (void)PATCH:(NSString *)api
-    parameters:(NSDictionary *)parameter
-      response:(requestSuccessBlock)response
-       failure:(requestFailureBlock)failure;
+   parameters:(NSDictionary *)parameter
+     response:(requestSuccessBlock)response
+      failure:(requestFailureBlock)failure;
 
 /**
  *  @author CC, 16-03-10
@@ -317,11 +324,11 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
  *  @param failure          故障处理回调
  */
 + (void)PATCH:(NSString *)requestURLString
-     parameters:(NSDictionary *)parameter
-     modelClass:(Class)modelClass
-    cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
-       response:(responseBlock)response
-        failure:(requestFailureBlock)failure;
+   parameters:(NSDictionary *)parameter
+   modelClass:(Class)modelClass
+  cachePolicy:(CCHTTPRequestCachePolicy)cachePolicy
+     response:(responseBlock)response
+      failure:(requestFailureBlock)failure;
 
 #pragma mark :. 网络请求并解析 同步
 /**
@@ -439,7 +446,7 @@ typedef void (^requestSuccessBlock)(CCResponseObject *responseObject);
           failure:(requestFailureBlock)failure;
 
 #pragma mar -
-#pragma mar :. 上下传文件
+#pragma mar :.上下传文件
 
 /**
  *  @author CC, 16-03-10
