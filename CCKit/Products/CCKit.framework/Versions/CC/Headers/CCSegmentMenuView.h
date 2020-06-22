@@ -67,6 +67,9 @@
 
 - (void)setItems:(NSArray *)arr;
 
+//修改选中对象
+- (void)changeCurrentIndex:(NSInteger)currentIndex;
+
 - (void)showBadgePointOnItemIndex:(NSInteger)index;
 
 - (void)hideBadgePointOnItemIndex:(NSInteger)index;
@@ -82,4 +85,3 @@
 - (void)didScrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 @end
-

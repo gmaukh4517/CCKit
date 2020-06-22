@@ -41,33 +41,32 @@
     // Ignore when no view controller is pushed into the navigation stack.
     if (self.navigationController.viewControllers.count <= 1)
         return NO;
-
+    
     // Ignore when the active view controller doesn't allow interactive pop.
     UIViewController *topViewController = self.navigationController.viewControllers.lastObject;
     if (topViewController.cc_interactivePopDisabled) {
         return NO;
     }
-
+    
     // Ignore when the beginning location is beyond max allowed initial distance to left edge.
     CGPoint beginningLocation = [gestureRecognizer locationInView:gestureRecognizer.view];
     CGFloat maxAllowedInitialDistance = topViewController.cc_interactivePopMaxAllowedInitialDistanceToLeftEdge;
     if (maxAllowedInitialDistance == 0)
         maxAllowedInitialDistance = 40;
-
+    
     if (maxAllowedInitialDistance > 0 && beginningLocation.x > maxAllowedInitialDistance)
         return NO;
-
+    
     // Ignore pan gesture when the navigation controller is currently in transition.
     if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue])
         return NO;
-
+    
     // Prevent calling the handler when the gesture begins in an opposite direction.
     CGPoint translation = [gestureRecognizer translationInView:gestureRecognizer.view];
     if (translation.x <= 0)
         return NO;
-
+    
     self.navigationController.cc_grTransitioning = YES;
-
     return YES;
 }
 
@@ -106,26 +105,26 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if (self.viewControllers.count)
         viewController.hidesBottomBarWhenPushed = YES;
     objc_setAssociatedObject(viewController, @"navigationBarAlpha", @(1), OBJC_ASSOCIATION_COPY_NONATOMIC);
-
-
+    
+    
     if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.cc_fullscreenPopGestureRecognizer]) {
         // Add our own gesture recognizer to where the onboard screen edge pan gesture recognizer is attached to.
         [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.cc_fullscreenPopGestureRecognizer];
-
+        
         // Forward the gesture events to the private handler of the onboard gesture recognizer.
         NSArray *internalTargets = [self.interactivePopGestureRecognizer valueForKey:@"targets"];
         id internalTarget = [internalTargets.firstObject valueForKey:@"target"];
         SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
         self.cc_fullscreenPopGestureRecognizer.delegate = self.cc_popGestureRecognizerDelegate;
         [self.cc_fullscreenPopGestureRecognizer addTarget:internalTarget action:internalAction];
-
+        
         // Disable the onboard gesture recognizer.
         self.interactivePopGestureRecognizer.enabled = NO;
     }
-
+    
     // Handle perferred navigation bar appearance.
     [self cc_setupViewControllerBasedNavigationBarAppearanceIfNeeded:viewController animated:animated];
-
+    
     // Forward to primary implementation.
     if (![self.viewControllers containsObject:viewController]) {
         UIWindow *windowView = [UIApplication sharedApplication].keyWindow;
@@ -139,17 +138,17 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 {
     if (!self.cc_viewControllerBasedNavigationBarAppearanceEnabled || !self.viewControllers.count)
         return;
-
+    
     id fromVCAlpha = objc_getAssociatedObject(self.topViewController, @"navigationBarAlpha");
     CGFloat fromAlpha = 1;
     if (fromVCAlpha)
         fromAlpha = [fromVCAlpha floatValue];
-
+    
     id toVCAlpha = objc_getAssociatedObject(appearingViewController, @"navigationBarAlpha");
     CGFloat toAlpha = 1;
     if (toVCAlpha)
         toAlpha = [toVCAlpha floatValue];
-
+    
     if (fromAlpha == 0 && toAlpha == 0 && self.viewControllers.count) {
         [self.navigationBar setSlideNavigationBackground:0];
         self.topViewController.navigationBarView.hidden = YES;
@@ -162,7 +161,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
                 [self.navigationBar setSlideNavigationBackground:1];
             appearingViewController.navigationBarView.hidden = YES;
         });
-
+        
     } else if (fromAlpha == 1 && toAlpha == 0 && self.viewControllers.count) {
         self.topViewController.navigationBarView.hidden = NO;
         [self.navigationBar setSlideNavigationBackground:0];
@@ -182,14 +181,14 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             appearingViewController.navigationBarView.hidden = YES;
         });
     }
-
+    
     __weak typeof(self) weakSelf = self;
     _CCViewControllerWillAppearInjectBlock block = ^(UIViewController *viewController, BOOL animated) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf)
             [strongSelf setNavigationBarHidden:viewController.cc_prefersNavigationBarHidden animated:animated];
     };
-
+    
     // Setup will appear inject block to appearing view controller.
     // Setup disappearing view controller as well, because not every view controller is added into
     // stack by pushing, maybe by "-setViewControllers:".
@@ -203,11 +202,11 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 - (_CCFullscreenPopGestureRecognizerDelegate *)cc_popGestureRecognizerDelegate
 {
     _CCFullscreenPopGestureRecognizerDelegate *delegate = objc_getAssociatedObject(self, _cmd);
-
+    
     if (!delegate) {
         delegate = [[_CCFullscreenPopGestureRecognizerDelegate alloc] init];
         delegate.navigationController = self;
-
+        
         objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return delegate;
@@ -216,11 +215,11 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
 - (UIPanGestureRecognizer *)cc_fullscreenPopGestureRecognizer
 {
     UIPanGestureRecognizer *panGestureRecognizer = objc_getAssociatedObject(self, _cmd);
-
+    
     if (!panGestureRecognizer) {
         panGestureRecognizer = [[UIPanGestureRecognizer alloc] init];
         panGestureRecognizer.maximumNumberOfTouches = 1;
-
+        
         objc_setAssociatedObject(self, _cmd, panGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return panGestureRecognizer;
@@ -257,13 +256,13 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             CGFloat fromAlpha = 1;
             if (fromVCAlpha)
                 fromAlpha = [fromVCAlpha floatValue];
-
+            
             UIViewController *toViewController = [coordinator viewControllerForKey:UITransitionContextToViewControllerKey];
             id toVCAlpha = objc_getAssociatedObject(toViewController, @"navigationBarAlpha");
             CGFloat toAlpha = 1;
             if (toVCAlpha)
                 toAlpha = [toVCAlpha floatValue];
-
+            
             CGFloat newAlpha = fromAlpha + ((toAlpha - fromAlpha) * percentComplete);
             if (toAlpha == 0 && fromAlpha == 0) {
                 [self.navigationBar setSlideNavigationBackground:0];
@@ -288,7 +287,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             }
         }
     }
-
+    
     [self cc_updateInteractiveTransition:percentComplete];
 }
 
@@ -297,7 +296,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     UIViewController *popVc = [self cc_popViewControllerAnimated:animated];
     if (self.viewControllers.count <= 0)
         return popVc;
-
+    
     UIViewController *topVC = [self.viewControllers lastObject];
     if (topVC != nil) {
         id<UIViewControllerTransitionCoordinator> coordinator = topVC.transitionCoordinator;
@@ -327,11 +326,11 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         CGFloat fromVCAlpha = 1;
         if (fromAlpha)
             fromVCAlpha = [fromAlpha floatValue];
-
+        
         [UIView animateWithDuration:animdDuration
                          animations:^{
-                             [self.navigationBar setSlideNavigationBackground:fromVCAlpha];
-                         }];
+            [self.navigationBar setSlideNavigationBackground:fromVCAlpha];
+        }];
     } else { // 自动完成(pop到上一个界面了)
         [self viewcontrollerOver:[context viewControllerForKey:UITransitionContextToViewControllerKey] fromViewController:[context viewControllerForKey:UITransitionContextFromViewControllerKey]];
     };
@@ -344,12 +343,12 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     CGFloat toAlpha = 1;
     if (toVCAlpha)
         toAlpha = [toVCAlpha floatValue];
-
+    
     id fromVCAlpha = objc_getAssociatedObject(fromViewController, @"navigationBarAlpha");
     CGFloat fromAlpha = 1;
     if (fromVCAlpha)
         fromAlpha = [fromVCAlpha floatValue];
-
+    
     if (toAlpha == 0 && fromAlpha == 0) {
         [self.navigationBar setSlideNavigationBackground:0];
         toViewController.navigationBarView.hidden = YES;
@@ -367,7 +366,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
         dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
             toViewController.navigationBarView.backgroundColor = self.navigationBar.barTintColor;
         });
-
+        
         dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
             toViewController.navigationBarView.hidden = YES;
             toViewController.navigationBarView.backgroundColor = backgroundColor;
@@ -427,7 +426,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
             return viewController;
         }
     }
-
+    
     return nil;
 }
 /**

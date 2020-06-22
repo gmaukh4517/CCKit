@@ -57,6 +57,7 @@
 #define iOS10Later (CURRENT_SYS_VERSION >= 10.0f)
 #define iOS11Later (CURRENT_SYS_VERSION >= 11.0f)
 #define iOS12Later (CURRENT_SYS_VERSION >= 12.0f)
+#define iOS13Later (CURRENT_SYS_VERSION >= 13.0f)
 
 /** 设备版本号 */
 #define CURRENT_SYS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]

@@ -578,7 +578,7 @@ static char NavBarIsLoadingKey;
 
     if (index && toIndex) {
         toIndex = viewControllers.count - toIndex;
-        if (index + toIndex < viewControllers.count)
+        if (index + toIndex <= viewControllers.count)
             [viewControllers removeObjectsInRange:NSMakeRange(index, toIndex)];
         self.navigationController.viewControllers = viewControllers;
         [self popViewControllerAnimated];

@@ -37,9 +37,16 @@
 /**
  *  @author C C, 16-09-08
  *
- *  @brief  Cell 获取下标
+ *  @brief  HeaderFooterView 获取下标
  */
 @property (nonatomic, assign) NSInteger cc_Section;
+
+/**
+ *  @author C C, 16-09-08
+ *
+ *  @brief  HeaderFooterView 获取RowCount
+ */
+@property (nonatomic, assign) NSInteger cc_rowCount;
 
 /**
  *  @author CC, 16-09-08

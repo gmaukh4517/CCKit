@@ -26,11 +26,11 @@
 #ifndef CCMacros_h
 #define CCMacros_h
 
-#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <pthread.h>
-#include <sys/param.h>
 #include <sys/mount.h>
+#include <sys/param.h>
 
 #pragma mark -
 #pragma mark :. GCD 线程处理
@@ -113,6 +113,27 @@ static inline void cc_dispatch_sync_on_main_queue(void (^block)(void))
     }
 }
 
+/** 异步提交执行块，倒计时。*/
+static inline void cc_dispatch_countdown(NSTimeInterval second, void (^block)(NSInteger second))
+{
+    __block NSInteger timeSecond = second;
+    dispatch_queue_t quene = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, quene);
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC, 0 * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(timer, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (timeSecond == 0) {
+                dispatch_cancel(timer);
+                !block ?: block(timeSecond);
+            } else {
+                !block ?: block(timeSecond);
+                timeSecond--;
+            }
+        });
+    });
+    dispatch_resume(timer);
+}
+
 #pragma mark -
 #pragma mark :. 数据验证
 
@@ -177,6 +198,17 @@ static inline void cc_view_shadow_radius(UIView *view, UIColor *color, CGSize of
     view.layer.shadowRadius = shadowRadius;
 }
 
+/** 颜色渐变 **/
+static inline void cc_view_gradualChange(UIView *view, CGPoint startPoint, CGPoint endPoint, NSArray *colors, NSArray *locations)
+{
+    CAGradientLayer *layer = [CAGradientLayer layer];
+    layer.startPoint = startPoint;
+    layer.endPoint = endPoint;
+    layer.colors = colors;
+    layer.locations = locations;
+    layer.frame = view.layer.frame;
+    [view.layer addSublayer:layer];
+}
 
 /** view 圆角 */
 static inline void cc_view_radius(UIView *view, CGFloat radius)
@@ -201,7 +233,7 @@ static inline void cc_view_border_radius(UIView *view, CGFloat radius, CGFloat w
 
 /**
  view 单个圆角
-
+ 
  @param view 试图
  @param angle 某个圆角
  * UIRectCornerTopLeft
@@ -274,7 +306,7 @@ static inline NSString *cc_cachesPath()
 
 /**
  生成子文件夹(如果子文件夹不存在，则直接创建；如果已经存在，则直接返回)
-
+ 
  @param path 文件路径
  @param subFolder 子文件夹名
  @return 返回文件夹路径
@@ -291,7 +323,7 @@ static inline NSString *cc_createSubFolder(NSString *path, NSString *subFolder)
                                 attributes:nil
                                      error:nil];
     }
-
+    
     return subFolderPath;
 }
 
@@ -309,7 +341,7 @@ static inline int cc_isJailbreak()
         "/usr/sbin/sshd",
         "/etc/apt",
     };
-
+    
     int appay_size = sizeof(jailbreak_tool_pathes) / sizeof(jailbreak_tool_pathes[ 0 ]);
     for (int i = 0; i < appay_size; i++) {
         if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithUTF8String:jailbreak_tool_pathes[ i ]]]) {
@@ -332,7 +364,7 @@ static inline double cc_freeDiskSpace()
 
 /**
  等比计算(iPhone 6 基础)
-
+ 
  @param value 换算值
  */
 static inline CGFloat autoSizeScale(CGFloat value)

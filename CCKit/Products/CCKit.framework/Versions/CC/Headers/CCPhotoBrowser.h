@@ -1,5 +1,5 @@
 //
-//  CJPhotoBrowser.h
+//  CCPhotoBrowser.h
 //  CCKit
 //
 // Copyright (c) 2015 CC ( https://github.com/gmaukh4517/CCKit )

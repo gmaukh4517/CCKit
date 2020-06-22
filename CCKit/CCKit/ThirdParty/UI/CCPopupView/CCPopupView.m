@@ -55,21 +55,21 @@
            atPoint:(CGPoint)point
 {
     [self showInView:view
-        backgroundView:nil
-               atPoint:point];
+      backgroundView:nil
+             atPoint:point];
 }
 
 + (void)showInView:(UIView *)view
      withIsPackage:(BOOL)isPackage
 {
     [self showInView:view
-             superView:nil
-        backgroundView:nil
-               atPoint:CGPointZero
-             popupType:CCPopupTypeBottom
-             animation:YES
-         withIsPackage:NO
-            completion:nil];
+           superView:nil
+      backgroundView:nil
+             atPoint:CGPointZero
+           popupType:CCPopupTypeBottom
+           animation:YES
+       withIsPackage:NO
+          completion:nil];
 }
 
 /**
@@ -83,9 +83,9 @@
            atPoint:(CGPoint)point
 {
     [self showInView:view
-        backgroundView:backgroundView
-               atPoint:point
-           completeion:nil];
+      backgroundView:backgroundView
+             atPoint:point
+         completeion:nil];
 }
 
 /**
@@ -101,18 +101,18 @@
        completeion:(void (^)(void))completeion
 {
     [self showInView:view
-             superView:nil
-        backgroundView:backgroundView
-               atPoint:point
-             popupType:CCPopupTypeBottom
-             animation:YES
-         withIsPackage:YES
-            completion:completeion];
+           superView:nil
+      backgroundView:backgroundView
+             atPoint:point
+           popupType:CCPopupTypeBottom
+           animation:YES
+       withIsPackage:YES
+          completion:completeion];
 }
 
 /**
  弹出试图方式
-
+ 
  @param view 视图
  @param type 弹出位置
  */
@@ -121,14 +121,14 @@
          PopupType:(CCPopupType)type
 {
     [self showInView:view
-        backgroundView:nil
-               atPoint:point
-             PopupType:type];
+      backgroundView:nil
+             atPoint:point
+           PopupType:type];
 }
 
 /**
  弹出试图方式
-
+ 
  @param view 视图
  @param superView 显示view层级
  @param point 偏移位置
@@ -140,18 +140,18 @@
          PopupType:(CCPopupType)type
 {
     [self showInView:view
-             superView:superView
-        backgroundView:nil
-               atPoint:point
-             popupType:type
-             animation:YES
-         withIsPackage:YES
-            completion:nil];
+           superView:superView
+      backgroundView:nil
+             atPoint:point
+           popupType:type
+           animation:YES
+       withIsPackage:YES
+          completion:nil];
 }
 
 /**
  弹出试图方式
-
+ 
  @param view 视图
  @param superView 显示view层级
  @param point 偏移位置
@@ -164,13 +164,13 @@
         completion:(void (^)(void))completion
 {
     [self showInView:view
-             superView:superView
-        backgroundView:nil
-               atPoint:point
-             popupType:type
-             animation:YES
-         withIsPackage:YES
-            completion:completion];
+           superView:superView
+      backgroundView:nil
+             atPoint:point
+           popupType:type
+           animation:YES
+       withIsPackage:YES
+          completion:completion];
 }
 
 + (void)showInView:(UIView *)view
@@ -179,13 +179,13 @@
         completion:(void (^)(void))completion
 {
     [self showInView:view
-             superView:nil
-        backgroundView:nil
-               atPoint:point
-             popupType:type
-             animation:YES
-         withIsPackage:YES
-            completion:completion];
+           superView:nil
+      backgroundView:nil
+             atPoint:point
+           popupType:type
+           animation:YES
+       withIsPackage:YES
+          completion:completion];
 }
 
 + (void)showInView:(UIView *)view
@@ -194,10 +194,10 @@
          PopupType:(CCPopupType)type
 {
     [self showInView:view
-        backgroundView:backgroundView
-               atPoint:point
-             PopupType:type
-           completeion:nil];
+      backgroundView:backgroundView
+             atPoint:point
+           PopupType:type
+         completeion:nil];
 }
 
 + (void)showInView:(UIView *)view
@@ -207,18 +207,18 @@
        completeion:(void (^)(void))completion
 {
     [self showInView:view
-             superView:nil
-        backgroundView:backgroundView
-               atPoint:point
-             popupType:type
-             animation:YES
-         withIsPackage:YES
-            completion:completion];
+           superView:nil
+      backgroundView:backgroundView
+             atPoint:point
+           popupType:type
+           animation:YES
+       withIsPackage:YES
+          completion:completion];
 }
 
 /**
  弹出试图
-
+ 
  @param view 显示试图
  @param superView 显示父类视图
  @param backgroundView 背景视图
@@ -240,11 +240,11 @@
     UIView *targetView = superView;
     if (!targetView)
         targetView = [self parentTarget];
-
+    
     if (![targetView.subviews containsObject:view]) {
         CGFloat semiViewHeight = view.frame.size.height;
         CGRect vf = targetView.bounds;
-
+        
         CGRect semiViewFrame;
         CGRect overlayFrame;
         switch (type) {
@@ -271,20 +271,21 @@
             default:
                 break;
         }
-
+        
         UIView *overlay = [[UIView alloc] init];
         overlay.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
         if (backgroundView)
             overlay = backgroundView;
-
+        
         overlay.frame = CGRectMake(point.x, point.y, targetView.frame.size.width - point.x, targetView.frame.size.height - point.y);
-
+        
         overlay.userInteractionEnabled = YES;
         overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         overlay.tag = kSemiModalScreenshotTag;
         overlay.alpha = 0;
         [targetView addSubview:overlay];
-
+        overlay.layer.zPosition = 1;
+        
         if (isPackage) {
             UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [dismissButton addTarget:self action:@selector(dismissButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -293,27 +294,31 @@
             dismissButton.tag = type;
             dismissButton.frame = overlayFrame;
             [overlay addSubview:dismissButton];
-
+            
             if (completion)
                 objc_setAssociatedObject(dismissButton, @"dismissButtonBlock", completion, OBJC_ASSOCIATION_RETAIN);
         }
-
+        
         view.tag = kSemiModalModalViewTag;
         [targetView addSubview:view];
+        view.layer.zPosition = 2;
         if (type != CCPopupTypeBottom) {
             if ([targetView isKindOfClass:[UIWindow class]])
                 ((UIWindow *)targetView).windowLevel = UIWindowLevelAlert;
             else
                 [targetView bringSubviewToFront:view];
         }
-
+        
         [UIView animateWithDuration:kCCDuration
                          animations:^{
-                             view.frame = semiViewFrame;
-                             overlay.alpha = 1;
-                         }];
-
-        if (CCPopupTypeBottom) {
+            view.frame = semiViewFrame;
+            overlay.alpha = 1;
+        }];
+        
+        if ([targetView isKindOfClass:[UIScrollView class]])
+            ((UIScrollView *)targetView).scrollEnabled = NO;
+        
+        if (CCPopupTypeBottom && !isPackage) {
             UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(globalKeyboardHide:)];
             tapGestureRecognizer.cancelsTouchesInView = NO;
             [view addGestureRecognizer:tapGestureRecognizer];
@@ -349,18 +354,21 @@
 #pragma mark :. UIKeyboad Notification methods
 + (void)keyboardWillShow:(NSNotification *)aNotification
 {
+    UIWindow *target = [self parentTarget];
+    UIView *modal = [target viewWithTag:kSemiModalModalViewTag];
+    if (modal.frame.origin.y != target.bounds.size.height - modal.frame.size.height)
+        return;
+    
     CGRect kbFrame = [[aNotification userInfo][ UIKeyboardFrameEndUserInfoKey ] CGRectValue];
     CGRect screenSize = [[UIScreen mainScreen] bounds];
     CGRect intersectRect = CGRectIntersection(kbFrame, screenSize);
-
-    UIWindow *target = [self parentTarget];
-    UIView *modal = [target viewWithTag:kSemiModalModalViewTag];
+    
     [UIView animateWithDuration:kCCDuration
                      animations:^{
-                         CGRect frame = modal.frame;
-                         frame.origin.y -= intersectRect.size.height;
-                         modal.frame = frame;
-                     }];
+        CGRect frame = modal.frame;
+        frame.origin.y -= intersectRect.size.height;
+        modal.frame = frame;
+    }];
 }
 
 + (void)keyboardWillHide:(NSNotification *)aNotification
@@ -369,10 +377,10 @@
     UIView *modal = [target viewWithTag:kSemiModalModalViewTag];
     [UIView animateWithDuration:kCCDuration
                      animations:^{
-                         CGRect frame = modal.frame;
-                         frame.origin.y = target.frame.size.height - modal.frame.size.height;
-                         modal.frame = frame;
-                     }];
+        CGRect frame = modal.frame;
+        frame.origin.y = target.frame.size.height - modal.frame.size.height;
+        modal.frame = frame;
+    }];
 }
 
 /** 隐藏 **/
@@ -401,24 +409,24 @@
     UIView *overlay = [target viewWithTag:kSemiModalScreenshotTag];
     if (animation) {
         [UIView animateWithDuration:kCCDuration
-            animations:^{
-                [self animationPosition];
-                overlay.alpha -= 0.9;
+                         animations:^{
+            [self animationPosition];
+            overlay.alpha -= 0.9;
+        }
+                         completion:^(BOOL finished) {
+            [overlay removeFromSuperview];
+            [modal removeFromSuperview];
+            if (completion) {
+                dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    completion();
+                });
             }
-            completion:^(BOOL finished) {
-                [overlay removeFromSuperview];
-                [modal removeFromSuperview];
-                if (completion) {
-                    dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        completion();
-                    });
-                }
-            }];
+        }];
     } else {
         [self animationPosition];
         [overlay removeFromSuperview];
         [modal removeFromSuperview];
-
+        
         if (completion) {
             dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 completion();
@@ -453,6 +461,8 @@
     modal.frame = frame;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [modal removeGestureRecognizer:modal.gestureRecognizers.lastObject];
+    if ([modal.superview isKindOfClass:[UIScrollView class]])
+        ((UIScrollView *)modal.superview).scrollEnabled = YES;
 }
 
 @end
