@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CCHTTPManager.h"
+#import "HttpFileConfig.h"
+#import <CCKit/CCHTTPProtocol.h>
 
 @class AFHTTPRequestOperationManager;
 

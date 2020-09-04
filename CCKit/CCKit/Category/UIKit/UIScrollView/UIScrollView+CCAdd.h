@@ -380,7 +380,10 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
  
  @param item 试图
  */
+- (void)scrollToHorizontalItem:(UIView *)item;
+- (void)scrollToHorizontalItem:(UIView *)item animated:(BOOL)animated;
 - (void)scrollToVerticalItem:(UIView *)item;
+- (void)scrollToVerticalItem:(UIView *)item animated:(BOOL)animated;
 
 /**
  *  @author CC, 16-03-04
@@ -390,6 +393,15 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
  *  @param iconName logo路径
  */
 - (void)setLogoViewIcon:(NSString *)iconName;
+
+/**
+ *  @author CC, 20-08-07
+ *
+ *  @brief 设置顶部底部视图
+ *
+ *  @param bottomView 底部视图
+ */
+- (void)addBottomView:(UIView *)bottomView;
 
 - (NSInteger)pages;
 - (NSInteger)currentPage;
@@ -481,11 +493,11 @@ typedef void (^KeyboardWillChangeBlock)(CGRect keyboardRect, UIViewAnimationOpti
 #pragma mark :. EmptyDataSet
 
 /** The empty datasets data source. */
-@property(nonatomic, weak) IBOutlet id<CCNEmptyDataSetSource> emptyDataSetSource;
+@property (nonatomic, weak) IBOutlet id<CCNEmptyDataSetSource> emptyDataSetSource;
 /** The empty datasets delegate. */
-@property(nonatomic, weak) IBOutlet id<CCNEmptyDataSetDelegate> emptyDataSetDelegate;
+@property (nonatomic, weak) IBOutlet id<CCNEmptyDataSetDelegate> emptyDataSetDelegate;
 /** YES if any empty dataset is visible. */
-@property(nonatomic, readonly, getter=isEmptyDataSetVisible) BOOL emptyDataSetVisible;
+@property (nonatomic, readonly, getter=isEmptyDataSetVisible) BOOL emptyDataSetVisible;
 
 /**
  Reloads the empty dataset content receiver.
@@ -494,6 +506,3 @@ typedef void (^KeyboardWillChangeBlock)(CGRect keyboardRect, UIViewAnimationOpti
 - (void)reloadEmptyDataSet;
 
 @end
-
-
-

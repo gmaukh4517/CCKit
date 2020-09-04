@@ -24,6 +24,7 @@
 //
 
 #import "CCWebViewController.h"
+#import "CCDNSInterceptor.h"
 #import "CCMacroProperty.h"
 #import "CCProgressHUD.h"
 #import "CCWebViewProgress.h"
@@ -199,13 +200,22 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     
     if (!self.navigationbarTransparent) {
         CGRect frame = self.view.frame;
-        frame.size.height -= [self obtainNavigationbarHeight];
+        frame.size.height = winsize.height - [self obtainNavigationbarHeight] - (self.autoBottom ? 22 : 0);
         view.frame = frame;
-        if (_isAdapterBottom) {
+        if (self.autoBottom) {
             UIView *bottomCoverView = [[UIView alloc] initWithFrame:CGRectMake(0, frame.origin.y + frame.size.height, frame.size.width, self.view.frame.size.height - frame.size.height)];
             bottomCoverView.backgroundColor = [UIColor blackColor];
             [self.view addSubview:bottomCoverView];
         }
+    }
+    
+    if (self.autoNavigation) {
+        CGFloat y = [self obtainNavigationbarHeight];
+        CGRect frame = view.frame;
+        frame.origin.y = y;
+        if (self.navigationbarTransparent)
+            frame.size.height = frame.size.height - y - (self.autoBottom ? 22 : 0);
+        view.frame = frame;
     }
     
     if (self.urlString)
@@ -319,10 +329,13 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
 
 - (CGFloat)obtainNavigationbarHeight
 {
-    CGFloat height = self.navigationController.navigationBarHidden ?: 64;
-    if (@available(iOS 11.0, *)) {
-        if ([UIApplication sharedApplication].keyWindow.safeAreaInsets.top == 44)
-            height = (self.navigationController.navigationBarHidden ? 22 : 88) + (_isAdapterBottom ? 22 : 0);
+   CGFloat height = 20;
+    if (self.navigationController && !self.navigationController.navigationBarHidden)
+        height = 64;
+    if (device_iPhoneXAbove) {
+        height = 44;
+        if (self.navigationController && !self.navigationController.navigationBarHidden)
+            height = 88;
     }
     return height;
 }
@@ -429,6 +442,18 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
     } else {
         [self.webViewJSContext evaluateScript:javaScriptString];
     }
+}
+
+#pragma mark -
+#pragma mark :. DNS
+
+- (void)registerInvalidDNSHandler:(void (^)(NSURL *originUrl))registerHandler
+{
+    [NSURLProtocol registerClass:[CCDNSInterceptor class]];
+    [CCDNSInterceptor setEnableWKCustomProtocol:YES];
+    [CCDNSInterceptor registerInvalidIpHandle:^(NSURL *originUrl) {
+        !registerHandler ?: registerHandler(originUrl);
+    }];
 }
 
 #pragma mark -
@@ -658,6 +683,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         _configuration.preferences.javaScriptEnabled = YES;
         _configuration.preferences.javaScriptCanOpenWindowsAutomatically = NO;
         _configuration.processPool = [CCProcessPool sharedProcessPool];
+        _configuration.allowsInlineMediaPlayback = YES;
         
         WKUserContentController *userContentController = [[WKUserContentController alloc] init];
         _configuration.userContentController = userContentController;
@@ -700,6 +726,7 @@ typedef void (^ResponseBlock)(NSString *functionName, NSArray *arguments);
         _webView = [[UIWebView alloc] initWithFrame:self.view.frame];
         _webView.backgroundColor = [UIColor whiteColor];
         _webView.scrollView.delegate = self;
+        _webView.allowsInlineMediaPlayback = YES;
         
         _webViewProgress = [[CCWebViewProgress alloc] init];
         _webView.delegate = _webViewProgress;

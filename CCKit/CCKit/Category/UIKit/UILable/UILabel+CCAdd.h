@@ -197,9 +197,49 @@ typedef NS_ENUM(NSInteger, UILabelCCBlinkingMode) {
 
 /**
  设置行间距
-
+ 
  @param spacing 间距大小
  */
 - (void)setTextLineSpacing:(NSInteger)spacing;
+
+#pragma mark -
+#pragma mark :. text Click=
+
+/**
+ *  @brief  设置某段字点击事件
+ *
+ *  @param range 文字段
+ *  @param linkColor 文颜色
+ *  @param actionBlock 点击回调
+ */
+- (void)setTextLinkWithRange:(NSRange)range
+                   linkColor:(UIColor *)linkColor
+                 withLinBloc:(void (^)(UILabel *sender, id linkData))actionBlock;
+
+/**
+ *  @brief  设置某段字点击事件
+ *
+ *  @param range 文字段
+ *  @param linkColor 文颜色
+ *  @param target 回调对象
+ *  @param action 回到事件
+ */
+- (void)setTextLinkWithRange:(NSRange)range
+                   linkColor:(UIColor *)linkColor
+                   andTarget:(id)target
+                      action:(SEL)action;
+
+/**
+ *  @brief  设置某段字点击事件
+ *
+ *  @param linkData 点击数据
+ *  @param range 文字段
+ *  @param linkColor 文颜色
+ *  @param actionBlock 点击回调
+ */
+- (void)setTextLinkWithData:(id)linkData
+                  linkColor:(UIColor *)linkColor
+                      range:(NSRange)range
+                withLinBloc:(void (^)(UILabel *sender, id linkData))actionBlock;
 
 @end

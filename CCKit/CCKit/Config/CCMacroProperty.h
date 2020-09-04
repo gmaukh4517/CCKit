@@ -161,10 +161,9 @@
 /** 设备是否为iPhone 是否是X及以上设备 */
 #define device_iPhoneXAbove ({                                                    \
     BOOL isBool = NO;                                                             \
-    if (@available(iOS 11.0, *)) {                                                \
-        if ([UIApplication sharedApplication].keyWindow.safeAreaInsets.top == 44) \
-            isBool = YES;                                                         \
-    }                                                                             \
+    NSInteger notchValue = winsize.width / winsize.height * 100;                  \
+    if (216 == notchValue || 46 == notchValue)                                    \
+        isBool = YES;                                                             \
     isBool;                                                                       \
 })
 

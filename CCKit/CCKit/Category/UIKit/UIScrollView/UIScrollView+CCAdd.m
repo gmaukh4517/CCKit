@@ -91,6 +91,7 @@ static char const *const kEmptyDataSetView = "emptyDataSetView";
 @implementation UIScrollView (CCAdd)
 
 static NSString *const kCCLogoView = @"kCCLogoView";
+static NSString *const kCCBottomView = @"kCCBottomView";
 
 - (void)setContentInsetTop:(CGFloat)contentInsetTop
 {
@@ -198,7 +199,7 @@ static NSString *const kCCLogoView = @"kCCLogoView";
     NSInteger height = self.contentSize.height + self.contentInset.bottom - self.bounds.size.height;
     if (height < 0)
         height = 0;
-
+    
     return CGPointMake(0.0f, height);
 }
 - (CGPoint)leftContentOffset
@@ -213,7 +214,7 @@ static NSString *const kCCLogoView = @"kCCLogoView";
 - (ScrollDirection)ScrollDirection
 {
     ScrollDirection direction;
-
+    
     if ([self.panGestureRecognizer translationInView:self.superview].y > 0.0f) {
         direction = ScrollDirectionUp;
     } else if ([self.panGestureRecognizer translationInView:self.superview].y < 0.0f) {
@@ -225,7 +226,7 @@ static NSString *const kCCLogoView = @"kCCLogoView";
     } else {
         direction = ScrollDirectionWTF;
     }
-
+    
     return direction;
 }
 - (BOOL)isScrolledToTop
@@ -277,22 +278,49 @@ static NSString *const kCCLogoView = @"kCCLogoView";
     [self setContentOffset:CGPointMake(self.frame.size.width * pageIndex, 0.0f) animated:animated];
 }
 
-- (void)scrollToVerticalItem:(UIView *)item
+- (void)scrollToHorizontalItem:(UIView *)item
+{
+    [self scrollToHorizontalItem:item animated:YES];
+}
+
+- (void)scrollToHorizontalItem:(UIView *)item animated:(BOOL)animated
 {
     CGFloat targetX = CGRectGetMidX(item.frame) - self.bounds.size.width / 2.0f;
     //左边缘适配
     if (targetX <= 0)
         targetX = 0;
-
+    
     //右边缘适配
     if (targetX >= self.contentSize.width - self.bounds.size.width) {
         targetX = self.contentSize.width - self.bounds.size.width;
         if (targetX < 0)
             targetX = 0;
     }
-
+    
     [self setContentOffset:CGPointMake(targetX, 0)];
 }
+- (void)scrollToVerticalItem:(UIView *)item
+{
+    [self scrollToVerticalItem:item animated:YES];
+}
+
+- (void)scrollToVerticalItem:(UIView *)item animated:(BOOL)animated
+{
+    CGFloat targetY = CGRectGetMidY(item.frame) - self.bounds.size.height / 2.0f;
+    //最上缘适配
+    if (targetY <= 0)
+        targetY = 0;
+    
+    //最下缘适配
+    if (targetY >= self.contentSize.height - self.bounds.size.height) {
+        targetY = self.contentSize.height - self.bounds.size.height;
+        if (targetY < 0)
+            targetY = 0;
+    }
+    
+    [self setContentOffset:CGPointMake(0, targetY) animated:animated];
+}
+
 
 - (void)setLogoView:(UIImageView *)logoView
 {
@@ -318,6 +346,63 @@ static NSString *const kCCLogoView = @"kCCLogoView";
     }
 }
 
+
+- (void)setBottomView:(UIView *)bottomView
+{
+    objc_setAssociatedObject(self, &kCCBottomView, bottomView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (UIView *)bottomView
+{
+    return objc_getAssociatedObject(self, &kCCBottomView);
+}
+
+- (void)addBottomView:(UIView *)bottomView
+{
+    if (self.bottomView || !bottomView) {
+        if (self.bottomView) {
+            [self removeObserver:self forKeyPath:@"contentSize" context:nil];
+            [self.bottomView removeFromSuperview];
+            [self setBottomView:nil];
+        }
+        
+        if (!bottomView)
+            return;
+    }
+    
+    if ([self isKindOfClass:[UITableView class]]) {
+        UITableView *tableView = (UITableView *)self;
+        tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width, bottomView.frame.size.height)];
+        [self addSubview:bottomView];
+        [self setBottomView:bottomView];
+        bottomView.hidden = YES;
+        [self addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+        [self adjustFrameWithContentSize];
+    }
+}
+
+#pragma mark 监听UIScrollView的属性
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (!self.userInteractionEnabled || self.alpha <= 0.01 || self.hidden) return;
+    if ([@"contentSize" isEqualToString:keyPath]) {
+        [self bottomView].hidden = YES;
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(adjustFrameWithContentSize) object:nil];
+        [self performSelector:@selector(adjustFrameWithContentSize) withObject:nil afterDelay:0.2];
+    }
+}
+
+#pragma mark 重写调整frame
+- (void)adjustFrameWithContentSize
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(adjustFrameWithContentSize) object:nil];
+    CGFloat contentHeight = self.contentSizeHeight;
+    CGFloat scrollHeight = self.frame.size.height - self.contentInsetTop - self.contentInsetBottom;
+    
+    CGRect frame = [self bottomView].frame;
+    frame.origin.y = MAX(contentHeight, scrollHeight) - frame.size.height;
+    [self bottomView].frame = frame;
+    [self bottomView].hidden = NO;
+}
 
 - (NSInteger)pages
 {
@@ -523,22 +608,22 @@ static NSString *const MessageInputBarHeightKey = @"MessageInputBarHeightKey";
                                              selector:@selector(handleWillShowKeyboardNotification:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleWillHideKeyboardNotification:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
                                                  name:UIKeyboardDidHideNotification
                                                object:nil];
-
+    
     if (isPanGestured)
         [self.panGestureRecognizer addTarget:self action:@selector(handlePanGesture:)];
 }
@@ -549,7 +634,7 @@ static NSString *const MessageInputBarHeightKey = @"MessageInputBarHeightKey";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
-
+    
     if (isPanGestured)
         [self.panGestureRecognizer removeTarget:self action:@selector(handlePanGesture:)];
 }
@@ -560,15 +645,15 @@ static NSString *const MessageInputBarHeightKey = @"MessageInputBarHeightKey";
 {
     if (!self.keyboardView || self.keyboardView.hidden)
         return;
-
+    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
-
+    
     UIWindow *panWindow = [[UIApplication sharedApplication] keyWindow];
     CGPoint location = [pan locationInView:panWindow];
     location.y += self.messageInputBarHeight;
     CGPoint velocity = [pan velocityInView:panWindow];
-
+    
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
             self.previousKeyboardY = self.keyboardView.frame.origin.y;
@@ -576,60 +661,60 @@ static NSString *const MessageInputBarHeightKey = @"MessageInputBarHeightKey";
         case UIGestureRecognizerStateEnded:
             if (velocity.y > 0 && self.keyboardView.frame.origin.y > self.previousKeyboardY) {
                 [UIView animateWithDuration:0.3
-                    delay:0
-                    options:UIViewAnimationOptionCurveEaseOut
-                    animations:^{
-                        self.keyboardView.frame = CGRectMake(0.0f,
-                                                             screenHeight,
-                                                             self.keyboardView.frame.size.width,
-                                                             self.keyboardView.frame.size.height);
-
-                        if (self.keyboardWillBeDismissed) {
-                            self.keyboardWillBeDismissed();
-                        }
+                                      delay:0
+                                    options:UIViewAnimationOptionCurveEaseOut
+                                 animations:^{
+                    self.keyboardView.frame = CGRectMake(0.0f,
+                                                         screenHeight,
+                                                         self.keyboardView.frame.size.width,
+                                                         self.keyboardView.frame.size.height);
+                    
+                    if (self.keyboardWillBeDismissed) {
+                        self.keyboardWillBeDismissed();
                     }
-                    completion:^(BOOL finished) {
-                        self.keyboardView.hidden = YES;
-                        self.keyboardView.frame = CGRectMake(0.0f,
-                                                             self.previousKeyboardY,
-                                                             self.keyboardView.frame.size.width,
-                                                             self.keyboardView.frame.size.height);
-                        [self resignFirstResponder];
-
-                        if (self.keyboardDidHide) {
-                            self.keyboardDidHide();
-                        }
-                    }];
+                }
+                                 completion:^(BOOL finished) {
+                    self.keyboardView.hidden = YES;
+                    self.keyboardView.frame = CGRectMake(0.0f,
+                                                         self.previousKeyboardY,
+                                                         self.keyboardView.frame.size.width,
+                                                         self.keyboardView.frame.size.height);
+                    [self resignFirstResponder];
+                    
+                    if (self.keyboardDidHide) {
+                        self.keyboardDidHide();
+                    }
+                }];
             } else { // gesture ended with no flick or a flick upwards, snap keyboard back to original position
                 [UIView animateWithDuration:0.2
                                       delay:0
                                     options:UIViewAnimationOptionCurveEaseOut
                                  animations:^{
-                                     if (self.keyboardWillSnapBackToPoint) {
-                                         self.keyboardWillSnapBackToPoint(CGPointMake(0.0f, self.previousKeyboardY));
-                                     }
-
-                                     self.keyboardView.frame = CGRectMake(0.0f,
-                                                                          self.previousKeyboardY,
-                                                                          self.keyboardView.frame.size.width,
-                                                                          self.keyboardView.frame.size.height);
-                                 }
+                    if (self.keyboardWillSnapBackToPoint) {
+                        self.keyboardWillSnapBackToPoint(CGPointMake(0.0f, self.previousKeyboardY));
+                    }
+                    
+                    self.keyboardView.frame = CGRectMake(0.0f,
+                                                         self.previousKeyboardY,
+                                                         self.keyboardView.frame.size.width,
+                                                         self.keyboardView.frame.size.height);
+                }
                                  completion:NULL];
             }
             break;
-
-        // gesture is currently panning, match keyboard y to touch y
+            
+            // gesture is currently panning, match keyboard y to touch y
         default:
             if (location.y > self.keyboardView.frame.origin.y || self.keyboardView.frame.origin.y != self.previousKeyboardY) {
                 CGFloat newKeyboardY = self.previousKeyboardY + (location.y - self.previousKeyboardY);
                 newKeyboardY = newKeyboardY < self.previousKeyboardY ? self.previousKeyboardY : newKeyboardY;
                 newKeyboardY = newKeyboardY > screenHeight ? screenHeight : newKeyboardY;
-
+                
                 self.keyboardView.frame = CGRectMake(0.0f,
                                                      newKeyboardY,
                                                      self.keyboardView.frame.size.width,
                                                      self.keyboardView.frame.size.height);
-
+                
                 if (self.keyboardDidScrollToPoint) {
                     self.keyboardDidScrollToPoint(CGPointMake(0.0f, newKeyboardY));
                 }
@@ -673,7 +758,7 @@ static NSString *const MessageInputBarHeightKey = @"MessageInputBarHeightKey";
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIViewAnimationCurve curve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-
+    
     if (self.keyboardWillChange) {
         self.keyboardWillChange(keyboardRect, [self animationOptionsForCurve:curve], duration, (([notification.name isEqualToString:UIKeyboardWillShowNotification]) ? YES : NO));
     }
@@ -684,16 +769,16 @@ static NSString *const MessageInputBarHeightKey = @"MessageInputBarHeightKey";
     switch (curve) {
         case UIViewAnimationCurveEaseInOut:
             return UIViewAnimationOptionCurveEaseInOut;
-
+            
         case UIViewAnimationCurveEaseIn:
             return UIViewAnimationOptionCurveEaseIn;
-
+            
         case UIViewAnimationCurveEaseOut:
             return UIViewAnimationOptionCurveEaseOut;
-
+            
         case UIViewAnimationCurveLinear:
             return UIViewAnimationOptionCurveLinear;
-
+            
         default:
             return kNilOptions;
     }
@@ -720,18 +805,18 @@ static char UIScrollViewParallaxView;
         APParallaxView *parallaxView = [[APParallaxView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width * 2, height) andShadow:shadow];
         [parallaxView setClipsToBounds:YES];
         [parallaxView.imageView setImage:image];
-
+        
         parallaxView.scrollView = self;
         parallaxView.parallaxHeight = height;
         [self addSubview:parallaxView];
         [self sendSubviewToBack:parallaxView];
-
+        
         parallaxView.originalTopInset = self.contentInset.top;
-
+        
         UIEdgeInsets newInset = self.contentInset;
         newInset.top = height;
         self.contentInset = newInset;
-
+        
         self.parallaxView = parallaxView;
         self.showsParallax = YES;
     }
@@ -754,20 +839,20 @@ static char UIScrollViewParallaxView;
         APParallaxView *parallaxView = [[APParallaxView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, height) andShadow:NO];
         [parallaxView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
         [parallaxView setClipsToBounds:YES];
-
+        
         [parallaxView setCustomView:view];
-
+        
         parallaxView.scrollView = self;
         parallaxView.parallaxHeight = height;
         [self addSubview:parallaxView];
         [self sendSubviewToBack:parallaxView];
-
+        
         parallaxView.originalTopInset = self.contentInset.top;
-
+        
         UIEdgeInsets newInset = self.contentInset;
         newInset.top = height;
         self.contentInset = newInset;
-
+        
         self.parallaxView = parallaxView;
         self.showsParallax = YES;
     }
@@ -788,7 +873,7 @@ static char UIScrollViewParallaxView;
 - (void)setShowsParallax:(BOOL)showsParallax
 {
     self.parallaxView.hidden = !showsParallax;
-
+    
     if (!showsParallax) {
         if (self.parallaxView.isObserving) {
             [self removeObserver:self.parallaxView forKeyPath:@"contentOffset"];
@@ -836,16 +921,16 @@ static char UIScrollViewParallaxView;
 - (CCNEmptyDataSetView *)emptyDataSetView
 {
     CCNEmptyDataSetView *view = objc_getAssociatedObject(self, kEmptyDataSetView);
-
+    
     if (!view) {
         view = [CCNEmptyDataSetView new];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         view.hidden = YES;
-
+        
         view.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cc_didTapContentView:)];
         view.tapGesture.delegate = self;
         [view addGestureRecognizer:view.tapGesture];
-
+        
         [self setEmptyDataSetView:view];
     }
     return view;
@@ -858,44 +943,44 @@ static char UIScrollViewParallaxView;
             return YES;
         }
     }
-
+    
     return NO;
 }
 
 - (NSInteger)cc_itemsCount
 {
     NSInteger items = 0;
-
+    
     if (![self respondsToSelector:@selector(dataSource)]) {
         return items;
     }
-
+    
     if ([self isKindOfClass:[UITableView class]]) {
         id<UITableViewDataSource> dataSource = [self performSelector:@selector(dataSource)];
         UITableView *tableView = (UITableView *)self;
-
+        
         NSInteger sections = 1;
         if ([dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) {
             sections = [dataSource numberOfSectionsInTableView:tableView];
         }
-
+        
         for (NSInteger i = 0; i < sections; i++) {
             items += [dataSource tableView:tableView numberOfRowsInSection:i];
         }
     } else if ([self isKindOfClass:[UICollectionView class]]) {
         id<UICollectionViewDataSource> dataSource = [self performSelector:@selector(dataSource)];
         UICollectionView *collectionView = (UICollectionView *)self;
-
+        
         NSInteger sections = 1;
         if ([dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)]) {
             sections = [dataSource numberOfSectionsInCollectionView:collectionView];
         }
-
+        
         for (NSInteger i = 0; i < sections; i++) {
             items += [dataSource collectionView:collectionView numberOfItemsInSection:i];
         }
     }
-
+    
     return items;
 }
 
@@ -1005,7 +1090,7 @@ static char UIScrollViewParallaxView;
 - (CGFloat)cc_verticalOffset
 {
     CGFloat offset = 0.0;
-
+    
     if (self.emptyDataSetSource && [self.emptyDataSetSource respondsToSelector:@selector(verticalOffsetForEmptyDataSet:)]) {
         offset = [self.emptyDataSetSource verticalOffsetForEmptyDataSet:self];
     }
@@ -1125,12 +1210,12 @@ static char UIScrollViewParallaxView;
     if (!datasource || ![self cc_canDisplay]) {
         [self cc_invalidate];
     }
-
+    
     objc_setAssociatedObject(self, kEmptyDataSetSource, datasource, OBJC_ASSOCIATION_ASSIGN);
-
+    
     // We add method sizzling for injecting -cc_reloadData implementation to the native -reloadData implementation
     [self swizzleIfPossible:@selector(reloadData)];
-
+    
     // Exclusively for UITableView, we also inject -cc_reloadData to -endUpdates
     if ([self isKindOfClass:[UITableView class]]) {
         [self swizzleIfPossible:@selector(endUpdates)];
@@ -1142,7 +1227,7 @@ static char UIScrollViewParallaxView;
     if (!delegate) {
         [self cc_invalidate];
     }
-
+    
     objc_setAssociatedObject(self, kEmptyDataSetDelegate, delegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
@@ -1170,13 +1255,13 @@ static char UIScrollViewParallaxView;
     if (![self cc_canDisplay]) {
         return;
     }
-
+    
     if ([self cc_shouldDisplay] && [self cc_itemsCount] == 0) {
         // Notifies that the empty dataset view will appear
         [self cc_willAppear];
-
+        
         CCNEmptyDataSetView *view = self.emptyDataSetView;
-
+        
         if (!view.superview) {
             // Send the view all the way to the back, in case a header and/or footer is present, as well as for sectionHeaders or any other content
             if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
@@ -1185,12 +1270,12 @@ static char UIScrollViewParallaxView;
                 [self addSubview:view];
             }
         }
-
+        
         // Removing view resetting the view and its constraints it very important to guarantee a good state
         [view prepareForReuse];
-
+        
         UIView *customView = [self cc_customView];
-
+        
         // If a non-nil custom view is available, let's configure it instead
         if (customView) {
             view.customView = customView;
@@ -1198,16 +1283,16 @@ static char UIScrollViewParallaxView;
             // Get the data from the data source
             NSAttributedString *titleLabelString = [self cc_titleLabelString];
             NSAttributedString *detailLabelString = [self cc_detailLabelString];
-
+            
             UIImage *buttonImage = [self cc_buttonImageForState:UIControlStateNormal];
             NSAttributedString *buttonTitle = [self cc_buttonTitleForState:UIControlStateNormal];
-
+            
             UIImage *image = [self cc_image];
             UIColor *imageTintColor = [self cc_imageTintColor];
             UIImageRenderingMode renderingMode = imageTintColor ? UIImageRenderingModeAlwaysTemplate : UIImageRenderingModeAlwaysOriginal;
-
+            
             view.verticalSpace = [self cc_verticalSpace];
-
+            
             // Configure Image
             if (image) {
                 if ([image respondsToSelector:@selector(imageWithRenderingMode:)]) {
@@ -1218,17 +1303,17 @@ static char UIScrollViewParallaxView;
                     view.imageView.image = image;
                 }
             }
-
+            
             // Configure title label
             if (titleLabelString) {
                 view.titleLabel.attributedText = titleLabelString;
             }
-
+            
             // Configure detail label
             if (detailLabelString) {
                 view.detailLabel.attributedText = detailLabelString;
             }
-
+            
             // Configure button
             if (buttonImage) {
                 [view.button setImage:buttonImage forState:UIControlStateNormal];
@@ -1240,41 +1325,41 @@ static char UIScrollViewParallaxView;
                 [view.button setBackgroundImage:[self cc_buttonBackgroundImageForState:UIControlStateHighlighted] forState:UIControlStateHighlighted];
             }
         }
-
+        
         // Configure offset
         view.verticalOffset = [self cc_verticalOffset];
-
+        
         // Configure the empty dataset view
         view.backgroundColor = [self cc_dataSetBackgroundColor];
         view.hidden = NO;
         view.clipsToBounds = YES;
-
+        
         // Configure empty dataset userInteraction permission
         view.userInteractionEnabled = [self cc_isTouchAllowed];
-
+        
         // Configure empty dataset fade in display
         view.fadeInOnDisplay = [self cc_shouldFadeIn];
-
+        
         [view setupConstraints];
-
+        
         [UIView performWithoutAnimation:^{
             [view layoutIfNeeded];
         }];
-
+        
         // Configure scroll permission
         self.scrollEnabled = [self cc_isScrollAllowed];
-
+        
         // Configure image view animation
         if ([self cc_isImageViewAnimateAllow]) {
             CAAnimation *animation = [self cc_imageAnimation];
-
+            
             if (animation) {
                 [self.emptyDataSetView.imageView.layer addAnimation:animation forKey:kEmptyImageViewAnimationKey];
             }
         } else if ([self.emptyDataSetView.imageView.layer animationForKey:kEmptyImageViewAnimationKey]) {
             [self.emptyDataSetView.imageView.layer removeAnimationForKey:kEmptyImageViewAnimationKey];
         }
-
+        
         // Notifies that the empty dataset view did appear
         [self cc_didAppear];
     } else if (self.isEmptyDataSetVisible) {
@@ -1286,16 +1371,16 @@ static char UIScrollViewParallaxView;
 {
     // Notifies that the empty dataset view will disappear
     [self cc_willDisappear];
-
+    
     if (self.emptyDataSetView) {
         [self.emptyDataSetView prepareForReuse];
         [self.emptyDataSetView removeFromSuperview];
-
+        
         [self setEmptyDataSetView:nil];
     }
-
+    
     self.scrollEnabled = YES;
-
+    
     // Notifies that the empty dataset view did disappear
     [self cc_didDisappear];
 }
@@ -1312,16 +1397,16 @@ void cc_original_implementation(id self, SEL _cmd)
 {
     // Fetch original implementation from lookup table
     NSString *key = cc_implementationKey(self, _cmd);
-
+    
     NSDictionary *swizzleInfo = [_impLookupTable objectForKey:key];
     NSValue *impValue = [swizzleInfo valueForKey:DZNSwizzleInfoPointerKey];
-
+    
     IMP impPointer = [impValue pointerValue];
-
+    
     // We then inject the additional implementation for reloading the empty dataset
     // Doing it before calling the original implementation does update the 'isEmptyDataSetVisible' flag on time.
     [self cc_reloadEmptyDataSet];
-
+    
     // If found, call original implementation
     if (impPointer) {
         ((void (*)(id, SEL))impPointer)(self, _cmd);
@@ -1333,7 +1418,7 @@ NSString *cc_implementationKey(id target, SEL selector)
     if (!target || !selector) {
         return nil;
     }
-
+    
     Class baseClass;
     if ([target isKindOfClass:[UITableView class]])
         baseClass = [UITableView class];
@@ -1343,9 +1428,9 @@ NSString *cc_implementationKey(id target, SEL selector)
         baseClass = [UIScrollView class];
     else
         return nil;
-
+    
     NSString *className = NSStringFromClass([baseClass class]);
-
+    
     NSString *selectorName = NSStringFromSelector(selector);
     return [NSString stringWithFormat:@"%@_%@", className, selectorName];
 }
@@ -1356,41 +1441,41 @@ NSString *cc_implementationKey(id target, SEL selector)
     if (![self respondsToSelector:selector]) {
         return;
     }
-
+    
     // Create the lookup table
     if (!_impLookupTable) {
         _impLookupTable = [[NSMutableDictionary alloc] initWithCapacity:2];
     }
-
+    
     // We make sure that setImplementation is called once per class kind, UITableView or UICollectionView.
     for (NSDictionary *info in [_impLookupTable allValues]) {
         Class class = [info objectForKey:DZNSwizzleInfoOwnerKey];
         NSString *selectorName = [info objectForKey:DZNSwizzleInfoSelectorKey];
-
+        
         if ([selectorName isEqualToString:NSStringFromSelector(selector)]) {
             if ([self isKindOfClass:class]) {
                 return;
             }
         }
     }
-
+    
     NSString *key = cc_implementationKey(self, selector);
     NSValue *impValue = [[_impLookupTable objectForKey:key] valueForKey:DZNSwizzleInfoPointerKey];
-
+    
     // If the implementation for this class already exist, skip!!
     if (impValue || !key) {
         return;
     }
-
+    
     // Swizzle by injecting additional implementation
     Method method = class_getInstanceMethod([self class], selector);
     IMP cc_newImplementation = method_setImplementation(method, (IMP)cc_original_implementation);
-
+    
     // Store the new implementation in the lookup table
     NSDictionary *swizzledInfo = @{DZNSwizzleInfoOwnerKey : [self class],
                                    DZNSwizzleInfoSelectorKey : NSStringFromSelector(selector),
                                    DZNSwizzleInfoPointerKey : [NSValue valueWithPointer:cc_newImplementation]};
-
+    
     [_impLookupTable setObject:swizzledInfo forKey:key];
 }
 
@@ -1402,23 +1487,23 @@ NSString *cc_implementationKey(id target, SEL selector)
     if ([gestureRecognizer.view isEqual:self.emptyDataSetView]) {
         return [self cc_isTouchAllowed];
     }
-
+    
     return [super gestureRecognizerShouldBegin:gestureRecognizer];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     UIGestureRecognizer *tapGesture = self.emptyDataSetView.tapGesture;
-
+    
     if ([gestureRecognizer isEqual:tapGesture] || [otherGestureRecognizer isEqual:tapGesture]) {
         return YES;
     }
-
+    
     // defer to emptyDataSetDelegate's implementation if available
     if ((self.emptyDataSetDelegate != (id)self) && [self.emptyDataSetDelegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
         return [(id)self.emptyDataSetDelegate gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
     }
-
+    
     return NO;
 }
 
@@ -1440,27 +1525,27 @@ NSString *cc_implementationKey(id target, SEL selector)
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
-
+    
     //// General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
-
-
+    
+    
     //// Gradient Declarations
     NSArray *gradient3Colors = [NSArray arrayWithObjects:
-                                            (id)[UIColor colorWithWhite:0 alpha:0.3].CGColor,
-                                            (id)[ UIColor clearColor ].CGColor, nil];
+                                (id)[UIColor colorWithWhite:0 alpha:0.3].CGColor,
+                                (id)[ UIColor clearColor ].CGColor, nil];
     CGFloat gradient3Locations[] = {0, 1};
     CGGradientRef gradient3 = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradient3Colors, gradient3Locations);
-
+    
     //// Rectangle Drawing
     UIBezierPath *rectanglePath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, CGRectGetWidth(rect), 8)];
     CGContextSaveGState(context);
     [rectanglePath addClip];
     CGContextDrawLinearGradient(context, gradient3, CGPointMake(0, CGRectGetHeight(rect)), CGPointMake(0, 0), 0);
     CGContextRestoreGState(context);
-
-
+    
+    
     //// Cleanup
     CGGradientRelease(gradient3);
     CGColorSpaceRelease(colorSpace);
@@ -1486,16 +1571,16 @@ NSString *cc_implementationKey(id target, SEL selector)
         // default styling values
         [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         [self setState:APParallaxTrackingActive];
-
+        
         self.imageView = [[UIImageView alloc] init];
         [self.imageView setContentMode:UIViewContentModeScaleAspectFill];
         [self.imageView setClipsToBounds:YES];
         [self addSubview:self.imageView];
-
+        
         [self.imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[imageView]|" options:0 metrics:nil views:@{ @"imageView" : self.imageView }]];
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[imageView]|" options:0 metrics:nil views:@{ @"imageView" : self.imageView }]];
-
+        
         if (shadow) {
             self.shadowView = [[APParallaxShadowView alloc] init];
             [self addSubview:self.shadowView];
@@ -1504,7 +1589,7 @@ NSString *cc_implementationKey(id target, SEL selector)
             [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[shadowView]|" options:0 metrics:nil views:@{ @"shadowView" : self.shadowView }]];
         }
     }
-
+    
     return self;
 }
 
@@ -1534,9 +1619,9 @@ NSString *cc_implementationKey(id target, SEL selector)
     if (_customView) {
         [_customView removeFromSuperview];
     }
-
+    
     _customView = customView;
-
+    
     [self addSubview:customView];
     [customView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[customView]|" options:0 metrics:nil views:@{ @"customView" : customView }]];
@@ -1546,7 +1631,7 @@ NSString *cc_implementationKey(id target, SEL selector)
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
+    
     if (self.shadowView) {
         [self bringSubviewToFront:self.shadowView];
     }
@@ -1571,15 +1656,15 @@ NSString *cc_implementationKey(id target, SEL selector)
     } else {
         [self setState:APParallaxTrackingActive];
     }
-
+    
     if (self.state == APParallaxTrackingActive) {
         CGFloat yOffset = contentOffset.y * -1;
         if ([self.delegate respondsToSelector:@selector(parallaxView:willChangeFrame:)]) {
             [self.delegate parallaxView:self willChangeFrame:self.frame];
         }
-
+        
         [self setFrame:CGRectMake(0, contentOffset.y, CGRectGetWidth(self.frame), yOffset)];
-
+        
         if ([self.delegate respondsToSelector:@selector(parallaxView:didChangeFrame:)]) {
             [self.delegate parallaxView:self didChangeFrame:self.frame];
         }
@@ -1613,11 +1698,11 @@ NSString *cc_implementationKey(id target, SEL selector)
 - (void)didMoveToSuperview
 {
     self.frame = self.superview.bounds;
-
+    
     void (^fadeInBlock)(void) = ^{
         self.contentView.alpha = 1.0;
     };
-
+    
     if (self.fadeInOnDisplay) {
         [UIView animateWithDuration:0.25
                          animations:fadeInBlock
@@ -1651,7 +1736,7 @@ NSString *cc_implementationKey(id target, SEL selector)
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         _imageView.userInteractionEnabled = NO;
         _imageView.accessibilityIdentifier = @"empty set background image";
-
+        
         [_contentView addSubview:_imageView];
     }
     return _imageView;
@@ -1663,14 +1748,14 @@ NSString *cc_implementationKey(id target, SEL selector)
         _titleLabel = [UILabel new];
         _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _titleLabel.backgroundColor = [UIColor clearColor];
-
+        
         _titleLabel.font = [UIFont systemFontOfSize:27.0];
         _titleLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1.0];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         _titleLabel.numberOfLines = 0;
         _titleLabel.accessibilityIdentifier = @"empty set title";
-
+        
         [_contentView addSubview:_titleLabel];
     }
     return _titleLabel;
@@ -1682,14 +1767,14 @@ NSString *cc_implementationKey(id target, SEL selector)
         _detailLabel = [UILabel new];
         _detailLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _detailLabel.backgroundColor = [UIColor clearColor];
-
+        
         _detailLabel.font = [UIFont systemFontOfSize:17.0];
         _detailLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1.0];
         _detailLabel.textAlignment = NSTextAlignmentCenter;
         _detailLabel.lineBreakMode = NSLineBreakByWordWrapping;
         _detailLabel.numberOfLines = 0;
         _detailLabel.accessibilityIdentifier = @"empty set detail label";
-
+        
         [_contentView addSubview:_detailLabel];
     }
     return _detailLabel;
@@ -1704,9 +1789,9 @@ NSString *cc_implementationKey(id target, SEL selector)
         _button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         _button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         _button.accessibilityIdentifier = @"empty set button";
-
+        
         [_button addTarget:self action:@selector(didTapButton:) forControlEvents:UIControlEventTouchUpInside];
-
+        
         [_contentView addSubview:_button];
     }
     return _button;
@@ -1743,12 +1828,12 @@ NSString *cc_implementationKey(id target, SEL selector)
     if (!view) {
         return;
     }
-
+    
     if (_customView) {
         [_customView removeFromSuperview];
         _customView = nil;
     }
-
+    
     _customView = view;
     _customView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:_customView];
@@ -1760,7 +1845,7 @@ NSString *cc_implementationKey(id target, SEL selector)
 - (void)didTapButton:(id)sender
 {
     SEL selector = NSSelectorFromString(@"cc_didTapDataButton:");
-
+    
     if ([self.superview respondsToSelector:selector]) {
         [self.superview performSelector:selector withObject:sender afterDelay:0.0f];
     }
@@ -1775,13 +1860,13 @@ NSString *cc_implementationKey(id target, SEL selector)
 - (void)prepareForReuse
 {
     [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
+    
     _titleLabel = nil;
     _detailLabel = nil;
     _imageView = nil;
     _button = nil;
     _customView = nil;
-
+    
     [self removeAllConstraints];
 }
 
@@ -1794,44 +1879,44 @@ NSString *cc_implementationKey(id target, SEL selector)
     // The content view must alway be centered to its superview
     NSLayoutConstraint *centerXConstraint = [self equallyRelatedConstraintWithView:self.contentView attribute:NSLayoutAttributeCenterX];
     NSLayoutConstraint *centerYConstraint = [self equallyRelatedConstraintWithView:self.contentView attribute:NSLayoutAttributeCenterY];
-
+    
     [self addConstraint:centerXConstraint];
     [self addConstraint:centerYConstraint];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView]|" options:0 metrics:nil views:@{ @"contentView" : self.contentView }]];
-
+    
     // When a custom offset is available, we adjust the vertical constraints' constants
     if (self.verticalOffset != 0 && self.constraints.count > 0) {
         centerYConstraint.constant = self.verticalOffset;
     }
-
+    
     // If applicable, set the custom view's constraints
     if (_customView) {
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView]|" options:0 metrics:nil views:@{ @"contentView" : self.contentView }]];
-
+        
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[customView]|" options:0 metrics:nil views:@{ @"customView" : _customView }]];
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[customView]|" options:0 metrics:nil views:@{ @"customView" : _customView }]];
     } else {
         CGFloat width = CGRectGetWidth(self.frame) ?: CGRectGetWidth([UIScreen mainScreen].bounds);
         CGFloat padding = roundf(width / 16.0);
         CGFloat verticalSpace = self.verticalSpace ?: 11.0; // Default is 11 pts
-
+        
         NSMutableArray *subviewStrings = [NSMutableArray array];
         NSMutableDictionary *views = [NSMutableDictionary dictionary];
         NSDictionary *metrics = @{ @"padding" : @(padding) };
-
+        
         // Assign the image view's horizontal constraints
         if (_imageView.superview) {
             [subviewStrings addObject:@"imageView"];
             views[ [subviewStrings lastObject] ] = _imageView;
-
+            
             [self.contentView addConstraint:[self.contentView equallyRelatedConstraintWithView:_imageView attribute:NSLayoutAttributeCenterX]];
         }
-
+        
         // Assign the title label's horizontal constraints
         if ([self canShowTitle]) {
             [subviewStrings addObject:@"titleLabel"];
             views[ [subviewStrings lastObject] ] = _titleLabel;
-
+            
             [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(padding@750)-[titleLabel(>=0)]-(padding@750)-|"
                                                                                      options:0
                                                                                      metrics:metrics
@@ -1842,12 +1927,12 @@ NSString *cc_implementationKey(id target, SEL selector)
             [_titleLabel removeFromSuperview];
             _titleLabel = nil;
         }
-
+        
         // Assign the detail label's horizontal constraints
         if ([self canShowDetail]) {
             [subviewStrings addObject:@"detailLabel"];
             views[ [subviewStrings lastObject] ] = _detailLabel;
-
+            
             [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(padding@750)-[detailLabel(>=0)]-(padding@750)-|"
                                                                                      options:0
                                                                                      metrics:metrics
@@ -1858,12 +1943,12 @@ NSString *cc_implementationKey(id target, SEL selector)
             [_detailLabel removeFromSuperview];
             _detailLabel = nil;
         }
-
+        
         // Assign the button's horizontal constraints
         if ([self canShowButton]) {
             [subviewStrings addObject:@"button"];
             views[ [subviewStrings lastObject] ] = _button;
-
+            
             [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(padding@750)-[button(>=0)]-(padding@750)-|"
                                                                                      options:0
                                                                                      metrics:metrics
@@ -1874,20 +1959,20 @@ NSString *cc_implementationKey(id target, SEL selector)
             [_button removeFromSuperview];
             _button = nil;
         }
-
-
+        
+        
         NSMutableString *verticalFormat = [NSMutableString new];
-
+        
         // Build a dynamic string format for the vertical constraints, adding a margin between each element. Default is 11 pts.
         for (int i = 0; i < subviewStrings.count; i++) {
             NSString *string = subviewStrings[ i ];
             [verticalFormat appendFormat:@"[%@]", string];
-
+            
             if (i < subviewStrings.count - 1) {
                 [verticalFormat appendFormat:@"-(%.f@750)-", verticalSpace];
             }
         }
-
+        
         // Assign the vertical constraints to the content view
         if (verticalFormat.length > 0) {
             [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|%@|", verticalFormat]
@@ -1901,17 +1986,17 @@ NSString *cc_implementationKey(id target, SEL selector)
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     UIView *hitView = [super hitTest:point withEvent:event];
-
+    
     // Return any UIControl instance such as buttons, segmented controls, switches, etc.
     if ([hitView isKindOfClass:[UIControl class]]) {
         return hitView;
     }
-
+    
     // Return either the contentView or customView
     if ([hitView isEqual:_contentView] || [hitView isEqual:_customView]) {
         return hitView;
     }
-
+    
     return nil;
 }
 

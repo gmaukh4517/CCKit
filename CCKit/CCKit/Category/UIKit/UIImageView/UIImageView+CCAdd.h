@@ -68,20 +68,20 @@ typedef void (^CCImageCompletionBlock)(UIImage *image, NSError *error, NSURL *im
 // 画水印
 // 图片水印
 - (void)setImage:(UIImage *)image
-    withWaterMark:(UIImage *)mark
-           inRect:(CGRect)rect;
+   withWaterMark:(UIImage *)mark
+          inRect:(CGRect)rect;
 // 文字水印
 - (void)setImage:(UIImage *)image
-    withStringWaterMark:(NSString *)markString
-                 inRect:(CGRect)rect
-                  color:(UIColor *)color
-                   font:(UIFont *)font;
+withStringWaterMark:(NSString *)markString
+          inRect:(CGRect)rect
+           color:(UIColor *)color
+            font:(UIFont *)font;
 
 - (void)setImage:(UIImage *)image
-    withStringWaterMark:(NSString *)markString
-                atPoint:(CGPoint)point
-                  color:(UIColor *)color
-                   font:(UIFont *)font;
+withStringWaterMark:(NSString *)markString
+         atPoint:(CGPoint)point
+           color:(UIColor *)color
+            font:(UIFont *)font;
 
 /**
  *  @author C C, 2015-10-14
@@ -127,14 +127,14 @@ void hack_uiimageview_bf(void);
 
 /**
  Sets the image property of the view based on initial text. A random background color is automatically generated.
-
+ 
  @param string The string used to generate the initials. This should be a user's full name if available
  */
 - (void)setImageWithString:(NSString *)string;
 
 /**
  Sets the image property of the view based on initial text and a specified background color.
-
+ 
  @param string The string used to generate the initials. This should be a user's full name if available
  @param color (optional) This optional paramter sets the background of the image. If not provided, a random color will be generated
  */
@@ -144,7 +144,7 @@ void hack_uiimageview_bf(void);
 
 /**
  Sets the image property of the view based on initial text, a specified background color, and a circular clipping
-
+ 
  @param string The string used to generate the initials. This should be a user's full name if available
  @param color (optional) This optional paramter sets the background of the image. If not provided, a random color will be generated
  @param isCircular This boolean will determine if the image view will be clipped to a circular shape
@@ -155,7 +155,7 @@ void hack_uiimageview_bf(void);
 
 /**
  Sets the image property of the view based on initial text, a specified background color, a custom font, and a circular clipping
-
+ 
  @param string The string used to generate the initials. This should be a user's full name if available
  @param color (optional) This optional paramter sets the background of the image. If not provided, a random color will be generated
  @param isCircular This boolean will determine if the image view will be clipped to a circular shape
@@ -168,7 +168,7 @@ void hack_uiimageview_bf(void);
 
 /**
  Sets the image property of the view based on initial text, a specified background color, custom text attributes, and a circular clipping
-
+ 
  @param string The string used to generate the initials. This should be a user's full name if available
  @param color (optional) This optional paramter sets the background of the image. If not provided, a random color will be generated
  @param isCircular This boolean will determine if the image view will be clipped to a circular shape
@@ -260,7 +260,7 @@ void hack_uiimageview_bf(void);
 #pragma mark :. 根据URL获取图片大小
 /**
  传入图片url  返回图片size
-
+ 
  @param imageURL 图片网络地址
  @return image size
  */
@@ -268,12 +268,23 @@ void hack_uiimageview_bf(void);
 
 /**
  传入图片url  返回图片size
-
+ 
  @param imageURL 图片网络地址
  @param defineWidth 等比最大宽度
  @return 返回图片Size
  */
 + (CGSize)downloadImageSizeWithURL:(id)imageURL
                        targetWidth:(CGFloat)defineWidth;
+
+
+#pragma mark -
+#pragma mark :. Video
+
+/**
+ 传入视频地址 加载第一帧图片
+ 
+ @param videoURL 网络视频地址
+ */
+- (void)videoCoverWithURL:(NSString *)videoURL;
 
 @end

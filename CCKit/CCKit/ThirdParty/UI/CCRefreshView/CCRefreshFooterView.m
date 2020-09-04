@@ -111,7 +111,7 @@
 - (void)adjustFrameWithContentSize
 {
     // 内容的高度
-    CGFloat contentHeight = self.scrollView.contentSizeHeight;
+    CGFloat contentHeight = self.scrollView.contentSizeHeight + self.scrollViewOriginalInset.bottom;
     // 表格的高度
     CGFloat scrollHeight = self.scrollView.height - self.scrollViewOriginalInset.top - self.scrollViewOriginalInset.bottom;
     // 设置位置和尺寸

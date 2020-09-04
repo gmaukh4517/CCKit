@@ -82,6 +82,16 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
                     }
                     
                     view.frame = CGRectMake(-margins.left + letf, -margins.top, margins.left + margins.right + view.frame.size.width - letf * 2, margins.top + margins.bottom + view.frame.size.height);
+                    //延迟处理中间标题页面跳转抖动问题
+                    dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+                        for (UIView *viewItem in view.subviews) {
+                            if ([NSStringFromClass(viewItem.classForCoder) containsString:@"UILabel"]) {
+                                CGRect frame = viewItem.frame;
+                                frame.origin.x = (view.frame.size.width - frame.size.width) / 2;
+                                viewItem.frame = frame;
+                            }
+                        }
+                    });
                 } else {
                     view.layoutMargins = UIEdgeInsetsMake(0, 10, 0, 10);
                 }
@@ -167,7 +177,7 @@ static inline void AutomaticWritingSwizzleSelector(Class class, SEL originalSele
     if (isAlpha) {
         UINavigationController *superNav = (UINavigationController *)[self viewController];
         if (superNav && superNav.topViewController)
-            objc_setAssociatedObject(superNav.topViewController, @"navigationBarAlpha", @(alpha), OBJC_ASSOCIATION_COPY_NONATOMIC);
+            objc_setAssociatedObject(superNav.topViewController, @"navigationBarAlpha", @(alpha < 0 ? 0 : alpha), OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
 }
 

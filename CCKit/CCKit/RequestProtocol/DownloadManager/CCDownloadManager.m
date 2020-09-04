@@ -24,13 +24,18 @@
 //
 
 #import "CCDownloadManager.h"
-#import <UIKit/UIApplication.h>
+#import "CCDownloadMultiProxy.h"
 #import "CCDownloadStore.h"
 #import <CCKit/CCExtension.h>
+#import <UIKit/UIApplication.h>
 
 #define kArrayName @"taskLists"
 
-@interface CCDownloadManager () <CCSessionDownloadDelegate>
+#import "CCEventNoticeCenter.h"
+
+@interface CCDownloadManager () {
+    CCDownloadMultiProxy *_proxy;
+}
 
 @property (nonatomic, strong) CCDownloadStore *store;
 
@@ -67,6 +72,8 @@ static CCDownloadManager *manager;
         [manager getDownloadListFromStore];
         //观察self.taskLists
         [manager addObserver:manager forKeyPath:kArrayName options:NSKeyValueObservingOptionNew context:nil];
+        
+        [CCEventNoticeCenter addTarget:self eventName:@"CCDownloadStateSuccess" actionSEL:@selector(downloaderComplete:)];
     });
     return manager;
 }
@@ -83,6 +90,18 @@ static CCDownloadManager *manager;
 - (NSArray *)downloadArr
 {
     return self.taskLists;
+}
+- (void)setDownloadDelegate:(id<CCDownloadManagerDelegate>)downloadDelegate
+{
+    if (!_proxy)
+        _proxy = [CCDownloadMultiProxy proxy];
+    
+    [_proxy addDelegate:downloadDelegate];
+}
+
+- (void)removeDownloadDelegate:(id<CCSessionDownloadDelegate>)downloadDelegate
+{
+    [_proxy removeDelete:downloadDelegate];
 }
 
 #pragma mark :. define
@@ -112,8 +131,8 @@ static CCDownloadManager *manager;
     if ([keyPath isEqualToString:@"operations"]) {
         if (0 == ((NSOperationQueue *)object).operations.count) {
             if (!self.isQueueComplete) {
-                if ([self.downloadDelegate respondsToSelector:@selector(downloaderComplete)])
-                    [self.downloadDelegate downloaderComplete];
+                if ([(id<CCDownloadManagerDelegate>)self->_proxy respondsToSelector:@selector(downloaderComplete)])
+                    [(id<CCDownloadManagerDelegate>)self->_proxy downloaderComplete];
             }
             self.isQueueComplete = NO;
         }
@@ -127,8 +146,8 @@ static CCDownloadManager *manager;
     CCSessionDownload *download = [self modelWithUniqueId:uniqueId];
     if (download.status == CCDownloadStateSuccess || download.status == CCDownloadStateFailed) {
         [self.taskLists removeObject:download];
-        if ([self.downloadDelegate respondsToSelector:@selector(downloader:withUniqueid:)])
-            [self.downloadDelegate downloader:download withUniqueid:download.uniqueId];
+        if ([(id<CCDownloadManagerDelegate>)self->_proxy respondsToSelector:@selector(downloader:withUniqueid:)])
+            [(id<CCDownloadManagerDelegate>)self->_proxy downloader:download withUniqueid:download.uniqueId];
     }
 }
 
@@ -136,16 +155,13 @@ static CCDownloadManager *manager;
 
 /**
  根据标识从列表获取下载对象
-
+ 
  @param uniqueId 绘画ID
  */
 - (CCSessionDownload *)modelWithUniqueId:(NSString *)uniqueId
 {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uniqueId = %@", uniqueId];
-    CCSessionDownload *download = [[self.taskLists filteredArrayUsingPredicate:predicate] firstObject];
-    [download removeDownloadDelegate:self];
-    [download setDownloadDelegate:self];
-    return download;
+    return [[self.taskLists filteredArrayUsingPredicate:predicate] firstObject];
 }
 
 /**
@@ -156,16 +172,16 @@ static CCDownloadManager *manager;
     for (CCSessionDownload *model in self.taskLists) {
         if (model.status == CCDownloadStateRunning)
             [model stop];
-
+        
         if (model.status == CCDownloadStateReady)
             model.status = CCDownloadStateStopped;
-
+        
         NSMutableDictionary *storeDic = [NSMutableDictionary dictionary];
         [storeDic setObject:[model.model cc_keyValues] forKey:@"model"];
         [storeDic setObject:model.downloadUserInfo forKey:@"downloadUserInfo"];
         [storeDic setObject:model.uniqueId forKey:@"uniqueId"];
         [storeDic setObject:@(model.status) forKey:@"status"];
-
+        
         [self.store putObject:storeDic withId:model.uniqueId intoTable:CCCacheTableName];
     }
 }
@@ -176,11 +192,11 @@ static CCDownloadManager *manager;
 - (void)getDownloadListFromStore
 {
     NSArray *list = [self.store getAllItemsWithTable:CCCacheTableName];
-
+    
     NSMutableArray *array = [NSMutableArray array];
     for (NSDictionary *item in list)
         [array addObject:[CCSessionDownload cc_objectWithKeyValues:item]];
-
+    
     [self.taskLists addObjectsFromArray:array];
 }
 
@@ -207,7 +223,7 @@ static CCDownloadManager *manager;
 
 /**
  添加下载任务
-
+ 
  @param url 下载地址
  */
 - (void)addTaskWithUrl:(NSString *)url
@@ -220,14 +236,12 @@ static CCDownloadManager *manager;
 
 /**
  添加下载任务
-
+ 
  @param model 下载模型
  */
 - (void)addTaskWithModel:(CCSessionDownload *)model
 {
     if (![self modelWithUniqueId:model.uniqueId]) {
-        [model removeDownloadDelegate:self];
-        [model setDownloadDelegate:self];
         [self.taskLists addObject:model];
         [self.taskQueue addOperation:[model valueForKey:@"getOperation"]];
     }
@@ -287,6 +301,11 @@ static CCDownloadManager *manager;
     [download cleanSession];
     [self.taskLists removeObject:download];
     [self.store deleteObjectById:download.uniqueId fromTable:CCCacheTableName];
+    
+    dispatch_after(dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^() {
+        if ([(id<CCDownloadManagerDelegate>)self->_proxy respondsToSelector:@selector(downloaderDelete:withUniqueid:)])
+            [(id<CCDownloadManagerDelegate>)self->_proxy downloaderDelete:download withUniqueid:download.uniqueId];
+    });
 }
 
 /**
@@ -315,60 +334,14 @@ static CCDownloadManager *manager;
     }
 }
 
-#pragma mark -
-#pragma mark :. CCSessionDownloadDelegate
-
-/**
- 下载失败回调
-
- @param downloader 下载器
- @param uniqueid 下载文件 id
- @param reason 错误信息
- */
-- (void)dataDownloadFailed:(CCSessionDownload *)downloader withUniqueid:(NSString *)uniqueid reason:(NSString *)reason
+// 删除完成删除并且回调
+- (void)downloaderComplete:(CCEvent *)event
 {
-    //    [(id<CCSessionDownloadDelegate>)self->_proxy dataDownloadFailed:downloader withUniqueid:uniqueid reason:reason];
+    CCSessionDownload *downloader = event.object;
+    if ([(id<CCDownloadManagerDelegate>)self->_proxy respondsToSelector:@selector(downloader:withUniqueid:)])
+        [(id<CCDownloadManagerDelegate>)self->_proxy downloader:downloader withUniqueid:downloader.uniqueId];
+    
+    [self.taskLists removeObject:downloader];
 }
-
-/**
- 下载进度回调
-
- @param downloader 下载器
- @param uniqueid 下载文件 id
- @param aPercent 下载进度，取值 0-100
- */
-- (void)dataDownloadAtPercent:(CCSessionDownload *)downloader withUniqueid:(NSString *)uniqueid percent:(NSNumber *)aPercent
-{
-    //    [(id<CCSessionDownloadDelegate>)self->_proxy dataDownloadAtPercent:downloader withUniqueid:uniqueid percent:aPercent];
-}
-
-/**
- 下载速率回调
-
- @param downloader 下载器
- @param uniqueid 下载文件 id
- @param aRate 下载速率
- */
-- (void)dataDownloadAtRate:(CCSessionDownload *)downloader withUniqueid:(NSString *)uniqueid rate:(NSNumber *)aRate
-{
-}
-
-/**
- 下载状态回调
-
- @param downloader 下载器
- @param uniqueid 下载文件 id
- @param status 下载状态
- */
-- (void)downloader:(CCSessionDownload *)downloader withUniqueid:(NSString *)uniqueid didChangeDownloadStatus:(CCDownloadState)status
-{
-    if (downloader.status == CCDownloadStateSuccess){
-        if ([self.downloadDelegate respondsToSelector:@selector(downloader:withUniqueid:)])
-            [self.downloadDelegate downloader:downloader withUniqueid:uniqueid];
-
-        [self.taskLists removeObject:downloader];
-    }
-}
-
 
 @end

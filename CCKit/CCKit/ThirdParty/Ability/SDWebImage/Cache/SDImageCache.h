@@ -188,6 +188,8 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
  */
 - (nullable UIImage *)imageFromCacheForKey:(nullable NSString *)key;
 
+- (nullable NSData *)diskImageDataBySearchingAllPathsForKey:(nullable NSString *)key;
+
 #pragma mark - Remove Ops
 
 /**

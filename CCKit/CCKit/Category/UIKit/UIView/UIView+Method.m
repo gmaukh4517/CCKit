@@ -23,23 +23,23 @@
 // THE SOFTWARE.
 //
 
-#import "UIView+Method.h"
 #import "SDWebImageManager.h"
+#import "UIView+Method.h"
 #import <objc/runtime.h>
 //#import "CCCacheManager.h"
 //#import "CCMessageAvatarFactory.h"
 
 @interface GestureCallbackValues : NSObject
 
-@property(nonatomic, copy) void (^tapCallback)(UITapGestureRecognizer *recognizer, NSString *gestureId);
-@property(nonatomic, copy) void (^pinchCallback)(UIPinchGestureRecognizer *recognizer, NSString *gestureId);
-@property(nonatomic, copy) void (^panCallback)(UIPanGestureRecognizer *recognizer, NSString *gestureId);
-@property(nonatomic, copy) void (^swipeCallback)(UISwipeGestureRecognizer *recognizer, NSString *gestureId);
-@property(nonatomic, copy) void (^rotationCallback)(UIRotationGestureRecognizer *recognizer, NSString *gestureId);
-@property(nonatomic, copy) void (^longPressCallback)(UILongPressGestureRecognizer *recognizer, NSString *gestureId);
+@property (nonatomic, copy) void (^tapCallback)(UITapGestureRecognizer *recognizer, NSString *gestureId);
+@property (nonatomic, copy) void (^pinchCallback)(UIPinchGestureRecognizer *recognizer, NSString *gestureId);
+@property (nonatomic, copy) void (^panCallback)(UIPanGestureRecognizer *recognizer, NSString *gestureId);
+@property (nonatomic, copy) void (^swipeCallback)(UISwipeGestureRecognizer *recognizer, NSString *gestureId);
+@property (nonatomic, copy) void (^rotationCallback)(UIRotationGestureRecognizer *recognizer, NSString *gestureId);
+@property (nonatomic, copy) void (^longPressCallback)(UILongPressGestureRecognizer *recognizer, NSString *gestureId);
 
-@property(nonatomic, retain) UIGestureRecognizer *gesture;
-@property(nonatomic, retain) NSString *gestureId;
+@property (nonatomic, retain) UIGestureRecognizer *gesture;
+@property (nonatomic, retain) NSString *gestureId;
 
 @end
 
@@ -50,7 +50,8 @@
 
 @implementation CCCircleView
 
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
@@ -58,7 +59,8 @@
     return self;
 }
 
-- (void)drawRect:(CGRect)rect {
+- (void)drawRect:(CGRect)rect
+{
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextAddEllipseInRect(context, CGRectMake(0, 0, CGRectGetWidth(rect), CGRectGetHeight(rect)));
@@ -74,12 +76,12 @@ static char BUTTONCARRYOBJECTS;
 
 @implementation UIView (Method)
 
--(CGSize)LayoutSizeFittingSize
+- (CGSize)LayoutSizeFittingSize
 {
     CGFloat contentViewWidth = CGRectGetWidth(self.frame);
     
     CGSize viewSize = CGSizeMake(contentViewWidth, 0);
-
+    
     if (contentViewWidth > 0) {
         if (viewSize.height <= 0) {
             // Add a hard width constraint to make dynamic content views (like labels) expand vertically instead
@@ -91,7 +93,7 @@ static char BUTTONCARRYOBJECTS;
             viewSize = [self systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
             [self removeConstraint:widthFenceConstraint];
         }
-    }else{
+    } else {
 #if DEBUG
         // Warn if using AutoLayout but get zero height.
         if (self.constraints.count > 0) {
@@ -122,10 +124,10 @@ static char BUTTONCARRYOBJECTS;
     return objc_getAssociatedObject(self, &BUTTONCARRYOBJECTS);
 }
 
-- (id)duplicate 
-{  
-    NSData * tempArchive = [NSKeyedArchiver archivedDataWithRootObject:self];  
-    return [NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];  
+- (id)duplicate
+{
+    NSData *tempArchive = [NSKeyedArchiver archivedDataWithRootObject:self];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
 }
 
 #pragma mark -
@@ -173,22 +175,26 @@ static char BUTTONCARRYOBJECTS;
  */
 - (UIViewController *)viewController
 {
-    UIResponder *responder = self.nextResponder;
+    UIResponder *nextResponder = self;
     do {
-        if ([responder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *)responder;
-        }
-        responder = responder.nextResponder;
-    } while (responder);
+        nextResponder = [nextResponder nextResponder];
+        
+        if ([nextResponder isKindOfClass:[UINavigationController class]])
+            return ((UINavigationController *)nextResponder).topViewController;
+        
+        if ([nextResponder isKindOfClass:[UIViewController class]])
+            return (UIViewController *)nextResponder;
+    } while (nextResponder != nil);
+    
     return nil;
 }
 
 /**
  *  @author CC, 16-04-25
- *  
+ *
  *  @brief 找到当前View所在的NavigationController
  */
--(UINavigationController *)navigationController
+- (UINavigationController *)navigationController
 {
     return self.viewController.navigationController;
 }
@@ -198,12 +204,12 @@ static char BUTTONCARRYOBJECTS;
 
 /**
  *  @author CC, 16-03-14
- *  
+ *
  *  @brief 找到指定类名的view对象
  *
  *  @param className View名称
  */
--(id)findSubViewWithSubViewNSString:(NSString *)className
+- (id)findSubViewWithSubViewNSString:(NSString *)className
 {
     return [self findSubViewWithSubViewClass:NSClassFromString(className)];
 }
@@ -270,7 +276,6 @@ static char BUTTONCARRYOBJECTS;
  */
 - (UIView *)findFirstResponder
 {
-    
     if (([self isKindOfClass:[UITextField class]] || [self isKindOfClass:[UITextView class]]) && (self.isFirstResponder)) {
         return self;
     }
@@ -287,7 +292,7 @@ static char BUTTONCARRYOBJECTS;
 
 /**
  *  @author CC, 16-02-26
- *  
+ *
  *  @brief 是否包含视图类型
  *
  *  @param cls 视图类型
@@ -317,7 +322,7 @@ static char BUTTONCARRYOBJECTS;
 
 /**
  *  @author CC, 16-02-26
- *  
+ *
  *  @brief 删除某项类型
  *
  *  @param cls 视图类型
@@ -332,12 +337,12 @@ static char BUTTONCARRYOBJECTS;
 
 /**
  *  @author CC, 16-03-23
- *  
+ *
  *  @brief 添加一组子View
  *
  *  @param subviews 子View集合
  */
--(void)cc_addSubviews:(NSArray *)subviews
+- (void)cc_addSubviews:(NSArray *)subviews
 {
     [subviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger idx, BOOL *stop) {
         if ([view isKindOfClass:[UIView class]]) {
@@ -394,12 +399,9 @@ static char BUTTONCARRYOBJECTS;
 {
     [self runBlockOnAllSubviews:^(UIView *view) {
         
-        if ([view isKindOfClass:[UIControl class]])
-        {
+        if ([view isKindOfClass:[UIControl class]]) {
             [(UIControl *)view setEnabled:YES];
-        }
-        else if ([view isKindOfClass:[UITextView class]])
-        {
+        } else if ([view isKindOfClass:[UITextView class]]) {
             [(UITextView *)view setEditable:YES];
         }
     }];
@@ -409,12 +411,9 @@ static char BUTTONCARRYOBJECTS;
 {
     [self runBlockOnAllSubviews:^(UIView *view) {
         
-        if ([view isKindOfClass:[UIControl class]])
-        {
+        if ([view isKindOfClass:[UIControl class]]) {
             [(UIControl *)view setEnabled:NO];
-        }
-        else if ([view isKindOfClass:[UITextView class]])
-        {
+        } else if ([view isKindOfClass:[UITextView class]]) {
             [(UITextView *)view setEditable:NO];
         }
     }];
@@ -610,7 +609,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removePinchGesture:pinchGestureId];
     }
-
+    
     self.userInteractionEnabled = YES;
     UIPinchGestureRecognizer *tg = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchHandler:)];
     
@@ -687,7 +686,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removePanGesture:panGestureId];
     }
-
+    
     self.userInteractionEnabled = YES;
     UIPanGestureRecognizer *tg = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHandler:)];
     tg.minimumNumberOfTouches = minimumNumberOfTouches;
@@ -764,7 +763,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeSwipeGesture:swipeGestureId];
     }
-
+    
     self.userInteractionEnabled = YES;
     UISwipeGestureRecognizer *tg = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     tg.direction = direction;
@@ -838,7 +837,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeRotationGesture:rotationGestureId];
     }
-
+    
     self.userInteractionEnabled = YES;
     UIRotationGestureRecognizer *tg = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotationHandler:)];
     
@@ -924,7 +923,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     if (r != nil) {
         [self removeLongPressGesture:longPressGestureId];
     }
-
+    
     self.userInteractionEnabled = YES;
     UILongPressGestureRecognizer *tg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHandler:)];
     tg.numberOfTapsRequired = numberOfTapsRequired;
@@ -989,7 +988,7 @@ const NSString *UIView_GestureCallback_gestureKeysHashKey = @"UIView_GestureCall
     NSMutableString *randomString = [NSMutableString stringWithCapacity:len];
     
     for (int i = 0; i < len; i++) {
-        [randomString appendFormat:@"%C", [letters characterAtIndex:arc4random_uniform((u_int32_t)[letters length])]];
+        [randomString appendFormat:@"%C", [letters characterAtIndex:arc4random_uniform((u_int32_t)[ letters length ])]];
     }
     
     return randomString;
@@ -1175,14 +1174,14 @@ NSString *const CSToastPositionBottom = @"bottom";
                           delay:0.0
                         options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionAllowUserInteraction)
                      animations:^{
-                         toast.alpha = 1.0;
-                     }
+        toast.alpha = 1.0;
+    }
                      completion:^(BOOL finished) {
-                         NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(toastTimerDidFinish:) userInfo:toast repeats:NO];
-                         // associate the timer with the toast view
-                         objc_setAssociatedObject (toast, &CSToastTimerKey, timer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-                         objc_setAssociatedObject (toast, &CSToastTapCallbackKey, tapCallback, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-                     }];
+        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(toastTimerDidFinish:) userInfo:toast repeats:NO];
+        // associate the timer with the toast view
+        objc_setAssociatedObject(toast, &CSToastTimerKey, timer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(toast, &CSToastTapCallbackKey, tapCallback, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }];
 }
 
 
@@ -1192,11 +1191,11 @@ NSString *const CSToastPositionBottom = @"bottom";
                           delay:0.0
                         options:(UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionBeginFromCurrentState)
                      animations:^{
-                         toast.alpha = 0.0;
-                     }
+        toast.alpha = 0.0;
+    }
                      completion:^(BOOL finished) {
-                         [toast removeFromSuperview];
-                     }];
+        [toast removeFromSuperview];
+    }];
 }
 
 #pragma mark :. Events
@@ -1259,8 +1258,8 @@ NSString *const CSToastPositionBottom = @"bottom";
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         activityView.alpha = 1.0;
-                     }
+        activityView.alpha = 1.0;
+    }
                      completion:nil];
 }
 
@@ -1272,12 +1271,12 @@ NSString *const CSToastPositionBottom = @"bottom";
                               delay:0.0
                             options:(UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
-                             existingActivityView.alpha = 0.0;
-                         }
+            existingActivityView.alpha = 0.0;
+        }
                          completion:^(BOOL finished) {
-                             [existingActivityView removeFromSuperview];
-                             objc_setAssociatedObject (self, &CSToastActivityViewKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-                         }];
+            [existingActivityView removeFromSuperview];
+            objc_setAssociatedObject(self, &CSToastActivityViewKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }];
     }
 }
 
@@ -1665,7 +1664,7 @@ typedef NS_ENUM(NSInteger, EdgeType) {
 
 static char loadOperationKey;
 
-- (NSMutableDictionary *)operationDictionary
+- (NSMutableDictionary *)cc_operationDictionary
 {
     NSMutableDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);
     if (operations) {
@@ -1679,14 +1678,14 @@ static char loadOperationKey;
 - (void)cc_setImageLoadOperation:(id)operation forKey:(NSString *)key
 {
     [self cc_cancelImageLoadOperationWithKey:key];
-    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    NSMutableDictionary *operationDictionary = [self cc_operationDictionary];
     [operationDictionary setObject:operation forKey:key];
 }
 
 - (void)cc_cancelImageLoadOperationWithKey:(NSString *)key
 {
     // Cancel in progress downloader from queue
-    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    NSMutableDictionary *operationDictionary = [self cc_operationDictionary];
     id operations = [operationDictionary objectForKey:key];
     if (operations) {
         if ([operations isKindOfClass:[NSArray class]]) {
@@ -1696,14 +1695,15 @@ static char loadOperationKey;
                 }
             }
         } else if ([operations conformsToProtocol:@protocol(SDWebImageOperation)]) {
-            [(id<SDWebImageOperation>) operations cancel];
+            [(id<SDWebImageOperation>)operations cancel];
         }
         [operationDictionary removeObjectForKey:key];
     }
 }
 
-- (void)cc_removeImageLoadOperationWithKey:(NSString *)key {
-    NSMutableDictionary *operationDictionary = [self operationDictionary];
+- (void)cc_removeImageLoadOperationWithKey:(NSString *)key
+{
+    NSMutableDictionary *operationDictionary = [self cc_operationDictionary];
     [operationDictionary removeObjectForKey:key];
 }
 
@@ -1711,33 +1711,36 @@ static char loadOperationKey;
 #pragma mark -
 #pragma mark :. CCRemoteImage
 
-const char* const kCCURLPropertyKey   = "CCURLDownloadURLPropertyKey";
-const char* const kCCLoadingStateKey  = "CCURLDownloadLoadingStateKey";
-const char* const kCCLoadingViewKey   = "CCURLDownloadLoadingViewKey";
+const char *const kCCURLPropertyKey = "CCURLDownloadURLPropertyKey";
+const char *const kCCLoadingStateKey = "CCURLDownloadLoadingStateKey";
+const char *const kCCLoadingViewKey = "CCURLDownloadLoadingViewKey";
 
-const char* const kCCActivityIndicatorViewKey   = "CCActivityIndicatorViewKey";
+const char *const kCCActivityIndicatorViewKey = "CCActivityIndicatorViewKey";
 
-const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
+const char *const kCCMessageAvatarTypeKey = "CCMessageAvatarTypeKey";
 
 #define kCCActivityIndicatorViewSize 35
 
-+ (id)imageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading {
++ (id)imageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading
+{
     UIImageView *view = [self new];
     view.url = url;
-    if(autoLoading) {
+    if (autoLoading) {
         [view load];
     }
     return view;
 }
 
-+ (id)indicatorImageView {
++ (id)indicatorImageView
+{
     UIImageView *view = [self new];
     [view setDefaultLoadingView];
     
     return view;
 }
 
-+ (id)indicatorImageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading {
++ (id)indicatorImageViewWithURL:(NSURL *)url autoLoading:(BOOL)autoLoading
+{
     UIImageView *view = [self imageViewWithURL:url autoLoading:autoLoading];
     [view setDefaultLoadingView];
     
@@ -1746,7 +1749,8 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
 
 #pragma mark :. Properties
 
-- (dispatch_queue_t)cachingQueue {
+- (dispatch_queue_t)cachingQueue
+{
     static dispatch_queue_t cachingQeueu;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -1755,67 +1759,78 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
     return cachingQeueu;
 }
 
-- (void)setActivityIndicatorView:(UIActivityIndicatorView *)activityIndicatorView {
+- (void)setActivityIndicatorView:(UIActivityIndicatorView *)activityIndicatorView
+{
     objc_setAssociatedObject(self, kCCActivityIndicatorViewKey, activityIndicatorView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIActivityIndicatorView *)activityIndicatorView {
+- (UIActivityIndicatorView *)activityIndicatorView
+{
     return objc_getAssociatedObject(self, kCCActivityIndicatorViewKey);
 }
 
-- (void)setMessageAvatarType:(CCMessageAvatarType)messageAvatarType {
+- (void)setMessageAvatarType:(CCMessageAvatarType)messageAvatarType
+{
     objc_setAssociatedObject(self, &kCCMessageAvatarTypeKey, [NSNumber numberWithInteger:messageAvatarType], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CCMessageAvatarType)messageAvatarType {
+- (CCMessageAvatarType)messageAvatarType
+{
     return (CCMessageAvatarType)([objc_getAssociatedObject(self, &kCCMessageAvatarTypeKey) integerValue]);
 }
 
-- (NSURL*)url {
+- (NSURL *)url
+{
     return objc_getAssociatedObject(self, kCCURLPropertyKey);
 }
 
-- (void)setUrl:(NSURL *)url {
+- (void)setUrl:(NSURL *)url
+{
     [self setImageUrl:url autoLoading:NO];
 }
 
-- (void)setImageUrl:(NSURL *)url autoLoading:(BOOL)autoLoading {
-    if(![url isEqual:self.url]) {
+- (void)setImageUrl:(NSURL *)url autoLoading:(BOOL)autoLoading
+{
+    if (![url isEqual:self.url]) {
         objc_setAssociatedObject(self, kCCURLPropertyKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         if (url) {
             self.loadingState = UIImageViewURLDownloadStateWaitingForLoad;
-        }
-        else {
+        } else {
             self.loadingState = UIImageViewURLDownloadStateUnknown;
         }
     }
     
-    if(autoLoading) {
+    if (autoLoading) {
         [self load];
     }
 }
 
-- (void)setImageWithURL:(NSURL *)url {
+- (void)setImageWithURL:(NSURL *)url
+{
     [self setImageWithURL:url placeholer:nil];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage {
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage
+{
     [self setImageWithURL:url placeholer:placeholerImage showActivityIndicatorView:NO];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show {
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show
+{
     [self _setupPlaecholerImage:placeholerImage showActivityIndicatorView:show];
     [self setImageUrl:url autoLoading:YES];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show completionBlock:(void(^)(UIImage *image, NSURL *url, NSError *error))handler {
+- (void)setImageWithURL:(NSURL *)url placeholer:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show completionBlock:(void (^)(UIImage *image, NSURL *url, NSError *error))handler
+{
     [self _setupPlaecholerImage:placeholerImage showActivityIndicatorView:show];
     [self setImageUrl:url autoLoading:NO];
-//    [self loadWithCompletionBlock:handler];
+    //    [self loadWithCompletionBlock:handler];
 }
 
-- (void)_setupPlaecholerImage:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show {
+- (void)_setupPlaecholerImage:(UIImage *)placeholerImage showActivityIndicatorView:(BOOL)show
+{
     if (placeholerImage) {
         [self setupImage:placeholerImage];
     }
@@ -1831,29 +1846,34 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
     }
 }
 
-- (UIImageViewURLDownloadState)loadingState {
+- (UIImageViewURLDownloadState)loadingState
+{
     return (NSUInteger)([objc_getAssociatedObject(self, kCCLoadingStateKey) integerValue]);
 }
 
-- (void)setLoadingState:(UIImageViewURLDownloadState)loadingState {
+- (void)setLoadingState:(UIImageViewURLDownloadState)loadingState
+{
     objc_setAssociatedObject(self, kCCLoadingStateKey, @(loadingState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIView *)loadingView {
+- (UIView *)loadingView
+{
     return objc_getAssociatedObject(self, kCCLoadingViewKey);
 }
 
-- (void)setLoadingView:(UIView *)loadingView {
+- (void)setLoadingView:(UIView *)loadingView
+{
     [self.loadingView removeFromSuperview];
     
     objc_setAssociatedObject(self, kCCLoadingViewKey, loadingView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     loadingView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-    loadingView.alpha  = 0;
+    loadingView.alpha = 0;
     [self addSubview:loadingView];
 }
 
-- (void)setDefaultLoadingView {
+- (void)setDefaultLoadingView
+{
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     indicator.frame = self.frame;
     indicator.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -1863,7 +1883,8 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
 
 #pragma mark :. Setup Image
 
-- (void)setupImage:(UIImage *)image {
+- (void)setupImage:(UIImage *)image
+{
     if (!image) {
         return;
     }
@@ -1878,16 +1899,18 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
 
 #pragma mark :. Loading view
 
-- (void)showLoadingView {
+- (void)showLoadingView
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         self.loadingView.alpha = 1;
-        if([self.loadingView respondsToSelector:@selector(startAnimating)]) {
+        if ([self.loadingView respondsToSelector:@selector(startAnimating)]) {
             [self.loadingView performSelector:@selector(startAnimating)];
         }
     });
 }
 
-- (void)hideLoadingView {
+- (void)hideLoadingView
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         UIActivityIndicatorView *activityIndicatorView = [self activityIndicatorView];
         if (activityIndicatorView) {
@@ -1896,23 +1919,23 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
         }
         [UIView animateWithDuration:0.3
                          animations:^{
-                             self.loadingView.alpha = 0;
-                         }
+            self.loadingView.alpha = 0;
+        }
                          completion:^(BOOL finished) {
-                             if([self.loadingView respondsToSelector:@selector(stopAnimating)]) {
-                                 [self.loadingView performSelector:@selector(stopAnimating)];
-                             }
-                         }
-         ];
+            if ([self.loadingView respondsToSelector:@selector(stopAnimating)]) {
+                [self.loadingView performSelector:@selector(stopAnimating)];
+            }
+        }];
     });
 }
 
 #pragma mark :. Image downloading
 
-+ (NSOperationQueue *)downloadQueue {
++ (NSOperationQueue *)downloadQueue
+{
     static NSOperationQueue *_sharedQueue = nil;
     
-    if(_sharedQueue == nil) {
+    if (_sharedQueue == nil) {
         _sharedQueue = [NSOperationQueue new];
         [_sharedQueue setMaxConcurrentOperationCount:3];
     }
@@ -1920,7 +1943,8 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
     return _sharedQueue;
 }
 
-+ (void)dataWithContentsOfURL:(NSURL *)url completionBlock:(void (^)(NSURL *, NSData *, NSError *))completion {
++ (void)dataWithContentsOfURL:(NSURL *)url completionBlock:(void (^)(NSURL *, NSData *, NSError *))completion
+{
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
     [request setTimeoutInterval:5.0];
@@ -1928,22 +1952,22 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[self downloadQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               if(completion) {
-                                   completion(url, data, connectionError);
-                               }
-                           }
-     ];
+        if (completion) {
+            completion(url, data, connectionError);
+        }
+    }];
 }
 
-- (void)load {
-//    [self loadWithCompletionBlock:nil];
+- (void)load
+{
+    //    [self loadWithCompletionBlock:nil];
 }
 
 //- (void)loadWithCompletionBlock:(void(^)(UIImage *image, NSURL *url, NSError *error))handler {
 //    self.loadingState = UIImageViewURLDownloadStateNowLoading;
-//    
+//
 //    [self showLoadingView];
-//    
+//
 //    __weak typeof(self) weakSelf = self;
 //    dispatch_async(self.cachingQueue, ^{
 //        UIImage *cacheImage = [CCCacheManager imageWithURL:weakSelf.url storeMemoryCache:YES];
@@ -1959,7 +1983,7 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
 //            [UIImageView dataWithContentsOfURL:weakSelf.url
 //                               completionBlock:^(NSURL *url, NSData *data, NSError *error) {
 //                                   UIImage *image = [weakSelf didFinishDownloadWithData:data forURL:url error:error];
-//                                   
+//
 //                                   if(handler) {
 //                                       handler(image, url, error);
 //                                   }
@@ -1980,16 +2004,17 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
 //    });
 //}
 
-- (UIImage *)didFinishDownloadWithData:(NSData *)data forURL:(NSURL *)url error:(NSError *)error {
+- (UIImage *)didFinishDownloadWithData:(NSData *)data forURL:(NSURL *)url error:(NSError *)error
+{
     if (data) {
-//        [self cachingImageData:data url:url];
+        //        [self cachingImageData:data url:url];
     }
     UIImage *image = [UIImage imageWithData:data];
     if (self.messageAvatarType != CCMessageAvatarTypeNormal) {
-//        image = [CCMessageAvatarFactory avatarImageNamed:image messageAvatarType:self.messageAvatarType];
+        //        image = [CCMessageAvatarFactory avatarImageNamed:image messageAvatarType:self.messageAvatarType];
     }
-    if([url isEqual:self.url]) {
-        if(error) {
+    if ([url isEqual:self.url]) {
+        if (error) {
             self.loadingState = UIImageViewURLDownloadStateFailed;
         } else {
             [self performSelectorOnMainThread:@selector(setupImage:) withObject:image waitUntilDone:NO];
@@ -2000,8 +2025,9 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
     return image;
 }
 
-- (void)setImage:(UIImage *)image forURL:(NSURL *)url {
-    if([url isEqual:self.url]) {
+- (void)setImage:(UIImage *)image forURL:(NSURL *)url
+{
+    if ([url isEqual:self.url]) {
         [self performSelectorOnMainThread:@selector(setupImage:) withObject:image waitUntilDone:NO];
         self.loadingState = UIImageViewURLDownloadStateLoaded;
         [self hideLoadingView];
@@ -2011,19 +2037,22 @@ const char* const kCCMessageAvatarTypeKey   = "CCMessageAvatarTypeKey";
 #pragma mark -
 #pragma mark :.  CCBadgeView
 
-static NSString const * CCBadgeViewKey = @"CCBadgeViewKey";
-static NSString const * CCBadgeViewFrameKey = @"CCBadgeViewFrameKey";
-static NSString const * CCCircleBadgeViewKey = @"CCCircleBadgeViewKey";
+static NSString const *CCBadgeViewKey = @"CCBadgeViewKey";
+static NSString const *CCBadgeViewFrameKey = @"CCBadgeViewFrameKey";
+static NSString const *CCCircleBadgeViewKey = @"CCCircleBadgeViewKey";
 
-- (void)setBadgeViewFrame:(CGRect)badgeViewFrame {
+- (void)setBadgeViewFrame:(CGRect)badgeViewFrame
+{
     objc_setAssociatedObject(self, &CCBadgeViewFrameKey, NSStringFromCGRect(badgeViewFrame), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CGRect)badgeViewFrame {
+- (CGRect)badgeViewFrame
+{
     return CGRectFromString(objc_getAssociatedObject(self, &CCBadgeViewFrameKey));
 }
 
-- (UIView *)badgeView {
+- (UIView *)badgeView
+{
     UIView *badgeView = objc_getAssociatedObject(self, &CCBadgeViewKey);
     if (badgeView)
         return badgeView;
@@ -2036,11 +2065,13 @@ static NSString const * CCCircleBadgeViewKey = @"CCCircleBadgeViewKey";
     return badgeView;
 }
 
-- (void)setBadgeView:(UIView *)badgeView {
+- (void)setBadgeView:(UIView *)badgeView
+{
     objc_setAssociatedObject(self, &CCBadgeViewKey, badgeView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIView *)setupCircleBadge {
+- (UIView *)setupCircleBadge
+{
     self.opaque = NO;
     self.clipsToBounds = NO;
     CGRect circleViewFrame = CGRectMake(CGRectGetWidth(self.bounds) - 4, 0, 8, 8);
@@ -2057,7 +2088,8 @@ static NSString const * CCCircleBadgeViewKey = @"CCCircleBadgeViewKey";
     return circleView;
 }
 
-- (void)destroyCircleBadge {
+- (void)destroyCircleBadge
+{
     CCCircleView *circleView = objc_getAssociatedObject(self, &CCCircleBadgeViewKey);
     if (circleView) {
         circleView.hidden = YES;

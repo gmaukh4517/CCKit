@@ -29,11 +29,11 @@
 
 #import "CCSegmentContentScrollView.h"
 
-#import "UIView+Frame.h"
-#import "UIView+Method.h"
-#import "UIScrollView+CCAdd.h"
 #import "CCConfig.h"
 #import "UIColor+CCAdd.h"
+#import "UIScrollView+CCAdd.h"
+#import "UIView+Frame.h"
+#import "UIView+Method.h"
 
 #define kSegmentViewTagOffset 1000
 #define kSegmentViewFooterTagOffset 2000
@@ -41,12 +41,12 @@
 #define kSegmentViewFooterIndex(view) ([view tag] - kSegmentViewTagOffset)
 
 #define CCAssert(condition, format, ...)                                                       \
-    do {                                                                                       \
-        _Pragma("clang diagnostic push")                                                       \
-            _Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
-                NSLog(format, ##__VA_ARGS__);                                                  \
-        _Pragma("clang diagnostic pop")                                                        \
-    } while (0);
+do {                                                                                       \
+_Pragma("clang diagnostic push")                                                       \
+_Pragma("clang diagnostic ignored \"-Wformat-extra-args\"") if ((condition) == NO) \
+NSLog(format, ##__VA_ARGS__);                                                  \
+_Pragma("clang diagnostic pop")                                                        \
+} while (0);
 
 @interface CCSegmentView () <CCSegmentMenuViewDelegate, UIScrollViewDelegate>
 
@@ -94,21 +94,20 @@
 {
     if (_segmentView)
         return;
-
+    
     self.isMultiplexing = YES;
     self.visibleTableViews = [NSMutableSet set];
     self.reusableTableViews = [NSMutableSet set];
-
+    
     self.visibleFooterViews = [NSMutableSet set];
     self.reusableFooterViews = [NSMutableSet set];
-
+    
     self.tableViews = [NSMutableArray array];
     self.showIndex = -1;
-
+    
     CCSegmentMenuView *segmentView = [[CCSegmentMenuView alloc] initWithFrame:CGRectMake(0, 0, winsize.width, 40)];
     segmentView.lineWidth = 15;
     segmentView.lineHeight = 3;
-    segmentView.animation = YES;
     segmentView.isFullof = YES;
     segmentView.titleColor = [UIColor colorFromHexCode:@"A1A1A3"];
     segmentView.titleSelectedColor = [UIColor colorFromHexCode:@"303943"];
@@ -116,7 +115,7 @@
     [self addSubview:_segmentView = segmentView];
     [self bringSubviewToFront:segmentView];
     _segmentMenuView = segmentView;
-
+    
     [self addSubview:self.contentScrollView];
 }
 
@@ -128,12 +127,12 @@
     self.contentScrollView.y = self.segmentMenuView.bottom;
     self.contentScrollView.size = CGSizeMake(self.width, self.height - self.contentScrollView.y);
     self.contentScrollView.contentSize = CGSizeMake(self.contentScrollView.width * self.segmentViewCount, self.contentScrollView.height - 10);
-
+    
     [self.contentScrollView.subviews enumerateObjectsUsingBlock:^(__kindof UIView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         obj.height = self.contentScrollView.height;
         obj.width = self.contentScrollView.width;
     }];
-
+    
     if (y == 0) {
         [self.contentScrollView scrollToHorizontalPageIndex:self.segmentMenuView.currentIndex animated:NO];
         [self showTables];
@@ -152,7 +151,7 @@
     if (self.isMultiplexing) {
         [self.visibleTableViews removeAllObjects];
         [self.reusableTableViews removeAllObjects];
-
+        
         [self.visibleFooterViews removeAllObjects];
         [self.reusableFooterViews removeAllObjects];
     } else {
@@ -181,7 +180,7 @@
             oScrollView.scrollEnabled = NO;
         }
     }];
-
+    
     [self.segmentView didBeginDraaWillBeginDragging:scrollView.contentOffset];
 }
 
@@ -193,12 +192,12 @@
         self.direction = 4;
     if (translatedPoint.x > 0)
         self.direction = 2;
-
+    
     if (translatedPoint.y < 0)
         self.direction = 3;
     if (translatedPoint.y > 0)
         self.direction = 1;
-
+    
     [self.segmentView didScrollViewDidScroll:scrollView];
     [self showTables];
 }
@@ -206,7 +205,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     [self.segmentView didScrollViewDidEndDecelerating:scrollView];
-
+    
     BOOL scrollToScrollStop = !scrollView.tracking && !scrollView.dragging && !scrollView.decelerating;
     if (scrollToScrollStop) {
         [self scrollViewDidEndScroll:scrollView];
@@ -216,7 +215,7 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     [self.segmentView didScrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-
+    
     if (!decelerate) {
         BOOL dragToDragStop = scrollView.tracking && !scrollView.dragging && !scrollView.decelerating;
         if (dragToDragStop) {
@@ -247,10 +246,10 @@
         } else if (self.contentScrollView.currentPage > index && self.contentScrollView.currentPage - index > 1) {
             animated = NO;
         }
-
+        
         if (index <= self.segmentViewCount - 1)
             [self.contentScrollView scrollToHorizontalPageIndex:index animated:animated];
-
+        
         if ([self.delegate respondsToSelector:@selector(loadViewNearIndex:)]) {
             [self.delegate loadViewNearIndex:index];
         }
@@ -266,17 +265,17 @@
     if (!self.segmentViewCount) {
         if ([self.delegate respondsToSelector:@selector(numberOfSectionsInsSgmentView:)])
             self.segmentViewCount = [self.delegate numberOfSectionsInsSgmentView:self];
-
+        
         if (self.segmentViewCount == 0) {
             self.segmentViewCount = 1;
         }
     }
-
+    
     if (self.segmentViewCount == 1) {
         [self showTabeViewAtIndex:0];
         return;
     }
-
+    
     CGRect visibleBounds = self.contentScrollView.bounds;
     int firstIndex = (int)floorf(CGRectGetMinX(visibleBounds) / CGRectGetWidth(visibleBounds));
     int lastIndex = (int)floorf((CGRectGetMaxX(visibleBounds) - 1) / CGRectGetWidth(visibleBounds));
@@ -284,7 +283,7 @@
     if (firstIndex >= self.segmentViewCount) firstIndex = (int)self.segmentViewCount - 1;
     if (lastIndex < 0) lastIndex = 0;
     if (lastIndex >= self.segmentViewCount) lastIndex = (int)self.segmentViewCount - 1;
-
+    
     if (self.isMultiplexing) {
         //回收不再显示的TableView
         NSInteger viewIndex;
@@ -295,7 +294,7 @@
                 [view removeFromSuperview];
             }
         }
-
+        
         for (UIView *view in _visibleFooterViews) {
             viewIndex = kSegmentViewFooterIndex(view);
             if (viewIndex < firstIndex || viewIndex > lastIndex) {
@@ -303,15 +302,15 @@
                 [view removeFromSuperview];
             }
         }
-
+        
         [_visibleTableViews minusSet:_reusableTableViews];
         [_visibleFooterViews minusSet:_reusableFooterViews];
-        while (_reusableTableViews.count > 2)
+        while (_reusableTableViews.count > 3)
             [_reusableTableViews removeObject:[_reusableTableViews anyObject]];
-
-        while (_reusableFooterViews.count > 2)
+        
+        while (_reusableFooterViews.count > 3)
             [_reusableFooterViews removeObject:[_reusableFooterViews anyObject]];
-
+        
         for (NSUInteger index = firstIndex; index <= lastIndex; index++) {
             if (![self isShowingTableViewAtIndex:index])
                 [self showTabeViewAtIndex:index];
@@ -332,22 +331,27 @@
             return;
         self.showIndex = index;
     }
-
+    
     UIView *view, *footerView;
     if (self.isMultiplexing) {
-        view = [self dequeueReusableTableView];
+        if ([self.delegate respondsToSelector:@selector(segmentView:cellMultipleIdentifier:)]) {
+            NSString *cellIdentifier = [self.delegate segmentView:self cellMultipleIdentifier:index];
+            view = [self reusableTableViewWithIdentifier:cellIdentifier];
+        } else {
+            view = [self dequeueReusableTableView];
+        }
         footerView = [self dequeueReusableFooterView];
     } else if ([self isShowingTableViewAtIndex:index]) {
         view = [self dequeueReusableTableView:index];
     }
-
+    
     if (!view) { // 添加新的图片view
         if ([self.delegate respondsToSelector:@selector(segmentView:cellForRowAtIndex:)])
             view = [self.delegate segmentView:self cellForRowAtIndex:index];
-
+        
         if ([self.delegate respondsToSelector:@selector(segmentView:cellForFooterAtIndex:)])
             footerView = [self.delegate segmentView:self cellForFooterAtIndex:index];
-
+        
         CCAssert(view, @"view is nil index ⤭ %zi ⤪", index);
     }
     // 调整当期页的frame
@@ -363,7 +367,7 @@
     }
     view.frame = photoViewFrame;
     view.tag = kSegmentViewTagOffset + index;
-
+    
     if (self.isMultiplexing) {
         [_visibleTableViews addObject:view];
         if (footerView)
@@ -384,21 +388,27 @@
     UIView *view;
     if (self.isMultiplexing) {
         view = [_visibleTableViews anyObject];
-        if (_visibleTableViews.count > 1)
-            view = [self dequeueReusableTableView];
+        if (_visibleTableViews.count > 1) {
+            if ([self.delegate respondsToSelector:@selector(segmentView:cellMultipleIdentifier:)]) {
+                NSString *cellIdentifier = [self.delegate segmentView:self cellMultipleIdentifier:index];
+                view = [self reusableTableViewWithIdentifier:cellIdentifier];
+            } else {
+                view = [self dequeueReusableTableView];
+            }
+        }
     } else if ([self isShowingTableViewAtIndex:index]) {
         view = [self dequeueReusableTableView:index];
     }
-
+    
     if (!view)
         view = self.currentView;
-
+    
     if ([self.delegate respondsToSelector:@selector(segmentView:willDisplayView:forRowAtIndex:)])
         [self.delegate segmentView:self willDisplayView:view forRowAtIndex:index];
-
+    
     if ([self.delegate respondsToSelector:@selector(didSegmentMenuSelectedIndex:forRowAtIndex:)])
         [self.delegate didSegmentMenuSelectedIndex:view forRowAtIndex:index];
-
+    
     if ([self.delegate respondsToSelector:@selector(loadViewNearIndex:)]) {
         [self.delegate loadViewNearIndex:index];
     }
@@ -410,12 +420,25 @@
     id tableViews = _visibleTableViews;
     if (!self.isMultiplexing)
         tableViews = self.tableViews;
-
+    
     for (UIView *view in tableViews) {
         if (kSegmentViewIndex(view) == index)
             return YES;
     }
     return NO;
+}
+
+- (UIView *)reusableTableViewWithIdentifier:(NSString *)cellIdentifier
+{
+    UIView *tableView;
+    for (UIView *cell in _reusableTableViews) {
+        if ([NSStringFromClass(cell.class) isEqualToString:cellIdentifier]) {
+            tableView = cell;
+            [_reusableTableViews removeObject:tableView];
+            break;
+        }
+    }
+    return tableView;
 }
 
 - (UIView *)dequeueReusableTableView

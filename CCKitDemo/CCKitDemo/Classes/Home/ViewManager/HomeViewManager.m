@@ -37,21 +37,21 @@
     [self.homeTableView.cc_tableViewHelper registerNibs:@[ @"HomeTableViewCell" ]];
 
     //    @weakify(self);
-    [self.homeTableView.cc_tableViewHelper headerView:^UIView *_Nonnull(UITableView *_Nonnull tableView, NSInteger section, id _Nonnull cModel) {
-        static NSString *headIdentifier = @"TZCourseDetailsDownloadHeaderViewIdentifier";
-        UITableViewHeaderFooterView *headView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headIdentifier];
-        if (!headView) {
-            headView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headIdentifier];
-
-            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.width - 20, 20)];
-            titleLabel.tag = 123;
-            [headView addSubview:titleLabel];
-        }
-        UILabel *titleLabel = (UILabel *)[headView viewWithTag:123];
-        titleLabel.text = [NSString stringWithFormat:@"Header %zi", section];
-
-        return headView;
-    }];
+//    [self.homeTableView.cc_tableViewHelper headerView:^UIView *_Nonnull(UITableView *_Nonnull tableView, NSInteger section, id _Nonnull cModel) {
+//        static NSString *headIdentifier = @"TZCourseDetailsDownloadHeaderViewIdentifier";
+//        UITableViewHeaderFooterView *headView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headIdentifier];
+//        if (!headView) {
+//            headView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headIdentifier];
+//
+//            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.width - 20, 20)];
+//            titleLabel.tag = 123;
+//            [headView addSubview:titleLabel];
+//        }
+//        UILabel *titleLabel = (UILabel *)[headView viewWithTag:123];
+//        titleLabel.text = [NSString stringWithFormat:@"Header %zi", section];
+//
+//        return headView;
+//    }];
 
     //    @weakify(self);
     [self.homeTableView.cc_tableViewHelper didSelect:^(UITableView *tableView, NSIndexPath *_Nonnull cIndexPath, id _Nonnull cModel) {

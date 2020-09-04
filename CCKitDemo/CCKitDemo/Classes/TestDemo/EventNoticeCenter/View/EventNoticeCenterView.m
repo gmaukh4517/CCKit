@@ -45,7 +45,7 @@
 
     @weakify(self);
     [CCEventNoticeCenter addTarget:self
-                         EventName:@"ViewEventBlock"
+                         eventName:@"ViewEventBlock"
                             action:^(CCEvent *info) {
                                 @strongify(self);
                                 self.blockLabel.text = info.object;

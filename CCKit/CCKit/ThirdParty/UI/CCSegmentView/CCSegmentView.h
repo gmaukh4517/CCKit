@@ -31,7 +31,7 @@
 
 /**
  显示View数量
-
+ 
  @param segmentView segmentView
  @return 数量
  */
@@ -39,7 +39,7 @@
 
 /**
  创建显示View
-
+ 
  @param segmentView segmentView
  @param index 下标位置
  @return View
@@ -49,8 +49,17 @@
 @optional
 
 /**
- 创建Cell 底部显示View
+ 多重Cell获取标识符
+ 
+ @param segmentView segmentView
+ @param index 下标位置
+ @return cell 标识符
+ */
+- (NSString *)segmentView:(CCSegmentView *)segmentView cellMultipleIdentifier:(NSInteger)index;
 
+/**
+ 创建Cell 底部显示View
+ 
  @param segmentView segmentView
  @param index 下标位置
  @return View
@@ -59,7 +68,7 @@
 
 /**
  显示加载数据
-
+ 
  @param segmentView segmentView
  @param view 当前View
  @param index 下标位置
@@ -68,21 +77,21 @@
 
 /**
  选中实现
-
+ 
  @param index 下标位置
  */
 - (void)didSegmentMenuSelectedIndex:(UIView *)view forRowAtIndex:(NSInteger)index;
 
 /**
  当前显示View
-
+ 
  @param view View
  */
 - (void)didShowSegmentVie:(UIView *)view;
 
 /**
  加载当前索引附近视图
-
+ 
  @param index 当前缩影
  */
 - (void)loadViewNearIndex:(NSInteger)index;
@@ -104,6 +113,6 @@
 
 @property (nonatomic, weak) id<CCSegmentViewDelegate> delegate;
 
--(void)reloadData;
+- (void)reloadData;
 
 @end

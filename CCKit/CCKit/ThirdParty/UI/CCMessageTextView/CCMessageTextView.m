@@ -159,19 +159,23 @@
         if ([@"\uFFFC" isEqualToString:[self.text substringFromIndex:stringLength - 1]]) {
             if ([self.cc_delegate respondsToSelector:@selector(didDeleteBackward)])
                 [self.cc_delegate didDeleteBackward];
-        }else
+        } else
             [super deleteBackward];
-    }else
+    } else
         [super deleteBackward];
 }
 
-- (void)_firstBaselineOffsetFromTop {}
-- (void)_baselineOffsetFromBottom {}
+- (void)_firstBaselineOffsetFromTop
+{
+}
+- (void)_baselineOffsetFromBottom
+{
+}
 
 //-(void)copy:(id)sender
 //{
 //    UIPasteboard *generalPasteboard = [UIPasteboard generalPasteboard];
-//    
+//
 //    __block NSMutableString *plainString = [NSMutableString stringWithString:self.text];
 //    [self.attributedText enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
 //        if (value && [value isKindOfClass:[CCEmotionTextAttachment class]]) {
@@ -179,9 +183,9 @@
 //                                       withString:((CCEmotionTextAttachment *) value).emotionTag];
 //        }
 //    }];
-//    
+//
 //    generalPasteboard.string = plainString;
-//    
+//
 //}
 //
 //-(void)paste:(id)sender
@@ -189,9 +193,9 @@
 //    UIPasteboard *generalPasteboard = [UIPasteboard generalPasteboard];
 //    NSMutableArray *types = [[NSMutableArray alloc] init];
 //    [types addObjectsFromArray:UIPasteboardTypeListString];
-//    
+//
 //    if ([generalPasteboard containsPasteboardTypes:types]) {
-//        
+//
 //        //正则匹配表情符号解析替换
 //        self.text = [NSString stringWithFormat:@"%@%@",self.text,generalPasteboard.string];
 //    }
@@ -205,21 +209,21 @@
         CGRect placeHolderRect = CGRectMake(10.0f, 7.0f, rect.size.width, rect.size.height);
         [self.placeholderTextColor set];
         
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-            paragraphStyle.alignment = self.textAlignment;
-            
-            [self.placeholder drawInRect:placeHolderRect
-                          withAttributes:@{NSFontAttributeName : self.font,
-                                           NSForegroundColorAttributeName : self.placeholderTextColor,
-                                           NSParagraphStyleAttributeName : paragraphStyle}];
-        } else {
-            [self.placeholder drawInRect:placeHolderRect
-                                withFont:self.font
-                           lineBreakMode:NSLineBreakByTruncatingTail
-                               alignment:self.textAlignment];
-        }
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        paragraphStyle.alignment = self.textAlignment;
+        
+        [self.placeholder drawInRect:placeHolderRect
+                      withAttributes:@{NSFontAttributeName : self.font,
+                                       NSForegroundColorAttributeName : self.placeholderTextColor,
+                                       NSParagraphStyleAttributeName : paragraphStyle}];
+#else
+        [self.placeholder drawInRect:placeHolderRect
+                            withFont:self.font
+                       lineBreakMode:NSLineBreakByTruncatingTail
+                           alignment:self.textAlignment];
+#endif
     }
     [super drawRect:rect];
 }

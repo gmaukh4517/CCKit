@@ -1084,7 +1084,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 + (NSString *)stringWithBase64EncodedString:(NSString *)string
 {
-    NSData *data = [NSData dataWithBase64EncodedString:string];
+    NSData *data = [NSData dataBase64EncodedString:string];
     if (data) {
         return [[self alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
@@ -1110,7 +1110,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 - (NSData *)base64DecodedData
 {
-    return [NSData dataWithBase64EncodedString:self];
+    return [NSData dataBase64EncodedString:self];
 }
 
 - (NSString *)base64String
@@ -1273,7 +1273,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 - (NSString *)decryptedWithAESUsingKey:(NSString *)key andIV:(NSData *)iv
 {
-    NSData *decrypted = [[NSData dataWithBase64EncodedString:self] decryptedWithAESUsingKey:key andIV:iv];
+    NSData *decrypted = [[NSData dataBase64EncodedString:self] decryptedWithAESUsingKey:key andIV:iv];
     NSString *decryptedString = [[NSString alloc] initWithData:decrypted encoding:NSUTF8StringEncoding];
 
     return decryptedString;
@@ -1289,7 +1289,7 @@ NSString *_stringRepresentationOf(id<Concatenatable> object);
 
 - (NSString *)decryptedWith3DESUsingKey:(NSString *)key andIV:(NSData *)iv
 {
-    NSData *decrypted = [[NSData dataWithBase64EncodedString:self] decryptedWith3DESUsingKey:key andIV:iv];
+    NSData *decrypted = [[NSData dataBase64EncodedString:self] decryptedWith3DESUsingKey:key andIV:iv];
     NSString *decryptedString = [[NSString alloc] initWithData:decrypted encoding:NSUTF8StringEncoding];
 
     return decryptedString;

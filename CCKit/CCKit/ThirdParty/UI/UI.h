@@ -27,11 +27,14 @@
 #define CCKit_UI_h
 
 #import <CCKit/CCActionSheet.h>
+#import <CCKit/CCAutoScrollLabel.h>
 #import <CCKit/CCCameraViewController.h>
+#import <CCKit/CCDropDownList.h>
 #import <CCKit/CCEmotion.h>
 #import <CCKit/CCEmotionManager.h>
 #import <CCKit/CCEmotionManagerView.h>
 #import <CCKit/CCEmotionTextAttachment.h>
+#import <CCKit/CCLoadLogoView.h>
 #import <CCKit/CCMessageInputView.h>
 #import <CCKit/CCMessageTextView.h>
 #import <CCKit/CCPhotoBrowser.h>
@@ -41,11 +44,6 @@
 #import <CCKit/CCTransformRefresh.h>
 #import <CCKit/CCWebViewController.h>
 #import <CCKit/UIScrollView+CCRefresh.h>
-
 #import <CCKit/UITabBarItem+CCAnimation.h>
-
-#import <CCKit/CCLoadLogoView.h>
-
-#import <CCKit/CCDropDownList.h>
 
 #endif

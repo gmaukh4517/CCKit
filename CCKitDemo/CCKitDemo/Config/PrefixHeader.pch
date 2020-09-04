@@ -21,6 +21,6 @@
 
 #ifdef __OBJC__
 
-//#import <CCKit/CCKit.h>
+#import <CCKit/CCKit.h>
 
 #endif

@@ -131,7 +131,7 @@
     return textFields;
 }
 
-- (UIViewController *)viewController
+- (UIViewController *)cc_viewController
 {
     UIResponder *nextResponder = self;
     do {
@@ -163,7 +163,7 @@
         [controllersHierarchy addObject:topController];
     }
 
-    UIResponder *matchController = [self viewController];
+    UIResponder *matchController = [self cc_viewController];
 
     while (matchController != nil && [controllersHierarchy containsObject:matchController] == NO) {
         do {

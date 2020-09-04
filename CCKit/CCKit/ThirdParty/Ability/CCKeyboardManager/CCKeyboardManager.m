@@ -198,7 +198,7 @@ static dispatch_once_t onceToken;
 {
     UIWindow *keyWindow = [self keyWindow];
     CGRect textFieldViewRect = [[_textFieldView superview] convertRect:_textFieldView.frame toView:keyWindow];
-    UIViewController *rootViewController = [_textFieldView viewController];
+    UIViewController *rootViewController = [_textFieldView cc_viewController];
     if (!rootViewController) rootViewController = [keyWindow topMostController];
     CGRect rootViewRect = rootViewController.view.frame;
 

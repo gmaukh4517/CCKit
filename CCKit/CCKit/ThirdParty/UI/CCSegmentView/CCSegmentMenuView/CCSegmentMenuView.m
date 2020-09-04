@@ -93,8 +93,9 @@ static CGFloat const kSpacing = 15;
     _isLine = NO;
     _isint = YES;
     _isSlider = YES;
-    
+    _lineOffsetY = 2.5;
     _shadow = NO;
+    _animation = NO;
     
     _titleButtons = [NSMutableArray array];
     
@@ -296,9 +297,6 @@ static CGFloat const kSpacing = 15;
                         btn.width = btnRect.size.width + 30;
                         btn.height = btnRect.size.height + 8;
                         btn.y = (btnH - btn.height) / 2;
-                        
-                        if (self.isSlider)
-                            cc_view_border_radius(btn, btn.height / 2, 0.5, btn.selected ? self.titleSelectedColor : self.titleColor);
                     }
                     
                     totalX = totalX + btn.width;
@@ -310,9 +308,9 @@ static CGFloat const kSpacing = 15;
         }];
         
         if (totalX - 10 < winsize.width) {
-            self.contentSize = CGSizeMake(winsize.width, 0);
+            self.contentSize = CGSizeMake(winsize.width + self.sizeWidth, 0);
         } else {
-            self.contentSize = CGSizeMake(totalX, 0);
+            self.contentSize = CGSizeMake(totalX + self.sizeWidth, 0);
         }
         
         if (self.isSlider) {
@@ -323,7 +321,9 @@ static CGFloat const kSpacing = 15;
                 if (self.lineWidth > 0)
                     self.sliderView.width = self.lineWidth;
             }
-            self.sliderView.centerX = currentBtn.centerX;
+            cc_dispatch_after(0.01, ^{
+                self.sliderView.centerX = currentBtn.centerX;
+            });
         }
         
         self.lineView.width = self.contentSize.width;
@@ -465,7 +465,7 @@ static CGFloat const kSpacing = 15;
         CGFloat x = sourceLabel.frame.origin.x + ((sourceLabel.frame.size.width - (self.isFullof ? self.sliderView.width : self.lineWidth)) / 2.0) + moveTotalX * progress;
         CGFloat width = self.lineWidth + moveTotalW * progress;
         self.sliderView.x = x;
-        self.sliderView.width = width;
+        self.sliderView.width = self.animation ? width : self.lineWidth;
     }
 }
 

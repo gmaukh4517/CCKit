@@ -29,9 +29,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString * _Nullable (^CCTableHelperHeaderIdentifierBlock)(NSInteger section, id cModel);
-typedef NSString * _Nullable (^CCTableHelperFooterIdentifierBlock)(NSInteger section, id cModel);
-typedef NSString * _Nullable (^CCTableHelperCellIdentifierBlock)(NSIndexPath *cIndexPath, id cModel);
+typedef NSString *_Nullable (^CCTableHelperHeaderIdentifierBlock)(NSInteger section, id cModel);
+typedef NSString *_Nullable (^CCTableHelperFooterIdentifierBlock)(NSInteger section, id cModel);
+typedef NSString *_Nullable (^CCTableHelperCellIdentifierBlock)(NSIndexPath *cIndexPath, id cModel);
 typedef void (^CCTableHelperDidSelectBlock)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
 typedef void (^CCTableHelperDidDeSelectBlock)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
 
@@ -40,21 +40,23 @@ typedef void (^CCTableHelperDidMoveToRowBlock)(UITableView *tableView, NSIndexPa
 typedef void (^CCTableHelperDidWillDisplayBlock)(UITableViewCell *Cell, NSIndexPath *cIndexPath, id cModel, BOOL IsCelldisplay);
 
 typedef void (^CCTableHelperDidEditingBlock)(UITableView *tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath *cIndexPath, id cModel);
-typedef NSString * _Nullable (^CCTableHelperDidEditTitleBlock)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
+typedef NSString *_Nullable (^CCTableHelperDidEditTitleBlock)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
 
 typedef UITableViewCellEditingStyle (^CCTableHelperEditingStyle)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
-typedef NSArray<UITableViewRowAction *> * _Nullable (^CCTableHelperDidEditActionsBlock)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
+typedef NSArray<UITableViewRowAction *> *_Nullable (^CCTableHelperDidEditActionsBlock)(UITableView *tableView, NSIndexPath *cIndexPath, id cModel);
 
 typedef void (^CCScrollViewWillBeginDragging)(UIScrollView *scrollView);
 typedef void (^CCScrollViewDidScroll)(UIScrollView *scrollView);
+typedef void (^CCScrollViewDidEndDecelerating)(UIScrollView *scrollView);
+typedef void (^CCScrollViewDidEndDragging)(UIScrollView *scrollView, BOOL decelerate);
 typedef void (^CCTableHelperCellBlock)(NSString *info, id event);
 
 
 typedef void (^CCTableHelperHeaderBlock)(UITableViewHeaderFooterView *headerView, NSInteger section, id cModel);
 typedef void (^CCTableHelperFooterBlock)(UITableViewHeaderFooterView *footerView, NSInteger section, id cModel);
 
-typedef NSString * _Nullable (^CCTableHelperTitleHeaderBlock)(UITableView *tableView, NSInteger section);
-typedef NSString * _Nullable (^CCTableHelperTitleFooterBlock)(UITableView *tableView, NSInteger section);
+typedef NSString *_Nullable (^CCTableHelperTitleHeaderBlock)(UITableView *tableView, NSInteger section);
+typedef NSString *_Nullable (^CCTableHelperTitleFooterBlock)(UITableView *tableView, NSInteger section);
 
 typedef NSInteger (^CCTableHelperNumberOfSections)(UITableView *tableView, NSInteger count);
 typedef NSInteger (^CCTableHelperNumberRows)(UITableView *tableView, NSInteger section, NSArray *cModels);
@@ -231,6 +233,8 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 - (void)didScrollViewWillBeginDragging:(CCScrollViewWillBeginDragging)block;
 - (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block;
+- (void)didScrollViewDidEndDecelerating:(CCScrollViewDidEndDecelerating)block;
+- (void)didScrollViewDidEndDragging:(CCScrollViewDidEndDragging)block;
 
 /**
  *  @author CC, 16-05-18
@@ -278,7 +282,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 #pragma mark -
 #pragma mark :. Handler
 
--(void)cc_clearData;
+- (void)cc_clearData;
 
 /**
  *  @author CC, 16-07-02
@@ -291,7 +295,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 /**
  重新加载该分组数据
-
+ 
  @param newDataAry 分组数据
  @param cSection 分组下标
  */
@@ -333,7 +337,7 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 /**
  删除分组数据
-
+ 
  @param cSection 分组下标
  */
 - (void)cc_deleteGroupData:(NSInteger)cSection;
@@ -343,14 +347,14 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 
 /**
  设置Section Header 数据
-
+ 
  @param newHeaderAry 数据源
  */
 - (void)cc_resetHeaderAry:(NSArray *)newHeaderAry;
 
 /**
  设置section Footer 数据
-
+ 
  @param newFooterAry 数据源
  */
 - (void)cc_resetFooterAry:(NSArray *)newFooterAry;
@@ -450,8 +454,8 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 /**
  获取当前Header模型数据
  */
--(id)currentHeaderModel;
--(id)currentHeaderModelAtSection:(NSInteger)section;
+- (id)currentHeaderModel;
+- (id)currentHeaderModelAtSection:(NSInteger)section;
 
 /**
  获取当前Cell模型数据
@@ -462,8 +466,8 @@ typedef void (^CCTableHelperScrollViewDidEndScrolling)(UIScrollView *scrollView)
 /**
  获取当前Footer模型数据
  */
--(id)currentFooterModel;
--(id)currentFooterModelAtSection:(NSInteger)section;
+- (id)currentFooterModel;
+- (id)currentFooterModelAtSection:(NSInteger)section;
 
 @end
 

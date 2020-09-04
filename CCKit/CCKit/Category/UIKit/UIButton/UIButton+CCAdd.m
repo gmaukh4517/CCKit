@@ -99,8 +99,12 @@
  */
 - (void)setImage:(NSString *)imagePath
 {
-    [self setImage:[UIImage imageNamed:imagePath] forState:UIControlStateNormal];
-    [self setImage:[UIImage imageNamed:imagePath] forState:UIControlStateHighlighted];
+    UIImage *image;
+    if (imagePath.length)
+        image = [UIImage imageNamed:imagePath];
+    
+    [self setImage:image forState:UIControlStateNormal];
+    [self setImage:image forState:UIControlStateHighlighted];
     
     if ([imagePath rangeOfString:@"http://"].location != NSNotFound) {
         UIImageView *imageView = (UIImageView *)[self viewWithTag:8888];

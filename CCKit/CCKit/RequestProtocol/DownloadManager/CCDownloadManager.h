@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "CCSessionDownload.h"
 #import "CCDownLoadHelper.h"
+#import "CCSessionDownload.h"
+#import <Foundation/Foundation.h>
 
 @protocol CCDownloadManagerDelegate <NSObject>
 
@@ -33,9 +33,9 @@
 
 /**
  单个完成回调
-
+ 
  @param downloader 下载器
-  @param uniqueid 下载文件 id
+ @param uniqueid 下载文件 id
  */
 - (void)downloader:(CCSessionDownload *)downloader withUniqueid:(NSString *)uniqueid;
 
@@ -43,6 +43,14 @@
  所有下载任务完成回调
  */
 - (void)downloaderComplete;
+
+/**
+ 删除单个下载回调
+ 
+ @param downloader 下载器
+ @param uniqueid 下载文件 id
+ */
+- (void)downloaderDelete:(CCSessionDownload *)downloader withUniqueid:(NSString *)uniqueid;
 
 @end
 
@@ -60,21 +68,22 @@
 /**
  下载代理回调
  */
-@property (nonatomic, weak) id<CCDownloadManagerDelegate> downloadDelegate;
+- (void)setDownloadDelegate:(id<CCDownloadManagerDelegate>)downloadDelegate;
+- (void)removeDownloadDelegate:(id<CCDownloadManagerDelegate>)downloadDelegate;
 
 
 + (instancetype)sharedManager;
 
 /**
  添加下载任务
-
+ 
  @param url 下载地址
  */
 - (void)addTaskWithUrl:(NSString *)url;
 
 /**
  添加下载任务
-
+ 
  @param model 下载模型
  */
 - (void)addTaskWithModel:(CCSessionDownload *)model;

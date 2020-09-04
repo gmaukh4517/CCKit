@@ -52,9 +52,19 @@
 @property (nonatomic, assign) BOOL isScrollEnabled;
 
 /**
+ 自适应导航栏和底部
+ */
+@property (nonatomic, assign) BOOL autoNavigation;
+
+/**
  导航栏是否透明
  */
 @property (nonatomic, assign) BOOL navigationbarTransparent;
+
+/**
+ 是否适配底部(主要X 以上设备)
+ */
+@property (nonatomic, assign) BOOL autoBottom;
 
 /**
  附加web userAgent
@@ -64,11 +74,6 @@
  附加web cookie
  */
 @property (nonatomic, copy) NSDictionary *cookie;
-
-/**
- 是否适配底部(主要X 以上设备)
- */
-@property (nonatomic, assign) BOOL isAdapterBottom;
 
 /**
  退回或者返回刷新地址
@@ -95,7 +100,7 @@
 
 /**
  加载本地文件
-
+ 
  @param fileName 文件名
  @param expansionName 文件扩展名
  */
@@ -180,5 +185,14 @@
  */
 - (void)evaluateJavaScript:(NSString *)javaScriptString
          completionHandler:(void (^)(id response, NSError *error))completionHandler;
+
+/**
+ *  @author CC, 20-09-22
+ *
+ *  @brief DNS劫持处理
+ *
+ *  @param registerHandler 回调事件
+ */
+- (void)registerInvalidDNSHandler:(void (^)(NSURL *originUrl))registerHandler;
 
 @end

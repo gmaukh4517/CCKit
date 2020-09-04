@@ -68,6 +68,8 @@ typedef void (^_CCViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 
 @property (nonatomic, copy) _CCViewControllerWillAppearInjectBlock cc_willAppearInjectBlock;
 
++ (UIViewController *)topViewController;
+
 - (void)backButtonTouched:(void (^)(UIViewController *vc))backButtonHandler;
 
 /**

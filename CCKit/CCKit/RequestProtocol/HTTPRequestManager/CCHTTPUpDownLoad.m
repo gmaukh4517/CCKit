@@ -10,9 +10,38 @@
 #import "AFNetworking.h"
 #import "UIKit+AFNetworking.h"
 //#import "NSString+CCAdd.h"
-#import "HttpFileConfig.h"
 
 @implementation CCHTTPUpDownLoad
+
+/**
+ *  @author CC, 16-01-28
+ *
+ *  @brief 请求检查网络
+ */
++ (BOOL)requestBeforeCheckNetWork
+{
+    struct sockaddr zeroAddress;
+    bzero(&zeroAddress, sizeof(zeroAddress));
+    zeroAddress.sa_len = sizeof(zeroAddress);
+    zeroAddress.sa_family = AF_INET;
+    SCNetworkReachabilityRef defaultRouteReachability =
+    SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
+    SCNetworkReachabilityFlags flags;
+    BOOL didRetrieveFlags =
+    SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
+    CFRelease(defaultRouteReachability);
+    if (!didRetrieveFlags) {
+        printf("Error. Count not recover network reachability flags\n");
+        return NO;
+    }
+    BOOL isReachable = flags & kSCNetworkFlagsReachable;
+    BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
+    BOOL isNetworkEnable = (isReachable && !needsConnection) ? YES : NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = isNetworkEnable; /*  网络指示器的状态： 有网络 ： 开  没有网络： 关  */
+    });
+    return isNetworkEnable;
+}
 
 /**
  *  @author CC, 16-03-10
@@ -32,7 +61,7 @@
        success:(requestSuccessBlock)success
        failure:(requestFailureBlock)failure
 {
-    if (![CCHTTPManager requestBeforeCheckNetWork]) {
+    if (![CCHTTPUpDownLoad requestBeforeCheckNetWork]) {
         failure(nil,[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil]);
         return;
     }
@@ -66,7 +95,7 @@
        success:(requestSuccessBlock)success
        failure:(requestFailureBlock)failure
 {
-    if (![CCHTTPManager requestBeforeCheckNetWork]) {
+    if (![CCHTTPUpDownLoad requestBeforeCheckNetWork]) {
         failure(nil,[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil]);
         return;
     }
@@ -102,7 +131,7 @@ downloadProgressBlock:(void (^)(NSUInteger bytesRead, long long totalBytesRead, 
          success:(requestDownloadBacktrack)success
          failure:(requestFailureBlock)failure
 {
-    if (![CCHTTPManager requestBeforeCheckNetWork]) {
+    if (![CCHTTPUpDownLoad requestBeforeCheckNetWork]) {
         failure(nil,[NSError errorWithDomain:@"Error. Count not recover network reachability flags" code:kCFURLErrorNotConnectedToInternet userInfo:nil]);
         return;
     }

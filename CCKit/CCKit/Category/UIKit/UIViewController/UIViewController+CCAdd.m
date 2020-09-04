@@ -730,27 +730,32 @@ static void *const keypath = (void *)&keypath;
                  dismissed:nil];
 }
 
-- (UIViewController *)topViewControllers
++ (UIViewController *)topViewController
 {
-    return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+    return [UIViewController topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
 }
 
-- (UIViewController *)topViewControllerWithRootViewController:(UIViewController *)rootViewController
+- (UIViewController *)topViewControllers
+{
+    return [UIViewController topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+}
+
++ (UIViewController *)topViewControllerWithRootViewController:(UIViewController *)rootViewController
 {
     if ([rootViewController isKindOfClass:[UITabBarController class]]) {
         UITabBarController *tabBarController = (UITabBarController *)rootViewController;
-        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+        return [UIViewController topViewControllerWithRootViewController:tabBarController.selectedViewController];
     } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
         UINavigationController *navigationController = (UINavigationController *)rootViewController;
-        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+        return [UIViewController topViewControllerWithRootViewController:navigationController.visibleViewController];
     } else if (rootViewController.presentedViewController) {
         UIViewController *presentedViewController = rootViewController.presentedViewController;
-        return [self topViewControllerWithRootViewController:presentedViewController];
+        return [UIViewController topViewControllerWithRootViewController:presentedViewController];
     } else {
         if (rootViewController) {
             return rootViewController;
         } else {
-            UIViewController *recentView = self;
+            UIViewController *recentView = rootViewController;
 
             while (recentView.parentViewController != nil) {
                 recentView = recentView.parentViewController;

@@ -69,11 +69,11 @@
         [_LoadViews startAnimation];
         [self addSubview:_LoadViews];
         
-        if (Logo && ![Logo isEqualToString:@""]) {
-            UIImageView *LogoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:Logo]];
-            LogoImageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-            [self addSubview:LogoImageView];
-        }
+//        if (Logo && ![Logo isEqualToString:@""]) {
+//            UIImageView *LogoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:Logo]];
+//            LogoImageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+//            [self addSubview:LogoImageView];
+//        }
     
         //按home键回来 继续转动
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];

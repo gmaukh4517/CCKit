@@ -90,6 +90,8 @@ _Pragma("clang diagnostic pop")                                                 
 
 @property (nonatomic, copy) CCScrollViewWillBeginDragging scrollViewBdBlock;
 @property (nonatomic, copy) CCScrollViewDidScroll scrollViewddBlock;
+@property (nonatomic, copy) CCScrollViewDidEndDecelerating scrollViewDidEndDeceleratingBlock;
+@property (nonatomic, copy) CCScrollViewDidEndDragging scrollViewDidEndDraggingBlock;
 
 @property (nonatomic, copy) CCTableHelperHeaderBlock didHeaderWillDisplayBlock;
 @property (nonatomic, copy) CCTableHelperTitleHeaderBlock headerTitleBlock;
@@ -383,6 +385,16 @@ _Pragma("clang diagnostic pop")                                                 
 - (void)didScrollViewDidScroll:(CCScrollViewDidScroll)block
 {
     self.scrollViewddBlock = block;
+}
+
+- (void)didScrollViewDidEndDecelerating:(CCScrollViewDidEndDecelerating)block
+{
+    self.scrollViewDidEndDeceleratingBlock = block;
+}
+
+- (void)didScrollViewDidEndDragging:(CCScrollViewDidEndDragging)block
+{
+    self.scrollViewDidEndDraggingBlock = block;
 }
 
 - (void)currentModelIndexPath:(CCTableHelperCurrentModelAtIndexPath)cb
@@ -865,6 +877,16 @@ _Pragma("clang diagnostic pop")                                                 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scrollViewDidEndScrollingAnimation:) object:scrollView];
     if (self.scrollViewDidEndScrolling && scrollView)
         self.scrollViewDidEndScrolling(scrollView);
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    !self.scrollViewDidEndDeceleratingBlock ?: self.scrollViewDidEndDeceleratingBlock(scrollView);
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    !self.scrollViewDidEndDraggingBlock ?: self.scrollViewDidEndDraggingBlock(scrollView, decelerate);
 }
 
 #pragma mark :. handle

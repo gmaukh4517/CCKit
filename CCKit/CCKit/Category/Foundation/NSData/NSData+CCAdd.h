@@ -68,7 +68,7 @@
  *
  *  @return 传入字符串 base64后的data
  */
-+ (NSData *)dataWithBase64EncodedString:(NSString *)string;
++ (NSData *)dataBase64EncodedString:(NSString *)string;
 /**
  *  @brief  NSData转string
  *

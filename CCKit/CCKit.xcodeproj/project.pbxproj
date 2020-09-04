@@ -48,16 +48,16 @@
 		422AEA8B22363367006C86E4 /* CCSessionDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 420B35952233C01500E0C8FD /* CCSessionDownloadDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		422DE1701EC2A9B4008A3C99 /* NSArray+CCAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC721E1E70012800FBBE42 /* NSArray+CCAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		423388781F0F22950055701E /* CCMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 423388771F0F223C0055701E /* CCMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4233C1F91E83CCD80041A015 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1EE1E83CCD80041A015 /* FMDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1F91E83CCD80041A015 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1EE1E83CCD80041A015 /* FMDatabase.h */; };
 		4233C1FA1E83CCD80041A015 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1EF1E83CCD80041A015 /* FMDatabase.m */; };
-		4233C1FB1E83CCD80041A015 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1FB1E83CCD80041A015 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F01E83CCD80041A015 /* FMDatabaseAdditions.h */; };
 		4233C1FC1E83CCD80041A015 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F11E83CCD80041A015 /* FMDatabaseAdditions.m */; };
-		4233C1FD1E83CCD80041A015 /* FMDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F21E83CCD80041A015 /* FMDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1FD1E83CCD80041A015 /* FMDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F21E83CCD80041A015 /* FMDatabasePool.h */; };
 		4233C1FE1E83CCD80041A015 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F31E83CCD80041A015 /* FMDatabasePool.m */; };
-		4233C1FF1E83CCD80041A015 /* FMDatabaseQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F41E83CCD80041A015 /* FMDatabaseQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C1FF1E83CCD80041A015 /* FMDatabaseQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F41E83CCD80041A015 /* FMDatabaseQueue.h */; };
 		4233C2001E83CCD80041A015 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F51E83CCD80041A015 /* FMDatabaseQueue.m */; };
 		4233C2011E83CCD80041A015 /* FMDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F61E83CCD80041A015 /* FMDB.h */; };
-		4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F71E83CCD80041A015 /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4233C2021E83CCD80041A015 /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4233C1F71E83CCD80041A015 /* FMResultSet.h */; };
 		4233C2031E83CCD80041A015 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233C1F81E83CCD80041A015 /* FMResultSet.m */; };
 		423AB433227859BE00510223 /* CocoaSecurity.h in Headers */ = {isa = PBXBuildFile; fileRef = 423AB431227859BE00510223 /* CocoaSecurity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		423AB434227859BE00510223 /* CocoaSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 423AB432227859BE00510223 /* CocoaSecurity.m */; };
@@ -201,6 +201,12 @@
 		4252A03E1E9F18680093AFF7 /* CCActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4252A03A1E9F18680093AFF7 /* CCActionSheet.m */; };
 		4252A0431E9F18D80093AFF7 /* CCActionSheetViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4252A0411E9F18D80093AFF7 /* CCActionSheetViewController.h */; };
 		4252A0441E9F18D80093AFF7 /* CCActionSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4252A0421E9F18D80093AFF7 /* CCActionSheetViewController.m */; };
+		425F1BC824F0CF5C00CE9BA9 /* CCDNSInterceptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 425F1BC624F0CF5C00CE9BA9 /* CCDNSInterceptor.h */; };
+		425F1BC924F0CF5C00CE9BA9 /* CCDNSInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 425F1BC724F0CF5C00CE9BA9 /* CCDNSInterceptor.m */; };
+		425F1BD024F0E65500CE9BA9 /* CCHostMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425F1BCE24F0E65500CE9BA9 /* CCHostMapper.h */; };
+		425F1BD124F0E65500CE9BA9 /* CCHostMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425F1BCF24F0E65500CE9BA9 /* CCHostMapper.m */; };
+		425F1BD424F0E92900CE9BA9 /* CCHostFilterRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 425F1BD224F0E92900CE9BA9 /* CCHostFilterRule.h */; };
+		425F1BD524F0E92900CE9BA9 /* CCHostFilterRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 425F1BD324F0E92900CE9BA9 /* CCHostFilterRule.m */; };
 		426B74CF1EEF7BB800042EA0 /* CCLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 426B74CD1EEF7BB800042EA0 /* CCLanguage.m */; };
 		426B7DC41EF0EB21006C63EB /* CCLanguage.h in Headers */ = {isa = PBXBuildFile; fileRef = 426B7DC31EF0EB21006C63EB /* CCLanguage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		426CB20E2021941900E4394F /* CCTransformRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 426CB20C2021941900E4394F /* CCTransformRefresh.m */; };
@@ -316,6 +322,7 @@
 		429A48EA21BF545400A3AC1C /* CCEventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48D821BF545400A3AC1C /* CCEventObject.m */; };
 		429A48EB21BF545400A3AC1C /* CCEventObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 429A48D921BF545400A3AC1C /* CCEventObject.h */; };
 		429A48EC21BF545400A3AC1C /* CCEventCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 429A48DA21BF545400A3AC1C /* CCEventCenter.m */; };
+		429F2CFC24A97D4B00845A33 /* CCHTTPProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 429F2CF924A97BCC00845A33 /* CCHTTPProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42AE45D82212574000EDD27E /* CCLoadLogoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AE45D62212574000EDD27E /* CCLoadLogoView.m */; };
 		42AE45D92212574000EDD27E /* CCLoadLogoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 42AE45D72212574000EDD27E /* CCLoadLogoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42B013AC1F1F48A0006A752C /* CCAppDelegateSOA.h in Headers */ = {isa = PBXBuildFile; fileRef = 42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -392,6 +399,8 @@
 		42B5CDDD1E70E1C2002D302E /* CCUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */; };
 		42BC9E4621B4C09A002235FE /* CCUnicode.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BC9E4421B4C09A002235FE /* CCUnicode.m */; };
 		42BC9E4721B4C09A002235FE /* CCUnicode.h in Headers */ = {isa = PBXBuildFile; fileRef = 42BC9E4521B4C09A002235FE /* CCUnicode.h */; };
+		42BE700224ED1AF2004D03A7 /* CCDownloadMultiProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 42BE700024ED1AF2004D03A7 /* CCDownloadMultiProxy.h */; };
+		42BE700324ED1AF2004D03A7 /* CCDownloadMultiProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE700124ED1AF2004D03A7 /* CCDownloadMultiProxy.m */; };
 		42C43A8821D1CB0A0071D8D6 /* UIView+CCHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C43A8421D1CB0A0071D8D6 /* UIView+CCHierarchy.m */; };
 		42C43A8921D1CB0A0071D8D6 /* UIView+CCHierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C43A8521D1CB0A0071D8D6 /* UIView+CCHierarchy.h */; };
 		42C43A8A21D1CB0A0071D8D6 /* CCKeyboardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42C43A8621D1CB0A0071D8D6 /* CCKeyboardManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -408,6 +417,8 @@
 		42D3020821D7669D005871E2 /* UITableViewRowAction+CCAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3020621D7669D005871E2 /* UITableViewRowAction+CCAdd.m */; };
 		42D616C31F46BE8900AAA901 /* CCDBManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D616C11F46BE8900AAA901 /* CCDBManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42D616C41F46BE8900AAA901 /* CCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D616C21F46BE8900AAA901 /* CCDBManager.m */; };
+		42E1A31E24DE58C200762E9E /* CCAutoScrollLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 42E1A31C24DE58C200762E9E /* CCAutoScrollLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42E1A31F24DE58C200762E9E /* CCAutoScrollLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E1A31D24DE58C200762E9E /* CCAutoScrollLabel.m */; };
 		42ED3276238BC77500305421 /* UITabBar+CCAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 42ED3274238BC77500305421 /* UITabBar+CCAnimation.h */; };
 		42ED3277238BC77500305421 /* UITabBar+CCAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ED3275238BC77500305421 /* UITabBar+CCAnimation.m */; };
 		42ED327A238BCBCA00305421 /* UITabBarItem+CCAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 42ED3278238BCBCA00305421 /* UITabBarItem+CCAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -432,7 +443,7 @@
 		42FC70B11E6FDB7700FBBE42 /* CCViewProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70A01E6FDB7700FBBE42 /* CCViewProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70C31E6FDC7F00FBBE42 /* CCKeyValueStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70B41E6FDC7F00FBBE42 /* CCKeyValueStore.h */; };
 		42FC70C41E6FDC7F00FBBE42 /* CCKeyValueStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC70B51E6FDC7F00FBBE42 /* CCKeyValueStore.m */; };
-		42FC70C51E6FDC7F00FBBE42 /* CCHTTPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70B71E6FDC7F00FBBE42 /* CCHTTPManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42FC70C51E6FDC7F00FBBE42 /* CCHTTPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70B71E6FDC7F00FBBE42 /* CCHTTPManager.h */; };
 		42FC70C61E6FDC7F00FBBE42 /* CCHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC70B81E6FDC7F00FBBE42 /* CCHTTPManager.m */; };
 		42FC70C71E6FDC7F00FBBE42 /* CCHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 42FC70B91E6FDC7F00FBBE42 /* CCHTTPRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42FC70C81E6FDC7F00FBBE42 /* CCHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FC70BA1E6FDC7F00FBBE42 /* CCHTTPRequest.m */; };
@@ -787,6 +798,12 @@
 		4252A03A1E9F18680093AFF7 /* CCActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionSheet.m; sourceTree = "<group>"; };
 		4252A0411E9F18D80093AFF7 /* CCActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionSheetViewController.h; sourceTree = "<group>"; };
 		4252A0421E9F18D80093AFF7 /* CCActionSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionSheetViewController.m; sourceTree = "<group>"; };
+		425F1BC624F0CF5C00CE9BA9 /* CCDNSInterceptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCDNSInterceptor.h; sourceTree = "<group>"; };
+		425F1BC724F0CF5C00CE9BA9 /* CCDNSInterceptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCDNSInterceptor.m; sourceTree = "<group>"; };
+		425F1BCE24F0E65500CE9BA9 /* CCHostMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCHostMapper.h; sourceTree = "<group>"; };
+		425F1BCF24F0E65500CE9BA9 /* CCHostMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCHostMapper.m; sourceTree = "<group>"; };
+		425F1BD224F0E92900CE9BA9 /* CCHostFilterRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCHostFilterRule.h; sourceTree = "<group>"; };
+		425F1BD324F0E92900CE9BA9 /* CCHostFilterRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCHostFilterRule.m; sourceTree = "<group>"; };
 		426B74CD1EEF7BB800042EA0 /* CCLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLanguage.m; sourceTree = "<group>"; };
 		426B7DC31EF0EB21006C63EB /* CCLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLanguage.h; sourceTree = "<group>"; };
 		426CB20C2021941900E4394F /* CCTransformRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTransformRefresh.m; sourceTree = "<group>"; };
@@ -902,6 +919,7 @@
 		429A48D821BF545400A3AC1C /* CCEventObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEventObject.m; sourceTree = "<group>"; };
 		429A48D921BF545400A3AC1C /* CCEventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEventObject.h; sourceTree = "<group>"; };
 		429A48DA21BF545400A3AC1C /* CCEventCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEventCenter.m; sourceTree = "<group>"; };
+		429F2CF924A97BCC00845A33 /* CCHTTPProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCHTTPProtocol.h; sourceTree = "<group>"; };
 		42AE45D62212574000EDD27E /* CCLoadLogoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLoadLogoView.m; sourceTree = "<group>"; };
 		42AE45D72212574000EDD27E /* CCLoadLogoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLoadLogoView.h; sourceTree = "<group>"; };
 		42B013AA1F1F48A0006A752C /* CCAppDelegateSOA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAppDelegateSOA.h; sourceTree = "<group>"; };
@@ -978,6 +996,8 @@
 		42B5CDDB1E70E1C2002D302E /* CCUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUserDefaults.m; sourceTree = "<group>"; };
 		42BC9E4421B4C09A002235FE /* CCUnicode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCUnicode.m; sourceTree = "<group>"; };
 		42BC9E4521B4C09A002235FE /* CCUnicode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUnicode.h; sourceTree = "<group>"; };
+		42BE700024ED1AF2004D03A7 /* CCDownloadMultiProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCDownloadMultiProxy.h; sourceTree = "<group>"; };
+		42BE700124ED1AF2004D03A7 /* CCDownloadMultiProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCDownloadMultiProxy.m; sourceTree = "<group>"; };
 		42C43A8421D1CB0A0071D8D6 /* UIView+CCHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CCHierarchy.m"; sourceTree = "<group>"; };
 		42C43A8521D1CB0A0071D8D6 /* UIView+CCHierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CCHierarchy.h"; sourceTree = "<group>"; };
 		42C43A8621D1CB0A0071D8D6 /* CCKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCKeyboardManager.h; sourceTree = "<group>"; };
@@ -994,6 +1014,8 @@
 		42D3020621D7669D005871E2 /* UITableViewRowAction+CCAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewRowAction+CCAdd.m"; sourceTree = "<group>"; };
 		42D616C11F46BE8900AAA901 /* CCDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDBManager.h; sourceTree = "<group>"; };
 		42D616C21F46BE8900AAA901 /* CCDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDBManager.m; sourceTree = "<group>"; };
+		42E1A31C24DE58C200762E9E /* CCAutoScrollLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCAutoScrollLabel.h; sourceTree = "<group>"; };
+		42E1A31D24DE58C200762E9E /* CCAutoScrollLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCAutoScrollLabel.m; sourceTree = "<group>"; };
 		42ED3274238BC77500305421 /* UITabBar+CCAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITabBar+CCAnimation.h"; sourceTree = "<group>"; };
 		42ED3275238BC77500305421 /* UITabBar+CCAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+CCAnimation.m"; sourceTree = "<group>"; };
 		42ED3278238BCBCA00305421 /* UITabBarItem+CCAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITabBarItem+CCAnimation.h"; sourceTree = "<group>"; };
@@ -1211,6 +1233,7 @@
 		420B358E2233BA5700E0C8FD /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				42BE6FFF24ED1AD8004D03A7 /* Proxy */,
 				422AEA822235F0A4006C86E4 /* Helper */,
 				420B35942233BFC200E0C8FD /* Protocol */,
 				420B358F2233BAA200E0C8FD /* Model */,
@@ -1607,6 +1630,19 @@
 			path = CCActionSheet;
 			sourceTree = "<group>";
 		};
+		425F1BC524F0CF0F00CE9BA9 /* Intercept */ = {
+			isa = PBXGroup;
+			children = (
+				425F1BC624F0CF5C00CE9BA9 /* CCDNSInterceptor.h */,
+				425F1BC724F0CF5C00CE9BA9 /* CCDNSInterceptor.m */,
+				425F1BCE24F0E65500CE9BA9 /* CCHostMapper.h */,
+				425F1BCF24F0E65500CE9BA9 /* CCHostMapper.m */,
+				425F1BD224F0E92900CE9BA9 /* CCHostFilterRule.h */,
+				425F1BD324F0E92900CE9BA9 /* CCHostFilterRule.m */,
+			);
+			path = Intercept;
+			sourceTree = "<group>";
+		};
 		426B74CB1EEF7BB800042EA0 /* CCLanguage */ = {
 			isa = PBXGroup;
 			children = (
@@ -1781,6 +1817,7 @@
 		42954A1B1E712B1A00F4CC4C /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				42E1A31B24DE58A700762E9E /* CCAutoScrollLabel */,
 				428398EB2474064D0019B050 /* CCDropDownList */,
 				42ED326F238B756500305421 /* CCAnimationTabBar */,
 				42497386222E1B8D0076CADD /* MessageMenuViews */,
@@ -1964,6 +2001,14 @@
 				429A48D821BF545400A3AC1C /* CCEventObject.m */,
 			);
 			path = Event;
+			sourceTree = "<group>";
+		};
+		429F2CFB24A97C6200845A33 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				429F2CF924A97BCC00845A33 /* CCHTTPProtocol.h */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		42AE45D52212574000EDD27E /* CCLoadLogoView */ = {
@@ -2210,6 +2255,15 @@
 			path = CCUnicode;
 			sourceTree = "<group>";
 		};
+		42BE6FFF24ED1AD8004D03A7 /* Proxy */ = {
+			isa = PBXGroup;
+			children = (
+				42BE700024ED1AF2004D03A7 /* CCDownloadMultiProxy.h */,
+				42BE700124ED1AF2004D03A7 /* CCDownloadMultiProxy.m */,
+			);
+			path = Proxy;
+			sourceTree = "<group>";
+		};
 		42C43A8221D1CB0A0071D8D6 /* CCKeyboardManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -2242,6 +2296,7 @@
 		42C91D7A21C0FC3100E89B77 /* CCWebViewController */ = {
 			isa = PBXGroup;
 			children = (
+				425F1BC524F0CF0F00CE9BA9 /* Intercept */,
 				42C91D7C21C0FC3100E89B77 /* CCWebViewController.h */,
 				42C91D7B21C0FC3100E89B77 /* CCWebViewController.m */,
 			);
@@ -2257,6 +2312,15 @@
 				42C91D7F21C0FC3100E89B77 /* CCWebViewProgressView.m */,
 			);
 			path = CCWebProgress;
+			sourceTree = "<group>";
+		};
+		42E1A31B24DE58A700762E9E /* CCAutoScrollLabel */ = {
+			isa = PBXGroup;
+			children = (
+				42E1A31C24DE58C200762E9E /* CCAutoScrollLabel.h */,
+				42E1A31D24DE58C200762E9E /* CCAutoScrollLabel.m */,
+			);
+			path = CCAutoScrollLabel;
 			sourceTree = "<group>";
 		};
 		42ED326F238B756500305421 /* CCAnimationTabBar */ = {
@@ -2376,6 +2440,7 @@
 		42FC70B61E6FDC7F00FBBE42 /* HTTPRequestManager */ = {
 			isa = PBXGroup;
 			children = (
+				429F2CFB24A97C6200845A33 /* Protocol */,
 				42FC70B71E6FDC7F00FBBE42 /* CCHTTPManager.h */,
 				42FC70B81E6FDC7F00FBBE42 /* CCHTTPManager.m */,
 				42FC70B91E6FDC7F00FBBE42 /* CCHTTPRequest.h */,
@@ -3054,6 +3119,7 @@
 				42FC70A51E6FDB7700FBBE42 /* UIViewController+CCProperties.h in Headers */,
 				424A51D2221A8C9D0094427D /* rc2.h in Headers */,
 				422AEA802235EF31006C86E4 /* CCDownLoadOperation.h in Headers */,
+				42E1A31E24DE58C200762E9E /* CCAutoScrollLabel.h in Headers */,
 				42954A741E712BE100F4CC4C /* NSData+ImageContentType.h in Headers */,
 				424A51D6221A8C9D0094427D /* ssl23.h in Headers */,
 				426D7D4F224240C700419419 /* CCQRCodeViewController.h in Headers */,
@@ -3130,6 +3196,7 @@
 				42954A951E712BE100F4CC4C /* UIImageView+HighlightedWebCache.h in Headers */,
 				42FC73881E70012800FBBE42 /* UITableView+CCAdd.h in Headers */,
 				42B3453E2213A7CA008310F3 /* TZImageCropManager.h in Headers */,
+				425F1BD424F0E92900CE9BA9 /* CCHostFilterRule.h in Headers */,
 				422AEA8B22363367006C86E4 /* CCSessionDownloadDelegate.h in Headers */,
 				42FC70C71E6FDC7F00FBBE42 /* CCHTTPRequest.h in Headers */,
 				42FC70A71E6FDB7700FBBE42 /* CCMediator.h in Headers */,
@@ -3145,6 +3212,7 @@
 				424A51D8221A8C9D0094427D /* md5.h in Headers */,
 				42FC731A1E70012800FBBE42 /* NSDictionary+CCAdd.h in Headers */,
 				426D7D57224240C700419419 /* rscode.h in Headers */,
+				425F1BD024F0E65500CE9BA9 /* CCHostMapper.h in Headers */,
 				423388781F0F22950055701E /* CCMacros.h in Headers */,
 				424A51E2221A8C9D0094427D /* obj_mac.h in Headers */,
 				42FC70C31E6FDC7F00FBBE42 /* CCKeyValueStore.h in Headers */,
@@ -3159,6 +3227,7 @@
 				42B345602213A8B8008310F3 /* CGGeometry+CCImageCropper.h in Headers */,
 				42954A841E712BE100F4CC4C /* FLAnimatedImageView.h in Headers */,
 				42FC70B11E6FDB7700FBBE42 /* CCViewProtocol.h in Headers */,
+				425F1BC824F0CF5C00CE9BA9 /* CCDNSInterceptor.h in Headers */,
 				424A51B2221A8C9D0094427D /* config.h in Headers */,
 				4244009F1F44452500C5F321 /* CCDB.h in Headers */,
 				42954A721E712BE100F4CC4C /* FLAnimatedImageView+WebCache.h in Headers */,
@@ -3309,6 +3378,7 @@
 				42B345382213A7CA008310F3 /* UIView+Layout.h in Headers */,
 				42B345852213A954008310F3 /* CameraSessionView.h in Headers */,
 				42954A861E712BE100F4CC4C /* SDWebImageCompat.h in Headers */,
+				42BE700224ED1AF2004D03A7 /* CCDownloadMultiProxy.h in Headers */,
 				42FC71AC1E6FFC0000FBBE42 /* CCProperty.h in Headers */,
 				424A5203221A8C9D0094427D /* srtp.h in Headers */,
 				4278A9FE1E8A0BF500F4FA97 /* TableViewCellEntity.h in Headers */,
@@ -3369,6 +3439,7 @@
 				424A51FC221A8C9D0094427D /* krb5_asn.h in Headers */,
 				42FC71821E6FDF1400FBBE42 /* UIImageView+AFNetworking.h in Headers */,
 				426D7D5A224240C700419419 /* bitstream.h in Headers */,
+				429F2CFC24A97D4B00845A33 /* CCHTTPProtocol.h in Headers */,
 				42FC73031E70012800FBBE42 /* Category.h in Headers */,
 				424A51D4221A8C9D0094427D /* ui_compat.h in Headers */,
 				424A51E5221A8C9D0094427D /* srp.h in Headers */,
@@ -3465,7 +3536,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=${PROJECT_NAME}\nFMK_VERSION=CC\nOPEN_PATH=${SRCROOT}/Products\n\n# Install dir will be the final output to the framework or bundle.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${OPEN_PATH}/${FMK_NAME}.framework\n#INSTALL_BUNDLE=${OPEN_PATH}/${FMK_NAME}.bundle\n\n# Working dir will be deleted after the framework or bundle creation.\nWRK_DIR=build\n\n# framework\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.framework\n\n# bundle\n#DEVICE_BUNDLE=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.bundle\n#SIMULATOR_BUNDLE=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.bundle\n\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos build\nxcodebuild -configuration \"Debug\" -target \"${FMK_NAME}\" -sdk iphonesimulator build\n\n\n# Cleaning the oldest.\nif [ -d \"${OPEN_PATH}\" ]\nthen\nrm -rf \"${OPEN_PATH}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# bundle\n#mkdir -p \"${INSTALL_BUNDLE}\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# bundle\n#cp -R \"${DEVICE_BUNDLE}/\" \"${INSTALL_BUNDLE}/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\"\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#lipo -create \"${DEVICE_BUNDLE}/${FMK_NAME}\" \"${SIMULATOR_BUNDLE}/${FMK_NAME}\" -output \"${INSTALL_BUNDLE}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\nopen \"${OPEN_PATH}\"\n";
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=${PROJECT_NAME}\nFMK_VERSION=CC\nOPEN_PATH=${SRCROOT}/Products\n\n# Install dir will be the final output to the framework or bundle.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${OPEN_PATH}/${FMK_NAME}.framework\n#INSTALL_BUNDLE=${OPEN_PATH}/${FMK_NAME}.bundle\n\n# Working dir will be deleted after the framework or bundle creation.\nWRK_DIR=build\n\n# framework\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# bundle\n#DEVICE_BUNDLE=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.bundle\n#SIMULATOR_BUNDLE=${WRK_DIR}/Debug-iphonesimulator/${FMK_NAME}.bundle\n\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos build\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator build\n\n\n# Cleaning the oldest.\nif [ -d \"${OPEN_PATH}\" ]\nthen\nrm -rf \"${OPEN_PATH}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# bundle\n#mkdir -p \"${INSTALL_BUNDLE}\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# bundle\n#cp -R \"${DEVICE_BUNDLE}/\" \"${INSTALL_BUNDLE}/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\"\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#lipo -create \"${DEVICE_BUNDLE}/${FMK_NAME}\" \"${SIMULATOR_BUNDLE}/${FMK_NAME}\" -output \"${INSTALL_BUNDLE}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\nopen \"${OPEN_PATH}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3480,6 +3551,7 @@
 				42FC71BF1E6FFC0000FBBE42 /* CCTableViewHelper.m in Sources */,
 				42FC73391E70012800FBBE42 /* NSTimer+CCAdd.m in Sources */,
 				42FC717F1E6FDF1400FBBE42 /* UIAlertView+AFNetworking.m in Sources */,
+				425F1BD124F0E65500CE9BA9 /* CCHostMapper.m in Sources */,
 				42497384222E00D30076CADD /* CCMessageInputView.m in Sources */,
 				42FC733D1E70012800FBBE42 /* NSURLConnection+CCAdd.m in Sources */,
 				426D7D4A224240C700419419 /* CCQRCodeViewController.m in Sources */,
@@ -3649,6 +3721,7 @@
 				42B3453B2213A7CA008310F3 /* TZAssetModel.m in Sources */,
 				42954A711E712BE100F4CC4C /* SDImageCacheConfig.m in Sources */,
 				42FC733F1E70012800FBBE42 /* NSURLRequest+CCAdd.m in Sources */,
+				425F1BD524F0E92900CE9BA9 /* CCHostFilterRule.m in Sources */,
 				42B345422213A7CA008310F3 /* TZVideoPlayerController.m in Sources */,
 				429A48E821BF545400A3AC1C /* CCEvent.m in Sources */,
 				42FC71B11E6FFC0000FBBE42 /* CCPropertyType.m in Sources */,
@@ -3659,6 +3732,7 @@
 				4249739F222E1C320076CADD /* CCEmotionManager.m in Sources */,
 				42FC70A61E6FDB7700FBBE42 /* UIViewController+CCProperties.m in Sources */,
 				42FC71A91E6FFC0000FBBE42 /* CCExtensionConst.m in Sources */,
+				425F1BC924F0CF5C00CE9BA9 /* CCDNSInterceptor.m in Sources */,
 				426B74CF1EEF7BB800042EA0 /* CCLanguage.m in Sources */,
 				42FC73371E70012800FBBE42 /* NSString+CCAdd.m in Sources */,
 				42954A8C1E712BE100F4CC4C /* SDWebImageManager.m in Sources */,
@@ -3670,6 +3744,7 @@
 				42954A871E712BE100F4CC4C /* SDWebImageCompat.m in Sources */,
 				42FC73871E70012800FBBE42 /* UITabBarController+CCAdd.m in Sources */,
 				426CB218202196FF00E4394F /* UICollectionViewCell+CCAdd.m in Sources */,
+				42E1A31F24DE58C200762E9E /* CCAutoScrollLabel.m in Sources */,
 				426D7D5C224240C700419419 /* qrspec.c in Sources */,
 				428398F3247406610019B050 /* CCDropDownListMenuItemView.m in Sources */,
 				42FC70A81E6FDB7700FBBE42 /* CCMediator.m in Sources */,
@@ -3697,6 +3772,7 @@
 				424A51B6221A8C9D0094427D /* NSDataEx.m in Sources */,
 				42FC736D1E70012800FBBE42 /* UIImage+CCAdd.m in Sources */,
 				42FC736B1E70012800FBBE42 /* UIGestureRecognizer+CCAdd.m in Sources */,
+				42BE700324ED1AF2004D03A7 /* CCDownloadMultiProxy.m in Sources */,
 				4252A0441E9F18D80093AFF7 /* CCActionSheetViewController.m in Sources */,
 				42B345BB2214F7B4008310F3 /* CCPhotoLoadingView.m in Sources */,
 				42D616C41F46BE8900AAA901 /* CCDBManager.m in Sources */,
@@ -3903,6 +3979,7 @@
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-fembed-bitcode";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = CCKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";

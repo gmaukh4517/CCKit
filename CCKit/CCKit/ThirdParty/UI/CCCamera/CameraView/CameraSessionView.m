@@ -510,10 +510,10 @@
 
 #pragma mark -
 #pragma mark :. 转屏handle
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationMaskAllButUpsideDown);
-}
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+//{
+//    return (interfaceOrientation == UIInterfaceOrientationMaskAllButUpsideDown);
+//}
 
 - (BOOL)shouldAutorotate
 {

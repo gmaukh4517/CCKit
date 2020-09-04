@@ -472,7 +472,7 @@
 @implementation CocoaSecurityDecoder
 - (NSData *)base64:(NSString *)string
 {
-    return [NSData dataWithBase64EncodedString:string];
+    return [NSData dataBase64EncodedString:string];
 }
 - (NSData *)hex:(NSString *)data
 {

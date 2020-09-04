@@ -26,6 +26,37 @@
 #import "UILabel+CCAdd.h"
 #include <objc/runtime.h>
 
+typedef void (^UILabelActionBlock)(UILabel *sender, id linkData);
+
+@interface UILabelActionBlockWrapper : NSObject
+
+@property (nonatomic, copy) UILabelActionBlock actionBlock;
+@property (nonatomic, assign) NSRange range;
+
+@property (nonatomic, weak) id target;
+@property (nonatomic, assign) SEL actionSEL;
+
+- (void)invokeBlock:(UILabel *)sender linkData:(id)linkData;
+
+@end
+
+static const void *UILabelActionBlockArray = &UILabelActionBlockArray;
+
+@implementation UILabelActionBlockWrapper
+
+- (void)invokeBlock:(UILabel *)sender linkData:(id)linkData
+{
+    !self.actionBlock ?: self.actionBlock(sender, linkData);
+    if ([self.target respondsToSelector:self.actionSEL]) {
+        IMP imp = [self.target methodForSelector:self.actionSEL];
+        void (*func)(id, SEL, id) = (void *)imp;
+        func(self.target, self.actionSEL, linkData);
+    }
+}
+
+@end
+
+
 @implementation UILabel (CCAdd)
 
 #pragma mark -
@@ -105,15 +136,15 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (UIEdgeInsets)edgeInsets
 {
     NSValue *edgeInsetsValue = objc_getAssociatedObject(self, &kAutomaticWritingEdgeInsetsKey);
-
+    
     if (edgeInsetsValue) {
         return edgeInsetsValue.UIEdgeInsetsValue;
     }
-
+    
     edgeInsetsValue = [NSValue valueWithUIEdgeInsets:UIEdgeInsetsZero];
-
+    
     objc_setAssociatedObject(self, &kAutomaticWritingEdgeInsetsKey, edgeInsetsValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     return edgeInsetsValue.UIEdgeInsetsValue;
 }
 
@@ -125,17 +156,17 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (NSOperationQueue *)automaticWritingOperationQueue
 {
     NSOperationQueue *operationQueue = objc_getAssociatedObject(self, &kAutomaticWritingOperationQueueKey);
-
+    
     if (operationQueue) {
         return operationQueue;
     }
-
+    
     operationQueue = NSOperationQueue.new;
     operationQueue.name = @"Automatic Writing Operation Queue";
     operationQueue.maxConcurrentOperationCount = 1;
-
+    
     objc_setAssociatedObject(self, &kAutomaticWritingOperationQueueKey, operationQueue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     return operationQueue;
 }
 
@@ -168,15 +199,15 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     self.automaticWritingOperationQueue.suspended = YES;
     self.automaticWritingOperationQueue = nil;
-
+    
     self.text = @"";
-
+    
     NSMutableString *automaticWritingText = NSMutableString.new;
-
+    
     if (text) {
         [automaticWritingText appendString:text];
     }
-
+    
     [self.automaticWritingOperationQueue addOperationWithBlock:^{
         [self automaticWriting:automaticWritingText duration:duration mode:blinkingMode character:blinkingCharacter completion:completion];
     }];
@@ -212,7 +243,7 @@ static char kAutomaticWritingEdgeInsetsKey;
                     [text insertString:[self stringWithCharacter:character] atIndex:0];
                 }
             }
-
+            
             if (text.length) {
                 [self appendCharacter:[text characterAtIndex:0]];
                 [text deleteCharactersInRange:NSMakeRange(0, 1)];
@@ -220,7 +251,7 @@ static char kAutomaticWritingEdgeInsetsKey;
                     [self appendCharacter:character];
                 }
             }
-
+            
             if (!currentQueue.isSuspended) {
                 [currentQueue addOperationWithBlock:^{
                     [self automaticWriting:text duration:duration mode:mode character:character completion:completion];
@@ -242,11 +273,11 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (NSString *)stringWithCharacters:(NSArray *)characters
 {
     NSMutableString *string = NSMutableString.new;
-
+    
     for (NSNumber *character in characters) {
         [string appendFormat:@"%C", character.unsignedShortValue];
     }
-
+    
     return string.copy;
 }
 
@@ -303,7 +334,7 @@ static char kAutomaticWritingEdgeInsetsKey;
     [self setNumberOfLines:0];
     //    [self setLineBreakMode:UILineBreakModeWordWrap];
     [self setLineBreakMode:NSLineBreakByWordWrapping];
-
+    
     // If maxSize is set to CGSizeZero, then assume the max width
     // is the size of the device screen minus the default
     // recommended edge distances (2 * 20)
@@ -311,14 +342,14 @@ static char kAutomaticWritingEdgeInsetsKey;
         maxSize.width = [[UIScreen mainScreen] bounds].size.width - 40.0;
         maxSize.height = MAXFLOAT; // infinite height
     }
-
+    
     // Now, calculate the size of the label constrained to maxSize
     CGSize tempSize = [[self text] boundingRectWithSize:maxSize
                                                 options:NSStringDrawingTruncatesLastVisibleLine
                                              attributes:@{NSFontAttributeName : [self font]}
                                                 context:nil]
     .size;
-
+    
     // If minSize is specified (not CGSizeZero) then
     // check if the new calculated size is smaller than
     // the minimum size
@@ -326,19 +357,19 @@ static char kAutomaticWritingEdgeInsetsKey;
         if (tempSize.width <= minSize.width) tempSize.width = minSize.width;
         if (tempSize.height <= minSize.height) tempSize.height = minSize.height;
     }
-
+    
     // Create rect
     CGRect newFrameSize = CGRectMake([self frame].origin.x, [self frame].origin.y, tempSize.width, tempSize.height);
-
+    
     //// 2) Change the font size if necessary
     //// ------------------------------------
     UIFont *labelFont = [self font];          // temporary label object
     CGFloat fSize = [labelFont pointSize];    // temporary font size value
     CGSize calculatedSizeWithCurrentFontSize; // temporary frame size
-
+    
     // Calculate label size as if there was no constrain
     CGSize unconstrainedSize = CGSizeMake(tempSize.width, MAXFLOAT);
-
+    
     // Keep reducing the font size until the calculated frame size
     // is smaller than the maxSize parameter
     do {
@@ -350,10 +381,10 @@ static char kAutomaticWritingEdgeInsetsKey;
         // Reduce the temporary font size value
         fSize--;
     } while (calculatedSizeWithCurrentFontSize.height > maxSize.height);
-
+    
     // Reset the font size to the last calculated value
     [self setFont:labelFont];
-
+    
     // Reset the frame size
     [self setFrame:newFrameSize];
 }
@@ -398,7 +429,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     if (self.attributedText)
         return [self suggestSizeForAttributedString:self.attributedText width:width];
-
+    
     return [self suggestSizeForString:self.text width:width];
 }
 
@@ -442,7 +473,7 @@ static char kAutomaticWritingEdgeInsetsKey;
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         NSDictionary *attributes = @{NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle.copy};
-
+        
         size = [text boundingRectWithSize:constrainedSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     } else {
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED <= 60000)
@@ -468,7 +499,7 @@ static char kAutomaticWritingEdgeInsetsKey;
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         NSDictionary *attributes = @{NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle.copy};
-
+        
         size = [text boundingRectWithSize:constrainedSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     } else {
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED <= 60000)
@@ -500,7 +531,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     if (!self.attributedString)
         self.attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedText];
-
+    
     return self.attributedString;
 }
 
@@ -530,7 +561,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     if (location < 0 || location > self.text.length - 1 || length + location > self.text.length)
         return;
-
+    
     [[self setTextAttributedString] addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(location, length)];
     [self drawRectTextAttributedString];
 }
@@ -548,7 +579,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     if (location < 0 || location > self.text.length - 1 || length + location > self.text.length)
         return;
-
+    
     [[self setTextAttributedString] addAttribute:NSFontAttributeName value:font range:NSMakeRange(location, length)];
     [self drawRectTextAttributedString];
 }
@@ -566,7 +597,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 {
     if (location < 0 || location > self.text.length - 1 || length + location > self.text.length)
         return;
-
+    
     [[self setTextAttributedString] addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:style] range:NSMakeRange(location, length)];
     [self drawRectTextAttributedString];
 }
@@ -586,7 +617,7 @@ static char kAutomaticWritingEdgeInsetsKey;
 
 /**
  设置行间距
-
+ 
  @param spacing 间距大小
  */
 - (void)setTextLineSpacing:(NSInteger)spacing
@@ -601,6 +632,208 @@ static char kAutomaticWritingEdgeInsetsKey;
 - (void)drawRectTextAttributedString
 {
     self.attributedText = self.attributedString;
+}
+
+
+#pragma mark -
+#pragma mark :. text Click
+
+- (NSMutableArray *)actionBlocksArray
+{
+    NSMutableArray *actionBlocksArray = objc_getAssociatedObject(self, UILabelActionBlockArray);
+    if (!actionBlocksArray) {
+        actionBlocksArray = [NSMutableArray array];
+        objc_setAssociatedObject(self, UILabelActionBlockArray, actionBlocksArray, OBJC_ASSOCIATION_RETAIN);
+    }
+    return actionBlocksArray;
+}
+
+/**
+ *  @brief  设置某段字点击事件
+ *
+ *  @param range 文字段
+ *  @param linkColor 文颜色
+ *  @param actionBlock 点击回调
+ */
+- (void)setTextLinkWithRange:(NSRange)range
+                   linkColor:(UIColor *)linkColor
+                 withLinBloc:(void (^)(UILabel *sender, id linkData))actionBlock
+{
+    [self setTextLinkWithData:nil
+                    linkColor:linkColor
+                        range:range
+                  withLinBloc:actionBlock];
+}
+
+/**
+ *  @brief  设置某段字点击事件
+ *
+ *  @param range 文字段
+ *  @param linkColor 文颜色
+ *  @param actionBlock 点击回调
+ *  @param target 回调对象
+ *  @param action 回到事件
+ */
+- (void)setTextLinkWithRange:(NSRange)range
+                   linkColor:(UIColor *)linkColor
+                   andTarget:(id)target
+                      action:(SEL)action
+{
+    [self setTextLinkWithData:nil
+                    linkColor:linkColor
+                        range:range
+                    andTarget:target
+                       action:action
+                  withLinBloc:nil];
+}
+
+/**
+ *  @brief  设置某段字点击事件
+ *
+ *  @param linkData 点击数据
+ *  @param range 文字段
+ *  @param linkColor 文颜色
+ *  @param actionBlock 点击回调
+ */
+- (void)setTextLinkWithData:(id)linkData
+                  linkColor:(UIColor *)linkColor
+                      range:(NSRange)range
+                withLinBloc:(void (^)(UILabel *sender, id linkData))actionBlock
+{
+    [self setTextLinkWithData:linkData
+                    linkColor:linkColor
+                        range:range
+                    andTarget:nil
+                       action:nil
+                  withLinBloc:actionBlock];
+}
+
+- (void)setTextLinkWithData:(id)linkData
+                  linkColor:(UIColor *)linkColor
+                      range:(NSRange)range
+                  andTarget:(id)target
+                     action:(SEL)action
+                withLinBloc:(void (^)(UILabel *sender, id linkData))actionBlock
+{
+    NSMutableAttributedString *textAttributedString = [self setTextAttributedString];
+    if (self.text.length < range.location + range.length)
+        return;
+    
+    NSMutableDictionary *linkEvent = [NSMutableDictionary dictionary];
+    [linkEvent setObject:[NSValue valueWithRange:range] forKey:@"range"];
+    if (linkData)
+        [linkEvent setObject:linkData forKey:@"linkData"];
+    [textAttributedString addAttribute:@"CCLinkAttributeName" value:linkEvent range:range];
+    
+    [textAttributedString addAttribute:NSForegroundColorAttributeName value:linkColor range:range];
+    [self drawRectTextAttributedString];
+    
+    if (@available(iOS 11.0, *)) {
+        for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
+            if ([gesture.name isEqualToString:@"CCLinkAttributeName"])
+                [self removeGestureRecognizer:gesture];
+        }
+    }
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(textLinkTapGestureRecognizer:)];
+    if (@available(iOS 11.0, *))
+        [tapGestureRecognizer setName:@"CCLinkAttributeName"];
+    self.userInteractionEnabled = YES;
+    [self addGestureRecognizer:tapGestureRecognizer];
+    
+    
+    NSMutableArray *actionBlocksArray = [self actionBlocksArray];
+    UILabelActionBlockWrapper *blockActionWrapper = [[UILabelActionBlockWrapper alloc] init];
+    blockActionWrapper.actionBlock = actionBlock;
+    blockActionWrapper.actionSEL = action;
+    blockActionWrapper.target = target;
+    blockActionWrapper.range = range;
+    [actionBlocksArray addObject:blockActionWrapper];
+}
+
+- (void)textLinkTapGestureRecognizer:(UITapGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateRecognized) {
+        CGPoint point = [gesture locationInView:self];
+        NSDictionary *event = [self textAttributesAtPoint:point];
+        if ([event.allKeys containsObject:@"CCLinkAttributeName"]) {
+            NSRange range = [[[event objectForKey:@"CCLinkAttributeName"] objectForKey:@"range"] rangeValue];
+            NSMutableArray *actionBlocksArray = [self actionBlocksArray];
+            for (UILabelActionBlockWrapper *blockActionWrapper in actionBlocksArray) {
+                if (NSEqualRanges(range, blockActionWrapper.range)) {
+                    [blockActionWrapper invokeBlock:self
+                                           linkData:[[event objectForKey:@"CCLinkAttributeName"] objectForKey:@"linkData"]];
+                }
+            }
+        }
+    }
+}
+
+- (NSDictionary *)textAttributesAtPoint:(CGPoint)point
+{
+    // Locate the attributes of the text within the label at the specified point
+    NSDictionary *dictionary = nil;
+    // First, create a CoreText framesetter
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)self.attributedText);
+    CGMutablePathRef framePath = CGPathCreateMutable();
+    CGPathAddRect(framePath, NULL, CGRectMake(0, 0, self.frame.size.width, self.frame.size.height));
+    // Get the frame that will do the rendering.
+    CFRange currentRange = CFRangeMake(0, 0);
+    CTFrameRef frameRef = CTFramesetterCreateFrame(framesetter, currentRange, framePath, NULL);
+    CGPathRelease(framePath);
+    // Get each of the typeset lines
+    NSArray *lines = (__bridge id)CTFrameGetLines(frameRef);
+    CFIndex linesCount = [lines count];
+    CGPoint *lineOrigins = (CGPoint *)malloc(sizeof(CGPoint) * linesCount);
+    CTFrameGetLineOrigins(frameRef, CFRangeMake(0, linesCount), lineOrigins);
+    CTLineRef line = NULL;
+    CGPoint lineOrigin = CGPointZero;
+    // Correct each of the typeset lines (which have origin (0,0)) to the correct orientation (typesetting offsets from the bottom of the frame)
+    CGFloat bottom = self.frame.size.height;
+    for (CFIndex i = 0; i < linesCount; ++i) {
+        lineOrigins[ i ].y = self.frame.size.height - lineOrigins[ i ].y;
+        bottom = lineOrigins[ i ].y;
+    }
+    // Offset the touch point by the amount of space between the top of the label frame and the text
+    point.y -= (self.frame.size.height - bottom) / 2;
+    // Scan through each line to find the line containing the touch point y position
+    for (CFIndex i = 0; i < linesCount; ++i) {
+        line = (__bridge CTLineRef)[lines objectAtIndex:i];
+        lineOrigin = lineOrigins[ i ];
+        CGFloat descent, ascent;
+        CGFloat width = CTLineGetTypographicBounds(line, &ascent, &descent, nil);
+        if (point.y < (floor(lineOrigin.y) + floor(descent))) {
+            // Cater for text alignment set in the label itself (not in the attributed string)
+            if (self.textAlignment == NSTextAlignmentCenter) {
+                point.x -= (self.frame.size.width - width) / 2;
+            } else if (self.textAlignment == NSTextAlignmentRight) {
+                point.x -= (self.frame.size.width - width);
+            }
+            // Offset the touch position by the actual typeset line origin. pt is now the correct touch position with the line bounds
+            point.x -= lineOrigin.x;
+            point.y -= lineOrigin.y;
+            // Find the text index within this line for the touch position
+            CFIndex i = CTLineGetStringIndexForPosition(line, point);
+            // Iterate through each of the glyph runs to find the run containing the character index
+            NSArray *glyphRuns = (__bridge id)CTLineGetGlyphRuns(line);
+            CFIndex runCount = [glyphRuns count];
+            for (CFIndex run = 0; run < runCount; ++run) {
+                CTRunRef glyphRun = (__bridge CTRunRef)[glyphRuns objectAtIndex:run];
+                CFRange range = CTRunGetStringRange(glyphRun);
+                if (i >= range.location && i <= range.location + range.length) {
+                    dictionary = (__bridge NSDictionary *)CTRunGetAttributes(glyphRun);
+                    break;
+                }
+            }
+            if (dictionary) {
+                break;
+            }
+        }
+    }
+    free(lineOrigins);
+    CFRelease(frameRef);
+    CFRelease(framesetter);
+    return dictionary;
 }
 
 @end

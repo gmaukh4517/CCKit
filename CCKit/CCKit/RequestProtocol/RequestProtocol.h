@@ -29,7 +29,7 @@
 #import <CCKit/CCHTTPRequest.h>
 #import <CCKit/CCResponseObject.h>
 #import <CCKit/HttpFileConfig.h>
-
+#import <CCKit/CCHTTPProtocol.h>
 #import <CCKit/CCDownloadManager.h>
 
 #endif

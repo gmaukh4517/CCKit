@@ -146,7 +146,7 @@ static char TAG_ACTIVITY_SHOW;
 
 #if SD_UIKIT
 - (void)sd_setIndicatorStyle:(UIActivityIndicatorViewStyle)style{
-    objc_setAssociatedObject(self, &TAG_ACTIVITY_STYLE, [NSNumber numberWithInt:style], OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, &TAG_ACTIVITY_STYLE, [NSNumber numberWithInteger:style], OBJC_ASSOCIATION_RETAIN);
 }
 
 - (int)sd_getIndicatorStyle{

@@ -50,6 +50,8 @@
 @property (nonatomic, assign) CGFloat lineHeight;
 /** 底部线宽度 **/
 @property (nonatomic, assign) CGFloat lineWidth;
+/** 滑动区域增加 **/
+@property (nonatomic, assign) CGFloat sizeWidth;
 /** 是否显示滑块 **/
 @property (nonatomic, assign) BOOL isSlider;
 /** 是否铺满 **/

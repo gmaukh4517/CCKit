@@ -24,6 +24,7 @@
 //
 
 #import "CCDownLoadOperation.h"
+#import "CCEventNoticeCenter.h"
 
 #import "CCDownLoadHelper.h"
 
@@ -183,6 +184,10 @@ didCompleteWithError:(NSError *)error
     id<CCSessionDownloadDelegate> downloadDelegate = (id<CCSessionDownloadDelegate>)self.sessionModel;
     if ([downloadDelegate respondsToSelector:@selector(downloader:withUniqueid:didChangeDownloadStatus:)])
         [downloadDelegate downloader:self.sessionModel withUniqueid:self.sessionModel.uniqueId didChangeDownloadStatus:status];
+    
+    if (status == CCDownloadStateSuccess) {
+        [CCEventNoticeCenter postEventName:@"CCDownloadStateSuccess" object:self.sessionModel];
+    }
 }
 
 #pragma mark -
